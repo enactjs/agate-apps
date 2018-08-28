@@ -1,0 +1,12 @@
+{
+  "name": "agate-apps",
+  "version": "1.0.0",
+  "description": "A collection of Agate UI sample applications.",
+  "author": "",
+  "license": "Apache-2.0",
+  "private": true,
+  "repository": "https://github.com/enactjs/agate-apps",
+  "eslintConfig": {
+    "extends": "enact/strict"
+  }
+}
