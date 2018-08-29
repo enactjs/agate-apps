@@ -1,4 +1,5 @@
 import Button from '@enact/agate/Button';
+import Icon from '@enact/agate/Icon';
 import kind from '@enact/core/kind';
 import {Panel, Header} from '@enact/moonstone/Panels';
 import React from 'react';
@@ -11,6 +12,11 @@ const MainPanel = kind({
 	render: (props) => (
 		<Panel {...props}>
 			<Header title="Hello world!">
+				<Icon>fullscreen</Icon>
+				<Button icon="fullscreen" />
+				<Button icon="fullscreen" type="grid" />
+				<Button icon="fullscreen" type="grid">Click me</Button>
+				<Button icon="fullscreen">Click me</Button>
 				<Button>Click me</Button>
 				<Button type="grid">Click me</Button>
 			</Header>
