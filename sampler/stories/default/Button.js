@@ -1,4 +1,5 @@
-import Button from '@enact/agate/Button';
+import Button, {ButtonBase} from '@enact/agate/Button';
+import UiButton from '@enact/ui/Button';
 import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
@@ -9,7 +10,7 @@ import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
 Button.displayName = 'Button';
-const Config = mergeComponentMetadata('Button', Button);
+const Config = mergeComponentMetadata('Button', UiButton, ButtonBase, Button);
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -25,12 +26,11 @@ storiesOf('Agate', module)
 		})(() => (
 			<Button
 				onClick={action('onClick')}
-				casing={select('casing', prop.casing, Config, 'upper')}
 				disabled={boolean('disabled', Config)}
 				icon={select('icon', prop.icons, Config)}
-				minWidth={!!boolean('minWidth', Config)}
 				selected={boolean('selected', Config)}
 				small={boolean('small', Config)}
+				type={select('type', ['standard', 'grid'], Config)}
 			>
 				{text('children', Button, 'Click me')}
 			</Button>
