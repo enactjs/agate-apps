@@ -1,0 +1,16 @@
+// Phone.less
+//
+
+.phone {
+	[data-subtitle]::before {
+		content: attr(data-subtitle);
+		display: block;
+		position: absolute;
+		top: 70%;
+		left: 50%;
+		transform: translateX(-50%);
+		letter-spacing: 0.1em;
+		font-size: 15px;
+		font-weight: bold;
+	}
+}
