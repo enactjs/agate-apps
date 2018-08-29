@@ -1,0 +1,47 @@
+{
+  "name": "agate-sampler",
+  "version": "1.0.0",
+  "description": "Component samples for Agate",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "lint": "enact lint --strict",
+    "test": "echo \"No test suite\" && exit 0",
+    "pack": "build-storybook -c .storybook -o dist",
+    "pack-qa": "build-storybook -c .qa-storybook -o dist",
+    "serve": "start-storybook -p 8080 -c .storybook"
+  },
+  "license": "Apache-2.0",
+  "eslintConfig": {
+    "extends": "enact/strict"
+  },
+  "devDependencies": {
+    "@enact/dev-utils": "^0.4.0",
+    "@storybook/addon-actions": "^3",
+    "@storybook/addon-info": "^3",
+    "@storybook/addon-knobs": "^3",
+    "@storybook/addon-options": "^3",
+    "ajv": "^6.1.1",
+    "autoprefixer": "^7.2.5",
+    "@storybook/react": "^3.4.10",
+    "babel-core": "^6.26.3",
+    "babel-plugin-dev-expression": "^0.2.1",
+    "babel-plugin-transform-react-inline-elements": "^6.22.0",
+    "babel-preset-env": "^1.6.1",
+    "less": "^2.7.3",
+    "less-loader": "^4.0.5",
+    "postcss-flexbugs-fixes": "^3.3.0",
+    "postcss-loader": "^2.0.10",
+    "resolution-independence": "0.0.3",
+    "style-loader": "^0.19.1"
+  },
+  "dependencies": {
+    "@enact/agate": "github:enactjs/agate#master",
+    "@enact/core": "^2.1.1",
+    "@enact/moonstone": "^2.1.1",
+    "@enact/ui": "^2.1.1",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2"
+  },
+  "author": ""
+}
