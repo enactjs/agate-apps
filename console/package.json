@@ -31,11 +31,11 @@
 	],
 	"dependencies": {
 		"@enact/agate": "enactjs/agate#master",
-		"@enact/core": "next",
-		"@enact/i18n": "next",
-		"@enact/moonstone": "next",
-		"@enact/spotlight": "next",
-		"@enact/ui": "next",
+		"@enact/core": "^2.1.1",
+		"@enact/i18n": "^2.1.1",
+		"@enact/moonstone": "^2.1.1",
+		"@enact/spotlight": "^2.1.1",
+		"@enact/ui": "^2.1.1",
 		"prop-types": "^15.6.2",
 		"react": "^16.4.2",
 		"react-dom": "^16.4.2"
