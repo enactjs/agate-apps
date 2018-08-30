@@ -3,11 +3,11 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import {TabbedPanels} from '@enact/agate/Panels';
 
+import Home from '../views/Home';
+import Phone from '../views/Phone';
 import MainPanel from '../views/MainPanel';
 
 import css from './App.less';
-
-const divTest = (props) => <div {...props} />;
 
 const AppBase = kind({
 	name: 'App',
@@ -23,13 +23,9 @@ const AppBase = kind({
 			orientation="vertical"
 			tabPosition="after"
 			tabs={[
-				{title: 'Main Panel', view: MainPanel},
-				{title: 'Tab 1', view: divTest, viewProps: {
-					children: 'View 1'
-				}},
-				{title: 'Tab 2', view: divTest, viewProps: {
-					children: 'View 2'
-				}}
+				{title: 'Home', view: Home},
+				{title: 'Phone', view: Phone},
+				{title: 'Hello!', view: MainPanel}
 			]}
 		/>
 	)
