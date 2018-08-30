@@ -20,7 +20,8 @@ const AppBase = kind({
 	render: (props) => (
 		<TabbedPanels
 			{...props}
-			tabOrientation="vertical"
+			orientation="vertical"
+			tabPosition="after"
 			tabs={[
 				{title: 'Main Panel', view: MainPanel},
 				{title: 'Tab 1', view: divTest, viewProps: {
