@@ -21,7 +21,7 @@ const AppBase = kind({
 		<TabbedPanels
 			{...props}
 			orientation="vertical"
-			tabPosition="after"
+			// tabPosition="after"
 			tabs={[
 				{title: 'Home', view: Home},
 				{title: 'Phone', view: Phone},
