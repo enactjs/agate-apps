@@ -4,6 +4,7 @@ import React from 'react';
 import {TabbedPanels} from '@enact/agate/Panels';
 
 import Home from '../views/Home';
+import HVAC from '../views/HVAC';
 import Phone from '../views/Phone';
 import MainPanel from '../views/MainPanel';
 
@@ -25,6 +26,7 @@ const AppBase = kind({
 			tabs={[
 				{title: 'Home', view: Home},
 				{title: 'Phone', view: Phone},
+				{title: 'HVAC', view: HVAC},
 				{title: 'Hello!', view: MainPanel}
 			]}
 		/>
