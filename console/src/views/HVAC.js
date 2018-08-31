@@ -7,47 +7,32 @@ import kind                  from '@enact/core/kind';
 import {Row, Cell}           from '@enact/ui/Layout';
 import React                 from 'react';
 
-// import HeatedSeatButton      from '../components/HeatedSeatButton';
-// import Temp                  from '../components/Temp';
-
 import css                   from './HVAC.less';
 
 const Hvac = kind({
-    name: 'HVAC',
-
-	propTypes: {
-		// Define and document properties
-	},
-
-	// Define default values for any properties that have them
-	// defaultProps: {
-	// },
+	name: 'HVAC',
 
 	styles: {
 		css,
 		className: 'hvac'
 	},
 
-	// Add computed property values
-	// computed: {
-	// },
-
 	render: (props) => (
 		<Panel {...props}>
-            <Divider>
-                Fan Speed
-            </Divider>
+			<Divider>
+				Fan Speed
+			</Divider>
 			<SliderButton>
-                {'Off'}
-                {'Low'}
-                {'Medium'}
-                {'High'}
-            </SliderButton>
+				{'Off'}
+				{'Low'}
+				{'Medium'}
+				{'High'}
+			</SliderButton>
 			<Row className={css.above + ' ' + css.spaced}>
 				<LabeledIconButton icon="plus">L Seat</LabeledIconButton>
-                <Button type="grid" className={css.button}>
-                    A/C
-                </Button>
+				<Button type="grid" className={css.button}>
+					A/C
+				</Button>
 				<LabeledIconButton icon="plus">R Seat</LabeledIconButton>
 			</Row>
 			<Row className={css.below + ' ' + css.spaced}>
@@ -58,18 +43,18 @@ const Hvac = kind({
 					<Button type="grid" className={css.button}>
 						AUTO
 					</Button>
-                    <Button type="grid" icon="rollforward" className={css.button} />
-                </div>
+					<Button type="grid" icon="rollforward" className={css.button} />
+				</div>
 				<Cell>
 					Picker
 				</Cell>
 			</Row>
 			<Row className={css.spaced}>
-				<LabeledIconButton icon="arrowsmalldown">Air Down</LabeledIconButton>
-				<LabeledIconButton icon="arrowsmallup">Air Up</LabeledIconButton>
-				<LabeledIconButton icon="arrowsmallright">Air Face</LabeledIconButton>
-				<LabeledIconButton icon="hollowstar">Rear Defrost</LabeledIconButton>
-				<LabeledIconButton icon="hollowstar">Front Defrost</LabeledIconButton>
+				<LabeledIconButton icon="arrowsmalldown">Down</LabeledIconButton>
+				<LabeledIconButton icon="arrowsmallup">Up</LabeledIconButton>
+				<LabeledIconButton icon="arrowsmallright">Face</LabeledIconButton>
+				<LabeledIconButton icon="hollowstar">Rear</LabeledIconButton>
+				<LabeledIconButton icon="hollowstar">Front</LabeledIconButton>
 			</Row>
 		</Panel>
 	)
@@ -77,6 +62,6 @@ const Hvac = kind({
 
 export default Hvac;
 export {
-    Hvac as App,
-    Hvac
+	Hvac as App,
+	Hvac
 };
