@@ -1,5 +1,7 @@
 import AgateDecorator from '@enact/agate/AgateDecorator';
+import {adaptEvent, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
+import Changeable from '@enact/ui/Changeable';
 import React from 'react';
 import {TabbedPanels} from '@enact/agate/Panels';
 
@@ -17,6 +19,14 @@ const AppBase = kind({
 		className: 'app'
 	},
 
+	handlers: {
+		onSelect: handle(
+			// this should probably be done in TabbedPanels to line up the event payload (index)
+			// with the prop but i'm taking a shortcut for now
+			adaptEvent(({selected}) => ({index: selected}), forward('onSelect'))
+		)
+	},
+
 	render: (props) => (
 		<TabbedPanels
 			{...props}
@@ -31,28 +41,11 @@ const AppBase = kind({
 	)
 });
 
-class App extends React.Component {
-	constructor (props) {
-		super(props);
-		this.state = {
-			index: props.index || 0
-		};
-	}
-	onSelect = (ev) => {
-		const {selected: index} = ev;
-		if (typeof index === 'number' && index !== this.state.index) {
-			this.setState({index});
-		}
-	};
-	render () {
-		const props = Object.assign({}, this.props);
-		props.index = this.state.index;
-		props.onSelect = this.onSelect;
+const App = AgateDecorator(
+	Changeable(
+		{change: 'onSelect', prop: 'index'},
+		AppBase
+	)
+);
 
-		return(
-			<AppBase {...props} />
-		);
-	}
-}
-
-export default AgateDecorator(App);
+export default App;
