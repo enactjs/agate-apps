@@ -22,7 +22,6 @@ const Home = kind({
 	name: 'Home',
 
 	render: (props) => {
-		console.log('HOME PROPS', props);
 		return(
 			<Panel {...props}>
 				<Column align="center center">

@@ -3,9 +3,9 @@ import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
 import compose from 'ramda/src/compose';
 import React from 'react';
-import {adaptEvent, forward, handle} from '@enact/core/handle';
+// import {adaptEvent, forward, handle} from '@enact/core/handle';
 import Button from '@enact/agate/Button';
-import Skinnable from '@enact/agate/Skinnable';
+// import Skinnable from '@enact/agate/Skinnable';
 import {TabbedPanels} from '@enact/agate/Panels';
 
 import Home from '../views/Home';
@@ -42,9 +42,9 @@ const AppBase = kind({
 				// orientation="vertical"
 				// tabPosition="after"
 				tabs={[
-					{title: 'Home', view: Home},
-					{title: 'Phone', view: Phone},
-					{title: 'Hello!', view: MainPanel}
+					{title: 'Home', icon: 'denselist', view: Home},
+					{title: 'Phone', icon: 'funnel', view: Phone},
+					{title: 'Hello!', icon: 'search', view: MainPanel}
 				]}
 			>
 				<afterTabs>
@@ -56,11 +56,12 @@ const AppBase = kind({
 });
 
 const AppState = hoc((configHoc, Wrapped) => {
-	return class App extends React.Component {
+	return class extends React.Component {
+		static displayName = 'AppState';
 		constructor (props) {
 			super(props);
 			this.state = {
-				index: props.index || 0,
+				index: props.defaultIndex || props.index || 0,
 				skin: props.skin || 'carbon' // 'titanium' alternate.
 			};
 		}
@@ -74,9 +75,11 @@ const AppState = hoc((configHoc, Wrapped) => {
 			this.setState(({skin}) => ({skin: (skin === 'carbon' ? 'titanium' : 'carbon')}));
 		};
 		render () {
+			const props = {...this.props};
+			delete props.defaultIndex;
 			return(
 				<Wrapped
-					{...this.props}
+					{...props}
 					index={this.state.index}
 					onSelect={this.onSelect}
 					onSkinChange={this.onSkinChange}
@@ -90,8 +93,8 @@ const AppState = hoc((configHoc, Wrapped) => {
 
 const AppDecorator = compose(
 	AppState,
-	AgateDecorator,
-	Skinnable,
+	AgateDecorator
+	// Skinnable,
 );
 
 const App = AppDecorator(AppBase);
