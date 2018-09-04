@@ -1,11 +1,11 @@
 import Button, {ButtonBase} from '@enact/agate/Button';
 import UiButton from '@enact/ui/Button';
-import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 import {withInfo} from '@storybook/addon-info';
 
+import icons from './icons';
 import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
@@ -15,7 +15,7 @@ const Config = mergeComponentMetadata('Button', UiButton, ButtonBase, Button);
 // Set up some defaults for info and knobs
 const prop = {
 	casing: ['preserve', 'sentence', 'word', 'upper'],
-	icons: ['', ...Object.keys(icons)]
+	icons: ['', ...icons]
 };
 
 storiesOf('Agate', module)
