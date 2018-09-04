@@ -32,7 +32,7 @@ const PanelsBase = kind({
 				<Panel className={css.panel}>
 					<Column>
 						<Cell shrink>
-							<Divider>{title}</Divider>
+							<Divider startSection>{title}</Divider>
 							{description ? (
 								<div className={css.description}>
 									<p>{description}</p>
