@@ -1,10 +1,10 @@
 import AgateDecorator from '@enact/agate/AgateDecorator';
+import Button from '@enact/agate/Button';
+import compose from 'ramda/src/compose';
+import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import Popup from '@enact/agate/Popup';
-import hoc from '@enact/core/hoc';
-import compose from 'ramda/src/compose';
 import React from 'react';
-import Button from '@enact/agate/Button';
 import {TabbedPanels} from '@enact/agate/Panels';
 
 import Home from '../views/Home';
@@ -99,7 +99,6 @@ const AppState = hoc((configHoc, Wrapped) => {
 const AppDecorator = compose(
 	AppState,
 	AgateDecorator
-	// Skinnable,
 );
 
 const App = AppDecorator(AppBase);

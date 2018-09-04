@@ -3,7 +3,8 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {withInfo} from '@storybook/addon-info';
 
-import {boolean, text} from '../../src/enact-knobs';
+import iconNames from './icons';
+import {boolean, text, select} from '../../src/enact-knobs';
 LabeledItem.displayName = 'LabeledItem';
 
 storiesOf('Agate', module)
@@ -15,6 +16,7 @@ storiesOf('Agate', module)
 			<LabeledItem
 				label={text('label', LabeledItem, 'Label')}
 				disabled={boolean('disabled', LabeledItem)}
+				titleIcon={select('icon', ['', ...iconNames], LabeledItem, 'fullscreen')}
 			>
 				{text('children', LabeledItem, 'Hello LabeledItem')}
 			</LabeledItem>
