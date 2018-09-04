@@ -21,7 +21,7 @@ const HomeIconCell = kind({
 const Home = kind({
 	name: 'Home',
 
-	render: ({onTogglePopup, ...rest}) => {
+	render: ({onTogglePopup, onToggleBasicPopup, ...rest}) => {
 		return(
 			<Panel {...rest}>
 				<Column align="center center">
@@ -36,7 +36,7 @@ const Home = kind({
 						<Row align="start center">
 							<HomeIconCell icon="audio">Radio</HomeIconCell>
 							<HomeIconCell icon="resumeplay">Multimedia</HomeIconCell>
-							<HomeIconCell icon="repeat">Connect</HomeIconCell>
+							<HomeIconCell icon="repeat" onClick={onToggleBasicPopup}>Connect</HomeIconCell>
 						</Row>
 					</Cell>
 					<Cell shrink>
