@@ -21,33 +21,35 @@ const HomeIconCell = kind({
 const Home = kind({
 	name: 'Home',
 
-	render: ({onTogglePopup, ...rest}) => (
-		<Panel {...rest}>
-			<Column align="center center">
-				<Cell shrink>
-					<Row align="start center">
-						<HomeIconCell icon="rollforward">HVAC</HomeIconCell>
-						<HomeIconCell icon="exitfullscreen">Navigation</HomeIconCell>
-						<HomeIconCell icon="info">Phone</HomeIconCell>
-					</Row>
-				</Cell>
-				<Cell shrink>
-					<Row align="start center">
-						<HomeIconCell icon="audio">Radio</HomeIconCell>
-						<HomeIconCell icon="resumeplay">Multimedia</HomeIconCell>
-						<HomeIconCell icon="repeat">Connect</HomeIconCell>
-					</Row>
-				</Cell>
-				<Cell shrink>
-					<Row align="start center">
-						<HomeIconCell icon="repeatdownload">Dashboard</HomeIconCell>
-						<HomeIconCell icon="gear">Settings</HomeIconCell>
-						<HomeIconCell icon="closex" onClick={onTogglePopup}>Point of Interest</HomeIconCell>
-					</Row>
-				</Cell>
-			</Column>
-		</Panel>
-	)
+	render: ({onTogglePopup, ...rest}) => {
+		return(
+			<Panel {...rest}>
+				<Column align="center center">
+					<Cell shrink>
+						<Row align="start center">
+							<HomeIconCell icon="rollforward">HVAC</HomeIconCell>
+							<HomeIconCell icon="exitfullscreen">Navigation</HomeIconCell>
+							<HomeIconCell icon="info">Phone</HomeIconCell>
+						</Row>
+					</Cell>
+					<Cell shrink>
+						<Row align="start center">
+							<HomeIconCell icon="audio">Radio</HomeIconCell>
+							<HomeIconCell icon="resumeplay">Multimedia</HomeIconCell>
+							<HomeIconCell icon="repeat">Connect</HomeIconCell>
+						</Row>
+					</Cell>
+					<Cell shrink>
+						<Row align="start center">
+							<HomeIconCell icon="repeatdownload">Dashboard</HomeIconCell>
+							<HomeIconCell icon="gear">Settings</HomeIconCell>
+							<HomeIconCell icon="closex" onClick={onTogglePopup}>Point of Interest</HomeIconCell>
+						</Row>
+					</Cell>
+				</Column>
+			</Panel>
+		);
+	}
 });
 
 export default Home;

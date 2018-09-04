@@ -1,7 +1,10 @@
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import kind from '@enact/core/kind';
 import Popup from '@enact/agate/Popup';
+import hoc from '@enact/core/hoc';
+import compose from 'ramda/src/compose';
 import React from 'react';
+import Button from '@enact/agate/Button';
 import {TabbedPanels} from '@enact/agate/Panels';
 
 import Home from '../views/Home';
@@ -20,58 +23,85 @@ const AppBase = kind({
 		className: 'app'
 	},
 
-	render: ({onTogglePopup, showPopup, ...rest}) => (
-		<div>
-			<TabbedPanels
-				{...rest}
-				orientation="vertical"
-				// tabPosition="after"
-				tabs={[
-					{title: 'Home', view: Home, viewProps: {
-						onTogglePopup
-				}},
-					{title: 'Phone', view: Phone},
-					{title: 'Hello!', view: MainPanel}
-				]}
-			/>
-			<Popup
-				open={showPopup}
-			>
-				<CenteredPopupMessage onClick={onTogglePopup}>
-					HELLO!
-				</CenteredPopupMessage>
-			</Popup>
-		</div>
-	)
-});
-
-class App extends React.Component {
-	constructor (props) {
-		super(props);
-		this.state = {
-			index: props.index || 0
-		};
-	}
-	onSelect = (ev) => {
-		const {selected: index} = ev;
-		if (typeof index === 'number' && index !== this.state.index) {
-			this.setState({index});
-		}
-	};
-	onTogglePopup = () => {
-		this.setState(prevState => ({showPopup: !prevState.showPopup}));
-	};
-	render () {
-		const props = Object.assign({}, this.props);
-		props.index = this.state.index;
-		props.onSelect = this.onSelect;
-		props.onTogglePopup = this.onTogglePopup;
-		props.showPopup = this.state.showPopup;
-
-		return(
-			<AppBase {...props} />
+	render: ({onSkinChange, onTogglePopup, showPopup, skinName, ...rest}) => {
+		return (
+			<div>
+				<TabbedPanels
+					{...rest}
+					// orientation="vertical"
+					// tabPosition="after"
+					tabs={[
+						{title: 'Home', icon: 'denselist', view: Home, viewProps: {
+							onTogglePopup
+						}},
+						{title: 'Phone', icon: 'funnel', view: Phone},
+						{title: 'Hello!', icon: 'search', view: MainPanel}
+					]}
+				>
+					<afterTabs>
+						<Button type="grid" icon="fullscreen" small onTap={onSkinChange} />
+					</afterTabs>
+				</TabbedPanels>
+				<Popup
+					open={showPopup}
+				>
+					<CenteredPopupMessage onClick={onTogglePopup}>
+						{`Popup for ${skinName} skin`}
+					</CenteredPopupMessage>
+				</Popup>
+			</div>
 		);
 	}
-}
+});
 
-export default AgateDecorator(App);
+const AppState = hoc((configHoc, Wrapped) => {
+	return class extends React.Component {
+		static displayName = 'AppState';
+		constructor (props) {
+			super(props);
+			this.state = {
+				index: props.defaultIndex || props.index || 0,
+				skin: props.skin || 'carbon' // 'titanium' alternate.
+			};
+		}
+		onSelect = (ev) => {
+			const {selected: index} = ev;
+			if (typeof index === 'number' && index !== this.state.index) {
+				this.setState({index});
+			}
+		};
+		onSkinChange = () => {
+			this.setState(({skin}) => ({skin: (skin === 'carbon' ? 'titanium' : 'carbon')}));
+		};
+		onTogglePopup = () => {
+			this.setState(({showPopup}) => ({showPopup: !showPopup}));
+		};
+		render () {
+			const props = {...this.props};
+			delete props.defaultIndex;
+			return(
+				<Wrapped
+					{...props}
+					index={this.state.index}
+					onSelect={this.onSelect}
+					onSkinChange={this.onSkinChange}
+					onTogglePopup={this.onTogglePopup}
+					showPopup={this.state.showPopup}
+					skin={this.state.skin}
+					skinName={this.state.skin}
+					orientation={(this.state.skin === 'titanium') ? 'horizontal' : 'vertical'}
+				/>
+			);
+		}
+	};
+});
+
+const AppDecorator = compose(
+	AppState,
+	AgateDecorator
+	// Skinnable,
+);
+
+const App = AppDecorator(AppBase);
+
+export default App;
