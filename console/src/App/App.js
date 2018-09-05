@@ -1,11 +1,10 @@
 import AgateDecorator from '@enact/agate/AgateDecorator';
-import kind from '@enact/core/kind';
-import hoc from '@enact/core/hoc';
-import compose from 'ramda/src/compose';
-import React from 'react';
-// import {adaptEvent, forward, handle} from '@enact/core/handle';
 import Button from '@enact/agate/Button';
-// import Skinnable from '@enact/agate/Skinnable';
+import Popup from '@enact/agate/Popup';
+import compose from 'ramda/src/compose';
+import hoc from '@enact/core/hoc';
+import kind from '@enact/core/kind';
+import React from 'react';
 import {TabbedPanels} from '@enact/agate/Panels';
 
 import Home from '../views/Home';
@@ -22,35 +21,46 @@ const AppBase = kind({
 		className: 'app'
 	},
 
-	// computed: {
-	// 	orientation: ({skin}) => (skin === 'titanium' ? 'horizontal' : 'vertical')
-	// },
-
-	// handlers: {
-	// 	onSelect: handle(
-	// 		// this should probably be done in TabbedPanels to line up the event payload (index)
-	// 		// with the prop but i'm taking a shortcut for now
-	// 		adaptEvent(({selected}) => ({index: selected}), forward('onSelect'))
-	// 	)
-	// },
-
-	render: ({onSkinChange, ...rest}) => {
-		// delete rest.skin;
+	render: ({onSkinChange, onTogglePopup, onToggleBasicPopup, showPopup, showBasicPopup, skinName, ...rest}) => {
 		return (
-			<TabbedPanels
-				{...rest}
-				// orientation="vertical"
-				// tabPosition="after"
-				tabs={[
-					{title: 'Home', icon: 'denselist', view: Home},
-					{title: 'Phone', icon: 'funnel', view: Phone},
-					{title: 'Hello!', icon: 'search', view: MainPanel}
-				]}
-			>
-				<afterTabs>
-					<Button type="grid" icon="fullscreen" small onTap={onSkinChange} />
-				</afterTabs>
-			</TabbedPanels>
+			<div>
+				<TabbedPanels
+					{...rest}
+					// orientation="vertical"
+					// tabPosition="after"
+					tabs={[
+						{title: 'Home', icon: 'denselist', view: Home, viewProps: {
+							onTogglePopup,
+							onToggleBasicPopup
+						}},
+						{title: 'Phone', icon: 'funnel', view: Phone},
+						{title: 'Hello!', icon: 'search', view: MainPanel}
+					]}
+				>
+					<afterTabs>
+						<Button type="grid" icon="fullscreen" small onTap={onSkinChange} />
+					</afterTabs>
+				</TabbedPanels>
+				<Popup
+					onClose={onToggleBasicPopup}
+					open={showBasicPopup}
+				>
+					{`Popup for ${skinName} skin`}
+				</Popup>
+				<Popup
+					onClose={onTogglePopup}
+					open={showPopup}
+					closeButton
+				>
+					<title>
+						{`Popup for ${skinName} skin`}
+					</title>
+					This is an example of a popup with a body section and a title. Plus there&apos;s buttons!
+					<buttons>
+						<Button>Enable Transport Mode</Button>
+					</buttons>
+				</Popup>
+			</div>
 		);
 	}
 });
@@ -62,6 +72,8 @@ const AppState = hoc((configHoc, Wrapped) => {
 			super(props);
 			this.state = {
 				index: props.defaultIndex || props.index || 0,
+				showPopup: false,
+				showBasicPopup: false,
 				skin: props.skin || 'carbon' // 'titanium' alternate.
 			};
 		}
@@ -74,6 +86,12 @@ const AppState = hoc((configHoc, Wrapped) => {
 		onSkinChange = () => {
 			this.setState(({skin}) => ({skin: (skin === 'carbon' ? 'titanium' : 'carbon')}));
 		};
+		onTogglePopup = () => {
+			this.setState(({showPopup}) => ({showPopup: !showPopup}));
+		};
+		onToggleBasicPopup = () => {
+			this.setState(({showBasicPopup}) => ({showBasicPopup: !showBasicPopup}));
+		};
 		render () {
 			const props = {...this.props};
 			delete props.defaultIndex;
@@ -83,18 +101,22 @@ const AppState = hoc((configHoc, Wrapped) => {
 					index={this.state.index}
 					onSelect={this.onSelect}
 					onSkinChange={this.onSkinChange}
+					onTogglePopup={this.onTogglePopup}
+					onToggleBasicPopup={this.onToggleBasicPopup}
+					showPopup={this.state.showPopup}
+					showBasicPopup={this.state.showBasicPopup}
 					skin={this.state.skin}
+					skinName={this.state.skin}
 					orientation={(this.state.skin === 'titanium') ? 'horizontal' : 'vertical'}
 				/>
 			);
 		}
-	}
+	};
 });
 
 const AppDecorator = compose(
 	AppState,
 	AgateDecorator
-	// Skinnable,
 );
 
 const App = AppDecorator(AppBase);
