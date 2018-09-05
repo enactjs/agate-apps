@@ -5,8 +5,10 @@ import compose from 'ramda/src/compose';
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import React from 'react';
+import Layout, {Cell} from '@enact/ui/Layout';
 import {TabbedPanels} from '@enact/agate/Panels';
 
+import Clock from '../components/Clock';
 import Home from '../views/Home';
 import Phone from '../views/Phone';
 import MainPanel from '../views/MainPanel';
@@ -38,7 +40,12 @@ const AppBase = kind({
 					]}
 				>
 					<afterTabs>
-						<Button type="grid" icon="fullscreen" small onTap={onSkinChange} />
+						<Layout orientation="vertical" align="center space-evenly">
+							<Cell shrink>
+								<Clock />
+							</Cell>
+							<Cell shrink component={Button} type="grid" icon="fullscreen" small onTap={onSkinChange} />
+						</Layout>
 					</afterTabs>
 				</TabbedPanels>
 				<Popup
