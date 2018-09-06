@@ -29,11 +29,11 @@ const Hvac = kind({
 				{'High'}
 			</SliderButton>
 			<Row className={css.above + ' ' + css.spaced}>
-				<LabeledIconButton icon="plus">L Seat</LabeledIconButton>
+				<Button icon="plus" />
 				<Button type="grid" className={css.button}>
 					A/C
 				</Button>
-				<LabeledIconButton icon="plus">R Seat</LabeledIconButton>
+				<Button icon="plus" />
 			</Row>
 			<Row className={css.below + ' ' + css.spaced}>
 				<Cell>
