@@ -17,7 +17,7 @@ const Phone = kind({
 					<span>input</span>
 				</Cell>
 				<Cell className="dialer-grid">
-					<Dialer />
+					<Dialer align="center center" />
 				</Cell>
 				<Cell shrink className="call">
 					<Button type="grid" highlighted style={{width: '300px'}}>Call</Button>
