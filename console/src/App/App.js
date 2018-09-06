@@ -37,7 +37,7 @@ const AppBase = kind({
 							onToggleBasicPopup
 						}},
 						{title: 'Phone', icon: 'funnel', view: Phone},
-						{title: 'HVAC', view: HVAC},
+						{title: 'HVAC', icon: 'play', view: HVAC},
 						{title: 'Hello!', icon: 'search', view: MainPanel}
 					]}
 				>
