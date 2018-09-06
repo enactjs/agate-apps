@@ -19,8 +19,8 @@ if (typeof window !== 'undefined') {
 	appElement = (
 		<App
 			defaultIndex={index}
+			defaultSkin={skin}
 			onSelect={onSelect}
-			skin={skin}
 		/>
 	);
 

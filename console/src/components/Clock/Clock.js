@@ -1,4 +1,3 @@
-import Button from '@enact/agate/Button';
 import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
 import {Layout, Cell} from '@enact/ui/Layout';
