@@ -10,6 +10,7 @@ import {TabbedPanels} from '@enact/agate/Panels';
 
 import Clock from '../components/Clock';
 import Home from '../views/Home';
+import HVAC from '../views/HVAC';
 import Phone from '../views/Phone';
 import MainPanel from '../views/MainPanel';
 
@@ -36,6 +37,7 @@ const AppBase = kind({
 							onToggleBasicPopup
 						}},
 						{title: 'Phone', icon: 'funnel', view: Phone},
+						{title: 'HVAC', icon: 'play', view: HVAC},
 						{title: 'Hello!', icon: 'search', view: MainPanel}
 					]}
 				>
