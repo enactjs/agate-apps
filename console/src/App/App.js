@@ -1,13 +1,13 @@
+import {adaptEvent, forward, handle} from '@enact/core/handle';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
-import {TabbedPanels} from '@enact/agate/Panels';
-import Popup from '@enact/agate/Popup';
-import {adaptEvent, forward, handle} from '@enact/core/handle';
+import compose from 'ramda/src/compose';
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import Layout, {Cell} from '@enact/ui/Layout';
-import compose from 'ramda/src/compose';
+import Popup from '@enact/agate/Popup';
 import React from 'react';
+import {TabbedPanels} from '@enact/agate/Panels';
 
 import Clock from '../components/Clock';
 import Home from '../views/Home';
