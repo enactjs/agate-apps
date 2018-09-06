@@ -21,10 +21,9 @@ const HomeIconCell = kind({
 const Home = kind({
 	name: 'Home',
 
-	render: (props) => {
-		console.log('HOME PROPS', props);
+	render: ({onTogglePopup, onToggleBasicPopup, ...rest}) => {
 		return(
-			<Panel {...props}>
+			<Panel {...rest}>
 				<Column align="center center">
 					<Cell shrink>
 						<Row align="start center">
@@ -37,14 +36,14 @@ const Home = kind({
 						<Row align="start center">
 							<HomeIconCell icon="audio">Radio</HomeIconCell>
 							<HomeIconCell icon="resumeplay">Multimedia</HomeIconCell>
-							<HomeIconCell icon="repeat">Connect</HomeIconCell>
+							<HomeIconCell icon="repeat" onClick={onToggleBasicPopup}>Connect</HomeIconCell>
 						</Row>
 					</Cell>
 					<Cell shrink>
 						<Row align="start center">
 							<HomeIconCell icon="repeatdownload">Dashboard</HomeIconCell>
 							<HomeIconCell icon="gear">Settings</HomeIconCell>
-							<HomeIconCell icon="closex">Point of Interest</HomeIconCell>
+							<HomeIconCell icon="closex" onClick={onTogglePopup}>Point of Interest</HomeIconCell>
 						</Row>
 					</Cell>
 				</Column>

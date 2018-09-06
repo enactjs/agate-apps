@@ -19,7 +19,8 @@
 	"private": true,
 	"repository": "",
 	"enact": {
-		"theme": "agate"
+		"theme": "agate",
+		"template": "html-template.ejs"
 	},
 	"eslintConfig": {
 		"extends": "enact"
@@ -36,6 +37,8 @@
 		"@enact/spotlight": "^2.1.1",
 		"@enact/ui": "^2.1.1",
 		"prop-types": "^15.6.2",
+		"query-string": "^6.1.0",
+		"ramda": "^0.25.0",
 		"react": "^16.4.2",
 		"react-dom": "^16.4.2"
 	}
