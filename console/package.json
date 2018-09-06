@@ -19,7 +19,8 @@
 	"private": true,
 	"repository": "",
 	"enact": {
-		"theme": "agate"
+		"theme": "agate",
+		"template": "html-template.ejs"
 	},
 	"eslintConfig": {
 		"extends": "enact"

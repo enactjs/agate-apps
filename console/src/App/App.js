@@ -1,17 +1,19 @@
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
+import {TabbedPanels} from '@enact/agate/Panels';
 import Popup from '@enact/agate/Popup';
-import compose from 'ramda/src/compose';
+import {adaptEvent, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
-import React from 'react';
 import Layout, {Cell} from '@enact/ui/Layout';
-import {TabbedPanels} from '@enact/agate/Panels';
+import compose from 'ramda/src/compose';
+import React from 'react';
 
 import Clock from '../components/Clock';
 import Home from '../views/Home';
-import Phone from '../views/Phone';
+import HVAC from '../views/HVAC';
 import MainPanel from '../views/MainPanel';
+import Phone from '../views/Phone';
 
 import css from './App.less';
 
@@ -21,6 +23,14 @@ const AppBase = kind({
 	styles: {
 		css,
 		className: 'app'
+	},
+
+	handlers: {
+		onSelect: handle(
+			// this should probably be done in TabbedPanels to line up the event payload (index)
+			// with the prop but i'm taking a shortcut for now
+			adaptEvent(({selected}) => ({index: selected}), forward('onSelect'))
+		)
 	},
 
 	render: ({onSkinChange, onTogglePopup, onToggleBasicPopup, showPopup, showBasicPopup, skinName, ...rest}) => {
@@ -36,6 +46,7 @@ const AppBase = kind({
 							onToggleBasicPopup
 						}},
 						{title: 'Phone', icon: 'funnel', view: Phone},
+						{title: 'HVAC', icon: 'play', view: HVAC},
 						{title: 'Hello!', icon: 'search', view: MainPanel}
 					]}
 				>
@@ -78,31 +89,36 @@ const AppState = hoc((configHoc, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.state = {
-				index: props.defaultIndex || props.index || 0,
+				index: props.defaultIndex || 0,
 				showPopup: false,
 				showBasicPopup: false,
-				skin: props.skin || 'carbon' // 'titanium' alternate.
+				skin: props.defaultSkin || 'carbon' // 'titanium' alternate.
 			};
 		}
-		onSelect = (ev) => {
-			const {selected: index} = ev;
-			if (typeof index === 'number' && index !== this.state.index) {
-				this.setState({index});
-			}
-		};
+
+		onSelect = handle(
+			forward('onSelect'),
+			({index}) => this.setState(state => state.index === index ? null : {index})
+		).bind(this)
+
 		onSkinChange = () => {
 			this.setState(({skin}) => ({skin: (skin === 'carbon' ? 'titanium' : 'carbon')}));
-		};
+		}
+
 		onTogglePopup = () => {
 			this.setState(({showPopup}) => ({showPopup: !showPopup}));
-		};
+		}
+
 		onToggleBasicPopup = () => {
 			this.setState(({showBasicPopup}) => ({showBasicPopup: !showBasicPopup}));
-		};
+		}
+
 		render () {
 			const props = {...this.props};
+
 			delete props.defaultIndex;
-			return(
+
+			return (
 				<Wrapped
 					{...props}
 					index={this.state.index}
@@ -110,11 +126,11 @@ const AppState = hoc((configHoc, Wrapped) => {
 					onSkinChange={this.onSkinChange}
 					onTogglePopup={this.onTogglePopup}
 					onToggleBasicPopup={this.onToggleBasicPopup}
+					orientation={(this.state.skin === 'titanium') ? 'horizontal' : 'vertical'}
 					showPopup={this.state.showPopup}
 					showBasicPopup={this.state.showBasicPopup}
 					skin={this.state.skin}
 					skinName={this.state.skin}
-					orientation={(this.state.skin === 'titanium') ? 'horizontal' : 'vertical'}
 				/>
 			);
 		}
