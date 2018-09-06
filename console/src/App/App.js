@@ -14,6 +14,7 @@ import Home from '../views/Home';
 import HVAC from '../views/HVAC';
 import MainPanel from '../views/MainPanel';
 import Phone from '../views/Phone';
+import Settings from '../views/Settings';
 
 import css from './App.less';
 
@@ -33,21 +34,16 @@ const AppBase = kind({
 		)
 	},
 
-	render: ({onSkinChange, onTogglePopup, onToggleBasicPopup, showPopup, showBasicPopup, skinName, ...rest}) => {
+	render: ({onShowSettings, onSkinChange, onTogglePopup, onToggleBasicPopup, showPopup, showBasicPopup, skinName, ...rest}) => {
 		return (
 			<div>
 				<TabbedPanels
 					{...rest}
-					// orientation="vertical"
-					// tabPosition="after"
 					tabs={[
-						{title: 'Home', icon: 'denselist', view: Home, viewProps: {
-							onTogglePopup,
-							onToggleBasicPopup
-						}},
-						{title: 'Phone', icon: 'funnel', view: Phone},
-						{title: 'HVAC', icon: 'play', view: HVAC},
-						{title: 'Hello!', icon: 'search', view: MainPanel}
+						{title: 'Home', icon: 'denselist'},
+						{title: 'Phone', icon: 'funnel'},
+						{title: 'HVAC', icon: 'play'},
+						{title: 'Hello!', icon: 'search'}
 					]}
 				>
 					<afterTabs>
@@ -58,6 +54,15 @@ const AppBase = kind({
 							<Cell shrink component={Button} type="grid" icon="fullscreen" small onTap={onSkinChange} />
 						</Layout>
 					</afterTabs>
+					<Home
+						onShowSettings={onShowSettings}
+						onTogglePopup={onTogglePopup}
+						onToggleBasicPopup={onToggleBasicPopup}
+					/>
+					<Phone />
+					<HVAC />
+					<MainPanel />
+					<Settings />
 				</TabbedPanels>
 				<Popup
 					onClose={onToggleBasicPopup}
@@ -101,17 +106,25 @@ const AppState = hoc((configHoc, Wrapped) => {
 			({index}) => this.setState(state => state.index === index ? null : {index})
 		).bind(this)
 
+		//TODO: embetter this
+		onShowSettings = handle(
+			adaptEvent(
+				() => ({index: 4}),
+				this.onSelect
+			)
+		);
+
 		onSkinChange = () => {
 			this.setState(({skin}) => ({skin: (skin === 'carbon' ? 'titanium' : 'carbon')}));
-		}
+		};
 
 		onTogglePopup = () => {
 			this.setState(({showPopup}) => ({showPopup: !showPopup}));
-		}
+		};
 
 		onToggleBasicPopup = () => {
 			this.setState(({showBasicPopup}) => ({showBasicPopup: !showBasicPopup}));
-		}
+		};
 
 		render () {
 			const props = {...this.props};
@@ -123,6 +136,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 					{...props}
 					index={this.state.index}
 					onSelect={this.onSelect}
+					onShowSettings={this.onShowSettings}
 					onSkinChange={this.onSkinChange}
 					onTogglePopup={this.onTogglePopup}
 					onToggleBasicPopup={this.onToggleBasicPopup}

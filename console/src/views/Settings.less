@@ -1,0 +1,19 @@
+@import '~@enact/agate/styles/skin.less';
+
+.settingsView {
+	.applySkins({
+		.header, .item, .switchItem {
+			border-bottom: @agate-divider-border-width solid @agate-divider-border-color;
+		}
+
+		.switchItem {
+			width: 100% !important;
+		}
+	});
+}
+
+//.header, .item, .labeledItem {
+//	.applySkins({
+//		border-bottom: @agate-divider-border-width solid @agate-divider-border-color;
+//	})
+//}
