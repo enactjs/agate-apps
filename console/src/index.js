@@ -1,8 +1,8 @@
 /* eslint-disable react/jsx-no-bind */
 
 import React from 'react';
-import {render} from 'react-dom';
 import qs from 'query-string';
+import {render} from 'react-dom';
 
 import App from './App';
 
