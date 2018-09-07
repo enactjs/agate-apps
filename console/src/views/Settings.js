@@ -1,6 +1,8 @@
 import {Cell, Column, Row} from '@enact/ui/Layout';
 import Divider from '@enact/agate/Divider';
-import IconItem from '@enact/agate/IconItem';
+import Item from '@enact/agate/Item';
+import Icon from '@enact/agate/Icon';
+// import IconItem from '@enact/agate/IconItem';
 import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
 import React from 'react';
@@ -14,12 +16,14 @@ const IconItemCell = kind({
 		css: viewCss,
 		className: 'item'
 	},
+	//TODO: IconItem (or Icon I think) is difficult to match the icon style for SwitchItem; this is as close as I can get with bare components
 	render: ({children, icon, ...rest}) => {
 		return (
-			<Cell {...rest}>
-				<IconItem icon={icon}>
-					{children}
-				</IconItem>
+			<Cell component={Item} {...rest}>
+				<Icon>
+					{icon}
+				</Icon>
+				{children}
 			</Cell>
 		);
 	}
