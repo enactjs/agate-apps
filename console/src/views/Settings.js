@@ -32,7 +32,7 @@ const Settings = kind({
 		css: viewCss,
 		className: 'settingsView'
 	},
-	render: ({css, ...rest}) => (
+	render: ({css, onToggleDateTimePopup, ...rest}) => (
 		<Panel {...rest}>
 			<Row className="enact-fit">
 				<Cell />
@@ -52,6 +52,7 @@ const Settings = kind({
 					<SwitchItemCell
 						icon="star"
 						noToggle
+						onTap={onToggleDateTimePopup}
 					>
 						Date & Time
 					</SwitchItemCell>

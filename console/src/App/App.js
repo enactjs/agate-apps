@@ -34,7 +34,18 @@ const AppBase = kind({
 		)
 	},
 
-	render: ({onShowSettings, onSkinChange, onTogglePopup, onToggleBasicPopup, showPopup, showBasicPopup, skinName, ...rest}) => {
+	render: ({
+				 onShowSettings,
+				 onSkinChange,
+				 onTogglePopup,
+				 onToggleBasicPopup,
+				 onToggleDateTimePopup,
+				 showPopup,
+				 showBasicPopup,
+				 showDateTimePopup,
+				 skinName,
+				 ...rest
+	}) => {
 		return (
 			<div>
 				<TabbedPanels
@@ -62,7 +73,9 @@ const AppBase = kind({
 					<Phone />
 					<HVAC />
 					<MainPanel />
-					<Settings />
+					<Settings
+						onToggleDateTimePopup={onToggleDateTimePopup}
+					/>
 				</TabbedPanels>
 				<Popup
 					onClose={onToggleBasicPopup}
@@ -81,6 +94,19 @@ const AppBase = kind({
 					This is an example of a popup with a body section and a title. Plus there&apos;s buttons!
 					<buttons>
 						<Button>Enable Transport Mode</Button>
+					</buttons>
+				</Popup>
+				<Popup
+					onClose={onToggleDateTimePopup}
+					open={showDateTimePopup}
+					closeButton
+				>
+					<title>
+						Date & Time
+					</title>
+					Date and time pickers go here
+					<buttons>
+						<Button onTap={onToggleDateTimePopup}>Set Date & Time</Button>
 					</buttons>
 				</Popup>
 			</div>
@@ -126,6 +152,10 @@ const AppState = hoc((configHoc, Wrapped) => {
 			this.setState(({showBasicPopup}) => ({showBasicPopup: !showBasicPopup}));
 		};
 
+		onToggleDateTimePopup = () => {
+			this.setState(({showDateTimePopup}) => ({showDateTimePopup: !showDateTimePopup}));
+		};
+
 		render () {
 			const props = {...this.props};
 
@@ -140,9 +170,11 @@ const AppState = hoc((configHoc, Wrapped) => {
 					onSkinChange={this.onSkinChange}
 					onTogglePopup={this.onTogglePopup}
 					onToggleBasicPopup={this.onToggleBasicPopup}
+					onToggleDateTimePopup={this.onToggleDateTimePopup}
 					orientation={(this.state.skin === 'titanium') ? 'horizontal' : 'vertical'}
 					showPopup={this.state.showPopup}
 					showBasicPopup={this.state.showBasicPopup}
+					showDateTimePopup={this.state.showDateTimePopup}
 					skin={this.state.skin}
 					skinName={this.state.skin}
 				/>
