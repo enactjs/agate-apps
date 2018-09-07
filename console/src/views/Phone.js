@@ -1,17 +1,16 @@
+
 import Button from '@enact/agate/Button';
-import Icon from '@enact/agate/Icon';
 import Input from '@enact/agate/Input';
 import Changeable from '@enact/ui/Changeable';
-import Toggleable from '@enact/ui/Toggleable';
-import {Column, Cell} from '@enact/ui/Layout';
 import Scroller from '@enact/ui/Scroller';
-import {adaptEvent, forKey, forward, handle, oneOf} from '@enact/core/handle';
+import Icon from '@enact/agate/Icon';
+import {Column, Cell} from '@enact/ui/Layout';
+import {adaptEvent, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import CallPopup from '../components/CallPopup';
 import Dialer from '../components/Dialer';
 import ContactThumbnail from '../components/ContactThumbnail';
 import css from './Phone.less';
@@ -23,34 +22,21 @@ const contacts = [
 	},
 	{
 		name: 'Tree',
-		number:  '650 476 9240'
+		number:  '111 111 1111'
 	},
 	{
 		name: 'React',
-		number:  '650 476 9240'
+		number:  '222 222 2222'
 	},
 	{
 		name: 'JavaScript',
-		number:  '650 476 9240'
+		number:  '333 333 3333'
 	},
 	{
 		name: 'Goo',
-		number:  '650 476 9240'
+		number:  '444 444 4444'
 	},
 ]
-
-const forwardClear = adaptEvent(
-	(ev, {value}) => ({value: value ? value.substring(0, value.length - 1) : ''}),
-	forward('onChange')
-);
-
-const isFromDecorator = ({target}) => target.nodeName !== 'INPUT';
-
-const isDigit = ({keyCode}) => keyCode >= 48 && keyCode <= 57;
-const appendValue = appender => adaptEvent(
-	(ev, {value}) => ({value: `${value}${appender(ev)}`}),
-	forward('onChange')
-);
 
 const PhoneBase = kind({
 	name: 'Phone',
@@ -61,8 +47,6 @@ const PhoneBase = kind({
 
 	propTypes: {
 		onChange: PropTypes.func,
-		onTogglePopup: PropTypes.func,
-		showPopup: PropTypes.bool,
 		value: PropTypes.string
 	},
 
@@ -71,69 +55,67 @@ const PhoneBase = kind({
 	},
 
 	handlers: {
-		handleInputKeyDown: handle(
-			isFromDecorator,
-			oneOf(
-				[forKey('backspace'), forwardClear],
-				[isDigit, appendValue(ev => ev.keyCode - 48)]
+		onClear: handle(
+			adaptEvent(
+				(ev, {value}) => ({value: value ? value.substring(0, value.length - 1) : ''}),
+				forward('onChange')
 			)
 		),
-		onClear: handle(forwardClear),
-		onSelectDigit: handle(appendValue(ev => ev.value))
+		onSelectDigit: handle(
+			adaptEvent(
+				({value: digit}, {value}) => ({value: `${value}${digit}`}),
+				forward('onChange')
+			)
+		),
+		onContactClick: handle(
+			adaptEvent(
+				(value) => ({value}),
+				forward('onChange')
+			)
+		),
 	},
 
-	render: ({handleInputKeyDown, onChange, onClear, onSelectDigit, onTogglePopup, showPopup, value, ...rest}) => {
-		const	contactList = contacts.map(contact => <ContactThumbnail contact={contact}/>)
+
+	render: ({onChange, onClear, onSelectDigit, onContactClick, value, ...rest}) => {
+		const	contactList = contacts.map(contact => {
+			return (
+				<ContactThumbnail
+					contact={contact}
+					onClick={onContactClick} />
+			);
+		})
 		return (
-		<Panel {...rest}>
-			<Column align="center">
-				<Cell shrink className="number-field">
-					<Icon>user</Icon>
-					<Input
-						dismissOnEnter
-						onKeyDown={handleInputKeyDown}
-						onChange={onChange}
-						placeholder="Phone Number ..."
-						type="number"
-						value={value}
-					/>
-					<Icon onClick={onClear} small>\u232B</Icon>
-				</Cell>
-				<Cell className="dialer-grid">
-					<Dialer align="center center" onSelectDigit={onSelectDigit} />
-				</Cell>
-				<Cell shrink className="call">
-					<Button
-						disabled={!value}
-						onClick={onTogglePopup}
-						type="grid"
-						highlighted
-						style={{width: '300px'}}
+			<Panel {...rest}>
+				<Column align="center">
+					<Cell shrink className="number-field">
+						<Icon>user</Icon>
+						<Input
+							onChange={onChange}
+							placeholder="Phone Number ..."
+							value={value}
+						/>
+						<Icon onClick={onClear} css={css} >{"\u232B"}</Icon>
+					</Cell>
+					<Cell className={css.dialer}>
+						<Dialer align="center center" onSelectDigit={onSelectDigit} />
+					</Cell>
+					<Cell shrink className="call">
+						<Button type="grid" highlighted style={{width: '300px'}}>Call</Button>
+					</Cell>
+					<Cell
+						component={Scroller}
+						shrink
+						className={css.contactsList}
+						direction="horizontal"
 					>
-						Call
-					</Button>
-				</Cell>
-				<Cell shrink className="contacts-cell">
-					<Scroller className="" direction="horizontal">
-						<div className={css.contacts}>{contactList}</div>
-					</Scroller>
-				</Cell>
-			</Column>
-			<CallPopup
-				contactName=""
-				onCallEnd={onTogglePopup}
-				open={showPopup}
-				phoneNumber={value}
-			/>
-		</Panel>
-	)}
+						{contactList}
+					</Cell>
+				</Column>
+			</Panel>
+		)
+	}
 });
 
-const Phone = Toggleable(
-	{prop: 'showPopup', toggle: 'onTogglePopup'},
-	Changeable(
-		PhoneBase
-	)
-);
+const Phone = Changeable(PhoneBase);
 
 export default Phone;
