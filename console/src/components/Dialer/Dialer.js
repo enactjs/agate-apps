@@ -5,6 +5,25 @@ import React from 'react';
 
 import css from './Dialer.less';
 
+const Digit = kind({
+	name: 'Digit',
+
+	handlers: {
+		onSelect: (ev, {children, onSelect}) => onSelect && onSelect({
+			type: 'onSelect',
+			value: children
+		})
+	},
+
+	render: ({children, onSelect, subtitle, ...rest}) => {
+		return (
+			<Cell shrink component={Button} type="grid" data-subtitle={subtitle} {...rest} onClick={onSelect}>
+				{children}
+			</Cell>
+		);
+	}
+});
+
 const Dialer = kind({
 	name: 'Dialer',
 
@@ -13,34 +32,34 @@ const Dialer = kind({
 		className: 'dialer'
 	},
 
-	render: (props) => (
-		<Column {...props}>
+	render: ({onSelectDigit, ...rest}) => (
+		<Column {...rest}>
 			<Cell shrink className={css.row}>
 				<Row align="center center">
-					<Cell shrink component={Button} type="grid">1</Cell>
-					<Cell shrink component={Button} type="grid" data-subtitle="ABC">2</Cell>
-					<Cell shrink component={Button} type="grid" data-subtitle="DEF">3</Cell>
+					<Digit onSelect={onSelectDigit}>1</Digit>
+					<Digit subtitle="ABC" onSelect={onSelectDigit}>2</Digit>
+					<Digit subtitle="DEF" onSelect={onSelectDigit}>3</Digit>
 				</Row>
 			</Cell>
 			<Cell shrink className={css.row}>
 				<Row align="center center">
-					<Cell shrink component={Button} type="grid" data-subtitle="GHI">4</Cell>
-					<Cell shrink component={Button} type="grid" data-subtitle="JKL">5</Cell>
-					<Cell shrink component={Button} type="grid" data-subtitle="MNO">6</Cell>
+					<Digit subtitle="GHI" onSelect={onSelectDigit}>4</Digit>
+					<Digit subtitle="JKL" onSelect={onSelectDigit}>5</Digit>
+					<Digit subtitle="MNO" onSelect={onSelectDigit}>6</Digit>
 				</Row>
 			</Cell>
 			<Cell shrink className={css.row}>
 				<Row align="center center">
-					<Cell shrink component={Button} type="grid" data-subtitle="PQRS">7</Cell>
-					<Cell shrink component={Button} type="grid" data-subtitle="TUV">8</Cell>
-					<Cell shrink component={Button} type="grid" data-subtitle="WXYZ">9</Cell>
+					<Digit subtitle="PQRS" onSelect={onSelectDigit}>7</Digit>
+					<Digit subtitle="TUV" onSelect={onSelectDigit}>8</Digit>
+					<Digit subtitle="WXYZ" onSelect={onSelectDigit}>9</Digit>
 				</Row>
 			</Cell>
 			<Cell shrink className={css.row}>
 				<Row align="center center">
-					<Cell shrink component={Button} type="grid">*</Cell>
-					<Cell shrink component={Button} type="grid" data-subtitle="+">0</Cell>
-					<Cell shrink component={Button} type="grid">#</Cell>
+					<Digit onSelect={onSelectDigit}>*</Digit>
+					<Digit subtitle="+" onSelect={onSelectDigit}>0</Digit>
+					<Digit onSelect={onSelectDigit}>#</Digit>
 				</Row>
 			</Cell>
 		</Column>
