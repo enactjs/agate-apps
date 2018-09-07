@@ -9,12 +9,11 @@ import icons from './icons';
 import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
-ToggleButton.displayName = 'Button';
-const Config = mergeComponentMetadata('Button', UiButton, ToggleButtonBase, ToggleButton);
+ToggleButton.displayName = 'ToggleButton';
+const Config = mergeComponentMetadata('ToggleButton', UiButton, ToggleButtonBase, ToggleButton);
 
 // Set up some defaults for info and knobs
 const prop = {
-	casing: ['preserve', 'sentence', 'word', 'upper'],
 	icons: ['', ...icons]
 };
 
