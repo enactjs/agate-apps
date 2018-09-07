@@ -12,7 +12,6 @@ import {TabbedPanels} from '@enact/agate/Panels';
 import Clock from '../components/Clock';
 import Home from '../views/Home';
 import HVAC from '../views/HVAC';
-import MainPanel from '../views/MainPanel';
 import Phone from '../views/Phone';
 import Settings from '../views/Settings';
 
@@ -53,8 +52,7 @@ const AppBase = kind({
 					tabs={[
 						{title: 'Home', icon: 'denselist'},
 						{title: 'Phone', icon: 'funnel'},
-						{title: 'HVAC', icon: 'play'},
-						{title: 'Hello!', icon: 'search'}
+						{title: 'HVAC', icon: 'play'}
 					]}
 				>
 					<afterTabs>
@@ -72,7 +70,6 @@ const AppBase = kind({
 					/>
 					<Phone />
 					<HVAC />
-					<MainPanel />
 					<Settings
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
@@ -135,7 +132,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 		//TODO: embetter this
 		onShowSettings = handle(
 			adaptEvent(
-				() => ({index: 4}),
+				() => ({index: 3}),
 				this.onSelect
 			)
 		);
