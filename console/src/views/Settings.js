@@ -16,7 +16,8 @@ const SwitchItemCell =  kind({
 	computed: {
 		className: ({css, noToggle, styler}) => styler.append(noToggle ? css.noToggle : '')
 	},
-	render: ({css, noToggle, ...rest}) => {
+	render: ({css, ...rest}) => {
+		delete rest.noToggle;
 		return (
 			<Cell shrink>
 				<SwitchItem css={css} {...rest} />
