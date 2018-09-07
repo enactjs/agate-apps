@@ -15,7 +15,7 @@ import CallPopup from '../components/CallPopup';
 import Dialer from '../components/Dialer';
 import ContactThumbnail from '../components/ContactThumbnail';
 import css from './Phone.less';
-console.log(css)
+
 const contacts = [
 	{
 		name: 'Hailey',
