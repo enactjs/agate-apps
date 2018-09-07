@@ -12,7 +12,6 @@ import React from 'react';
 import Clock from '../components/Clock';
 import Home from '../views/Home';
 import HVAC from '../views/HVAC';
-import MainPanel from '../views/MainPanel';
 import Phone from '../views/Phone';
 
 import css from './App.less';
@@ -38,7 +37,6 @@ const AppBase = kind({
 			<div>
 				<TabbedPanels
 					{...rest}
-					// orientation="vertical"
 					// tabPosition="after"
 					tabs={[
 						{title: 'Home', icon: 'denselist', view: Home, viewProps: {
@@ -46,8 +44,7 @@ const AppBase = kind({
 							onToggleBasicPopup
 						}},
 						{title: 'Phone', icon: 'funnel', view: Phone},
-						{title: 'HVAC', icon: 'play', view: HVAC},
-						{title: 'Hello!', icon: 'search', view: MainPanel}
+						{title: 'HVAC', icon: 'play', view: HVAC}
 					]}
 				>
 					<afterTabs>
