@@ -4,14 +4,40 @@ import Input from '@enact/agate/Input';
 import Changeable from '@enact/ui/Changeable';
 import Toggleable from '@enact/ui/Toggleable';
 import {Column, Cell} from '@enact/ui/Layout';
+import Scroller from '@enact/ui/Scroller';
 import {adaptEvent, forKey, forward, handle, oneOf} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Dialer from '../components/Dialer';
 import CallPopup from '../components/CallPopup';
+import Dialer from '../components/Dialer';
+import ContactThumbnail from '../components/ContactThumbnail';
+import css from './Phone.less';
+console.log(css)
+const contacts = [
+	{
+		name: 'Hailey',
+		number:  '650 476 9240'
+	},
+	{
+		name: 'Tree',
+		number:  '650 476 9240'
+	},
+	{
+		name: 'React',
+		number:  '650 476 9240'
+	},
+	{
+		name: 'JavaScript',
+		number:  '650 476 9240'
+	},
+	{
+		name: 'Goo',
+		number:  '650 476 9240'
+	},
+]
 
 const forwardClear = adaptEvent(
 	(ev, {value}) => ({value: value ? value.substring(0, value.length - 1) : ''}),
@@ -28,6 +54,10 @@ const appendValue = appender => adaptEvent(
 
 const PhoneBase = kind({
 	name: 'Phone',
+	styles: {
+		css,
+		className: 'phone'
+	},
 
 	propTypes: {
 		onChange: PropTypes.func,
@@ -52,7 +82,9 @@ const PhoneBase = kind({
 		onSelectDigit: handle(appendValue(ev => ev.value))
 	},
 
-	render: ({handleInputKeyDown, onChange, onClear, onSelectDigit, onTogglePopup, showPopup, value, ...rest}) => (
+	render: ({handleInputKeyDown, onChange, onClear, onSelectDigit, onTogglePopup, showPopup, value, ...rest}) => {
+		const	contactList = contacts.map(contact => <ContactThumbnail contact={contact}/>)
+		return (
 		<Panel {...rest}>
 			<Column align="center">
 				<Cell shrink className="number-field">
@@ -81,6 +113,11 @@ const PhoneBase = kind({
 						Call
 					</Button>
 				</Cell>
+				<Cell shrink className="contacts-cell">
+					<Scroller className="" direction="horizontal">
+						<div className={css.contacts}>{contactList}</div>
+					</Scroller>
+				</Cell>
 			</Column>
 			<CallPopup
 				contactName=""
@@ -89,7 +126,7 @@ const PhoneBase = kind({
 				phoneNumber={value}
 			/>
 		</Panel>
-	)
+	)}
 });
 
 const Phone = Toggleable(
