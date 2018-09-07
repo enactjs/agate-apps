@@ -1,18 +1,19 @@
+import {adaptEvent, forward, handle} from '@enact/core/handle';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
-import {TabbedPanels} from '@enact/agate/Panels';
-import Popup from '@enact/agate/Popup';
-import {adaptEvent, forward, handle} from '@enact/core/handle';
+import compose from 'ramda/src/compose';
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import Layout, {Cell} from '@enact/ui/Layout';
-import compose from 'ramda/src/compose';
+import Popup from '@enact/agate/Popup';
 import React from 'react';
+import {TabbedPanels} from '@enact/agate/Panels';
 
 import Clock from '../components/Clock';
 import Home from '../views/Home';
 import HVAC from '../views/HVAC';
 import Phone from '../views/Phone';
+import Settings from '../views/Settings';
 
 import css from './App.less';
 
@@ -32,19 +33,27 @@ const AppBase = kind({
 		)
 	},
 
-	render: ({onSkinChange, onTogglePopup, onToggleBasicPopup, showPopup, showBasicPopup, skinName, ...rest}) => {
+	render: ({
+		onShowSettings,
+		onShowHVAC,
+		onSkinChange,
+		onTogglePopup,
+		onToggleBasicPopup,
+		onToggleDateTimePopup,
+		showPopup,
+		showBasicPopup,
+		showDateTimePopup,
+		skinName,
+		...rest
+	}) => {
 		return (
 			<div>
 				<TabbedPanels
 					{...rest}
-					// tabPosition="after"
 					tabs={[
-						{title: 'Home', icon: 'denselist', view: Home, viewProps: {
-							onTogglePopup,
-							onToggleBasicPopup
-						}},
-						{title: 'Phone', icon: 'funnel', view: Phone},
-						{title: 'HVAC', icon: 'play', view: HVAC}
+						{title: 'Home', icon: 'denselist'},
+						{title: 'Phone', icon: 'funnel'},
+						{title: 'HVAC', icon: 'play'}
 					]}
 				>
 					<afterTabs>
@@ -55,6 +64,17 @@ const AppBase = kind({
 							<Cell shrink component={Button} type="grid" icon="fullscreen" small onTap={onSkinChange} />
 						</Layout>
 					</afterTabs>
+					<Home
+						onShowHVAC={onShowHVAC}
+						onShowSettings={onShowSettings}
+						onTogglePopup={onTogglePopup}
+						onToggleBasicPopup={onToggleBasicPopup}
+					/>
+					<Phone />
+					<HVAC />
+					<Settings
+						onToggleDateTimePopup={onToggleDateTimePopup}
+					/>
 				</TabbedPanels>
 				<Popup
 					onClose={onToggleBasicPopup}
@@ -73,6 +93,19 @@ const AppBase = kind({
 					This is an example of a popup with a body section and a title. Plus there&apos;s buttons!
 					<buttons>
 						<Button>Enable Transport Mode</Button>
+					</buttons>
+				</Popup>
+				<Popup
+					onClose={onToggleDateTimePopup}
+					open={showDateTimePopup}
+					closeButton
+				>
+					<title>
+						Date & Time
+					</title>
+					Date and time pickers go here
+					<buttons>
+						<Button onTap={onToggleDateTimePopup}>Set Date & Time</Button>
 					</buttons>
 				</Popup>
 			</div>
@@ -98,17 +131,36 @@ const AppState = hoc((configHoc, Wrapped) => {
 			({index}) => this.setState(state => state.index === index ? null : {index})
 		).bind(this)
 
+		//TODO: embetter this
+		onShowSettings = handle(
+			adaptEvent(
+				() => ({index: 3}),
+				this.onSelect
+			)
+		);
+
+		onShowHVAC = handle(
+			adaptEvent(
+				() => ({index: 2}),
+				this.onSelect
+			)
+		);
+
 		onSkinChange = () => {
 			this.setState(({skin}) => ({skin: (skin === 'carbon' ? 'titanium' : 'carbon')}));
-		}
+		};
 
 		onTogglePopup = () => {
 			this.setState(({showPopup}) => ({showPopup: !showPopup}));
-		}
+		};
 
 		onToggleBasicPopup = () => {
 			this.setState(({showBasicPopup}) => ({showBasicPopup: !showBasicPopup}));
-		}
+		};
+
+		onToggleDateTimePopup = () => {
+			this.setState(({showDateTimePopup}) => ({showDateTimePopup: !showDateTimePopup}));
+		};
 
 		render () {
 			const props = {...this.props};
@@ -120,12 +172,16 @@ const AppState = hoc((configHoc, Wrapped) => {
 					{...props}
 					index={this.state.index}
 					onSelect={this.onSelect}
+					onShowSettings={this.onShowSettings}
+					onShowHVAC={this.onShowHVAC}
 					onSkinChange={this.onSkinChange}
 					onTogglePopup={this.onTogglePopup}
 					onToggleBasicPopup={this.onToggleBasicPopup}
+					onToggleDateTimePopup={this.onToggleDateTimePopup}
 					orientation={(this.state.skin === 'titanium') ? 'horizontal' : 'vertical'}
 					showPopup={this.state.showPopup}
 					showBasicPopup={this.state.showBasicPopup}
+					showDateTimePopup={this.state.showDateTimePopup}
 					skin={this.state.skin}
 					skinName={this.state.skin}
 				/>
