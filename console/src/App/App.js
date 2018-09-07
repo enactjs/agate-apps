@@ -34,16 +34,17 @@ const AppBase = kind({
 	},
 
 	render: ({
-				 onShowSettings,
-				 onSkinChange,
-				 onTogglePopup,
-				 onToggleBasicPopup,
-				 onToggleDateTimePopup,
-				 showPopup,
-				 showBasicPopup,
-				 showDateTimePopup,
-				 skinName,
-				 ...rest
+		onShowSettings,
+		onShowHVAC,
+		onSkinChange,
+		onTogglePopup,
+		onToggleBasicPopup,
+		onToggleDateTimePopup,
+		showPopup,
+		showBasicPopup,
+		showDateTimePopup,
+		skinName,
+		...rest
 	}) => {
 		return (
 			<div>
@@ -64,6 +65,7 @@ const AppBase = kind({
 						</Layout>
 					</afterTabs>
 					<Home
+						onShowHVAC={onShowHVAC}
 						onShowSettings={onShowSettings}
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}
@@ -137,6 +139,13 @@ const AppState = hoc((configHoc, Wrapped) => {
 			)
 		);
 
+		onShowHVAC = handle(
+			adaptEvent(
+				() => ({index: 2}),
+				this.onSelect
+			)
+		);
+
 		onSkinChange = () => {
 			this.setState(({skin}) => ({skin: (skin === 'carbon' ? 'titanium' : 'carbon')}));
 		};
@@ -164,6 +173,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 					index={this.state.index}
 					onSelect={this.onSelect}
 					onShowSettings={this.onShowSettings}
+					onShowHVAC={this.onShowHVAC}
 					onSkinChange={this.onSkinChange}
 					onTogglePopup={this.onTogglePopup}
 					onToggleBasicPopup={this.onToggleBasicPopup}

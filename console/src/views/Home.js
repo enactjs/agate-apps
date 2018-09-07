@@ -21,13 +21,13 @@ const HomeIconCell = kind({
 const Home = kind({
 	name: 'Home',
 
-	render: ({onShowSettings, onTogglePopup, onToggleBasicPopup, ...rest}) => {
+	render: ({onShowHVAC, onShowSettings, onTogglePopup, onToggleBasicPopup, ...rest}) => {
 		return(
 			<Panel {...rest}>
 				<Column align="center center">
 					<Cell shrink>
 						<Row align="start center">
-							<HomeIconCell icon="rollforward">HVAC</HomeIconCell>
+							<HomeIconCell icon="rollforward" onClick={onShowHVAC}>HVAC</HomeIconCell>
 							<HomeIconCell icon="exitfullscreen">Navigation</HomeIconCell>
 							<HomeIconCell icon="info">Phone</HomeIconCell>
 						</Row>
