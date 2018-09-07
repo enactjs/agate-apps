@@ -1,8 +1,5 @@
 import {Cell, Column, Row} from '@enact/ui/Layout';
 import Divider from '@enact/agate/Divider';
-import Item from '@enact/agate/Item';
-import Icon from '@enact/agate/Icon';
-// import IconItem from '@enact/agate/IconItem';
 import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
 import React from 'react';
@@ -10,30 +7,20 @@ import SwitchItem from '@enact/agate/SwitchItem';
 
 import viewCss from './Settings.less';
 
-const IconItemCell = kind({
-	name: 'IconItemCell',
-	styles: {
-		css: viewCss,
-		className: 'item'
-	},
-	//TODO: IconItem (or Icon I think) is difficult to match the icon style for SwitchItem; this is as close as I can get with bare components
-	render: ({children, icon, ...rest}) => {
-		return (
-			<Cell component={Item} {...rest}>
-				<Icon>
-					{icon}
-				</Icon>
-				{children}
-			</Cell>
-		);
-	}
-});
-
 const SwitchItemCell =  kind({
 	name: 'SwitchItemCell',
-	render: (props) => {
+	styles: {
+		css: viewCss,
+		className: 'switchItem'
+	},
+	computed: {
+		className: ({css, noToggle, styler}) => styler.append(noToggle ? css.noToggle : '')
+	},
+	render: ({css, noToggle, ...rest}) => {
 		return (
-			<Cell component={SwitchItem} {...props} />
+			<Cell shrink>
+				<SwitchItem css={css} {...rest} />
+			</Cell>
 		);
 	}
 });
@@ -44,13 +31,12 @@ const Settings = kind({
 		css: viewCss,
 		className: 'settingsView'
 	},
-
 	render: ({css, ...rest}) => (
 		<Panel {...rest}>
 			<Row className="enact-fit">
 				<Cell />
 				<Cell
-					align="center"
+					className={css.content}
 					component={Column}
 				>
 					<Cell />
@@ -62,29 +48,31 @@ const Settings = kind({
 					>
 						Settings
 					</Cell>
-					<IconItemCell
+					<SwitchItemCell
 						icon="star"
-						shrink
+						noToggle
 					>
 						Date & Time
-					</IconItemCell>
+					</SwitchItemCell>
 					<SwitchItemCell
 						icon="bulletlist"
-						shrink
 					>
 						Bluetooth
 					</SwitchItemCell>
 					<SwitchItemCell
 						icon="gear"
-						shrink
 					>
 						WiFi
+					</SwitchItemCell>
+					<SwitchItemCell
+						icon="rollforward"
+					>
+						Turbo
 					</SwitchItemCell>
 					<SwitchItemCell
 						icon="arrowlargeup"
 						offText="disarmed"
 						onText="armed"
-						shrink
 					>
 						Ejection Seat
 					</SwitchItemCell>

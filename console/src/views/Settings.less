@@ -1,6 +1,29 @@
 @import '~@enact/agate/styles/skin.less';
 
 .settingsView {
+
+	.content {
+		justify-content: center;
+		min-width: 50%;
+	}
+
+	.switchItem {
+		//TODO: turn this into a variable
+		min-height: 85px;
+
+		//TODO: figure out why setting the color for label is necessary
+		.label {
+			color: inherit;
+		}
+
+		&.noToggle {
+
+			.switchIcon, .label {
+				display: none;
+			}
+		}
+	}
+
 	.applySkins({
 		.header, .item {
 			border-bottom: @agate-divider-border-width solid @agate-divider-border-color;
