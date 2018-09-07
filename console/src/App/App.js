@@ -55,9 +55,15 @@ const AppBase = kind({
 				<TabbedPanels
 					{...rest}
 					tabs={[
+<<<<<<< HEAD
 						{title: 'Home', icon: 'denselist'},
 						{title: 'Phone', icon: 'phone'},
 						{title: 'HVAC', icon: 'temperature'}
+=======
+						{title: 'Phone', icon: 'funnel'},
+						{title: 'Home', icon: 'denselist'},
+						{title: 'HVAC', icon: 'play'}
+>>>>>>> .
 					]}
 				>
 					<afterTabs>
