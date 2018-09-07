@@ -50,7 +50,7 @@ const Settings = kind({
 						Settings
 					</Cell>
 					<SwitchItemCell
-						icon="star"
+						icon="ellipsis"
 						noToggle
 						onTap={onToggleDateTimePopup}
 					>
@@ -67,12 +67,12 @@ const Settings = kind({
 						WiFi
 					</SwitchItemCell>
 					<SwitchItemCell
-						icon="rollforward"
+						icon="fan"
 					>
 						Turbo
 					</SwitchItemCell>
 					<SwitchItemCell
-						icon="arrowlargeup"
+						icon="heatseatright"
 						offText="disarmed"
 						onText="armed"
 					>
