@@ -24,7 +24,10 @@ const PhoneBase = kind({
 
 	handlers: {
 		onClear: handle(
-			adaptEvent(() => ({value: ''}), forward('onChange'))
+			adaptEvent(
+				(ev, {value}) => ({value: value ? value.substring(0, value.length - 1) : ''}),
+				forward('onChange')
+			)
 		),
 		onSelectDigit: handle(
 			adaptEvent(
@@ -45,7 +48,7 @@ const PhoneBase = kind({
 						type="number"
 						value={value}
 					/>
-					<Button small icon="closex" onClick={onClear} />
+					<Button small icon="\u232B" onClick={onClear} />
 				</Cell>
 				<Cell className="dialer-grid">
 					<Dialer align="center center" onSelectDigit={onSelectDigit} />
