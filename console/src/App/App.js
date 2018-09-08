@@ -1,10 +1,10 @@
 import {adaptEvent, forward, handle} from '@enact/core/handle';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
+import {Cell, Column} from '@enact/ui/Layout';
 import compose from 'ramda/src/compose';
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
-import Layout, {Cell} from '@enact/ui/Layout';
 import Popup from '@enact/agate/Popup';
 import React from 'react';
 import {TabbedPanels} from '@enact/agate/Panels';
@@ -57,12 +57,12 @@ const AppBase = kind({
 					]}
 				>
 					<afterTabs>
-						<Layout orientation="vertical" align="center space-evenly">
+						<Column align="center space-evenly">
 							<Cell shrink>
 								<Clock />
 							</Cell>
 							<Cell shrink component={Button} type="grid" icon="fullscreen" small onTap={onSkinChange} />
-						</Layout>
+						</Column>
 					</afterTabs>
 					<Home
 						onShowHVAC={onShowHVAC}
@@ -71,6 +71,7 @@ const AppBase = kind({
 						onToggleBasicPopup={onToggleBasicPopup}
 					/>
 					<Phone />
+					{/* eslint-disable-next-line */}
 					<HVAC />
 					<Settings
 						onToggleDateTimePopup={onToggleDateTimePopup}
@@ -90,7 +91,7 @@ const AppBase = kind({
 					<title>
 						{`Popup for ${skinName} skin`}
 					</title>
-					This is an example of a popup with a body section and a title. Plus there&apos;s buttons!
+					This is an example of a popup with a body section and a title. Plus there&apos;re buttons!
 					<buttons>
 						<Button>Enable Transport Mode</Button>
 					</buttons>
@@ -122,6 +123,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 				index: props.defaultIndex || 0,
 				showPopup: false,
 				showBasicPopup: false,
+				showDateTimePopup: false,
 				skin: props.defaultSkin || 'carbon' // 'titanium' alternate.
 			};
 		}

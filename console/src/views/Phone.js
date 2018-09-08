@@ -8,7 +8,7 @@ import {Panel} from '@enact/agate/Panels';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Dialer from '../components/Dialer';
+import {CallPopup, Dialer} from '../components/Dialer';
 
 const PhoneBase = kind({
 	name: 'Phone',
@@ -37,7 +37,7 @@ const PhoneBase = kind({
 		)
 	},
 
-	render: ({onChange, onClear, onSelectDigit, value, ...rest}) => (
+	render: ({onChange, onClear, onSelectDigit, onTogglePopup, showPopup, value, ...rest}) => (
 		<Panel {...rest}>
 			<Column align="center">
 				<Cell shrink className="number-field">
@@ -54,13 +54,37 @@ const PhoneBase = kind({
 					<Dialer align="center center" onSelectDigit={onSelectDigit} />
 				</Cell>
 				<Cell shrink className="call">
-					<Button type="grid" highlighted style={{width: '300px'}}>Call</Button>
+					<Button onClick={onTogglePopup} type="grid" highlighted style={{width: '300px'}}>Call</Button>
 				</Cell>
 			</Column>
+			<CallPopup
+				onTogglePopup={onTogglePopup}
+				open={showPopup}
+				phoneNumber={value}
+			/>
 		</Panel>
 	)
 });
 
-const Phone = Changeable(PhoneBase);
+class PhoneState extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			showPopup: this.props.showPopup
+		};
+	}
+	onTogglePopup = () => {
+		this.setState(({showPopup}) => ({showPopup: !showPopup}));
+	};
+	render () {
+		const props = Object.assign({}, this.state, this.props);
+		props.onTogglePopup = this.onTogglePopup;
+		return (
+			<PhoneBase {...props} />
+		);
+	}
+}
+
+const Phone = Changeable(PhoneState);
 
 export default Phone;

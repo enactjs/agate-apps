@@ -3,6 +3,8 @@ import kind from '@enact/core/kind';
 import {Row, Column, Cell} from '@enact/ui/Layout';
 import React from 'react';
 
+import CallPopup from './CallPopup';
+
 import css from './Dialer.less';
 
 const Digit = kind({
@@ -67,3 +69,4 @@ const Dialer = kind({
 });
 
 export default Dialer;
+export {CallPopup, Dialer};
