@@ -12,14 +12,8 @@ const ContactThumbnail = kind({
 		className: 'contact-thumbnail'
 	},
 
-  handlers: {
-    onClick: (ev) => {
-      console.log(ev.target)
-    }
-  },
-
-	render: ({contact, onClick, ...props}) => (
-		<div {...props} style={{width: '200px'}} onClick={onClick}>
+	render: ({contact, ...props}) => (
+		<div {...props} style={{width: '200px'}}>
       <Icon>hollowstar</Icon>
       <div>
         <p className="contact-name">{contact.name}</p>
