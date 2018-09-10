@@ -1,8 +1,7 @@
-import Button                from '@enact/agate/Button';
 import Divider               from '@enact/agate/Divider';
-import LabeledIconButton     from '@enact/agate/LabeledIconButton';
 import {Panel}               from '@enact/agate/Panels';
 import SliderButton          from '@enact/agate/SliderButton';
+import ToggleButton          from '@enact/agate/ToggleButton';
 import kind                  from '@enact/core/kind';
 import {Row, Cell}           from '@enact/ui/Layout';
 import React                 from 'react';
@@ -29,32 +28,28 @@ const Hvac = kind({
 				{'High'}
 			</SliderButton>
 			<Row className={css.above + ' ' + css.spaced}>
-				<Button icon="plus" />
-				<Button type="grid" className={css.button}>
-					A/C
-				</Button>
-				<Button icon="plus" />
+				<ToggleButton icon="heatseatleft" type="grid" className={css.button} toggleIndicator />
+				<ToggleButton type="grid" className={css.button}>A/C</ToggleButton>
+				<ToggleButton icon="heatseatright" type="grid" className={css.button} toggleIndicator />
 			</Row>
 			<Row className={css.below + ' ' + css.spaced}>
 				<Cell>
 					Picker
 				</Cell>
-				<div>
-					<Button type="grid" className={css.button}>
-						AUTO
-					</Button>
-					<Button type="grid" icon="rollforward" className={css.button} />
+				<div className={css.stackedButtons}>
+					<ToggleButton type="grid" className={css.button}>AUTO</ToggleButton>
+					<ToggleButton type="grid" icon="aircirculation" className={css.button} />
 				</div>
 				<Cell>
 					Picker
 				</Cell>
 			</Row>
 			<Row className={css.spaced}>
-				<LabeledIconButton icon="arrowsmalldown">Down</LabeledIconButton>
-				<LabeledIconButton icon="arrowsmallup">Up</LabeledIconButton>
-				<LabeledIconButton icon="arrowsmallright">Face</LabeledIconButton>
-				<LabeledIconButton icon="hollowstar">Rear</LabeledIconButton>
-				<LabeledIconButton icon="hollowstar">Front</LabeledIconButton>
+				<ToggleButton icon="airdown" />
+				<ToggleButton icon="airup" />
+				<ToggleButton icon="airright" />
+				<ToggleButton icon="defrosterback" />
+				<ToggleButton icon="defrosterfront" />
 			</Row>
 		</Panel>
 	)
