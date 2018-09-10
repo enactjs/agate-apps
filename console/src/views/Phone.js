@@ -1,10 +1,10 @@
 
 import Button from '@enact/agate/Button';
+import Icon from '@enact/agate/Icon';
 import Input from '@enact/agate/Input';
 import Changeable from '@enact/ui/Changeable';
 import Toggleable from '@enact/ui/Toggleable';
 import Scroller from '@enact/ui/Scroller';
-import Icon from '@enact/agate/Icon';
 import {Column, Cell} from '@enact/ui/Layout';
 import {adaptEvent, forKey, forward, handle, oneOf} from '@enact/core/handle';
 import kind from '@enact/core/kind';
@@ -37,7 +37,7 @@ const contacts = [
 	{
 		name: 'Goo',
 		number:  '444 444 4444'
-	},
+	}
 ]
 
 const forwardClear = adaptEvent(
@@ -55,6 +55,7 @@ const appendValue = appender => adaptEvent(
 
 const PhoneBase = kind({
 	name: 'Phone',
+
 	styles: {
 		css,
 		className: 'phone'
@@ -94,6 +95,7 @@ const PhoneBase = kind({
 		const	contactList = contacts.map(contact => {
 			return (
 				<ContactThumbnail
+					key={contact.name}
 					contact={contact}
 					onClick={onContactClick} />
 			);
