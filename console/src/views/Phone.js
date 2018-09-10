@@ -1,6 +1,7 @@
 import Button from '@enact/agate/Button';
 import Input from '@enact/agate/Input';
 import Changeable from '@enact/ui/Changeable';
+import Toggleable from '@enact/ui/Toggleable';
 import {Column, Cell} from '@enact/ui/Layout';
 import {adaptEvent, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
@@ -8,13 +9,16 @@ import {Panel} from '@enact/agate/Panels';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {CallPopup, Dialer} from '../components/Dialer';
+import Dialer from '../components/Dialer';
+import CallPopup from '../components/CallPopup';
 
 const PhoneBase = kind({
 	name: 'Phone',
 
 	propTypes: {
 		onChange: PropTypes.func,
+		onTogglePopup: PropTypes.func,
+		showPopup: PropTypes.bool,
 		value: PropTypes.string
 	},
 
@@ -54,11 +58,20 @@ const PhoneBase = kind({
 					<Dialer align="center center" onSelectDigit={onSelectDigit} />
 				</Cell>
 				<Cell shrink className="call">
-					<Button onClick={onTogglePopup} type="grid" highlighted style={{width: '300px'}}>Call</Button>
+					<Button
+						disabled={!value}
+						onClick={onTogglePopup}
+						type="grid"
+						highlighted
+						style={{width: '300px'}}
+					>
+						Call
+					</Button>
 				</Cell>
 			</Column>
 			<CallPopup
-				onTogglePopup={onTogglePopup}
+				contactName=""
+				onCallEnd={onTogglePopup}
 				open={showPopup}
 				phoneNumber={value}
 			/>
@@ -66,25 +79,11 @@ const PhoneBase = kind({
 	)
 });
 
-class PhoneState extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			showPopup: this.props.showPopup
-		};
-	}
-	onTogglePopup = () => {
-		this.setState(({showPopup}) => ({showPopup: !showPopup}));
-	};
-	render () {
-		const props = Object.assign({}, this.state, this.props);
-		props.onTogglePopup = this.onTogglePopup;
-		return (
-			<PhoneBase {...props} />
-		);
-	}
-}
-
-const Phone = Changeable(PhoneState);
+const Phone = Toggleable(
+	{prop: 'showPopup', toggle: 'onTogglePopup'},
+	Changeable(
+		PhoneBase
+	)
+);
 
 export default Phone;
