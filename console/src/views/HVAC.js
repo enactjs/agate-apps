@@ -36,14 +36,14 @@ const Hvac = kind({
 				<ToggleButton icon="heatseatright" type="grid" className={css.button} toggleIndicator />
 			</Row>
 			<Row className={css.below} align="center space-around">
-				<Picker orientation="vertical" className={css.picker} defaultIndex={3}>
+				<Picker orientation="vertical" className={css.picker}>
 					{temps}
 				</Picker>
 				<div className={css.stackedButtons}>
 					<ToggleButton type="grid" className={css.button}>AUTO</ToggleButton>
 					<ToggleButton type="grid" icon="aircirculation" className={css.button} />
 				</div>
-				<Picker orientation="vertical" className={css.picker} defaultIndex={5}>
+				<Picker orientation="vertical" className={css.picker}>
 					{temps}
 				</Picker>
 			</Row>

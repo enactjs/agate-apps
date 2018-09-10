@@ -24,7 +24,7 @@ const CallPopup = kind({
 	},
 
 	handlers: {
-		handleStopClick: forwardSimpleEvent('onCallEnd')
+		onCallEnd: forwardSimpleEvent('onCallEnd')
 	},
 
 	computed: {

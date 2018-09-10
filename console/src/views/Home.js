@@ -27,7 +27,7 @@ const Home = kind({
 				<Column align="center center">
 					<Cell shrink>
 						<Row align="start center">
-							<HomeIconCell icon="temperature" onClick={onShowHVAC}>HVAC</HomeIconCell>
+							<HomeIconCell icon="temperature" onClick={onShowHVAC}>Climate</HomeIconCell>
 							<HomeIconCell icon="compass">Navigation</HomeIconCell>
 							<HomeIconCell icon="phone" onClick={onShowPhone}>Phone</HomeIconCell>
 						</Row>

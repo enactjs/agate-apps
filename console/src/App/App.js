@@ -57,7 +57,7 @@ const AppBase = kind({
 					tabs={[
 						{title: 'Home', icon: 'denselist'},
 						{title: 'Phone', icon: 'phone'},
-						{title: 'HVAC', icon: 'temperature'}
+						{title: 'Climate', icon: 'temperature'}
 					]}
 				>
 					<afterTabs>
@@ -98,7 +98,7 @@ const AppBase = kind({
 					</title>
 					This is an example of a popup with a body section and a title. Plus there&apos;re buttons!
 					<buttons>
-						<Button>Enable Transport Mode</Button>
+						<Button>Transport Mode</Button>
 					</buttons>
 				</Popup>
 				<Popup
