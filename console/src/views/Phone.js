@@ -1,6 +1,7 @@
 import Button from '@enact/agate/Button';
 import Input from '@enact/agate/Input';
 import Changeable from '@enact/ui/Changeable';
+import Toggleable from '@enact/ui/Toggleable';
 import {Column, Cell} from '@enact/ui/Layout';
 import {adaptEvent, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
@@ -9,12 +10,15 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import Dialer from '../components/Dialer';
+import CallPopup from '../components/CallPopup';
 
 const PhoneBase = kind({
 	name: 'Phone',
 
 	propTypes: {
 		onChange: PropTypes.func,
+		onTogglePopup: PropTypes.func,
+		showPopup: PropTypes.bool,
 		value: PropTypes.string
 	},
 
@@ -37,7 +41,7 @@ const PhoneBase = kind({
 		)
 	},
 
-	render: ({onChange, onClear, onSelectDigit, value, ...rest}) => (
+	render: ({onChange, onClear, onSelectDigit, onTogglePopup, showPopup, value, ...rest}) => (
 		<Panel {...rest}>
 			<Column align="center">
 				<Cell shrink className="number-field">
@@ -54,13 +58,32 @@ const PhoneBase = kind({
 					<Dialer align="center center" onSelectDigit={onSelectDigit} />
 				</Cell>
 				<Cell shrink className="call">
-					<Button type="grid" highlighted style={{width: '300px'}}>Call</Button>
+					<Button
+						disabled={!value}
+						onClick={onTogglePopup}
+						type="grid"
+						highlighted
+						style={{width: '300px'}}
+					>
+						Call
+					</Button>
 				</Cell>
 			</Column>
+			<CallPopup
+				contactName=""
+				onCallEnd={onTogglePopup}
+				open={showPopup}
+				phoneNumber={value}
+			/>
 		</Panel>
 	)
 });
 
-const Phone = Changeable(PhoneBase);
+const Phone = Toggleable(
+	{prop: 'showPopup', toggle: 'onTogglePopup'},
+	Changeable(
+		PhoneBase
+	)
+);
 
 export default Phone;

@@ -67,3 +67,6 @@ const Dialer = kind({
 });
 
 export default Dialer;
+export {
+	Dialer
+};
