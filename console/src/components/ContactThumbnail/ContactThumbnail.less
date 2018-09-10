@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // @import "@agate/styles/skin.less";
 //
 // .thumbnail {
@@ -16,7 +17,24 @@
 =======
 >>>>>>> Added contact thumbnail component
 =======
+=======
+@import '~@enact/agate/styles/skin.less';
+
+>>>>>>> Contact scroller
 .contact-thumbnail {
-  display: inline-block;
+  display: inline-flex;
+  .name {
+    margin-top: 0.7rem;
+  }
+  .number {
+    font-size: 0.7rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .applySkins({
+    .name {
+      color: @agate-highlight;
+    }
+  });
 }
 >>>>>>> merge
