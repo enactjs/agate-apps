@@ -32,7 +32,7 @@ storiesOf('Agate', module)
 				toggleIndicator={boolean('toggleIndicator', Config, true)}
 				toggleOffLabel={text('toggleOffLabel', Config, 'Off')}
 				toggleOnLabel={text('toggleOnLabel', Config, 'On')}
-				type={select('type', ['standard', 'grid'], Config, 'grid')}
+				type={select('type', ['grid', 'standard'], Config, 'standard')}
 			>
 				{text('children', ToggleButton, 'Click me')}
 			</ToggleButton>
