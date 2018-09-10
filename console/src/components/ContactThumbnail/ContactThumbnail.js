@@ -1,5 +1,6 @@
 import kind from '@enact/core/kind';
 import Icon from '@enact/agate/Icon';
+import IconItem from '@enact/agate/IconItem';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -29,11 +30,7 @@ const ContactThumbnail = kind({
 
 	render: ({contact, onClick, ...props}) => (
 		<div {...props} css={css} onClick={onClick} data-number={contact.number}>
-      <Icon>user</Icon>
-      <div>
-        <div className={css.name}>{contact.name}</div>
-        <div className={css.number}>{contact.number}</div>
-		  </div>
+      <IconItem icon="user" label={contact.number} >{contact.name}</IconItem>
 		</div>
 	)
 });
