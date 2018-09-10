@@ -1,0 +1,18 @@
+@import '~@enact/agate/styles/skin.less';
+
+.contact-thumbnail {
+  display: inline-flex;
+  .name {
+    margin-top: 0.7rem;
+  }
+  .number {
+    font-size: 0.7rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .applySkins({
+    .name {
+      color: @agate-highlight;
+    }
+  });
+}
