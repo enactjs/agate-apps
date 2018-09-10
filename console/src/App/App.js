@@ -4,6 +4,7 @@ import Button from '@enact/agate/Button';
 import {Cell, Column} from '@enact/ui/Layout';
 import compose from 'ramda/src/compose';
 import hoc from '@enact/core/hoc';
+import {add} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import Popup from '@enact/agate/Popup';
 import React from 'react';
@@ -16,6 +17,8 @@ import Phone from '../views/Phone';
 import Settings from '../views/Settings';
 
 import css from './App.less';
+
+add('backspace', 8);
 
 const AppBase = kind({
 	name: 'App',
@@ -36,6 +39,7 @@ const AppBase = kind({
 	render: ({
 		onShowSettings,
 		onShowHVAC,
+		onShowPhone,
 		onSkinChange,
 		onTogglePopup,
 		onToggleBasicPopup,
@@ -52,8 +56,8 @@ const AppBase = kind({
 					{...rest}
 					tabs={[
 						{title: 'Home', icon: 'denselist'},
-						{title: 'Phone', icon: 'funnel'},
-						{title: 'HVAC', icon: 'play'}
+						{title: 'Phone', icon: 'phone'},
+						{title: 'HVAC', icon: 'temperature'}
 					]}
 				>
 					<afterTabs>
@@ -66,6 +70,7 @@ const AppBase = kind({
 					</afterTabs>
 					<Home
 						onShowHVAC={onShowHVAC}
+						onShowPhone={onShowPhone}
 						onShowSettings={onShowSettings}
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}
@@ -148,6 +153,13 @@ const AppState = hoc((configHoc, Wrapped) => {
 			)
 		);
 
+		onShowPhone = handle(
+			adaptEvent(
+				() => ({index: 1}),
+				this.onSelect
+			)
+		);
+
 		onSkinChange = () => {
 			this.setState(({skin}) => ({skin: (skin === 'carbon' ? 'titanium' : 'carbon')}));
 		};
@@ -176,6 +188,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 					onSelect={this.onSelect}
 					onShowSettings={this.onShowSettings}
 					onShowHVAC={this.onShowHVAC}
+					onShowPhone={this.onShowPhone}
 					onSkinChange={this.onSkinChange}
 					onTogglePopup={this.onTogglePopup}
 					onToggleBasicPopup={this.onToggleBasicPopup}

@@ -1,9 +1,10 @@
 import Button from '@enact/agate/Button';
+import Icon from '@enact/agate/Icon';
 import Input from '@enact/agate/Input';
 import Changeable from '@enact/ui/Changeable';
 import Toggleable from '@enact/ui/Toggleable';
 import {Column, Cell} from '@enact/ui/Layout';
-import {adaptEvent, forward, handle} from '@enact/core/handle';
+import {adaptEvent, forKey, forward, handle, oneOf} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
 import PropTypes from 'prop-types';
@@ -11,6 +12,19 @@ import React from 'react';
 
 import Dialer from '../components/Dialer';
 import CallPopup from '../components/CallPopup';
+
+const forwardClear = adaptEvent(
+	(ev, {value}) => ({value: value ? value.substring(0, value.length - 1) : ''}),
+	forward('onChange')
+);
+
+const isFromDecorator = ({target}) => target.nodeName !== 'INPUT';
+
+const isDigit = ({keyCode}) => keyCode >= 48 && keyCode <= 57;
+const appendValue = appender => adaptEvent(
+	(ev, {value}) => ({value: `${value}${appender(ev)}`}),
+	forward('onChange')
+);
 
 const PhoneBase = kind({
 	name: 'Phone',
@@ -27,32 +41,31 @@ const PhoneBase = kind({
 	},
 
 	handlers: {
-		onClear: handle(
-			adaptEvent(
-				(ev, {value}) => ({value: value ? value.substring(0, value.length - 1) : ''}),
-				forward('onChange')
+		handleInputKeyDown: handle(
+			isFromDecorator,
+			oneOf(
+				[forKey('backspace'), forwardClear],
+				[isDigit, appendValue(ev => ev.keyCode - 48)]
 			)
 		),
-		onSelectDigit: handle(
-			adaptEvent(
-				({value: digit}, {value}) => ({value: `${value}${digit}`}),
-				forward('onChange')
-			)
-		)
+		onClear: handle(forwardClear),
+		onSelectDigit: handle(appendValue(ev => ev.value))
 	},
 
-	render: ({onChange, onClear, onSelectDigit, onTogglePopup, showPopup, value, ...rest}) => (
+	render: ({handleInputKeyDown, onChange, onClear, onSelectDigit, onTogglePopup, showPopup, value, ...rest}) => (
 		<Panel {...rest}>
 			<Column align="center">
 				<Cell shrink className="number-field">
-					<span>user icon</span>
+					<Icon>user</Icon>
 					<Input
+						dismissOnEnter
+						onKeyDown={handleInputKeyDown}
 						onChange={onChange}
 						placeholder="Phone Number ..."
 						type="number"
 						value={value}
 					/>
-					<Button small icon="\u232B" onClick={onClear} />
+					<Icon onClick={onClear} small>\u232B</Icon>
 				</Cell>
 				<Cell className="dialer-grid">
 					<Dialer align="center center" onSelectDigit={onSelectDigit} />
