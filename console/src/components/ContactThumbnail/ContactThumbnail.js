@@ -1,8 +1,7 @@
-import kind from '@enact/core/kind';
-import Icon from '@enact/agate/Icon';
 import IconItem from '@enact/agate/IconItem';
-import React from 'react';
+import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
+import React from 'react';
 
 import css from './ContactThumbnail.less';
 
@@ -11,7 +10,7 @@ const ContactThumbnail = kind({
 
 	propTypes: {
 		contact: PropTypes.object,
-		onClick: PropTypes.func
+		onSelect: PropTypes.func
 	},
 
 	styles: {
@@ -21,16 +20,19 @@ const ContactThumbnail = kind({
 	},
 
 	handlers: {
-		onClick: (ev, {onClick}) => {
-			if (onClick) {
-				onClick(ev.currentTarget.dataset.number)
+		onSelect: (ev, {onSelect, contact}) => {
+			if (onSelect) {
+				onSelect({
+					type: 'onSelect',
+					contact
+				});
 			}
 		}
 	},
 
-	render: ({contact, onClick, ...props}) => (
-		<div {...props} css={css} onClick={onClick} data-number={contact.number}>
-      <IconItem icon="user" label={contact.number} >{contact.name}</IconItem>
+	render: ({contact, onSelect, ...props}) => (
+		<div {...props} css={css} onClick={onSelect}>
+			<IconItem icon="user" label={contact.number}>{contact.name}</IconItem>
 		</div>
 	)
 });

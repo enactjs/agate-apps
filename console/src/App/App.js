@@ -180,6 +180,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 			const props = {...this.props};
 
 			delete props.defaultIndex;
+			delete props.defaultSkin;
 
 			return (
 				<Wrapped

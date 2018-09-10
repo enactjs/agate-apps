@@ -82,7 +82,7 @@ const PhoneBase = kind({
 		),
 		onContactClick: handle(
 			adaptEvent(
-				(value) => ({value}),
+				({contact}) => ({value: contact.number.replace(/ /g, '')}),
 				forward('onChange')
 			)
 		),
@@ -92,14 +92,6 @@ const PhoneBase = kind({
 
 
 	render: ({handleInputKeyDown, onContactClick, onChange, onClear, onSelectDigit, onTogglePopup, showPopup, value, ...rest}) => {
-		const contactList = contacts.map(contact => {
-			return (
-				<ContactThumbnail
-					key={contact.name}
-					contact={contact}
-					onClick={onContactClick} />
-			);
-		})
 		return (
 			<Panel {...rest}>
 				<Column align="center">
@@ -124,7 +116,8 @@ const PhoneBase = kind({
 							type="grid"
 							highlighted
 							style={{width: '300px'}}
-							>Call
+						>
+							Call
 						</Button>
 					</Cell>
 					<Cell
@@ -133,7 +126,13 @@ const PhoneBase = kind({
 						className={css.contactsList}
 						direction="horizontal"
 					>
-						{contactList}
+						{contacts.map(contact => (
+							<ContactThumbnail
+								key={contact.name}
+								contact={contact}
+								onSelect={onContactClick}
+							/>
+						))}
 					</Cell>
 				</Column>
 				<CallPopup
