@@ -20,7 +20,7 @@ import css from './Phone.less';
 const contacts = [
 	{
 		name: 'Hailey',
-		number:  '650 476 9240'
+		number:  '011 006 1987'
 	},
 	{
 		name: 'Tree',
