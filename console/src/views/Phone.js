@@ -92,7 +92,7 @@ const PhoneBase = kind({
 
 
 	render: ({handleInputKeyDown, onContactClick, onChange, onClear, onSelectDigit, onTogglePopup, showPopup, value, ...rest}) => {
-		const	contactList = contacts.map(contact => {
+		const contactList = contacts.map(contact => {
 			return (
 				<ContactThumbnail
 					key={contact.name}
