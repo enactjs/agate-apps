@@ -7,6 +7,7 @@ import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import Popup from '@enact/agate/Popup';
+import DateTimePicker from '@enact/agate/DateTimePicker';
 import React from 'react';
 import {TabbedPanels} from '@enact/agate/Panels';
 
@@ -109,10 +110,7 @@ const AppBase = kind({
 					<title>
 						Date & Time
 					</title>
-					Date and time pickers go here
-					<buttons>
-						<Button onTap={onToggleDateTimePopup}>Set Date & Time</Button>
-					</buttons>
+					<DateTimePicker onClose={onToggleDateTimePopup}/>
 				</Popup>
 			</div>
 		);
