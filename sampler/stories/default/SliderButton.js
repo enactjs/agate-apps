@@ -1,5 +1,5 @@
 import SliderButton, {SliderButtonBase} from '@enact/agate/SliderButton';
-import {icons} from '@enact/moonstone/Icon';
+import {icons} from '@enact/agate/Icon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
