@@ -1,7 +1,7 @@
 import {adaptEvent, forward, handle} from '@enact/core/handle';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
-import {Cell, Column, Row} from '@enact/ui/Layout';
+import {Cell, Column} from '@enact/ui/Layout';
 import compose from 'ramda/src/compose';
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
