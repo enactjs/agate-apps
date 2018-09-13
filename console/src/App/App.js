@@ -15,6 +15,7 @@ import Clock from '../components/Clock';
 import Home from '../views/Home';
 import HVAC from '../views/HVAC';
 import Phone from '../views/Phone';
+import Radio from '../views/Radio';
 import Settings from '../views/Settings';
 
 import css from './App.less';
@@ -41,6 +42,7 @@ const AppBase = kind({
 		onShowSettings,
 		onShowHVAC,
 		onShowPhone,
+		onShowRadio,
 		onSkinChange,
 		onTogglePopup,
 		onToggleBasicPopup,
@@ -58,7 +60,8 @@ const AppBase = kind({
 					tabs={[
 						{title: 'Home', icon: 'denselist'},
 						{title: 'Phone', icon: 'phone'},
-						{title: 'Climate', icon: 'temperature'}
+						{title: 'Climate', icon: 'temperature'},
+						{title: 'Radio', icon: 'audio'}
 					]}
 				>
 					<afterTabs>
@@ -73,12 +76,14 @@ const AppBase = kind({
 						onShowHVAC={onShowHVAC}
 						onShowPhone={onShowPhone}
 						onShowSettings={onShowSettings}
+						onShowRadio={onShowRadio}
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}
 					/>
 					<Phone />
 					{/* eslint-disable-next-line */}
 					<HVAC />
+					<Radio />
 					<Settings
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
@@ -136,6 +141,14 @@ const AppState = hoc((configHoc, Wrapped) => {
 			({index}) => this.setState(state => state.index === index ? null : {index})
 		).bind(this)
 
+
+		onShowRadio = handle(
+			adaptEvent(
+				() => ({index: 4}),
+				this.onSelect
+			)
+		);
+
 		//TODO: embetter this
 		onShowSettings = handle(
 			adaptEvent(
@@ -157,7 +170,6 @@ const AppState = hoc((configHoc, Wrapped) => {
 				this.onSelect
 			)
 		);
-
 		onSkinChange = () => {
 			this.setState(({skin}) => ({skin: (skin === 'carbon' ? 'titanium' : 'carbon')}));
 		};
@@ -189,6 +201,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 					onShowHVAC={this.onShowHVAC}
 					onShowPhone={this.onShowPhone}
 					onSkinChange={this.onSkinChange}
+					onShowRadio={this.onShowRadio}
 					onTogglePopup={this.onTogglePopup}
 					onToggleBasicPopup={this.onToggleBasicPopup}
 					onToggleDateTimePopup={this.onToggleDateTimePopup}
