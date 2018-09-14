@@ -1,4 +1,4 @@
-import {adaptEvent, forward, handle} from '@enact/core/handle';
+import {forward, handle} from '@enact/core/handle';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
 import {Cell, Column} from '@enact/ui/Layout';
@@ -29,18 +29,9 @@ const AppBase = kind({
 		className: 'app'
 	},
 
-	handlers: {
-		onSelect: handle(
-			// this should probably be done in TabbedPanels to line up the event payload (index)
-			// with the prop but i'm taking a shortcut for now
-			adaptEvent(({selected}) => ({index: selected}), forward('onSelect'))
-		)
-	},
-
 	render: ({
-		onShowSettings,
-		onShowHVAC,
-		onShowPhone,
+		index,
+		onSelect,
 		onSkinChange,
 		onTogglePopup,
 		onToggleBasicPopup,
@@ -60,6 +51,9 @@ const AppBase = kind({
 						{title: 'Phone', icon: 'phone'},
 						{title: 'Climate', icon: 'temperature'}
 					]}
+					onSelect={onSelect}
+					selected={index}
+					index={index}
 				>
 					<afterTabs>
 						<Column align="center space-evenly">
@@ -70,9 +64,7 @@ const AppBase = kind({
 						</Column>
 					</afterTabs>
 					<Home
-						onShowHVAC={onShowHVAC}
-						onShowPhone={onShowPhone}
-						onShowSettings={onShowSettings}
+						onSelect={onSelect}
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}
 					/>
@@ -131,36 +123,28 @@ const AppState = hoc((configHoc, Wrapped) => {
 			};
 		}
 
+		onSelect = (ev) => {
+			const index = ev.selected;
+			this.props.onSelect({index});
+			this.setState(state => state.index === index ? null : {index})
+		}
+
 		onSelect = handle(
 			forward('onSelect'),
-			({index}) => this.setState(state => state.index === index ? null : {index})
+			(ev) => {
+				const index = ev.selected;
+				this.setState(state => state.index === index ? null : {index});
+			}
 		).bind(this)
-
-		//TODO: embetter this
-		onShowSettings = handle(
-			adaptEvent(
-				() => ({index: 3}),
-				this.onSelect
-			)
-		);
-
-		onShowHVAC = handle(
-			adaptEvent(
-				() => ({index: 2}),
-				this.onSelect
-			)
-		);
-
-		onShowPhone = handle(
-			adaptEvent(
-				() => ({index: 1}),
-				this.onSelect
-			)
-		);
 
 		onSkinChange = () => {
 			this.setState(({skin}) => ({skin: (skin === 'carbon' ? 'titanium' : 'carbon')}));
 		};
+
+		onTabChange = (index) => {
+			this.props.onSelect({index});
+			this.setState(state => state.index === index ? null : {index})
+		}
 
 		onTogglePopup = () => {
 			this.setState(({showPopup}) => ({showPopup: !showPopup}));
@@ -185,9 +169,6 @@ const AppState = hoc((configHoc, Wrapped) => {
 					{...props}
 					index={this.state.index}
 					onSelect={this.onSelect}
-					onShowSettings={this.onShowSettings}
-					onShowHVAC={this.onShowHVAC}
-					onShowPhone={this.onShowPhone}
 					onSkinChange={this.onSkinChange}
 					onTogglePopup={this.onTogglePopup}
 					onToggleBasicPopup={this.onToggleBasicPopup}
