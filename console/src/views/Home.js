@@ -22,15 +22,9 @@ const Home = kind({
 	name: 'Home',
 
 	handlers: {
-		onTabChange: (ev, {onTabChange}) => {
+		onTabChange: (ev, {onSelect}) => {
 			if ((ev.keyCode === 13 || ev.type === 'click') && ev.currentTarget.dataset.tabindex) {
-				onTabChange(parseInt(ev.currentTarget.dataset.tabindex));
-			}
-		},
-		onPopupOpen: (ev, {onTabChange}) => {
-			debugger
-			if ((ev.keyCode === 13 || ev.type === 'click') && ev.currentTarget.dataset.tabindex) {
-				onTabChange(parseInt(ev.currentTarget.dataset.tabindex));
+				onSelect({selected: parseInt(ev.currentTarget.dataset.tabindex)});
 			}
 		}
 	},

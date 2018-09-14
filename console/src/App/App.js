@@ -33,7 +33,6 @@ const AppBase = kind({
 		index,
 		onSelect,
 		onSkinChange,
-		onTabChange,
 		onTogglePopup,
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
@@ -65,10 +64,7 @@ const AppBase = kind({
 						</Column>
 					</afterTabs>
 					<Home
-						// onShowHVAC={onShowHVAC}
-						// onShowPhone={onShowPhone}
-						// onShowSettings={onShowSettings}
-						onTabChange={onTabChange}
+						onSelect={onSelect}
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}
 					/>
@@ -130,17 +126,12 @@ const AppState = hoc((configHoc, Wrapped) => {
 		onSelect = (ev) => {
 			const index = ev.selected;
 			this.props.onSelect({index});
-			this.setState(state => state.index === index ? null : {index}, () => console.log(this.state.index))
+			this.setState(state => state.index === index ? null : {index})
 		}
 
 		onSkinChange = () => {
 			this.setState(({skin}) => ({skin: (skin === 'carbon' ? 'titanium' : 'carbon')}));
 		};
-
-		onTabChange = (index) => {
-			this.props.onSelect({index});
-			this.setState(state => state.index === index ? null : {index}, () => console.log(this.state.index))
-		}
 
 		onTogglePopup = () => {
 			this.setState(({showPopup}) => ({showPopup: !showPopup}));
@@ -166,7 +157,6 @@ const AppState = hoc((configHoc, Wrapped) => {
 					index={this.state.index}
 					onSelect={this.onSelect}
 					onSkinChange={this.onSkinChange}
-					onTabChange={this.onTabChange}
 					onTogglePopup={this.onTogglePopup}
 					onToggleBasicPopup={this.onToggleBasicPopup}
 					onToggleDateTimePopup={this.onToggleDateTimePopup}
