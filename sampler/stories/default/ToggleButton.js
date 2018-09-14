@@ -29,7 +29,7 @@ storiesOf('Agate', module)
 				icon={select('icon', prop.icons, Config)}
 				small={boolean('small', Config)}
 				onToggle={action('onToggle')}
-				toggleIndicator={boolean('toggleIndicator', Config, true)}
+				underline={boolean('underline', Config, true)}
 				toggleOffLabel={text('toggleOffLabel', Config, 'Off')}
 				toggleOnLabel={text('toggleOnLabel', Config, 'On')}
 				type={select('type', ['grid', 'standard'], Config, 'standard')}
