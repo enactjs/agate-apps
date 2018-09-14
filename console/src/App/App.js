@@ -144,7 +144,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 
 		onShowRadio = handle(
 			adaptEvent(
-				() => ({index: 4}),
+				() => ({index: 3}),
 				this.onSelect
 			)
 		);
@@ -152,7 +152,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 		//TODO: embetter this
 		onShowSettings = handle(
 			adaptEvent(
-				() => ({index: 3}),
+				() => ({index: 4}),
 				this.onSelect
 			)
 		);
