@@ -9,7 +9,6 @@ import kind from '@enact/core/kind';
 import Popup from '@enact/agate/Popup';
 import DateTimePicker from '@enact/agate/DateTimePicker';
 import React from 'react';
-import {Router, Link} from "@reach/router"
 import {TabbedPanels} from '@enact/agate/Panels';
 
 import Clock from '../components/Clock';
