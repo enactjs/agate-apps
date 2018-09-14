@@ -33,7 +33,6 @@ const AppBase = kind({
 		index,
 		onSelect,
 		onSkinChange,
-		onTabChange,
 		onTogglePopup,
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
@@ -65,10 +64,7 @@ const AppBase = kind({
 						</Column>
 					</afterTabs>
 					<Home
-						// onShowHVAC={onShowHVAC}
-						// onShowPhone={onShowPhone}
-						// onShowSettings={onShowSettings}
-						onTabChange={onTabChange}
+						onSelect={onSelect}
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}
 					/>
@@ -174,7 +170,6 @@ const AppState = hoc((configHoc, Wrapped) => {
 					index={this.state.index}
 					onSelect={this.onSelect}
 					onSkinChange={this.onSkinChange}
-					onTabChange={this.onTabChange}
 					onTogglePopup={this.onTogglePopup}
 					onToggleBasicPopup={this.onToggleBasicPopup}
 					onToggleDateTimePopup={this.onToggleDateTimePopup}
