@@ -20,7 +20,7 @@ const PresetItemBase = kind({
 		className: 'presetItem'
 	},
 
-	render: ({children, css, disabled, icon, label, titleIcon, ...rest}) => (
+	render: ({children, css, disabled, icon, ...rest}) => (
 
 		<SlotItem
       className={css.item}
@@ -31,7 +31,7 @@ const PresetItemBase = kind({
     >
       {children}
       <slotAfter>
-        <Button icon="plus" />
+        <Button icon={icon} />
       </slotAfter>
 		</SlotItem>
 	)
