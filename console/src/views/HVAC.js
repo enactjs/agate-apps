@@ -31,9 +31,9 @@ const Hvac = kind({
 				{'High'}
 			</SliderButton>
 			<Row className={css.above} align="center space-around">
-				<ToggleButton icon="heatseatleft" type="grid" className={css.button} toggleIndicator />
+				<ToggleButton icon="heatseatleft" type="grid" className={css.button} underline />
 				<ToggleButton type="grid" className={css.button}>A/C</ToggleButton>
-				<ToggleButton icon="heatseatright" type="grid" className={css.button} toggleIndicator />
+				<ToggleButton icon="heatseatright" type="grid" className={css.button} underline />
 			</Row>
 			<Row className={css.below} align="center space-around">
 				<Picker orientation="vertical" className={css.picker}>
