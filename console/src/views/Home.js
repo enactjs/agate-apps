@@ -28,7 +28,6 @@ const Home = kind({
 			}
 		},
 		onPopupOpen: (ev, {onTabChange}) => {
-			debugger
 			if ((ev.keyCode === 13 || ev.type === 'click') && ev.currentTarget.dataset.tabindex) {
 				onTabChange(parseInt(ev.currentTarget.dataset.tabindex));
 			}

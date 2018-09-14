@@ -1,4 +1,4 @@
-import {adaptEvent, forward, handle} from '@enact/core/handle';
+import {forward, handle} from '@enact/core/handle';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
 import {Cell, Column} from '@enact/ui/Layout';
@@ -130,8 +130,16 @@ const AppState = hoc((configHoc, Wrapped) => {
 		onSelect = (ev) => {
 			const index = ev.selected;
 			this.props.onSelect({index});
-			this.setState(state => state.index === index ? null : {index}, () => console.log(this.state.index))
+			this.setState(state => state.index === index ? null : {index})
 		}
+
+		onSelect = handle(
+			forward('onSelect'),
+			(ev) => {
+				const index = ev.selected;
+				this.setState(state => state.index === index ? null : {index});
+			}
+		).bind(this)
 
 		onSkinChange = () => {
 			this.setState(({skin}) => ({skin: (skin === 'carbon' ? 'titanium' : 'carbon')}));
@@ -139,7 +147,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 
 		onTabChange = (index) => {
 			this.props.onSelect({index});
-			this.setState(state => state.index === index ? null : {index}, () => console.log(this.state.index))
+			this.setState(state => state.index === index ? null : {index})
 		}
 
 		onTogglePopup = () => {
