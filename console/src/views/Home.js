@@ -21,28 +21,42 @@ const HomeIconCell = kind({
 const Home = kind({
 	name: 'Home',
 
-	render: ({onShowHVAC, onShowPhone, onShowSettings, onTogglePopup, onToggleBasicPopup, ...rest}) => {
+	handlers: {
+		onTabChange: (ev, {onTabChange}) => {
+			if ((ev.keyCode === 13 || ev.type === 'click') && ev.currentTarget.dataset.tabindex) {
+				onTabChange(parseInt(ev.currentTarget.dataset.tabindex));
+			}
+		},
+		onPopupOpen: (ev, {onTabChange}) => {
+			debugger
+			if ((ev.keyCode === 13 || ev.type === 'click') && ev.currentTarget.dataset.tabindex) {
+				onTabChange(parseInt(ev.currentTarget.dataset.tabindex));
+			}
+		}
+	},
+
+	render: ({onTabChange, onTogglePopup, onToggleBasicPopup, onPopupOpen, ...rest}) => {
 		return(
 			<Panel {...rest}>
 				<Column align="center center">
 					<Cell shrink>
 						<Row align="start center">
-							<HomeIconCell icon="temperature" onClick={onShowHVAC}>Climate</HomeIconCell>
+							<HomeIconCell icon="temperature" data-tabindex={2} onKeyUp={onTabChange} onClick={onTabChange}>Climate</HomeIconCell>
 							<HomeIconCell icon="compass">Navigation</HomeIconCell>
-							<HomeIconCell icon="phone" onClick={onShowPhone}>Phone</HomeIconCell>
+							<HomeIconCell icon="phone" data-tabindex={1} onKeyUp={onTabChange} onClick={onTabChange}>Phone</HomeIconCell>
 						</Row>
 					</Cell>
 					<Cell shrink>
 						<Row align="start center">
 							<HomeIconCell icon="audio">Radio</HomeIconCell>
 							<HomeIconCell icon="resumeplay">Multimedia</HomeIconCell>
-							<HomeIconCell icon="repeat" onClick={onToggleBasicPopup}>Connect</HomeIconCell>
+							<HomeIconCell icon="repeat" onKeyUp={onPopupOpen} onClick={onToggleBasicPopup}>Connect</HomeIconCell>
 						</Row>
 					</Cell>
 					<Cell shrink>
 						<Row align="start center">
 							<HomeIconCell icon="repeatdownload">Dashboard</HomeIconCell>
-							<HomeIconCell icon="gear" onClick={onShowSettings}>Settings</HomeIconCell>
+							<HomeIconCell icon="gear" data-tabindex={3} onKeyUp={onTabChange} onClick={onTabChange}>Settings</HomeIconCell>
 							<HomeIconCell icon="closex" onClick={onTogglePopup}>Point of Interest</HomeIconCell>
 						</Row>
 					</Cell>

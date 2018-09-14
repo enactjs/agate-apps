@@ -4,6 +4,7 @@ import Icon from '@enact/agate/Icon';
 import Input from '@enact/agate/Input';
 import Changeable from '@enact/ui/Changeable';
 import Toggleable from '@enact/ui/Toggleable';
+import Spotlight from '@enact/spotlight';
 import Scroller from '@enact/ui/Scroller';
 import {Column, Cell} from '@enact/ui/Layout';
 import {adaptEvent, forKey, forward, handle, oneOf} from '@enact/core/handle';
@@ -40,9 +41,17 @@ const contacts = [
 	}
 ]
 
+let focusedInputIndex = 0;
+
 const forwardClear = adaptEvent(
-	(ev, {value}) => ({value: value ? value.substring(0, value.length - 1) : ''}),
-	forward('onChange')
+	(ev, {value}) => {
+		if (focusedInputIndex) {
+			console.log(focusedInputIndex)
+		}
+		return {value: value ? value.substring(0, value.length - 1) : ''};
+	},
+	forward('onChange'),
+	() => Spotlight.focus(this.inputRef)
 );
 
 const isFromDecorator = ({target}) => target.nodeName !== 'INPUT';
@@ -52,6 +61,11 @@ const appendValue = appender => adaptEvent(
 	(ev, {value}) => ({value: `${value}${appender(ev)}`}),
 	forward('onChange')
 );
+
+const focus = target => {
+	console.log(target)
+	// target.focus();
+}
 
 const PhoneBase = kind({
 	name: 'Phone',
@@ -86,12 +100,18 @@ const PhoneBase = kind({
 				forward('onChange')
 			)
 		),
-		onClear: handle(forwardClear),
+		onInputClick: ev => {
+			if (ev.target.selectionStart) {
+				focusedInputIndex = ev.target.selectionStart;
+			}
+			console.log(focusedInputIndex)
+		},
+		onClear: handle(forwardClear, ev => ev.target.previousElementSibling.firstChild.focus()),
 		onSelectDigit: handle(appendValue(ev => ev.value))
 	},
 
 
-	render: ({handleInputKeyDown, onContactClick, onChange, onClear, onSelectDigit, onTogglePopup, showPopup, value, ...rest}) => {
+	render: ({handleInputKeyDown, onContactClick, onChange, onInputClick, onClear, onSelectDigit, onTogglePopup, showPopup, value, ...rest}) => {
 		return (
 			<Panel {...rest}>
 				<Column align="center">
@@ -101,8 +121,10 @@ const PhoneBase = kind({
 							dismissOnEnter
 							onKeyDown={handleInputKeyDown}
 							onChange={onChange}
+							onClick={onInputClick}
 							placeholder="Phone Number ..."
 							value={value}
+							ref={this.inputRef}
 						/>
 						<Icon onClick={onClear} css={css} >\u232B</Icon>
 					</Cell>
