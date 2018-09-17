@@ -23,7 +23,7 @@ const Home = kind({
 
 	handlers: {
 		onTabChange: (ev, {onSelect}) => {
-			if ((ev.keyCode === 13 || ev.type === 'click') && ev.currentTarget.dataset.tabindex) {
+			if (ev.currentTarget.dataset.tabindex) {
 				onSelect({selected: parseInt(ev.currentTarget.dataset.tabindex)});
 			}
 		}
@@ -35,22 +35,22 @@ const Home = kind({
 				<Column align="center center">
 					<Cell shrink>
 						<Row align="start center">
-							<HomeIconCell icon="temperature" data-tabindex={2} onKeyUp={onTabChange} onClick={onTabChange}>Climate</HomeIconCell>
+							<HomeIconCell icon="temperature" data-tabindex={2} onClick={onTabChange}>Climate</HomeIconCell>
 							<HomeIconCell icon="compass">Navigation</HomeIconCell>
-							<HomeIconCell icon="phone" data-tabindex={1} onKeyUp={onTabChange} onClick={onTabChange}>Phone</HomeIconCell>
+							<HomeIconCell icon="phone" data-tabindex={1} onClick={onTabChange}>Phone</HomeIconCell>
 						</Row>
 					</Cell>
 					<Cell shrink>
 						<Row align="start center">
 							<HomeIconCell icon="audio">Radio</HomeIconCell>
 							<HomeIconCell icon="resumeplay">Multimedia</HomeIconCell>
-							<HomeIconCell icon="repeat" onKeyUp={onPopupOpen} onClick={onToggleBasicPopup}>Connect</HomeIconCell>
+							<HomeIconCell icon="repeat" onClick={onToggleBasicPopup}>Connect</HomeIconCell>
 						</Row>
 					</Cell>
 					<Cell shrink>
 						<Row align="start center">
 							<HomeIconCell icon="repeatdownload">Dashboard</HomeIconCell>
-							<HomeIconCell icon="gear" data-tabindex={3} onKeyUp={onTabChange} onClick={onTabChange}>Settings</HomeIconCell>
+							<HomeIconCell icon="gear" data-tabindex={3} onClick={onTabChange}>Settings</HomeIconCell>
 							<HomeIconCell icon="closex" onClick={onTogglePopup}>Point of Interest</HomeIconCell>
 						</Row>
 					</Cell>
