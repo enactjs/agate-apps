@@ -3,9 +3,11 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {withInfo} from '@storybook/addon-info';
 
-import {select, text} from '../../src/enact-knobs';
+import {boolean, select, text} from '../../src/enact-knobs';
 import iconNames from './icons';
+import {mergeComponentMetadata} from '../../src/utils';
 
+const Config = mergeComponentMetadata('SwitchItem', SwitchItem);
 SwitchItem.displayName = 'SwitchItem';
 
 
@@ -17,6 +19,7 @@ storiesOf('Agate', module)
 		})(() => (
 			<div>
 				<SwitchItem
+					defaultSelected={boolean('defaultSelected', Config, true)}
 					icon={select('icon', ['', ...iconNames], {}, 'music')}
 				>
 					{text('children', 'Sound')}
