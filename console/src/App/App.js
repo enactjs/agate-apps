@@ -17,6 +17,7 @@ import HVAC from '../views/HVAC';
 import Phone from '../views/Phone';
 import AppList from '../views/AppList';
 import Settings from '../views/Settings';
+import DisplaySettings from '../views/DisplaySettings';
 
 import css from './App.less';
 
@@ -37,6 +38,7 @@ const AppBase = kind({
 		onTogglePopup,
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
+		onUserSettingsChange,
 		showPopup,
 		showBasicPopup,
 		showDateTimePopup,
@@ -75,7 +77,12 @@ const AppBase = kind({
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}/>
 					<Settings
+						onSelect={onSelect}
 						onToggleDateTimePopup={onToggleDateTimePopup}
+						onUserSettingsChange={onUserSettingsChange}
+					/>
+					<DisplaySettings
+						onUserSettingsChange={onUserSettingsChange}
 					/>
 				</TabbedPanels>
 				<Popup
@@ -127,16 +134,39 @@ const AppState = hoc((configHoc, Wrapped) => {
 			};
 		}
 
-		onSelect = handle(
-			forward('onSelect'),
-			(ev) => {
-				const {index} = ev;
-				this.setState(state => state.index === index ? null : {index});
+		componentDidMount(){
+			if(!JSON.parse(window.localStorage.getItem(`user${this.state.userId}`))){
+				console.log('saved');
+				window.localStorage.setItem(`user${this.state.userSettings.userId}`, JSON.stringify({...this.state.userSettings}));
 			}
-		).bind(this);
+			this.setState({
+				userSettings: JSON.parse(window.localStorage.getItem(`user${this.state.userSettings.userId}`))
+			})
+		}
+
+		onUserSettingsChange = (ev) => {
+			this.setState((prevState) => {
+				return {userSettings: {...prevState.userSettings, ...ev}}
+			}, () => {
+				window.localStorage.setItem(`user${this.state.userSettings.userId}`, JSON.stringify(this.state.userSettings))
+			});
+		}
+
+		onSelect = (ev) => {
+			console.log(ev);
+			const index = ev.selected;
+			this.props.onSelect({index});
+			this.setState(state => state.index === index ? null : {index})
+		}
 
 		onSkinChange = () => {
-			this.setState(({skin}) => ({skin: (skin === 'carbon' ? 'titanium' : 'carbon')}));
+			this.setState(({userSettings}) => {
+				return (
+					{userSettings: {
+						skin: (userSettings.skin === 'carbon' ? 'titanium' : 'carbon')
+					}}
+				)
+			});
 		};
 
 		onTogglePopup = () => {
@@ -162,16 +192,17 @@ const AppState = hoc((configHoc, Wrapped) => {
 					{...props}
 					index={this.state.index}
 					onSelect={this.onSelect}
+					onUserSettingsChange={this.onUserSettingsChange}
 					onSkinChange={this.onSkinChange}
 					onTogglePopup={this.onTogglePopup}
 					onToggleBasicPopup={this.onToggleBasicPopup}
 					onToggleDateTimePopup={this.onToggleDateTimePopup}
-					orientation={(this.state.skin === 'titanium') ? 'horizontal' : 'vertical'}
+					orientation={(this.state.userSettings.skin === 'titanium') ? 'horizontal' : 'vertical'}
 					showPopup={this.state.showPopup}
 					showBasicPopup={this.state.showBasicPopup}
 					showDateTimePopup={this.state.showDateTimePopup}
-					skin={this.state.skin}
-					skinName={this.state.skin}
+					skin={this.state.userSettings.skin}
+					skinName={this.state.userSettings.skin}
 				/>
 			);
 		}
