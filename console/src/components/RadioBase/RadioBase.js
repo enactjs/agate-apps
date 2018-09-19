@@ -6,6 +6,7 @@ import React from 'react';
 import Marquee from '@enact/ui/Marquee';
 
 import PresetItem from './PresetItem';
+import ConsoleButton from './ConsoleButton';
 
 import css from './RadioBase.less';
 
@@ -13,39 +14,32 @@ import css from './RadioBase.less';
 const RadioBase = kind({
   name: 'Radio',
 
-  styles: {
-    css,
-    className: 'radio'
-  },
-
   render: (props) => (
     <Panel {...props}>
-      <div className={css.container}>
-        <div className={css.top}>
-          <div className={css.toggleContainer}>
-            <ToggleButton css={{bg: css.radioToggle}} small type="grid">AM</ToggleButton> |
-            <ToggleButton css={{bg: css.radioToggle}} selected small type="grid">FM</ToggleButton>
-          </div>
-          <div className={css.titleContainer}>
-            {/*Radio TextInfo*/}
-            <Marquee>93.1 MHZ</Marquee>
-            <Marquee>Artist - Song</Marquee>
-            {/*Tune*/}
-          </div>
-          <div className={css.buttonContainer}>
-            <Button icon={"arrowsmallleft"} />
-            Tune
-            <Button icon={"arrowsmallright"} />
-
-
-            {/*Scan*/}
-            <Button icon={"arrowsmallleft"} />
-            Scan
-            <Button icon={"arrowsmallright"} />
-          </div>
+      <div className={css.radio}>
+        <div className={css.radioToggle}>
+          <ToggleButton small type="grid">AM</ToggleButton> |
+          <ToggleButton selected small type="grid">FM</ToggleButton>
+        </div>
+        <div className={css.title}>
+          {/*Radio TextInfo*/}
+          <Marquee>93.1 MHZ</Marquee>
+          <Marquee>Artist - Song</Marquee>
+        </div>
+        <div className={css.tuneControls}>
+          {/*Tune*/}
+          <ConsoleButton icon={"arrowsmallleft"} />
+          Tune
+          <ConsoleButton icon={"arrowsmallright"} />
+        </div>
+        <div className={css.scanControls}>
+          <ConsoleButton icon={"arrowsmallleft"} />
+          Scan
+          <ConsoleButton icon={"arrowsmallright"} />
         </div>
         {/*List*/}
-        <div className={css.bottom}>
+        <div className={css.presetList}>
+          Presets
           <PresetItem icon="plus">93.1 MHZ FM</PresetItem>
           <PresetItem icon="plus">105.1 MHZ FM</PresetItem>
           <PresetItem icon="plus">88.1 MHZ FM</PresetItem>

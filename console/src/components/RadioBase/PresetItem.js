@@ -1,4 +1,4 @@
-import Button from '@enact/agate/Button';
+import ConsoleButton from './ConsoleButton';
 import {ItemBase} from '@enact/agate/Item';
 
 import Spottable from '@enact/spotlight/Spottable';
@@ -21,9 +21,7 @@ const PresetItemBase = kind({
 	},
 
 	render: ({children, css, disabled, icon, ...rest}) => (
-
 		<SlotItem
-      className={css.item}
       component={ItemBase}
       disabled={disabled}
       css={css}
@@ -31,7 +29,7 @@ const PresetItemBase = kind({
     >
       {children}
       <slotAfter>
-        <Button icon={icon} />
+        <ConsoleButton icon={icon} />
       </slotAfter>
 		</SlotItem>
 	)
