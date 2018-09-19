@@ -1,3 +1,5 @@
+@import '~@enact/agate/styles/skin.less';
+
 .ConsoleButton {
     &.button {
         margin: 0;
@@ -7,5 +9,10 @@
             border: none;
             background: none;
         }
+        .applySkins({
+            .client {
+                color: @agate-highlight;
+            }
+        });
     }
 }

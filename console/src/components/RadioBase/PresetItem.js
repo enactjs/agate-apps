@@ -1,5 +1,6 @@
-import ConsoleButton from './ConsoleButton';
+import {ConsoleButtonBase as ConsoleButton} from './ConsoleButton';
 import {ItemBase} from '@enact/agate/Item';
+import {LabeledItemBase} from '@enact/agate/LabeledItem';
 
 import Spottable from '@enact/spotlight/Spottable';
 import Pure from '@enact/ui/internal/Pure';
@@ -20,14 +21,16 @@ const PresetItemBase = kind({
 		className: 'presetItem'
 	},
 
-	render: ({children, css, disabled, icon, ...rest}) => (
+	render: ({children, css, disabled, icon, label, ...rest}) => (
 		<SlotItem
       component={ItemBase}
       disabled={disabled}
       css={css}
       {...rest}
     >
-      {children}
+      <LabeledItemBase label={label} labelPosition="before">
+        {children}
+      </LabeledItemBase>
       <slotAfter>
         <ConsoleButton icon={icon} />
       </slotAfter>

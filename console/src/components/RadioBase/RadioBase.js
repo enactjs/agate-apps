@@ -1,4 +1,4 @@
-import Button from '@enact/agate/Button';
+import Divider from '@enact/agate/Divider';
 import ToggleButton from '@enact/agate/ToggleButton';
 import {Panel} from '@enact/agate/Panels';
 import kind from '@enact/core/kind';
@@ -7,6 +7,7 @@ import Marquee from '@enact/ui/Marquee';
 
 import PresetItem from './PresetItem';
 import ConsoleButton from './ConsoleButton';
+import ConsoleToggleButton from './ConsoleToggleButton';
 
 import css from './RadioBase.less';
 
@@ -18,8 +19,8 @@ const RadioBase = kind({
     <Panel {...props}>
       <div className={css.radio}>
         <div className={css.radioToggle}>
-          <ToggleButton small type="grid">AM</ToggleButton> |
-          <ToggleButton selected small type="grid">FM</ToggleButton>
+          <ConsoleToggleButton small type="grid">AM</ConsoleToggleButton> |
+          <ConsoleToggleButton selected small type="grid">FM</ConsoleToggleButton>
         </div>
         <div className={css.title}>
           {/*Radio TextInfo*/}
@@ -40,11 +41,12 @@ const RadioBase = kind({
         {/*List*/}
         <div className={css.presetList}>
           Presets
-          <PresetItem icon="plus">93.1 MHZ FM</PresetItem>
-          <PresetItem icon="plus">105.1 MHZ FM</PresetItem>
-          <PresetItem icon="plus">88.1 MHZ FM</PresetItem>
-          <PresetItem icon="plus">92.1 MHZ FM</PresetItem>
-          <PresetItem icon="plus">120.1 MHZ FM</PresetItem>
+          <Divider startSection />
+          <PresetItem label="Station 1" icon="plus">93.1 MHZ FM</PresetItem>
+          <PresetItem label="Station 2" icon="plus">105.1 MHZ FM</PresetItem>
+          <PresetItem label="Station 3" icon="plus">88.1 MHZ FM</PresetItem>
+          <PresetItem label="Station 4" icon="plus">92.1 MHZ FM</PresetItem>
+          <PresetItem label="Station 5" icon="plus">120.1 MHZ FM</PresetItem>
         </div>
       </div>
     </Panel>

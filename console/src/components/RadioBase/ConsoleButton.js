@@ -1,7 +1,8 @@
-import Button from '@enact/agate/Button';
+import {ButtonBase as Button} from '@enact/agate/Button';
+import Skinnable from '@enact/agate/Skinnable';
 
-import Spottable from '@enact/spotlight/Spottable';
 import Pure from '@enact/ui/internal/Pure';
+import Spottable from '@enact/spotlight/Spottable';
 import compose from 'ramda/src/compose';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -24,10 +25,12 @@ const ConsoleButtonBase = kind({
 });
 
 const ConsoleButtonDecorator = compose(
-  Pure,
-	Spottable
+	Pure,
+	Spottable,
+	Skinnable
 );
 
 const ConsoleButton = ConsoleButtonDecorator(ConsoleButtonBase);
 
-export default ConsoleButtonBase;
+export default ConsoleButton;
+export {ConsoleButtonBase};
