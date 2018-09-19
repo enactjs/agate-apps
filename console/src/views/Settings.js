@@ -4,6 +4,7 @@ import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
 import React from 'react';
 import SwitchItem from '@enact/agate/SwitchItem';
+import SliderButton from '@enact/agate/SliderButton';
 
 import viewCss from './Settings.less';
 
@@ -32,7 +33,14 @@ const Settings = kind({
 		css: viewCss,
 		className: 'settingsView'
 	},
-	render: ({css, onToggleDateTimePopup, ...rest}) => (
+
+	handlers: {
+		onSelect: (ev, {onSelect}) => {
+			onSelect({selected: ev.currentTarget.dataset.tabindex});
+		}
+	},
+
+	render: ({css, onSelect, onToggleDateTimePopup, ...rest}) => (
 		<Panel {...rest}>
 			<Row className="enact-fit">
 				<Cell />
@@ -49,6 +57,20 @@ const Settings = kind({
 					>
 						Settings
 					</Cell>
+					<Cell>
+						<SliderButton>{[
+							'User 1',
+							'User 2'
+						]}</SliderButton>
+					</Cell>
+					<SwitchItemCell
+						icon="user"
+						noToggle
+						data-tabindex={4}
+						onTap={onSelect}
+					>
+						Display
+					</SwitchItemCell>
 					<SwitchItemCell
 						icon="ellipsis"
 						noToggle

@@ -16,6 +16,7 @@ import Home from '../views/Home';
 import HVAC from '../views/HVAC';
 import Phone from '../views/Phone';
 import Settings from '../views/Settings';
+import DisplaySettings from '../views/DisplaySettings';
 
 import css from './App.less';
 
@@ -36,6 +37,7 @@ const AppBase = kind({
 		onTogglePopup,
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
+		onUserSettingsChange,
 		showPopup,
 		showBasicPopup,
 		showDateTimePopup,
@@ -72,7 +74,12 @@ const AppBase = kind({
 					{/* eslint-disable-next-line */}
 					<HVAC />
 					<Settings
+						onSelect={onSelect}
 						onToggleDateTimePopup={onToggleDateTimePopup}
+						onUserSettingsChange={onUserSettingsChange}
+					/>
+					<DisplaySettings
+						onUserSettingsChange={onUserSettingsChange}
 					/>
 				</TabbedPanels>
 				<Popup
@@ -119,26 +126,47 @@ const AppState = hoc((configHoc, Wrapped) => {
 				showPopup: false,
 				showBasicPopup: false,
 				showDateTimePopup: false,
-				skin: props.defaultSkin || 'carbon' // 'titanium' alternate.
+				// skin: props.defaultSkin || 'carbon', // 'titanium' alternate.
+				userSettings: {
+					userId: 1,
+					skin: props.defaultSkin || 'carbon'
+				}
 			};
 		}
 
+		componentDidMount(){
+			if(!JSON.parse(window.localStorage.getItem(`user${this.state.userId}`))){
+				console.log('saved');
+				window.localStorage.setItem(`user${this.state.userSettings.userId}`, JSON.stringify({...this.state.userSettings}));
+			}
+			this.setState({
+				userSettings: JSON.parse(window.localStorage.getItem(`user${this.state.userSettings.userId}`))
+			})
+		}
+
+		onUserSettingsChange = (ev) => {
+			this.setState((prevState) => {
+				return {userSettings: {...prevState.userSettings, ...ev}}
+			}, () => {
+				window.localStorage.setItem(`user${this.state.userSettings.userId}`, JSON.stringify(this.state.userSettings))
+			});
+		}
+
 		onSelect = (ev) => {
+			console.log(ev);
 			const index = ev.selected;
 			this.props.onSelect({index});
 			this.setState(state => state.index === index ? null : {index})
 		}
 
-		onSelect = handle(
-			forward('onSelect'),
-			(ev) => {
-				const index = ev.selected;
-				this.setState(state => state.index === index ? null : {index});
-			}
-		).bind(this)
-
 		onSkinChange = () => {
-			this.setState(({skin}) => ({skin: (skin === 'carbon' ? 'titanium' : 'carbon')}));
+			this.setState(({userSettings}) => {
+				return (
+					{userSettings: {
+						skin: (userSettings.skin === 'carbon' ? 'titanium' : 'carbon')
+					}}
+				)
+			});
 		};
 
 		onTabChange = (index) => {
@@ -169,16 +197,17 @@ const AppState = hoc((configHoc, Wrapped) => {
 					{...props}
 					index={this.state.index}
 					onSelect={this.onSelect}
+					onUserSettingsChange={this.onUserSettingsChange}
 					onSkinChange={this.onSkinChange}
 					onTogglePopup={this.onTogglePopup}
 					onToggleBasicPopup={this.onToggleBasicPopup}
 					onToggleDateTimePopup={this.onToggleDateTimePopup}
-					orientation={(this.state.skin === 'titanium') ? 'horizontal' : 'vertical'}
+					orientation={(this.state.userSettings.skin === 'titanium') ? 'horizontal' : 'vertical'}
 					showPopup={this.state.showPopup}
 					showBasicPopup={this.state.showBasicPopup}
 					showDateTimePopup={this.state.showDateTimePopup}
-					skin={this.state.skin}
-					skinName={this.state.skin}
+					skin={this.state.userSettings.skin}
+					skinName={this.state.userSettings.skin}
 				/>
 			);
 		}
