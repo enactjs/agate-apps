@@ -7,7 +7,7 @@ import compose from 'ramda/src/compose';
 import kind from '@enact/core/kind';
 import React from 'react';
 
-import css from './ConsoleButton.less';
+import componentCss from './ConsoleButton.less';
 
 const ConsoleButtonBase = kind({
 	name: 'ConsoleButton',
@@ -15,7 +15,7 @@ const ConsoleButtonBase = kind({
 	propTypes:{},
 
 	styles: {
-		css,
+		css: componentCss,
 		className: 'ConsoleButton'
 	},
 

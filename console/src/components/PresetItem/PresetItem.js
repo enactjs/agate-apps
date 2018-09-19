@@ -1,4 +1,4 @@
-import {ConsoleButtonBase as ConsoleButton} from './ConsoleButton';
+import {ConsoleButtonBase as ConsoleButton} from '../ConsoleButton';
 import {ItemBase} from '@enact/agate/Item';
 import {LabeledItemBase} from '@enact/agate/LabeledItem';
 
@@ -9,7 +9,7 @@ import compose from 'ramda/src/compose';
 import kind from '@enact/core/kind';
 import React from 'react';
 
-import css from './PresetItem.less';
+import componentCss from './PresetItem.less';
 
 const PresetItemBase = kind({
 	name: 'PresetItem',
@@ -17,7 +17,7 @@ const PresetItemBase = kind({
 	propTypes:{},
 
 	styles: {
-		css,
+    css: componentCss,
 		className: 'presetItem'
 	},
 

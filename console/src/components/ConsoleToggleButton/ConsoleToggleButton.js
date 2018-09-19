@@ -31,7 +31,6 @@ const ConsoleToggleButtonBase = kind({
 
 
 const ConsoleToggleButtonDecorator = compose(
-	Pure,
 	Toggleable({prop: 'selected', toggleProp: 'onTap'}),
 	Skinnable
 );
