@@ -11,6 +11,8 @@ import DateTimePicker from '@enact/agate/DateTimePicker';
 import React from 'react';
 import {TabbedPanels} from '@enact/agate/Panels';
 
+import produce from "immer"
+
 import Clock from '../components/Clock';
 import Home from '../views/Home';
 import HVAC from '../views/HVAC';
@@ -20,6 +22,8 @@ import Settings from '../views/Settings';
 import DisplaySettings from '../views/DisplaySettings';
 
 import css from './App.less';
+
+const AppContext = React.createContext();
 
 add('backspace', 8);
 
@@ -144,6 +148,13 @@ const AppState = hoc((configHoc, Wrapped) => {
 			})
 		}
 
+		updateAppState = (cb) => {
+			this.setState(
+				produce(cb),
+				() => console.log(this.state)
+			)
+		}
+
 		onUserSettingsChange = (ev) => {
 			this.setState((prevState) => {
 				return {userSettings: {...prevState.userSettings, ...ev}}
@@ -188,22 +199,24 @@ const AppState = hoc((configHoc, Wrapped) => {
 			delete props.defaultSkin;
 
 			return (
-				<Wrapped
-					{...props}
-					index={this.state.index}
-					onSelect={this.onSelect}
-					onUserSettingsChange={this.onUserSettingsChange}
-					onSkinChange={this.onSkinChange}
-					onTogglePopup={this.onTogglePopup}
-					onToggleBasicPopup={this.onToggleBasicPopup}
-					onToggleDateTimePopup={this.onToggleDateTimePopup}
-					orientation={(this.state.userSettings.skin === 'titanium') ? 'horizontal' : 'vertical'}
-					showPopup={this.state.showPopup}
-					showBasicPopup={this.state.showBasicPopup}
-					showDateTimePopup={this.state.showDateTimePopup}
-					skin={this.state.userSettings.skin}
-					skinName={this.state.userSettings.skin}
-				/>
+				<AppContext.Provider value={this.state}>
+					<Wrapped
+						{...props}
+						index={this.state.index}
+						onSelect={this.onSelect}
+						onUserSettingsChange={this.onUserSettingsChange}
+						onSkinChange={this.onSkinChange}
+						onTogglePopup={this.onTogglePopup}
+						onToggleBasicPopup={this.onToggleBasicPopup}
+						onToggleDateTimePopup={this.onToggleDateTimePopup}
+						orientation={(this.state.userSettings.skin === 'titanium') ? 'horizontal' : 'vertical'}
+						showPopup={this.state.showPopup}
+						showBasicPopup={this.state.showBasicPopup}
+						showDateTimePopup={this.state.showDateTimePopup}
+						skin={this.state.userSettings.skin}
+						skinName={this.state.userSettings.skin}
+					/>
+				</AppContext.Provider>
 			);
 		}
 	};
@@ -217,3 +230,4 @@ const AppDecorator = compose(
 const App = AppDecorator(AppBase);
 
 export default App;
+export {AppContext}
