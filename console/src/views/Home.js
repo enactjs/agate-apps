@@ -50,7 +50,7 @@ const Home = kind({
 					<Cell shrink>
 						<Row align="start center">
 							<HomeIconCell icon="repeatdownload">Dashboard</HomeIconCell>
-							<HomeIconCell icon="gear" data-tabindex={3} onKeyUp={onTabChange} onClick={onTabChange}>Settings</HomeIconCell>
+							<HomeIconCell icon="gear" data-tabindex={4} onKeyUp={onTabChange} onClick={onTabChange}>Settings</HomeIconCell>
 							<HomeIconCell icon="closex" onClick={onTogglePopup}>Point of Interest</HomeIconCell>
 						</Row>
 					</Cell>
