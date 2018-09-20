@@ -20,7 +20,7 @@ storiesOf('Agate', module)
 			<div>
 				<SwitchItem
 					defaultSelected={boolean('defaultSelected', Config, true)}
-					icon={select('icon', ['', ...iconNames], {}, 'music')}
+					icon={select('icon', ['', ...iconNames], Config, 'music')}
 				>
 					{text('children', 'Sound')}
 				</SwitchItem>
