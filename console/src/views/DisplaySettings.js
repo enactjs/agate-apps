@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import {Panel} from '@enact/agate/Panels'
 import {Cell, Column, Row} from '@enact/ui/Layout';
 import Input from '@enact/agate/Input';
