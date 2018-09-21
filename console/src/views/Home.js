@@ -24,7 +24,7 @@ const Home = kind({
 	handlers: {
 		onTabChange: (ev, {onSelect}) => {
 			if ((ev.keyCode === 13 || ev.type === 'click') && ev.currentTarget.dataset.tabindex) {
-				onSelect({selected: parseInt(ev.currentTarget.dataset.tabindex)});
+				onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
 			}
 		}
 	},

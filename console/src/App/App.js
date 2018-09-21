@@ -123,28 +123,17 @@ const AppState = hoc((configHoc, Wrapped) => {
 			};
 		}
 
-		onSelect = (ev) => {
-			const index = ev.selected;
-			this.props.onSelect({index});
-			this.setState(state => state.index === index ? null : {index})
-		}
-
 		onSelect = handle(
 			forward('onSelect'),
 			(ev) => {
-				const index = ev.selected;
+				const {index} = ev;
 				this.setState(state => state.index === index ? null : {index});
 			}
-		).bind(this)
+		).bind(this);
 
 		onSkinChange = () => {
 			this.setState(({skin}) => ({skin: (skin === 'carbon' ? 'titanium' : 'carbon')}));
 		};
-
-		onTabChange = (index) => {
-			this.props.onSelect({index});
-			this.setState(state => state.index === index ? null : {index})
-		}
 
 		onTogglePopup = () => {
 			this.setState(({showPopup}) => ({showPopup: !showPopup}));
