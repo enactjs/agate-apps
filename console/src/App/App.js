@@ -6,6 +6,7 @@ import compose from 'ramda/src/compose';
 import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
+import ColorPicker from '@enact/agate/ColorPicker';
 import Popup from '@enact/agate/Popup';
 import DateTimePicker from '@enact/agate/DateTimePicker';
 import React from 'react';
@@ -24,13 +25,22 @@ add('backspace', 8);
 const AppBase = kind({
 	name: 'App',
 
+	defaultProps: {
+		colorAccent: '#0033cc',
+		colorHighlight: '#0033cc'
+	},
+
 	styles: {
 		css,
 		className: 'app'
 	},
 
 	render: ({
+		colorAccent,
+		colorHighlight,
 		index,
+		onColorChangeAccent,
+		onColorChangeHighlight,
 		onSelect,
 		onSkinChange,
 		onTogglePopup,
@@ -55,6 +65,10 @@ const AppBase = kind({
 					selected={index}
 					index={index}
 				>
+					<beforeTabs>
+						<ColorPicker onChange={onColorChangeAccent} defaultValue={colorAccent} small />
+						<ColorPicker onChange={onColorChangeHighlight} defaultValue={colorHighlight} small />
+					</beforeTabs>
 					<afterTabs>
 						<Column align="center space-evenly">
 							<Cell shrink>
@@ -137,6 +151,16 @@ const AppState = hoc((configHoc, Wrapped) => {
 			}
 		).bind(this)
 
+		onColorChangeAccent = (ev) => {
+			// console.log({value: ev.target.value});
+			this.setState({colorAccent: ev.target.value});
+		};
+
+		onColorChangeHighlight = (ev) => {
+			// console.log({value: ev.target.value});
+			this.setState({colorHighlight: ev.target.value});
+		};
+
 		onSkinChange = () => {
 			this.setState(({skin}) => ({skin: (skin === 'carbon' ? 'titanium' : 'carbon')}));
 		};
@@ -167,7 +191,11 @@ const AppState = hoc((configHoc, Wrapped) => {
 			return (
 				<Wrapped
 					{...props}
+					accent={this.state.colorAccent}
+					highlight={this.state.colorHighlight}
 					index={this.state.index}
+					onColorChangeAccent={this.onColorChangeAccent}
+					onColorChangeHighlight={this.onColorChangeHighlight}
 					onSelect={this.onSelect}
 					onSkinChange={this.onSkinChange}
 					onTogglePopup={this.onTogglePopup}
