@@ -17,10 +17,28 @@ import HVAC from '../views/HVAC';
 import Phone from '../views/Phone';
 import Settings from '../views/Settings';
 import DisplaySettings from '../views/DisplaySettings';
+import {observer, Provider} from "mobx-react";
+import { observable, computed, action, decorate } from "mobx";
 
 import css from './App.less';
 
 add('backspace', 8);
+
+class UserSettings {
+    fontSize;
+
+    setFontSize(size){
+		this.fontSize = size;
+		console.log(this.fontSize);
+	}
+}
+const UserSettingsDecorator = decorate(UserSettings, {
+	fontSize: observable,
+	setFontSize: action
+})
+
+const userSettings = new UserSettingsDecorator({fontSize: 12});
+
 
 const AppBase = kind({
 	name: 'App',
@@ -44,6 +62,7 @@ const AppBase = kind({
 		skinName,
 		...rest
 	}) => {
+		console.log(rest)
 		return (
 			<div>
 				<TabbedPanels
@@ -111,7 +130,8 @@ const AppBase = kind({
 					</title>
 					<DateTimePicker onClose={onToggleDateTimePopup}/>
 				</Popup>
-			</div>
+				</div>
+			
 		);
 	}
 });
@@ -191,31 +211,36 @@ const AppState = hoc((configHoc, Wrapped) => {
 
 			delete props.defaultIndex;
 			delete props.defaultSkin;
-
 			return (
-				<Wrapped
-					{...props}
-					index={this.state.index}
-					onSelect={this.onSelect}
-					onUserSettingsChange={this.onUserSettingsChange}
-					onSkinChange={this.onSkinChange}
-					onTogglePopup={this.onTogglePopup}
-					onToggleBasicPopup={this.onToggleBasicPopup}
-					onToggleDateTimePopup={this.onToggleDateTimePopup}
-					orientation={(this.state.userSettings.skin === 'titanium') ? 'horizontal' : 'vertical'}
-					showPopup={this.state.showPopup}
-					showBasicPopup={this.state.showBasicPopup}
-					showDateTimePopup={this.state.showDateTimePopup}
-					skin={this.state.userSettings.skin}
-					skinName={this.state.userSettings.skin}
-				/>
+				<Provider userSettings={userSettings}>
+					<Wrapped
+						{...props}
+						index={this.state.index}
+						onSelect={this.onSelect}
+						onUserSettingsChange={this.onUserSettingsChange}
+						onSkinChange={this.onSkinChange}
+						onTogglePopup={this.onTogglePopup}
+						onToggleBasicPopup={this.onToggleBasicPopup}
+						onToggleDateTimePopup={this.onToggleDateTimePopup}
+						orientation={(this.state.userSettings.skin === 'titanium') ? 'horizontal' : 'vertical'}
+						showPopup={this.state.showPopup}
+						showBasicPopup={this.state.showBasicPopup}
+						showDateTimePopup={this.state.showDateTimePopup}
+						skin={this.state.userSettings.skin}
+						skinName={this.state.userSettings.skin}
+					/>
+					</Provider>
 			);
 		}
 	};
 });
 
+
+
+
 const AppDecorator = compose(
 	AppState,
+	observer,
 	AgateDecorator
 );
 

@@ -3,17 +3,22 @@ import {Panel} from '@enact/agate/Panels'
 import {Cell, Column, Row} from '@enact/ui/Layout';
 import Input from '@enact/agate/Input';
 import SliderButton from '@enact/agate/SliderButton';
+import {inject, Observer, observer} from "mobx-react";
 
 class DisplaySettings extends Component {
 
+
 	render() {
+		console.log('re-render', this.props.userSettings)
+
 		return (
 			<Panel {...this.props}>
 				<Column className="enact-fit">
 					<label htmlFor="">Color</label>
 					<Input placeholder="Color"/>
 					<p>Text Size</p>
-					<SliderButton onChange={({value}) => this.props.onUserSettingsChange({fontSize: value})}>{[
+					<div>{this.props.userSettings.fontSize}</div>
+					<SliderButton onChange={({value}) => this.props.userSettings.setFontSize(value)}>{[
 						'Small',
 						'Medium',
 						'Large',
@@ -31,4 +36,6 @@ class DisplaySettings extends Component {
 	}
 }
 
-export default DisplaySettings;
+const DisplaySettingsObserver = inject("userSettings")(observer(DisplaySettings));
+
+export default DisplaySettingsObserver;
