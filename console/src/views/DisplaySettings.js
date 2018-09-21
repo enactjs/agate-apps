@@ -19,7 +19,7 @@ class DisplaySettings extends Component {
 	render() {
 		return (
 			<Panel {...this.props}>
-				<AppContext>
+				<AppContext.Consumer>
 					{({updateAppState}) => (
 						<Column className="enact-fit">
 						<label htmlFor="">Color</label>
@@ -41,7 +41,7 @@ class DisplaySettings extends Component {
 						]}</SliderButton>
 						</Column>
 						)}
-				</AppContext>
+				</AppContext.Consumer>
 			</Panel>
 		);
 	}
