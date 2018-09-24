@@ -1,8 +1,8 @@
-import {forward, handle} from '@enact/core/handle';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
 import {Cell, Column} from '@enact/ui/Layout';
 import compose from 'ramda/src/compose';
+import {fromEvent} from 'rxjs';
 import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
@@ -21,6 +21,23 @@ import DisplaySettings from '../views/DisplaySettings';
 import css from './App.less';
 
 add('backspace', 8);
+
+class IFrame extends React.Component {
+	constructor(props) {
+		super(props);
+	}
+	saveToStorage = (userSettings) => {
+		this.contentWindow.localStorage.setItem(`user${userSettings.userId}`, JSON.stringify({...userSettings}));
+	};
+	shouldComponentUpdate() {
+		return false;
+	}
+	render() {
+		return (
+			<iframe {...this.props} ref={(f) => {this.contentWindow = f.contentWindow;}} />
+		);
+	}
+}
 
 const AppBase = kind({
 	name: 'App',
@@ -126,52 +143,85 @@ const AppState = hoc((configHoc, Wrapped) => {
 				showPopup: false,
 				showBasicPopup: false,
 				showDateTimePopup: false,
-				// skin: props.defaultSkin || 'carbon', // 'titanium' alternate.
 				userSettings: {
-					userId: 1,
-					skin: props.defaultSkin || 'carbon'
+					userId: 1
 				}
 			};
 		}
 
 		componentDidMount(){
-			if(!JSON.parse(window.localStorage.getItem(`user${this.state.userId}`))){
+			if (!JSON.parse(window.localStorage.getItem(`user${this.state.userSettings.userId}`))) {
 				console.log('saved');
-				window.localStorage.setItem(`user${this.state.userSettings.userId}`, JSON.stringify({...this.state.userSettings}));
+				this.saveToLocalStorage(this.state.userSettings);
 			}
-			this.setState({
-				userSettings: JSON.parse(window.localStorage.getItem(`user${this.state.userSettings.userId}`))
-			})
+
+			// hydrate
+			this.hydrateFromLocalStorage(this.state.userSettings.userId);
+
+			// set up observable settings subscription
+			this.settings = fromEvent(window, 'storage');
+			this.subscription = this.settings.subscribe((ev) => {
+				const settings = JSON.parse(ev.newValue);
+				this.applyUserSettings({
+					settings: {
+						...this.state.userSettings, // not perfect since we were using setState callback to get the previous user settings
+						...settings
+					}
+				});
+			});
+		}
+
+		componentWillUnmount() {
+			// unsubscribe settings subscription
+			this.subscription.unsubscribe();
+		}
+
+		applyUserSettings({callback, settings}) {
+			this.setState((prevState) => {
+				return {userSettings: {...prevState.userSettings, ...settings}};
+			}, callback ? callback : null);
+		}
+
+		hydrateFromLocalStorage(userId) {
+			const {fontSize, skin} = JSON.parse(window.localStorage.getItem(`user${userId}`));
+			const settings = {
+				fontSize,
+				skin: skin || 'carbon'
+			};
+			this.applyUserSettings({settings});
+		}
+
+		saveToLocalStorage() {
+			const {userSettings} = this.state;
+			this.storageFrame.saveToStorage(userSettings);
 		}
 
 		onUserSettingsChange = (ev) => {
-			this.setState((prevState) => {
-				return {userSettings: {...prevState.userSettings, ...ev}}
-			}, () => {
-				window.localStorage.setItem(`user${this.state.userSettings.userId}`, JSON.stringify(this.state.userSettings))
+			this.applyUserSettings({
+				callback: this.saveToLocalStorage,
+				settings: {...ev}
 			});
-		}
+		};
 
 		onSelect = (ev) => {
 			console.log(ev);
 			const index = ev.selected;
 			this.props.onSelect({index});
 			this.setState(state => state.index === index ? null : {index})
-		}
+		};
 
 		onSkinChange = () => {
-			this.setState(({userSettings}) => {
-				return (
-					{userSettings: {
-						skin: (userSettings.skin === 'carbon' ? 'titanium' : 'carbon')
-					}}
-				)
+			this.applyUserSettings({
+				callback: this.saveToLocalStorage,
+				settings: {
+					skin: this.state.userSettings.skin === 'carbon' ? 'titanium' : 'carbon' // not perfect since we were using setState callback to get the previous state of `skin`
+				}
 			});
 		};
 
 		onTabChange = (index) => {
 			this.props.onSelect({index});
-			this.setState(state => state.index === index ? null : {index})
+			this.setState(state => state.index === index ? null : {index});
 		}
 
 		onTogglePopup = () => {
@@ -193,22 +243,31 @@ const AppState = hoc((configHoc, Wrapped) => {
 			delete props.defaultSkin;
 
 			return (
-				<Wrapped
-					{...props}
-					index={this.state.index}
-					onSelect={this.onSelect}
-					onUserSettingsChange={this.onUserSettingsChange}
-					onSkinChange={this.onSkinChange}
-					onTogglePopup={this.onTogglePopup}
-					onToggleBasicPopup={this.onToggleBasicPopup}
-					onToggleDateTimePopup={this.onToggleDateTimePopup}
-					orientation={(this.state.userSettings.skin === 'titanium') ? 'horizontal' : 'vertical'}
-					showPopup={this.state.showPopup}
-					showBasicPopup={this.state.showBasicPopup}
-					showDateTimePopup={this.state.showDateTimePopup}
-					skin={this.state.userSettings.skin}
-					skinName={this.state.userSettings.skin}
-				/>
+				<div>
+					<Wrapped
+						{...props}
+						index={this.state.index}
+						onSelect={this.onSelect}
+						onUserSettingsChange={this.onUserSettingsChange}
+						onSkinChange={this.onSkinChange}
+						onTogglePopup={this.onTogglePopup}
+						onToggleBasicPopup={this.onToggleBasicPopup}
+						onToggleDateTimePopup={this.onToggleDateTimePopup}
+						orientation={(this.state.userSettings.skin === 'titanium') ? 'horizontal' : 'vertical'}
+						showPopup={this.state.showPopup}
+						showBasicPopup={this.state.showBasicPopup}
+						showDateTimePopup={this.state.showDateTimePopup}
+						skin={this.state.userSettings.skin}
+						skinName={this.state.userSettings.skin}
+					/>
+					<IFrame
+						ref={(f) => {this.storageFrame = f;}}
+						src="about:blank"
+						style={{
+							visibility: 'hidden'
+						}}
+					/>
+				</div>
 			);
 		}
 	};

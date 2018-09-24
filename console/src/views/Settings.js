@@ -40,72 +40,76 @@ const Settings = kind({
 		}
 	},
 
-	render: ({css, onSelect, onToggleDateTimePopup, ...rest}) => (
-		<Panel {...rest}>
-			<Row className="enact-fit">
-				<Cell />
-				<Cell
-					className={css.content}
-					component={Column}
-				>
+	render: ({css, onSelect, onToggleDateTimePopup, ...rest}) => {
+		delete rest.onUserSettingsChange;
+
+		return (
+			<Panel {...rest}>
+				<Row className="enact-fit">
 					<Cell />
 					<Cell
-						className={css.header}
-						component={Divider}
-						shrink
-						spacing="small"
+						className={css.content}
+						component={Column}
 					>
-						Settings
+						<Cell />
+						<Cell
+							className={css.header}
+							component={Divider}
+							shrink
+							spacing="small"
+						>
+							Settings
+						</Cell>
+						<Cell>
+							<SliderButton>{[
+								'User 1',
+								'User 2'
+							]}</SliderButton>
+						</Cell>
+						<SwitchItemCell
+							icon="user"
+							noToggle
+							data-tabindex={4}
+							onTap={onSelect}
+						>
+							Display
+						</SwitchItemCell>
+						<SwitchItemCell
+							icon="ellipsis"
+							noToggle
+							onTap={onToggleDateTimePopup}
+						>
+							Date & Time
+						</SwitchItemCell>
+						<SwitchItemCell
+							icon="bulletlist"
+						>
+							Bluetooth
+						</SwitchItemCell>
+						<SwitchItemCell
+							icon="gear"
+						>
+							WiFi
+						</SwitchItemCell>
+						<SwitchItemCell
+							icon="fan"
+						>
+							Turbo
+						</SwitchItemCell>
+						<SwitchItemCell
+							icon="heatseatright"
+							offText="disarmed"
+							onText="armed"
+						>
+							Ejection Seat
+						</SwitchItemCell>
+						<Cell />
 					</Cell>
-					<Cell>
-						<SliderButton>{[
-							'User 1',
-							'User 2'
-						]}</SliderButton>
-					</Cell>
-					<SwitchItemCell
-						icon="user"
-						noToggle
-						data-tabindex={4}
-						onTap={onSelect}
-					>
-						Display
-					</SwitchItemCell>
-					<SwitchItemCell
-						icon="ellipsis"
-						noToggle
-						onTap={onToggleDateTimePopup}
-					>
-						Date & Time
-					</SwitchItemCell>
-					<SwitchItemCell
-						icon="bulletlist"
-					>
-						Bluetooth
-					</SwitchItemCell>
-					<SwitchItemCell
-						icon="gear"
-					>
-						WiFi
-					</SwitchItemCell>
-					<SwitchItemCell
-						icon="fan"
-					>
-						Turbo
-					</SwitchItemCell>
-					<SwitchItemCell
-						icon="heatseatright"
-						offText="disarmed"
-						onText="armed"
-					>
-						Ejection Seat
-					</SwitchItemCell>
 					<Cell />
-				</Cell>
-				<Cell />
-			</Row>
-		</Panel>
-	)
+				</Row>
+			</Panel>
+		)
+	}
 });
 
 export default Settings;
