@@ -1,34 +1,47 @@
-import React, { Component } from 'react';
-import {Panel} from '@enact/agate/Panels'
-import {Cell, Column, Row} from '@enact/ui/Layout';
+import {adaptEvent, forward, handle} from '@enact/core/handle';
+import {Cell, Column} from '@enact/ui/Layout';
+import kind from '@enact/core/kind';
 import Input from '@enact/agate/Input';
+import {Panel} from '@enact/agate/Panels'
+import React from 'react';
 import SliderButton from '@enact/agate/SliderButton';
 
-class DisplaySettings extends Component {
-
-	render() {
+const DisplaySettings = kind({
+	name: 'DisplaySettings',
+	handlers: {
+		onChange: handle(
+			adaptEvent(({value}) => ({fontSize: value}), forward('onUserSettingsChange'))
+		)
+	},
+	render: ({onChange, ...rest}) => {
 		return (
-			<Panel {...this.props}>
+			<Panel {...rest}>
 				<Column className="enact-fit">
-					<label htmlFor="">Color</label>
-					<Input placeholder="Color"/>
-					<p>Text Size</p>
-					<SliderButton onChange={({value}) => this.props.onUserSettingsChange({fontSize: value})}>{[
-						'Small',
-						'Medium',
-						'Large',
-						'Extra Large'
-					]}</SliderButton>
-					<p>Button Shape</p>
-					<SliderButton>{[
-						'Round',
-						'Both',
-						'Square'
-					]}</SliderButton>
+					<Cell shrink>
+						<label htmlFor="">Color</label>
+						<Input placeholder="Color"/>
+					</Cell>
+					<Cell shrink>
+						<p>Text Size</p>
+						<SliderButton onChange={onChange}>{[
+							'Small',
+							'Medium',
+							'Large',
+							'Extra Large'
+						]}</SliderButton>
+					</Cell>
+					<Cell shrink>
+						<p>Button Shape</p>
+						<SliderButton>{[
+							'Round',
+							'Both',
+							'Square'
+						]}</SliderButton>
+					</Cell>
 				</Column>
 			</Panel>
 		);
 	}
-}
+});
 
 export default DisplaySettings;
