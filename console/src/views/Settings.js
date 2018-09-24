@@ -36,7 +36,7 @@ const Settings = kind({
 
 	handlers: {
 		onSelect: (ev, {onSelect}) => {
-			onSelect({selected: ev.currentTarget.dataset.tabindex});
+			onSelect({selected: Number(ev.currentTarget.dataset.tabindex)});
 		}
 	},
 

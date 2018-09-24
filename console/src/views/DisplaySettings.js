@@ -9,11 +9,13 @@ import SliderButton from '@enact/agate/SliderButton';
 const DisplaySettings = kind({
 	name: 'DisplaySettings',
 	handlers: {
-		onChange: handle(
+		onFontSizeChange: handle(
 			adaptEvent(({value}) => ({fontSize: value}), forward('onUserSettingsChange'))
 		)
 	},
-	render: ({onChange, ...rest}) => {
+	render: ({onFontSizeChange, ...rest}) => {
+		delete rest.onUserSettingsChange;
+
 		return (
 			<Panel {...rest}>
 				<Column className="enact-fit">
@@ -23,7 +25,7 @@ const DisplaySettings = kind({
 					</Cell>
 					<Cell shrink>
 						<p>Text Size</p>
-						<SliderButton onChange={onChange}>{[
+						<SliderButton onChange={onFontSizeChange}>{[
 							'Small',
 							'Medium',
 							'Large',
