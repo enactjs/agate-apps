@@ -1,10 +1,10 @@
-import {ConsoleButtonBase as ConsoleButton} from '../ConsoleButton';
 import {ItemBase} from '@enact/agate/Item';
 import {LabeledItemBase} from '@enact/agate/LabeledItem';
 
 import Spottable from '@enact/spotlight/Spottable';
 import Pure from '@enact/ui/internal/Pure';
 import SlotItem from '@enact/ui/SlotItem';
+import Touchable from '@enact/ui/Touchable';
 import compose from 'ramda/src/compose';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -31,16 +31,14 @@ const PresetItemBase = kind({
       <LabeledItemBase label={label} labelPosition="before">
         {children}
       </LabeledItemBase>
-      <slotAfter>
-        <ConsoleButton icon={icon} />
-      </slotAfter>
 		</SlotItem>
 	)
 });
 
 const PresetItemDecorator = compose(
   Pure,
-	Spottable
+  Spottable,
+  Touchable
 );
 
 const PresetItem = PresetItemDecorator(PresetItemBase);

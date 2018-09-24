@@ -1,12 +1,12 @@
+import Button from '@enact/agate/Button';
 import Divider from '@enact/agate/Divider';
-import {Panel} from '@enact/agate/Panels';
 import {LabeledItemBase} from '@enact/agate/LabeledItem';
+import {Panel} from '@enact/agate/Panels';
+import ToggleButton from '@enact/agate/ToggleButton';
 import kind from '@enact/core/kind';
 import React, {Component} from 'react';
 
 import PresetItem from '../components/PresetItem';
-import ConsoleButton from '../components/ConsoleButton';
-import ConsoleToggleButton from '../components/ConsoleToggleButton';
 
 import css from './Radio.less';
 
@@ -20,11 +20,18 @@ const RadioBase = kind({
       changeFrequency(frequency);
     },
     onPresetClick: (ev, {changeStation, presets}) => {
-      const index = parseInt(ev.currentTarget.getAttribute('data-preset'));
-      changeStation(presets[index]);
+      const presetIndex = ev.currentTarget.getAttribute('preset');
+      changeStation(presets[presetIndex]);
+    },
+    onPresetDown: (ev, {changePreset}) => {
+      const presetIndex = ev.currentTarget.getAttribute('preset');
+      changePreset(presetIndex);
+    },
+    onPresetHold: (ev, {currentStation, currentPreset, updatePresets}) => {
+      updatePresets(currentStation, currentPreset);
     },
     onTune: (ev, {currentStation, changeStation}) => {
-      const action = ev.currentTarget.getAttribute("data-action");
+      const action = ev.currentTarget.getAttribute('action');
       let newStation;
 
       if (action === 'tune-up') {
@@ -56,44 +63,81 @@ const RadioBase = kind({
     }
   },
 
-  render: ({currentStation, frequency, presets, onFrequencyToggle, onPresetClick, onTune}) => {
-
-    return (
-      <Panel>
-        <div className={css.radio}>
-          <div className={css.radioToggle}>
-            <ConsoleToggleButton onClick={onFrequencyToggle} selected={frequency === 'AM'} small type="grid">AM</ConsoleToggleButton> |
-            <ConsoleToggleButton onClick={onFrequencyToggle} selected={frequency === 'FM'} small type="grid">FM</ConsoleToggleButton>
-          </div>
-          <div className={css.title}>
-            {/*Radio TextInfo*/}
-            <LabeledItemBase label="Artist - Song">{currentStation} MHZ</LabeledItemBase>
-          </div>
-          <div className={css.tuneControls}>
-            {/*Tune*/}
-            <ConsoleButton onClick={onTune} data-action="tune-down" icon={"arrowsmallleft"} />
-            Tune
-            <ConsoleButton onClick={onTune} data-action="tune-up" icon={"arrowsmallright"} />
-          </div>
-          <div className={css.scanControls}>
-            <ConsoleButton onClick={onTune} data-action="scan-down" icon={"arrowsmallleft"} />
-            Scan
-            <ConsoleButton onClick={onTune} data-action="scan-up" icon={"arrowsmallright"} />
-          </div>
-          {/*List*/}
-          <div className={css.presetList}>
-            Presets
-            <Divider startSection />
-            <PresetItem data-preset="0" label="Station 1" icon="plus" onClick={onPresetClick}>{presets[0]} MHZ</PresetItem>
-            <PresetItem data-preset="1" label="Station 2" icon="plus" onClick={onPresetClick}>{presets[1]} MHZ</PresetItem>
-            <PresetItem data-preset="2" label="Station 3" icon="plus" onClick={onPresetClick}>{presets[2]} MHZ</PresetItem>
-            <PresetItem data-preset="3" label="Station 4" icon="plus" onClick={onPresetClick}>{presets[3]} MHZ</PresetItem>
-            <PresetItem data-preset="4" label="Station 5" icon="plus" onClick={onPresetClick}>{presets[4]} MHZ</PresetItem>
-          </div>
+  render: ({currentStation, frequency, presets, onFrequencyToggle, onPresetClick, onPresetDown, onPresetHold, onTune}) => (
+    <Panel>
+      <div className={css.radio}>
+        <div className={css.radioToggle}>
+          <ToggleButton onClick={onFrequencyToggle} selected={frequency === 'AM'} small type="grid">AM</ToggleButton> |
+          <ToggleButton onClick={onFrequencyToggle} selected={frequency === 'FM'} small type="grid">FM</ToggleButton>
         </div>
-      </Panel>
-    );
-  }
+        <div className={css.title}>
+          {/*Radio TextInfo*/}
+          <LabeledItemBase label="Artist - Song">{currentStation} MHZ</LabeledItemBase>
+        </div>
+        <div className={css.tuneControls}>
+          {/*Tune*/}
+          <Button onClick={onTune} action="tune-down" icon={"arrowsmallleft"} />
+          Tune
+          <Button onClick={onTune} action="tune-up" icon={"arrowsmallright"} />
+        </div>
+        <div className={css.scanControls}>
+          <Button onClick={onTune} action="scan-down" icon={"arrowsmallleft"} />
+          Scan
+          <Button onClick={onTune} action="scan-up" icon={"arrowsmallright"} />
+        </div>
+        {/*List*/}
+        <div className={css.presetList}>
+          Presets
+          <Divider startSection />
+          <PresetItem
+            label="Station 1"
+            onClick={onPresetClick}
+            onDown={onPresetDown}
+            onHold={onPresetHold}
+            preset="0"
+          >
+            {presets[0]} MHZ
+          </PresetItem>
+          <PresetItem
+            label="Station 2"
+            onClick={onPresetClick}
+            onDown={onPresetDown}
+            onHold={onPresetHold}
+            preset="1"
+          >
+            {presets[1]} MHZ
+          </PresetItem>
+          <PresetItem
+            label="Station 3"
+            onClick={onPresetClick}
+            onDown={onPresetDown}
+            onHold={onPresetHold}
+            preset="2"
+          >
+            {presets[2]} MHZ
+          </PresetItem>
+          <PresetItem
+            label="Station 4"
+            onClick={onPresetClick}
+            onDown={onPresetDown}
+            onHold={onPresetHold}
+            preset="3"
+          >
+            {presets[3]} MHZ
+          </PresetItem>
+          <PresetItem
+            label="Station 5"
+            onClick={onPresetClick}
+            onDown={onPresetDown}
+            onHold={onPresetHold}
+            preset="4"
+          >
+            {presets[4]} MHZ
+          </PresetItem>
+        </div>
+      </div>
+    </Panel>
+  )
 });
 
 class Radio extends Component {
@@ -101,8 +145,9 @@ class Radio extends Component {
     super();
 
     this.state = {
+      currentPreset: 0,
       currentStation: 87.8,
-      frequency: 'AM',
+      frequency: 'FM',
       presets: [93.1, 105.1, 88.1, 92.1, 120.1]
     }
   }
@@ -111,23 +156,37 @@ class Radio extends Component {
     this.setState({frequency});
   }
 
-  changePreset = (presets) => {
-    this.setState({presets});
+  changePreset = (index) => {
+    this.setState({currentPreset: index});
   }
 
-  changeStation = (station) => {
+  changeStation = (station, index) => {
     this.setState({currentStation: station});
+  }
+
+  updatePresets = (station, index) => {
+    const updatedPresets = this.state.presets.map((presetStation, currentIndex) => {
+      if (parseInt(index) === currentIndex) {
+        return station;
+      } else {
+        return presetStation;
+      }
+    });
+
+    this.setState({presets: updatedPresets});
   }
 
   render() {
     return (
       <RadioBase
-        currentStation={this.state.currentStation}
-        frequency={this.state.frequency}
-        presets={this.state.presets}
         changeFrequency={this.changeFrequency}
         changePreset={this.changePreset}
         changeStation={this.changeStation}
+        currentPreset={this.state.currentPreset}
+        currentStation={this.state.currentStation}
+        frequency={this.state.frequency}
+        presets={this.state.presets}
+        updatePresets={this.updatePresets}
       />
     )
   }
