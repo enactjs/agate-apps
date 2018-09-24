@@ -1,6 +1,7 @@
 import {ItemBase} from '@enact/agate/Item';
 import {LabeledItemBase} from '@enact/agate/LabeledItem';
 
+import {forward, handle} from '@enact/core/handle';
 import Spottable from '@enact/spotlight/Spottable';
 import Pure from '@enact/ui/internal/Pure';
 import SlotItem from '@enact/ui/SlotItem';
@@ -17,28 +18,37 @@ const PresetItemBase = kind({
 	propTypes:{},
 
 	styles: {
-    css: componentCss,
+		css: componentCss,
 		className: 'presetItem'
+	},
+
+	handlers: {
+		onClick: (ev, props) => {
+			forward('onClick', {presetIndex: props.preset}, props)
+		},
+		onMouseDown: (ev, props) => {
+			forward('onMouseDown', {presetIndex: props.preset, ...ev}, props)
+		}
 	},
 
 	render: ({children, css, disabled, icon, label, ...rest}) => (
 		<SlotItem
-      component={ItemBase}
-      disabled={disabled}
-      css={css}
-      {...rest}
-    >
-      <LabeledItemBase label={label} labelPosition="before">
-        {children}
-      </LabeledItemBase>
+			component={ItemBase}
+			disabled={disabled}
+			css={css}
+			{...rest}
+		>
+			<LabeledItemBase label={label} labelPosition="before">
+				{children}
+			</LabeledItemBase>
 		</SlotItem>
 	)
 });
 
 const PresetItemDecorator = compose(
-  Pure,
-  Spottable,
-  Touchable
+	Pure,
+	Spottable,
+	Touchable
 );
 
 const PresetItem = PresetItemDecorator(PresetItemBase);
