@@ -26,6 +26,9 @@ class IFrame extends React.Component {
 	constructor(props) {
 		super(props);
 	}
+	readFromStorage = (userId) => {
+		return JSON.parse(this.contentWindow.localStorage.getItem(`user${userId}`));
+	};
 	saveToStorage = (userSettings) => {
 		this.contentWindow.localStorage.setItem(`user${userSettings.userId}`, JSON.stringify({...userSettings}));
 	};
@@ -95,6 +98,7 @@ const AppBase = kind({
 						onSelect={onSelect}
 						onToggleDateTimePopup={onToggleDateTimePopup}
 						onUserSettingsChange={onUserSettingsChange}
+						settings={settings}
 					/>
 					<DisplaySettings
 						onUserSettingsChange={onUserSettingsChange}
@@ -152,7 +156,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 		}
 
 		componentDidMount(){
-			if (!JSON.parse(window.localStorage.getItem(`user${this.state.userSettings.userId}`))) {
+			if (!this.readFromLocalStorage(this.state.userSettings.userId)) {
 				console.log('saved');
 				this.saveToLocalStorage(this.state.userSettings);
 			}
@@ -185,12 +189,16 @@ const AppState = hoc((configHoc, Wrapped) => {
 		}
 
 		hydrateFromLocalStorage(userId) {
-			const {fontSize, skin} = JSON.parse(window.localStorage.getItem(`user${userId}`));
+			const {fontSize, skin} = this.readFromLocalStorage(userId);
 			const settings = {
 				fontSize,
 				skin: skin || 'carbon'
 			};
 			this.applyUserSettings({settings});
+		}
+
+		readFromLocalStorage(userId) {
+			return this.storageFrame.readFromStorage(userId);
 		}
 
 		saveToLocalStorage() {
@@ -199,9 +207,19 @@ const AppState = hoc((configHoc, Wrapped) => {
 		}
 
 		onUserSettingsChange = (ev) => {
+			const {userId} = ev;
+			const {userSettings} = this.state;
+			let settings = {};
+			// if the userId changed, apply those settings
+			if (userId && userId !== userSettings.userId) {
+				settings = Object.assign({}, this.readFromLocalStorage(userId));
+			} else {
+				settings = Object.assign({}, userSettings, ev);
+			}
+
 			this.applyUserSettings({
 				callback: this.saveToLocalStorage,
-				settings: {...ev}
+				settings
 			});
 		};
 

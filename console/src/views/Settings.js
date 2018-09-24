@@ -1,3 +1,4 @@
+import {adaptEvent, forward, handle} from '@enact/core/handle';
 import {Cell, Column, Row} from '@enact/ui/Layout';
 import Divider from '@enact/agate/Divider';
 import kind from '@enact/core/kind';
@@ -35,13 +36,21 @@ const Settings = kind({
 	},
 
 	handlers: {
-		onSelect: (ev, {onSelect}) => {
-			onSelect({selected: Number(ev.currentTarget.dataset.tabindex)});
-		}
+		onSelect: handle(
+			adaptEvent((ev) => ({selected: Number(ev.currentTarget.dataset.tabindex)}), forward('onSelect'))
+		),
+		onUserChange: handle(
+			adaptEvent(({value}) => ({userId: value + 1}), forward('onUserSettingsChange'))
+		)
 	},
 
-	render: ({css, onSelect, onToggleDateTimePopup, ...rest}) => {
+	computed: {
+		userId: ({settings}) => settings.userId - 1
+	},
+
+	render: ({css, onSelect, onToggleDateTimePopup, onUserChange, userId, ...rest}) => {
 		delete rest.onUserSettingsChange;
+		delete rest.settings;
 
 		return (
 			<Panel {...rest}>
@@ -61,7 +70,7 @@ const Settings = kind({
 							Settings
 						</Cell>
 						<Cell>
-							<SliderButton>{[
+							<SliderButton onChange={onUserChange} value={userId}>{[
 								'User 1',
 								'User 2'
 							]}</SliderButton>
