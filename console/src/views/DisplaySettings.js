@@ -13,8 +13,12 @@ const DisplaySettings = kind({
 			adaptEvent(({value}) => ({fontSize: value}), forward('onUserSettingsChange'))
 		)
 	},
-	render: ({onFontSizeChange, ...rest}) => {
+	computed: {
+		fontSize: ({settings}) => settings.fontSize
+	},
+	render: ({fontSize, onFontSizeChange, ...rest}) => {
 		delete rest.onUserSettingsChange;
+		delete rest.settings;
 
 		return (
 			<Panel {...rest}>
@@ -25,7 +29,7 @@ const DisplaySettings = kind({
 					</Cell>
 					<Cell shrink>
 						<p>Text Size</p>
-						<SliderButton onChange={onFontSizeChange}>{[
+						<SliderButton onChange={onFontSizeChange} value={fontSize}>{[
 							'Small',
 							'Medium',
 							'Large',

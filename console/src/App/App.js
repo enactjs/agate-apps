@@ -55,6 +55,7 @@ const AppBase = kind({
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
 		onUserSettingsChange,
+		settings,
 		showPopup,
 		showBasicPopup,
 		showDateTimePopup,
@@ -97,6 +98,7 @@ const AppBase = kind({
 					/>
 					<DisplaySettings
 						onUserSettingsChange={onUserSettingsChange}
+						settings={settings}
 					/>
 				</TabbedPanels>
 				<Popup
@@ -254,6 +256,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 						onToggleBasicPopup={this.onToggleBasicPopup}
 						onToggleDateTimePopup={this.onToggleDateTimePopup}
 						orientation={(this.state.userSettings.skin === 'titanium') ? 'horizontal' : 'vertical'}
+						settings={this.state.userSettings}
 						showPopup={this.state.showPopup}
 						showBasicPopup={this.state.showBasicPopup}
 						showDateTimePopup={this.state.showDateTimePopup}
