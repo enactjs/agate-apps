@@ -1,0 +1,40 @@
+// CustomLayout.less
+//
+
+.customLayout {
+	.bodyRow {
+		height: 100%;
+	}
+
+	&.debug {
+		*[data-slot]::before {
+			content: "slot=" attr(data-slot);
+			display: block;
+			// position: absolute;
+			border: 1px solid lime;
+			color: lime;
+			padding: 0 0.3em;
+			margin: 0.3em;
+			line-height: 1.5em;
+			font-size: 60%;
+			background-color: black;
+		}
+
+		[data-slot="header"] {
+			background-color: red;
+		}
+		[data-slot="left"] {
+			background-color: yellow;
+			color: darkgray;
+		}
+		[data-slot="children"] {
+			background-color: green;
+		}
+		[data-slot="right"] {
+			background-color: blue;
+		}
+		[data-slot="footer"] {
+			background-color: purple;
+		}
+	}
+}

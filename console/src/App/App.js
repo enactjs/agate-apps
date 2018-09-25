@@ -13,6 +13,7 @@ import React from 'react';
 import {TabbedPanels} from '@enact/agate/Panels';
 
 import Clock from '../components/Clock';
+import CustomLayout from '../components/CustomLayout';
 import Home from '../views/Home';
 import HVAC from '../views/HVAC';
 import Phone from '../views/Phone';
@@ -25,19 +26,14 @@ add('backspace', 8);
 const AppBase = kind({
 	name: 'App',
 
-	defaultProps: {
-		colorAccent: '#0033cc',
-		colorHighlight: '#0033cc'
-	},
-
 	styles: {
 		css,
 		className: 'app'
 	},
 
 	render: ({
-		colorAccent,
-		colorHighlight,
+		accent,
+		highlight,
 		index,
 		onColorChangeAccent,
 		onColorChangeHighlight,
@@ -58,6 +54,7 @@ const AppBase = kind({
 					{...rest}
 					tabs={[
 						{title: 'Home', icon: 'denselist'},
+						{title: 'Layout', icon: 'series'},
 						{title: 'Phone', icon: 'phone'},
 						{title: 'Climate', icon: 'temperature'}
 					]}
@@ -66,8 +63,8 @@ const AppBase = kind({
 					index={index}
 				>
 					<beforeTabs>
-						<ColorPicker onChange={onColorChangeAccent} defaultValue={colorAccent} small />
-						<ColorPicker onChange={onColorChangeHighlight} defaultValue={colorHighlight} small />
+						<ColorPicker onChange={onColorChangeAccent} defaultValue={accent} small />
+						<ColorPicker onChange={onColorChangeHighlight} defaultValue={highlight} small />
 					</beforeTabs>
 					<afterTabs>
 						<Column align="center space-evenly">
@@ -82,6 +79,25 @@ const AppBase = kind({
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}
 					/>
+					{/*<CustomLayout>
+					{
+						[
+							null,
+							'left',
+							'Body Content space',
+							null,
+							'footer'
+						]
+					}
+					</CustomLayout>*/}
+					{/* arrangement={{right: 'left', left: 'footer'}} */}
+					<CustomLayout>
+						{/*<header>red header content</header>*/}
+						<left>yellow left content</left>
+						green body content
+						<right>blue right content</right>
+						<footer>purple footer content</footer>
+					</CustomLayout>
 					<Phone />
 					{/* eslint-disable-next-line */}
 					<HVAC />
@@ -129,6 +145,8 @@ const AppState = hoc((configHoc, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.state = {
+				colorAccent: '#cccccc',
+				colorHighlight: '#66aabb',
 				index: props.defaultIndex || 0,
 				showPopup: false,
 				showBasicPopup: false,
@@ -151,14 +169,12 @@ const AppState = hoc((configHoc, Wrapped) => {
 			}
 		).bind(this)
 
-		onColorChangeAccent = (ev) => {
-			// console.log({value: ev.target.value});
-			this.setState({colorAccent: ev.target.value});
+		onColorChangeAccent = ({value}) => {
+			this.setState({colorAccent: value});
 		};
 
-		onColorChangeHighlight = (ev) => {
-			// console.log({value: ev.target.value});
-			this.setState({colorHighlight: ev.target.value});
+		onColorChangeHighlight = ({value}) => {
+			this.setState({colorHighlight: value});
 		};
 
 		onSkinChange = () => {
