@@ -42,7 +42,6 @@ const AppBase = kind({
 		onTogglePopup,
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
-		onUserSettingsChange,
 		showPopup,
 		showBasicPopup,
 		showDateTimePopup,
@@ -83,11 +82,8 @@ const AppBase = kind({
 					<Settings
 						onSelect={onSelect}
 						onToggleDateTimePopup={onToggleDateTimePopup}
-						onUserSettingsChange={onUserSettingsChange}
 					/>
-					<DisplaySettings
-						onUserSettingsChange={onUserSettingsChange}
-					/>
+					<DisplaySettings/>
 				</TabbedPanels>
 				<Popup
 					onClose={onToggleBasicPopup}
@@ -151,16 +147,12 @@ const AppState = hoc((configHoc, Wrapped) => {
 		updateAppState = (cb) => {
 			this.setState(
 				produce(cb),
-				() => console.log(this.state)
+				this.saveUserSettingsLocally
 			)
 		}
 
-		onUserSettingsChange = (ev) => {
-			this.setState((prevState) => {
-				return {userSettings: {...prevState.userSettings, ...ev}}
-			}, () => {
-				window.localStorage.setItem(`user${this.state.userSettings.userId}`, JSON.stringify(this.state.userSettings))
-			});
+		saveUserSettingsLocally () {
+			window.localStorage.setItem(`user${this.state.userSettings.userId}`, JSON.stringify(this.state.userSettings))
 		}
 
 		onSelect = (ev) => {
@@ -204,7 +196,6 @@ const AppState = hoc((configHoc, Wrapped) => {
 						{...props}
 						index={this.state.index}
 						onSelect={this.onSelect}
-						onUserSettingsChange={this.onUserSettingsChange}
 						onSkinChange={this.onSkinChange}
 						onTogglePopup={this.onTogglePopup}
 						onToggleBasicPopup={this.onToggleBasicPopup}

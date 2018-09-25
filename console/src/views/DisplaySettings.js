@@ -10,7 +10,7 @@ class DisplaySettings extends Component {
 		super(props)
 	}
 
-	onSliderChange = (update) => ({value}) =>{
+	changeFontSize = (update) => ({value}) =>{
 		update((draft) => {
 			draft.userSettings.fontSize = value;
 		});
@@ -20,25 +20,27 @@ class DisplaySettings extends Component {
 		return (
 			<Panel {...this.props}>
 				<AppContext.Consumer>
-					{({updateAppState}) => (
+					{({updateAppState, userSettings}) => (
 						<Column className="enact-fit">
-						<label htmlFor="">Color</label>
-						<Input placeholder="Color"/>
-						<p>Text Size</p>
-						<SliderButton
-							onChange={this.onSliderChange(updateAppState)}
-						>{[
-							'Small',
-							'Medium',
-							'Large',
-							'Extra Large'
-						]}</SliderButton>
-						<p>Button Shape</p>
-						<SliderButton>{[
-							'Round',
-							'Both',
-							'Square'
-						]}</SliderButton>
+							<label htmlFor="">Color</label>
+							<Input placeholder="Color"/>
+							<p>Text Size</p>
+							{userSettings.fontSize}
+							<SliderButton
+								onChange={this.changeFontSize(updateAppState)}
+								value={userSettings.fontSize}
+							>{[
+								'Small',
+								'Medium',
+								'Large',
+								'Extra Large'
+							]}</SliderButton>
+							<p>Button Shape</p>
+							<SliderButton>{[
+								'Round',
+								'Both',
+								'Square'
+							]}</SliderButton>
 						</Column>
 						)}
 				</AppContext.Consumer>
