@@ -37,7 +37,7 @@ const Settings = kind({
 
 	handlers: {
 		onSelect: handle(
-			adaptEvent((ev) => ({selected: Number(ev.currentTarget.dataset.tabindex)}), forward('onSelect'))
+			adaptEvent((ev) => ({index: Number(ev.currentTarget.dataset.tabindex)}), forward('onSelect'))
 		),
 		onUserChange: handle(
 			adaptEvent(({value}) => ({userId: value + 1}), forward('onUserSettingsChange'))

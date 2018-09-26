@@ -2,6 +2,7 @@ import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
 import {Cell, Column} from '@enact/ui/Layout';
 import compose from 'ramda/src/compose';
+import {forward, handle} from '@enact/core/handle';
 import {fromEvent} from 'rxjs';
 import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
@@ -223,12 +224,13 @@ const AppState = hoc((configHoc, Wrapped) => {
 			});
 		};
 
-		onSelect = (ev) => {
-			console.log(ev);
-			const index = ev.selected;
-			this.props.onSelect({index});
-			this.setState(state => state.index === index ? null : {index})
-		};
+		onSelect = handle(
+			forward('onSelect'),
+			(ev) => {
+				const {index} = ev;
+				this.setState(state => state.index === index ? null : {index});
+			}
+		).bind(this);
 
 		onSkinChange = () => {
 			this.applyUserSettings({
