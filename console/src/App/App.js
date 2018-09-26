@@ -34,7 +34,13 @@ const AppBase = kind({
 		css,
 		className: 'app'
 	},
-
+	handlers: {
+		onSkinChange: (update) => () => {
+			update((draft) => {
+				draft.userSettings.skin = draft.userSettings.skin === 'carbon' ? 'titanium' : 'carbon'
+			})
+		}
+	},
 	render: ({
 		index,
 		onSelect,
@@ -46,6 +52,7 @@ const AppBase = kind({
 		showBasicPopup,
 		showDateTimePopup,
 		skinName,
+		updateAppState,
 		...rest
 	}) => {
 		return (
@@ -67,7 +74,7 @@ const AppBase = kind({
 							<Cell shrink>
 								<Clock />
 							</Cell>
-							<Cell shrink component={Button} type="grid" icon="fullscreen" small onTap={onSkinChange} />
+							<Cell shrink component={Button} type="grid" icon="fullscreen" small onTap={onSkinChange(updateAppState)} />
 						</Column>
 					</afterTabs>
 					<Home
@@ -135,24 +142,40 @@ const AppState = hoc((configHoc, Wrapped) => {
 		}
 
 		componentDidMount(){
+			this.loadUserSettings(this.state.userId);
+		}
+
+		loadUserSettings = (userId) => {
 			if(!JSON.parse(window.localStorage.getItem(`user${this.state.userId}`))){
-				console.log('saved');
-				window.localStorage.setItem(`user${this.state.userSettings.userId}`, JSON.stringify({...this.state.userSettings}));
+				console.log('saving');
+				window.localStorage.setItem(`user${this.state.userId}`, JSON.stringify({...this.state.userSettings}));
 			}
-			this.setState({
-				userSettings: JSON.parse(window.localStorage.getItem(`user${this.state.userSettings.userId}`))
-			})
+			console.log(userId, JSON.parse(window.localStorage.getItem(`user${userId}`)));
+			this.setState(
+				produce((draft) => {
+					draft.userSettings = JSON.parse(window.localStorage.getItem(`user${userId}`))
+				})
+			)
 		}
 
 		updateAppState = (cb) => {
 			this.setState(
 				produce(cb),
-				this.saveUserSettingsLocally
+				() => this.saveUserSettingsLocally(this.state.userId)
 			)
 		}
 
-		saveUserSettingsLocally () {
-			window.localStorage.setItem(`user${this.state.userSettings.userId}`, JSON.stringify(this.state.userSettings))
+		onSwitchUser = ({value}) => {
+			this.setState(
+				produce((draft) => {
+					draft.userId = value + 1
+				}),
+				() => this.loadUserSettings(this.state.userId)
+			)
+		}
+
+		saveUserSettingsLocally = () => {
+			window.localStorage.setItem(`user${this.state.userId}`, JSON.stringify(this.state.userSettings))
 		}
 
 		onSelect = (ev) => {
@@ -196,7 +219,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 						{...props}
 						index={this.state.index}
 						onSelect={this.onSelect}
-						onSkinChange={this.onSkinChange}
+						updateAppState={this.updateAppState}
 						onTogglePopup={this.onTogglePopup}
 						onToggleBasicPopup={this.onToggleBasicPopup}
 						onToggleDateTimePopup={this.onToggleDateTimePopup}

@@ -5,6 +5,7 @@ import {Panel} from '@enact/agate/Panels';
 import React from 'react';
 import SwitchItem from '@enact/agate/SwitchItem';
 import SliderButton from '@enact/agate/SliderButton';
+import {AppContext} from '../App/App'
 
 import viewCss from './Settings.less';
 
@@ -58,10 +59,17 @@ const Settings = kind({
 						Settings
 					</Cell>
 					<Cell>
-						<SliderButton>{[
-							'User 1',
-							'User 2'
-						]}</SliderButton>
+					<AppContext.Consumer>
+						{({onSwitchUser, userId}) => (
+							<SliderButton
+								onChange={onSwitchUser}
+								value={userId - 1}
+								>{[
+								'User 1',
+								'User 2'
+							]}</SliderButton>
+						)}
+					</AppContext.Consumer>
 					</Cell>
 					<SwitchItemCell
 						icon="user"
