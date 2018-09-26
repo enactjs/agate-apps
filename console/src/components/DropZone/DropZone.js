@@ -46,8 +46,8 @@ const DropZone = hoc((configHoc, Wrapped) => {
 			ev.preventDefault();
 
 			// Get the id of the target and add the moved element to the target's DOM
-			// const origSlot = ev.dataTransfer.getData('text/plain');
-			const origSlot = this.dragOriginNode.dataset.slot;
+			// const dragOrigin = ev.dataTransfer.getData('text/plain');
+			const dragOrigin = this.dragOriginNode.dataset.slot;
 
 			let dragDropNode;
 			if (ev.target.dataset.slot) {
@@ -61,28 +61,39 @@ const DropZone = hoc((configHoc, Wrapped) => {
 				}
 			}
 			// Get the destination element's slot value, or find its ancestor that has one (in case we drop this on a child or grandchild of the slotted item).
-			// const destSlot = ev.target.dataset.slot || (ev.target.closest('[data-slot]') && ev.target.closest('[data-slot]').dataset.slot);
-			const destSlot = dragDropNode.dataset.slot;
+			// const dragDestination = ev.target.dataset.slot || (ev.target.closest('[data-slot]') && ev.target.closest('[data-slot]').dataset.slot);
+			const dragDestination = dragDropNode.dataset.slot;
 
-			if (destSlot === origSlot) return;
+			if (dragDestination === dragOrigin) return;
 
 			// console.dir(ev.target);
 			// ev.dataTransfer.clearData();
 
-			this.dragOriginNode.dataset.slot = destSlot;
-			dragDropNode.dataset.slot = origSlot;
+			this.dragOriginNode.dataset.slot = dragDestination;
+			dragDropNode.dataset.slot = dragOrigin;
 
-			console.log('from:', origSlot, 'to:', destSlot);
+			console.log('from:', dragOrigin, 'to:', dragDestination);
 			// console.log(this.dragOriginNode.text)
 
 			this.dragOriginNode = null;
+			// this.setState(({arrangement}) => {
+			// 	const updated = {...arrangement};
+			// 	updated[dragOrigin] = arrangement[dragDestination] || dragDestination;
+			// 	updated[dragDestination] = arrangement[dragOrigin] || dragOrigin;
+			// 	return {dragging: null, arrangement: updated};
+			// });
 			this.setState(({arrangement}) => {
-				const previousOrigin = getKeyByValue(arrangement, origSlot) || origSlot;
-				const previousDestination = getKeyByValue(arrangement, destSlot) || destSlot;
+				// const previousOrigin = getKeyByValue(arrangement, dragOrigin) || dragOrigin;
+				const oldD = getKeyByValue(arrangement, dragDestination);
+				const oldO = getKeyByValue(arrangement, dragOrigin);
 
-				// debugger;
-				arrangement[previousDestination] = previousOrigin;
-				arrangement[previousOrigin] = previousDestination;
+				arrangement[oldD || dragDestination] = dragOrigin;
+				arrangement[oldO || dragOrigin] = dragDestination;
+
+				// arrangement._a = oldD;
+				// arrangement._b = oldO;
+				// arrangement._dragDestination = dragDestination;
+				// arrangement._dragOrigin = dragOrigin;
 				return {dragging: null, arrangement};
 			});
 		};

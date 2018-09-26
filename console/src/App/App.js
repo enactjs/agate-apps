@@ -93,10 +93,12 @@ const AppBase = kind({
 					{/* arrangement={{right: 'left', left: 'footer'}} */}
 					<CustomLayout>
 						{/*<header>red header content</header>*/}
-						<left>yellow left content</left>
+						<left>yellow left content <Button>Transport Mode</Button></left>
 						green body content
 						<right>blue right content</right>
-						<footer>purple footer content</footer>
+						<footer>purple footer content
+							<Button type="grid" icon="fullscreen" small onTap={onSkinChange} />
+						</footer>
 					</CustomLayout>
 					<Phone />
 					{/* eslint-disable-next-line */}
