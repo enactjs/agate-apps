@@ -17,6 +17,7 @@ import CustomLayout from '../components/CustomLayout';
 import Home from '../views/Home';
 import HVAC from '../views/HVAC';
 import Phone from '../views/Phone';
+import Radio from '../views/Radio';
 import Settings from '../views/Settings';
 
 import css from './App.less';
@@ -56,7 +57,8 @@ const AppBase = kind({
 						{title: 'Home', icon: 'denselist'},
 						{title: 'Layout', icon: 'series'},
 						{title: 'Phone', icon: 'phone'},
-						{title: 'Climate', icon: 'temperature'}
+						{title: 'Climate', icon: 'temperature'},
+						{title: 'Radio', icon: 'audio'}
 					]}
 					onSelect={onSelect}
 					selected={index}
@@ -103,6 +105,7 @@ const AppBase = kind({
 					<Phone />
 					{/* eslint-disable-next-line */}
 					<HVAC />
+					<Radio />
 					<Settings
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
@@ -153,6 +156,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 				showPopup: false,
 				showBasicPopup: false,
 				showDateTimePopup: false,
+				showRadio: false,
 				skin: props.defaultSkin || 'carbon' // 'titanium' alternate.
 			};
 		}
