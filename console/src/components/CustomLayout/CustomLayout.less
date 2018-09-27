@@ -1,12 +1,37 @@
 // CustomLayout.less
 //
 
+@import "~@enact/agate/styles/mixins.less";
+
 .customLayout {
 	.bodyRow {
 		height: 100%;
 	}
 
-	&.debug {
+	*[draggable=true] {
+		overflow: hidden;
+	}
+
+	*[data-slot] {
+
+		&::after {
+			content: "";
+			display: none;
+			position: absolute;
+			.position(6px);
+			border: 6px dashed fade(gray, 50%);
+			border-radius: 12px;
+			background-color: fade(white, 10%);
+		}
+	}
+
+	&:global(.dragging) *[data-slot]:global(.dropTarget) {
+		&::after {
+			display: block;
+		}
+	}
+
+	&:global(.debug.drag) {
 		*[data-slot]::before {
 			content: "slot=" attr(data-slot);
 			display: block;
@@ -21,20 +46,20 @@
 		}
 
 		[data-slot="header"] {
-			background-color: red;
+			background-color: fade(red, 20%);
 		}
 		[data-slot="left"] {
-			background-color: yellow;
+			background-color: fade(yellow, 20%);
 			color: darkgray;
 		}
 		[data-slot="children"] {
-			background-color: green;
+			background-color: fade(green, 20%);
 		}
 		[data-slot="right"] {
-			background-color: blue;
+			background-color: fade(blue, 20%);
 		}
 		[data-slot="footer"] {
-			background-color: purple;
+			background-color: fade(purple, 20%);
 		}
 	}
 }

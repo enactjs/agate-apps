@@ -1,40 +1,52 @@
-// import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
-// import {Layout, Cell} from '@enact/ui/Layout';
-// import Slottable from '@enact/ui/Slottable';
 import PropTypes from 'prop-types';
-import {setDisplayName} from 'recompose';
+import classnames from 'classnames';
+import {compose, setDisplayName} from 'recompose';
 import React from 'react';
+import Changeable from '@enact/ui/Changeable';
 
 // https://stackoverflow.com/questions/9907419/how-to-get-a-key-in-a-javascript-object-by-its-value
-// ZER0 - Mar 28 '12 at 12:51
+// By: ZER0 - Mar 28 '12 at 12:51
 const getKeyByValue = (obj, value) =>
 	Object.keys(obj).find(key => obj[key] === value);
 
-const DropZone = hoc((configHoc, Wrapped) => {
+const DropZoneBase = hoc((configHoc, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'DropZone';
 
 		static propTypes = {
-			arrangement: PropTypes.object
+			arrangement: PropTypes.object,
+			onArrange: PropTypes.func
 		};
 
 		state = {
 			arrangement: this.props.arrangement || {},
-			// index: this.props.index,
-			dragging: null
+			dragging: false
 		};
 
-		// constructor (props) {
-		// 	super(props);
-		// 	this.state = {
-		// 		showPopup: false,
-		// 	};
-		// }
+		addDropTarget = (target) => {
+			target.classList.add('dropTarget');
+		};
 
-		// onColorChangeAccent = ({value}) => {
-		// 	this.setState({colorAccent: value});
-		// };
+		removeDropTarget = (target) => {
+			target.classList.remove('dropTarget');
+		};
+
+
+		handleDragStart = (ev) => {
+			// ev.dataTransfer.setData('text/plain', ev.target.dataset.slot);
+			ev.dataTransfer.effectAllowed = 'move';
+			this.dragOriginNode = ev.target;
+			this.setState({dragging: true});
+		};
+
+		handleDragEnter = (ev) => {
+			this.addDropTarget(ev.target);
+		};
+
+		handleDragLeave = (ev) => {
+			this.removeDropTarget(ev.target);
+		};
 
 		handleDragOver = (ev) => {
 			ev.preventDefault();
@@ -45,134 +57,109 @@ const DropZone = hoc((configHoc, Wrapped) => {
 		handleDrop = (ev) => {
 			ev.preventDefault();
 
+			// Bail early if the drag started from some unknown location.
+			if (!this.dragOriginNode) {
+				this.setState({dragging: false});
+				return;
+			}
+
 			// Get the id of the target and add the moved element to the target's DOM
 			// const dragOrigin = ev.dataTransfer.getData('text/plain');
 			const dragOrigin = this.dragOriginNode.dataset.slot;
 
 			let dragDropNode;
+			// If we dropped directly on an element with a slot defined, just use that directly
 			if (ev.target.dataset.slot) {
 				dragDropNode = ev.target;
 			} else {
+				// If we dropped on a child of a slotted element (like an icon or a div or other
+				// nested component), find the closest ancestor with a slot and use that as the drop element.
 				const closestSlot = ev.target.closest('[data-slot]');
 				if (closestSlot && closestSlot.dataset.slot) {
 					dragDropNode = closestSlot;
 				} else {
+					// We didn't actually find anything, just bail out. The component was dropped in
+					// a place that is unknown.
+					this.setState({dragging: false});
 					return;
 				}
 			}
+
+			this.removeDropTarget(dragDropNode);
+
 			// Get the destination element's slot value, or find its ancestor that has one (in case we drop this on a child or grandchild of the slotted item).
 			// const dragDestination = ev.target.dataset.slot || (ev.target.closest('[data-slot]') && ev.target.closest('[data-slot]').dataset.slot);
 			const dragDestination = dragDropNode.dataset.slot;
 
-			if (dragDestination === dragOrigin) return;
+			// If the dragged element was dropped back on itself, do nothing and exit.
+			if (dragDestination === dragOrigin) {
+				this.setState({dragging: false});
+				return;
+			}
 
-			// console.dir(ev.target);
 			// ev.dataTransfer.clearData();
 
 			this.dragOriginNode.dataset.slot = dragDestination;
 			dragDropNode.dataset.slot = dragOrigin;
 
 			console.log('from:', dragOrigin, 'to:', dragDestination);
-			// console.log(this.dragOriginNode.text)
+			// console.log('a1', this.state.arrangement);
 
+			// We successfully completed the drag, blank-out the node.
 			this.dragOriginNode = null;
-			// this.setState(({arrangement}) => {
-			// 	const updated = {...arrangement};
-			// 	updated[dragOrigin] = arrangement[dragDestination] || dragDestination;
-			// 	updated[dragDestination] = arrangement[dragOrigin] || dragOrigin;
-			// 	return {dragging: null, arrangement: updated};
-			// });
+
 			this.setState(({arrangement}) => {
-				// const previousOrigin = getKeyByValue(arrangement, dragOrigin) || dragOrigin;
+				// console.log('a2', arrangement);
 				const oldD = getKeyByValue(arrangement, dragDestination);
 				const oldO = getKeyByValue(arrangement, dragOrigin);
 
 				arrangement[oldD || dragDestination] = dragOrigin;
 				arrangement[oldO || dragOrigin] = dragDestination;
 
-				// arrangement._a = oldD;
-				// arrangement._b = oldO;
-				// arrangement._dragDestination = dragDestination;
-				// arrangement._dragOrigin = dragOrigin;
-				return {dragging: null, arrangement};
+				// console.log('a3', arrangement);
+				return {dragging: false, arrangement};
 			});
 		};
 
-		// handleDragEnd = () => {
-		// 	this.setState({dragging: null});
-		// };
-
-		handleDragStart = (ev) => {
-			// ev.dataTransfer.setData('text/plain', ev.target.dataset.slot);
-			ev.dataTransfer.effectAllowed = 'move';
-			this.dragOriginNode = ev.target;
-			this.setState({dragging: true});
+		handleDragEnd = () => {
+			if (this.props.onArrange) {
+				this.props.onArrange({arrangement: this.state.arrangement});
+			}
 		};
 
-		// drop = (ev) => {
-		//     if (ev.target.id) {
-		//       this.props.swap(ev.dataTransfer.getData("text"), ev.target.id)
-		//       ev.dataTransfer.clearData()
-		//     }
-		//   }
-
-		// setNode = (node) => {
-		// 	this.node = ReactDOM.findDOMNode(node); // eslint-disable-line react/no-find-dom-node
-		// };
-		//
-		//
-		//
-		//
-		//
-		// SOMEONE needs to remember what the current state of remapping is and use those values as
-		// the origin slot names
-		//
-		//
-		//
-		//
-		//
-
 		render () {
-			const props = {...this.props};
-			console.log('DropZone arrangement:', this.state.arrangement);
+			const {className, ...rest} = {...this.props};
+			delete rest.onArrange;
+			// console.log('slots:', rest);
 
 			return (
 				<Wrapped
-					{...props}
-					// style={{
-						// backgroundColor: (this.state.dragging ? 'red': 'transparent'),
-						// pointerEvents: (this.state.dragging ? 'none': null)
-					// }}
-					// ref={this.setNode}
-					// showPopup={this.state.showPopup}
+					{...rest}
+					className={classnames(className, {dragging: this.state.dragging})}
 					arrangement={this.state.arrangement}
+					arranging={this.state.dragging}
 					// draggable="true"
+					onDragStart={this.handleDragStart}
+					onDragEnter={this.handleDragEnter}
+					onDragLeave={this.handleDragLeave}
 					onDragOver={this.handleDragOver}
 					onDrop={this.handleDrop}
-					// onDragEnd={this.handleDragEnd}
-					onDragStart={this.handleDragStart}
+					onDragEnd={this.handleDragEnd}
 				/>
 			);
 		}
 	};
 });
 
-// const Draggable = hoc(({props: configProps}, Wrapped) => props => <Wrapped {...props} {...configProps} />)
-const Draggable = (Wrapped) => setDisplayName('Draggable')((props) => <Wrapped {...props} draggable="true" />);
+const DropZone = compose(
+	Changeable({prop: 'arrangement'}),
+	DropZoneBase
+);
 
-// const Draggable = hoc((configHoc, Wrapped) => {
-// 	return class extends React.Component {
-// 		static displayName = 'Draggable';
-// 		render () {
-// 			return (
-// 				<Wrapped
-// 					draggable="true"
-// 					{...this.props}
-// 				/>
-// 			);
-// 		}
-// 	};
-// });
+const Draggable = (Wrapped) => setDisplayName('Draggable')(
+	// ({arrangement, name, ...rest}) => <Wrapped {...rest} data-slot={arrangement && arrangement[name] || name} draggable="true" />
+	({arrangement, name, slot, ...rest}) => <Wrapped {...rest} data-slot={arrangement && (arrangement[name] || arrangement[slot]) || (name || slot)} data-slot-name={slot} draggable="true" />
+);
 
 export default DropZone;
 export {

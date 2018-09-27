@@ -7,7 +7,8 @@ import React from 'react';
 // import ReactDOM from 'react-dom';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
 
-import DropZone from '../components/DropZone';
+import Rearrangeable from '../components/Rearrangeable';
+import DropZone, {Draggable} from '../components/DropZone';
 
 import css from './Home.less';
 
@@ -18,10 +19,30 @@ import css from './Home.less';
 
 // };
 
+const HomeRow = kind({
+	name: 'HomeRow',
+	render: ({slot00, slot01, slot02, ...rest}) => {
+		delete rest.arrangement;
+		delete rest.arranging;
+		return (
+			<Row {...rest}>
+				{slot00}
+				{slot01}
+				{slot02}
+			</Row>
+		);
+	}
+});
 
-const DropZoneRow = Slottable({slots: ['00', '01', '02']}, DropZone(Row));
+const DropZoneRow = DropZone(
+	Slottable({slots: ['slot00', 'slot01', 'slot02']},
+		Rearrangeable({slots: ['slot00', 'slot01', 'slot02']},
+			HomeRow
+		)
+	)
+);
 
-const HomeIconCell = kind({
+const HomeIconCell = Draggable(kind({
 	name: 'HomeIconCell',
 	styles: {
 		css,
@@ -29,9 +50,9 @@ const HomeIconCell = kind({
 	},
 
 	render: ({children, ...rest}) => (
-		<Cell draggable="true" component={LabeledIconButton} size={180} {...rest}>{children}</Cell>
+		<Cell component={LabeledIconButton} size={180} {...rest}>{children}</Cell>
 	)
-});
+}));
 
 const Home = kind({
 	name: 'Home',
@@ -49,24 +70,24 @@ const Home = kind({
 			<Panel {...rest}>
 				<Column align="center center">
 					<Cell shrink>
-						<DropZoneRow align="start center" id="row0">
-							<HomeIconCell id="slot00" data-slot="00" icon="temperature" data-tabindex={2} onKeyUp={onTabChange} onClick={onTabChange}>Climate</HomeIconCell>
-							<HomeIconCell id="slot01" data-slot="01" icon="compass">Navigation</HomeIconCell>
-							<HomeIconCell id="slot02" data-slot="02" icon="phone" data-tabindex={1} onKeyUp={onTabChange} onClick={onTabChange}>Phone</HomeIconCell>
+						<DropZoneRow align="start center">
+							<HomeIconCell name="slot00" slot="slot00" icon="temperature" data-tabindex={2} onKeyUp={onTabChange} onClick={onTabChange}>Climate</HomeIconCell>
+							<HomeIconCell name="slot01" slot="slot01" icon="compass">Navigation</HomeIconCell>
+							<HomeIconCell name="slot02" slot="slot02" icon="phone" data-tabindex={1} onKeyUp={onTabChange} onClick={onTabChange}>Phone</HomeIconCell>
 						</DropZoneRow>
 					</Cell>
 					<Cell shrink>
-						<DropZoneRow align="start center" id="row1">
-							<HomeIconCell id="slot10" data-slot="10" icon="audio">Radio</HomeIconCell>
-							<HomeIconCell id="slot11" data-slot="11" icon="resumeplay">Multimedia</HomeIconCell>
-							<HomeIconCell id="slot12" data-slot="12" icon="repeat" onKeyUp={onPopupOpen} onClick={onToggleBasicPopup}>Connect</HomeIconCell>
+						<DropZoneRow align="start center">
+							<HomeIconCell name="s00" slot="slot00" icon="audio">Radio</HomeIconCell>
+							<HomeIconCell name="s01" slot="slot01" icon="resumeplay">Multimedia</HomeIconCell>
+							<HomeIconCell name="s02" slot="slot02" icon="repeat" onKeyUp={onPopupOpen} onClick={onToggleBasicPopup}>Connect</HomeIconCell>
 						</DropZoneRow>
 					</Cell>
 					<Cell shrink>
-						<DropZoneRow align="start center" id="row2" data-slot="row2">
-							<HomeIconCell id="slot20" data-slot="20" icon="repeatdownload">Dashboard</HomeIconCell>
-							<HomeIconCell id="slot21" data-slot="21" icon="gear" data-tabindex={3} onKeyUp={onTabChange} onClick={onTabChange}>Settings</HomeIconCell>
-							<HomeIconCell id="slot22" data-slot="22" icon="closex" onClick={onTogglePopup}>Point of Interest</HomeIconCell>
+						<DropZoneRow align="start center">
+							<HomeIconCell slot="slot00" icon="repeatdownload">Dashboard</HomeIconCell>
+							<HomeIconCell slot="slot01" icon="gear" data-tabindex={3} onKeyUp={onTabChange} onClick={onTabChange}>Settings</HomeIconCell>
+							<HomeIconCell slot="slot02" icon="closex" onClick={onTogglePopup}>Point of Interest</HomeIconCell>
 						</DropZoneRow>
 					</Cell>
 				</Column>

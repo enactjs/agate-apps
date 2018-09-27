@@ -91,7 +91,7 @@ const AppBase = kind({
 					}
 					</CustomLayout>*/}
 					{/* arrangement={{right: 'left', left: 'footer'}} */}
-					<CustomLayout>
+					<CustomLayout onArrange={console.log} defaultArrangement={{right: 'left', left: 'right'}}>
 						{/*<header>red header content</header>*/}
 						<left>yellow left content <Button>Transport Mode</Button></left>
 						green body content
