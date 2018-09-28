@@ -158,7 +158,15 @@ const DropZone = compose(
 
 const Draggable = (Wrapped) => setDisplayName('Draggable')(
 	// ({arrangement, name, ...rest}) => <Wrapped {...rest} data-slot={arrangement && arrangement[name] || name} draggable="true" />
-	({arrangement, name, slot, ...rest}) => <Wrapped {...rest} data-slot={arrangement && (arrangement[name] || arrangement[slot]) || (name || slot)} data-slot-name={slot} draggable="true" />
+	// If something is marked explicitly as *not* draggable (everything using this is normally)
+	// don't assign it a data-slot, so it can't be dragged(A) or dropped on(B).
+	({arrangement, draggable = true, name, slot, ...rest}) =>
+		<Wrapped
+			{...rest}
+			draggable={draggable}
+			data-slot={draggable ? (arrangement && (arrangement[name] || arrangement[slot]) || (name || slot)) : null}
+			data-slot-name={slot}
+		/>
 );
 
 export default DropZone;
