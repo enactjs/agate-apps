@@ -37,7 +37,7 @@ const Settings = kind({
 
 	handlers: {
 		onSelect: (ev, {onSelect}) => {
-			onSelect({selected: ev.currentTarget.dataset.tabindex});
+			onSelect({index: ev.currentTarget.dataset.tabindex});
 		}
 	},
 
@@ -74,7 +74,7 @@ const Settings = kind({
 					<SwitchItemCell
 						icon="user"
 						noToggle
-						data-tabindex={4}
+						data-tabindex={5}
 						onTap={onSelect}
 					>
 						Display

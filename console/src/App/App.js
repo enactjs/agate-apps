@@ -147,10 +147,9 @@ const AppState = hoc((configHoc, Wrapped) => {
 
 		loadUserSettings = (userId) => {
 			if(!JSON.parse(window.localStorage.getItem(`user${this.state.userId}`))){
-				console.log('saving');
 				window.localStorage.setItem(`user${this.state.userId}`, JSON.stringify({...this.state.userSettings}));
 			}
-			console.log(userId, JSON.parse(window.localStorage.getItem(`user${userId}`)));
+
 			this.setState(
 				produce((draft) => {
 					draft.userSettings = JSON.parse(window.localStorage.getItem(`user${userId}`))
@@ -158,10 +157,20 @@ const AppState = hoc((configHoc, Wrapped) => {
 			)
 		}
 
+		saveUserSettingsLocally = (userId, hasChanged) => {
+			if(hasChanged){
+				window.localStorage.setItem(`user${userId}`, JSON.stringify(this.state.userSettings))
+			}
+		}
+
+		// Catch all way to update state
 		updateAppState = (cb) => {
+			const prevUserSettings = this.state.userSettings
 			this.setState(
 				produce(cb),
-				() => this.saveUserSettingsLocally(this.state.userId)
+				() => {
+					this.saveUserSettingsLocally(this.state.userId, this.state.userSettings !== prevUserSettings)
+				}
 			)
 		}
 
@@ -174,26 +183,13 @@ const AppState = hoc((configHoc, Wrapped) => {
 			)
 		}
 
-		saveUserSettingsLocally = () => {
-			window.localStorage.setItem(`user${this.state.userId}`, JSON.stringify(this.state.userSettings))
-		}
-
-		onSelect = (ev) => {
-			console.log(ev);
-			const index = ev.selected;
-			this.props.onSelect({index});
-			this.setState(state => state.index === index ? null : {index})
-		}
-
-		onSkinChange = () => {
-			this.setState(({userSettings}) => {
-				return (
-					{userSettings: {
-						skin: (userSettings.skin === 'carbon' ? 'titanium' : 'carbon')
-					}}
-				)
-			});
-		};
+		onSelect = handle(
+			forward('onSelect'),
+			(ev) => {
+				const {index} = ev;
+				this.setState(state => state.index === index ? null : {index});
+			}
+		).bind(this);
 
 		onTogglePopup = () => {
 			this.setState(({showPopup}) => ({showPopup: !showPopup}));
