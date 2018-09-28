@@ -78,7 +78,7 @@ const Home = kind({
 					</Cell>
 					<Cell shrink>
 						<DropZoneRow align="start center">
-							<HomeIconCell name="s00" slot="slot00" icon="audio" data-tabindex={3} onKeyUp={onTabChange} onClick={onTabChange}>Radio</HomeIconCell>
+							<HomeIconCell name="s00" slot="slot00" icon="audio" data-tabindex={4} onKeyUp={onTabChange} onClick={onTabChange}>Radio</HomeIconCell>
 							<HomeIconCell name="s01" slot="slot01" icon="resumeplay">Multimedia</HomeIconCell>
 							<HomeIconCell name="s02" slot="slot02" icon="repeat" onKeyUp={onPopupOpen} onClick={onToggleBasicPopup}>Connect</HomeIconCell>
 						</DropZoneRow>
@@ -86,7 +86,7 @@ const Home = kind({
 					<Cell shrink>
 						<DropZoneRow align="start center">
 							<HomeIconCell slot="slot00" icon="repeatdownload">Dashboard</HomeIconCell>
-							<HomeIconCell slot="slot01" icon="gear" data-tabindex={4} onKeyUp={onTabChange} onClick={onTabChange}>Settings</HomeIconCell>
+							<HomeIconCell slot="slot01" icon="gear" data-tabindex={5} onKeyUp={onTabChange} onClick={onTabChange}>Settings</HomeIconCell>
 							<HomeIconCell slot="slot02" icon="closex" onClick={onTogglePopup}>Point of Interest</HomeIconCell>
 						</DropZoneRow>
 					</Cell>
