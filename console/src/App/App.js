@@ -174,6 +174,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 			)
 		}
 
+		// If you want to be more specific about updating state. Similar to a redux action/reducer.
 		onSwitchUser = ({value}) => {
 			this.setState(
 				produce((draft) => {
