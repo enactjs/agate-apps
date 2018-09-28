@@ -9,7 +9,7 @@ import DropZone, {Draggable} from '../DropZone';
 
 import css from './CustomLayout.less';
 
-const allSlotNames = ['children', 'footer', 'header', 'left', 'right'];
+const allSlotNames = ['children', 'footer', 'footerLeft', 'footerRight', 'header', 'headerLeft', 'headerRight', 'left', 'right'];
 
 const DroppableCell = Draggable(Cell);
 
@@ -21,29 +21,46 @@ const CustomLayoutBase = kind({
 		arranging: PropTypes.bool,
 		children: PropTypes.node,
 		footer: PropTypes.node,
+		footerLeft: PropTypes.node,
+		footerRight: PropTypes.node,
 		header: PropTypes.node,
+		headerLeft: PropTypes.node,
+		headerRight: PropTypes.node,
 		left: PropTypes.node,
 		right: PropTypes.node
 	},
 
 	styles: {
 		css,
-		// className: 'customLayout'
-		className: 'customLayout debug layout drag'
+		className: 'customLayout'
+		// className: 'customLayout debug layout'
+		// className: 'customLayout debug layout drag'
 	},
 
-	render: ({arrangement, arranging, header, left, children, right, footer, ...rest}) => {
+	render: ({arrangement, arranging, header, headerLeft, headerRight, left, children, right, footer, footerLeft, footerRight, ...rest}) => {
 		return (
 			<Layout {...rest} orientation="vertical">
-				{header || arranging ? <DroppableCell size="25%" className={css.header} arrangement={arrangement} name="header">{header}</DroppableCell> : null}
-				<Cell>
-					<Layout className={css.bodyRow}>
-						{left || arranging ? <DroppableCell size="30%" className={css.left}  arrangement={arrangement} name="left">{left}</DroppableCell> : null}
-						<DroppableCell className={css.body}  arrangement={arrangement} name="children">{children}</DroppableCell>
-						{right || arranging ? <DroppableCell size="30%" className={css.right} arrangement={arrangement} name="right">{right}</DroppableCell> : null}
+				<Cell shrink>
+					<Layout>
+						{headerLeft || arranging ? <DroppableCell size={(!headerLeft && arranging) ? 30 : '30%'} className={css.headerLeft}  arrangement={arrangement} name="headerLeft">{headerLeft}</DroppableCell> : null}
+						{(header || headerLeft || headerRight) || arranging ? <DroppableCell className={css.header} arrangement={arrangement} name="header">{header}</DroppableCell> : null}
+						{headerRight || arranging ? <DroppableCell size={(!headerRight && arranging) ? 30 : '30%'} className={css.headerRight} arrangement={arrangement} name="headerRight">{headerRight}</DroppableCell> : null}
 					</Layout>
 				</Cell>
-				{footer || arranging ? <DroppableCell size="25%" className={css.footer} arrangement={arrangement} name="footer">{footer}</DroppableCell> : null}
+				<Cell>
+					<Layout className={css.bodyRow}>
+						{left || arranging ? <DroppableCell size={(!left && arranging) ? 30 : '30%'} className={css.left}  arrangement={arrangement} name="left">{left}</DroppableCell> : null}
+						<DroppableCell className={css.body}  arrangement={arrangement} name="children">{children}</DroppableCell>
+						{right || arranging ? <DroppableCell size={(!right && arranging) ? 30 : '30%'} className={css.right} arrangement={arrangement} name="right">{right}</DroppableCell> : null}
+					</Layout>
+				</Cell>
+				<Cell shrink>
+					<Layout>
+						{footerLeft || arranging ? <DroppableCell size={(!footerLeft && arranging) ? 30 : '30%'} className={css.footerLeft}  arrangement={arrangement} name="footerLeft">{footerLeft}</DroppableCell> : null}
+						{(footer || footerLeft || footerRight) || arranging ? <DroppableCell className={css.footer} arrangement={arrangement} name="footer">{footer}</DroppableCell> : null}
+						{footerRight || arranging ? <DroppableCell size={(!footerRight && arranging) ? 30 : '30%'} className={css.footerRight} arrangement={arrangement} name="footerRight">{footerRight}</DroppableCell> : null}
+					</Layout>
+				</Cell>
 			</Layout>
 		);
 	}
