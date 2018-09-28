@@ -87,16 +87,16 @@ const RadioBase = kind({
 		return (
 			<Panel {...rest}>
 				<CustomLayout>
-					<headerLeft>
+					<topLeft>
 						{/* Tune */}
 						<Row align="center center" className={css.tune}>
 							<Button onTap={onTune} action="tune-down" icon="arrowsmallleft" />
 							Tune
 							<Button onTap={onTune} action="tune-up" icon="arrowsmallright" />
 						</Row>
-					</headerLeft>
+					</topLeft>
 
-					<header>
+					<top>
 						{/* Radio TextInfo */}
 						<Row align="center space-around" wrap className={css.info}>
 							{/* Band Selector */}
@@ -109,16 +109,16 @@ const RadioBase = kind({
 								<LabeledItemBase label="Artist - Song">{frequency} MHZ</LabeledItemBase>
 							</Cell>
 						</Row>
-					</header>
+					</top>
 
-					<headerRight>
+					<topRight>
 						{/* Scan */}
 						<Row align="center center" className={css.scan}>
 							<Button onTap={onTune} action="scan-down" icon="arrowsmallleft" />
 							Scan
 							<Button onTap={onTune} action="scan-up" icon="arrowsmallright" />
 						</Row>
-					</headerRight>
+					</topRight>
 
 					{/*List*/}
 					<div className={css.presetList}>

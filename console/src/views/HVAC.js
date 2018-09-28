@@ -24,14 +24,14 @@ const Hvac = kind({
 	render: (props) => (
 		<Panel {...props}>
 			<CustomLayout>
-				<header>
+				<top>
 					<Divider>
 						Fan Speed
 					</Divider>
 					<SliderButton>
 						{['Off', 'Low', 'Medium', 'High']}
 					</SliderButton>
-				</header>
+				</top>
 				<Row className={css.above} align="center space-around">
 					<Cell component={ToggleButton} shrink icon="heatseatleft" type="grid" className={css.button} underline />
 					<Cell component={ToggleButton} shrink type="grid" className={css.button}>A/C</Cell>
@@ -49,7 +49,7 @@ const Hvac = kind({
 						{temps}
 					</Picker>
 				</Row>
-				<footer>
+				<bottom>
 					{/*<Row className={css.spaced}>*/}
 					<Layout align="center space-around" wrap>
 						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="airdown" />
@@ -58,7 +58,7 @@ const Hvac = kind({
 						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="defrosterback" />
 						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="defrosterfront" />
 					</Layout>
-				</footer>
+				</bottom>
 			</CustomLayout>
 		</Panel>
 	)

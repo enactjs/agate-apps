@@ -88,19 +88,19 @@ const AppBase = kind({
 							'left',
 							'Body Content space',
 							null,
-							'footer'
+							'bottom'
 						]
 					}
 					</CustomLayout>*/}
-					{/* arrangement={{right: 'left', left: 'footer'}}  defaultArrangement={{right: 'left', left: 'right'}} */}
+					{/* arrangement={{right: 'left', left: 'bottom'}}  defaultArrangement={{right: 'left', left: 'right'}} */}
 					<CustomLayout onArrange={console.log}>
-						{/*<header>red header content</header>*/}
+						{/*<top>red top content</top>*/}
 						<left>yellow left content <Button>Transport Mode</Button></left>
 						green body content
 						<right>blue right content</right>
-						<footer>purple footer content
+						<bottom>purple bottom content
 							<Button type="grid" icon="fullscreen" small onTap={onSkinChange} />
-						</footer>
+						</bottom>
 					</CustomLayout>
 					<Phone />
 					{/* eslint-disable-next-line */}

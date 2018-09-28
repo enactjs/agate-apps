@@ -128,7 +128,7 @@ const PhoneBase = kind({
 						open={showPopup}
 						phoneNumber={value}
 					/>
-					<footer>
+					<bottom>
 						<Cell
 							component={Scroller}
 							shrink
@@ -143,7 +143,7 @@ const PhoneBase = kind({
 								/>
 							))}
 						</Cell>
-					</footer>
+					</bottom>
 				</CustomLayout>
 			</Panel>
 		)
