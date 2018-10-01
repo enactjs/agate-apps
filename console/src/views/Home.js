@@ -76,7 +76,7 @@ const Home = kind({
                     </Row>
                     <Row align="start center">
                         <HomeIconCell icon="resumeplay">Multimedia</HomeIconCell>
-                        <HomeIconCell icon="repeat" onKeyUp={onPopupOpen} onClick={onToggleBasicPopup}>Connect</HomeIconCell>
+                        <HomeIconCell icon="gear" data-tabindex={4} onKeyUp={onTabChange} onClick={onTabChange}>Settings</HomeIconCell>
                     </Row>
                 </Cell>
                 <Cell className={css.quadFour}>

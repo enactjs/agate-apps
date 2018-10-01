@@ -67,7 +67,6 @@ const RadioBase = kind({
 	},
 
 	render: ({currentStation, frequency, presets, onFrequencyToggle, onPresetClick, onPresetDown, onPresetHold, onTune}) => {
-console.log(css);
       return <div className={css.compact}>
 					<Cell><LabeledItemBase css={css.label} label="Artist - Song">{currentStation} MHZ</LabeledItemBase></Cell>
         <Row className={css.row}>
