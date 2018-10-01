@@ -13,9 +13,9 @@ import {TabbedPanels} from '@enact/agate/Panels';
 
 import Clock from '../components/Clock';
 import Home from '../views/Home';
-import HVAC from '../views/HVAC/HVACPanel';
+import HVAC from '../views/HVAC';
 import Phone from '../views/Phone';
-import Radio from '../views/Radio/RadioPanel';
+import Radio from '../views/Radio';
 import Settings from '../views/Settings';
 
 import css from './App.less';
