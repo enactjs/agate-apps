@@ -4,15 +4,20 @@ import {LabeledItemBase} from '@enact/agate/LabeledItem';
 import {Panel} from '@enact/agate/Panels';
 import ToggleButton from '@enact/agate/ToggleButton';
 import kind from '@enact/core/kind';
+import {Row, Cell} from '@enact/ui/Layout';
 import React, {Component} from 'react';
 
-import PresetItem from '../components/PresetItem';
+import PresetItem from '../../components/PresetItem';
 
 import css from './Radio.less';
 
 
 const RadioBase = kind({
 	name: 'Radio',
+
+  styles: {
+    className: 'radio-compact'
+  },
 
 	handlers: {
 		onFrequencyToggle: (ev, {changeFrequency}) => {
@@ -61,84 +66,25 @@ const RadioBase = kind({
 		}
 	},
 
-	render: ({currentStation, frequency, presets, onFrequencyToggle, onPresetClick, onPresetDown, onPresetHold, onTune}) => (
-		<Panel>
-			<div className={css.radio}>
-				<div className={css.radioToggle}>
-					<ToggleButton onClick={onFrequencyToggle} selected={frequency === 'AM'} small type="grid">AM</ToggleButton> |
-					<ToggleButton onClick={onFrequencyToggle} selected={frequency === 'FM'} small type="grid">FM</ToggleButton>
-				</div>
-				<div className={css.title}>
-					{/*Radio TextInfo*/}
-					<LabeledItemBase label="Artist - Song">{currentStation} MHZ</LabeledItemBase>
-				</div>
-				<div className={css.tuneControls}>
-					{/*Tune*/}
-					<Button onClick={onTune} action="tune-down" icon={"arrowsmallleft"} />
+	render: ({currentStation, frequency, presets, onFrequencyToggle, onPresetClick, onPresetDown, onPresetHold, onTune}) => {
+console.log(css);
+      return <div className={css.compact}>
+					<Cell><LabeledItemBase css={css.label} label="Artist - Song">{currentStation} MHZ</LabeledItemBase></Cell>
+        <Row className={css.row}>
+					<Cell><Button onClick={onTune} action="tune-down" icon={"arrowsmallleft"} /></Cell>
 					Tune
-					<Button onClick={onTune} action="tune-up" icon={"arrowsmallright"} />
-				</div>
-				<div className={css.scanControls}>
-					<Button onClick={onTune} action="scan-down" icon={"arrowsmallleft"} />
+					<Cell><Button onClick={onTune} action="tune-up" icon={"arrowsmallright"} /></Cell>
+        </Row>
+        <Row className={css.row}>
+					<Cell><Button onClick={onTune} action="scan-down" icon={"arrowsmallleft"} /></Cell>
 					Scan
-					<Button onClick={onTune} action="scan-up" icon={"arrowsmallright"} />
-				</div>
-				{/*List*/}
-				<div className={css.presetList}>
-					Presets
-					<Divider startSection />
-					<PresetItem
-						label="Station 1"
-						onClick={onPresetClick}
-						onMouseDown={onPresetDown}
-						onHold={onPresetHold}
-						preset={0}
-					>
-						{presets[0]} MHZ
-					</PresetItem>
-					<PresetItem
-						label="Station 2"
-						onClick={onPresetClick}
-						onMouseDown={onPresetDown}
-						onHold={onPresetHold}
-						preset={1}
-					>
-						{presets[1]} MHZ
-					</PresetItem>
-					<PresetItem
-						label="Station 3"
-						onClick={onPresetClick}
-						onMouseDown={onPresetDown}
-						onHold={onPresetHold}
-						preset={2}
-					>
-						{presets[2]} MHZ
-					</PresetItem>
-					<PresetItem
-						label="Station 4"
-						onClick={onPresetClick}
-						onMouseDown={onPresetDown}
-						onHold={onPresetHold}
-						preset={3}
-					>
-						{presets[3]} MHZ
-					</PresetItem>
-					<PresetItem
-						label="Station 5"
-						onClick={onPresetClick}
-						onMouseDown={onPresetDown}
-						onHold={onPresetHold}
-						preset={4}
-					>
-						{presets[4]} MHZ
-					</PresetItem>
-				</div>
+					<Cell><Button onClick={onTune} action="scan-up" icon={"arrowsmallright"} /></Cell>
+				</Row>
 			</div>
-		</Panel>
-	)
+	}
 });
 
-class Radio extends Component {
+class RadioCompact extends Component {
 	constructor() {
 		super();
 
@@ -190,4 +136,4 @@ class Radio extends Component {
 	}
 }
 
-export default Radio;
+export default RadioCompact;
