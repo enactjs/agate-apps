@@ -7,7 +7,7 @@ import SliderButton from '@enact/agate/SliderButton';
 import Divider from '@enact/agate/Divider';
 import viewCss from './Settings.less';
 
-import AppStateConnect from '../App/AppContextConnect';
+import AppContextConnect from '../App/AppContextConnect';
 
 const DisplaySettings = kind({
 	name: 'DisplaySettings',
@@ -91,11 +91,11 @@ const FontSizeItem = kind({
 	)
 })
 
-const ColorPickerSetting = AppStateConnect((context) => ({
+const ColorPickerSetting = AppContextConnect((context) => ({
 	color: context.userSettings.color,
 }))(ColorPickerItem)
 
-const FontSizeSetting = AppStateConnect((context) => ({
+const FontSizeSetting = AppContextConnect((context) => ({
 	fontSize: context.userSettings.fontSize,
 }))(FontSizeItem)
 

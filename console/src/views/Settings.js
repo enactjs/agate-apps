@@ -8,6 +8,7 @@ import SliderButton from '@enact/agate/SliderButton';
 import {AppContext} from '../App/AppContextProvider'
 
 import viewCss from './Settings.less';
+import AppContextConnect from '../App/AppContextConnect';
 
 const SwitchItemCell =  kind({
 	name: 'SwitchItemCell',
@@ -116,4 +117,9 @@ const Settings = kind({
 	)
 });
 
-export default Settings;
+const ConnectedSettings = AppContextConnect((context) => ({
+	userId: context.userId,
+	onSwitchUser: context.onSwitchUser
+}))(Settings)
+
+export default ConnectedSettings;
