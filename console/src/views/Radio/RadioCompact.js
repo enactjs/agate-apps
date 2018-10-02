@@ -1,13 +1,9 @@
 import Button from '@enact/agate/Button';
-import Divider from '@enact/agate/Divider';
 import {LabeledItemBase} from '@enact/agate/LabeledItem';
-import {Panel} from '@enact/agate/Panels';
-import ToggleButton from '@enact/agate/ToggleButton';
+import IncrementSlider from '@enact/agate/IncrementSlider';
 import kind from '@enact/core/kind';
 import {Row, Cell} from '@enact/ui/Layout';
 import React, {Component} from 'react';
-
-import PresetItem from '../../components/PresetItem';
 
 import css from './Radio.less';
 
@@ -20,19 +16,6 @@ const RadioBase = kind({
   },
 
 	handlers: {
-		onFrequencyToggle: (ev, {changeFrequency}) => {
-			const frequency = ev.currentTarget.innerText.trim();
-			changeFrequency(frequency);
-		},
-		onPresetClick: (ev, {changeStation, presets}) => {
-			changeStation(presets[ev.presetIndex]);
-		},
-		onPresetDown: (ev, {changePreset}) => {
-			changePreset(ev.presetIndex);
-		},
-		onPresetHold: (ev, {currentStation, currentPreset, updatePresets}) => {
-			updatePresets(currentStation, currentPreset);
-		},
 		onTune: (ev, {currentStation, changeStation}) => {
 			const action = ev.currentTarget.getAttribute('action');
 			let newStation;
@@ -66,19 +49,24 @@ const RadioBase = kind({
 		}
 	},
 
-	render: ({currentStation, frequency, presets, onFrequencyToggle, onPresetClick, onPresetDown, onPresetHold, onTune}) => {
-      return <div className={css.compact}>
-					<Cell><LabeledItemBase css={css.label} label="Artist - Song">{currentStation} MHZ</LabeledItemBase></Cell>
-        <Row className={css.row}>
-					<Cell><Button onClick={onTune} action="tune-down" icon={"arrowsmallleft"} /></Cell>
-					Tune
-					<Cell><Button onClick={onTune} action="tune-up" icon={"arrowsmallright"} /></Cell>
-        </Row>
-        <Row className={css.row}>
-					<Cell><Button onClick={onTune} action="scan-down" icon={"arrowsmallleft"} /></Cell>
-					Scan
-					<Cell><Button onClick={onTune} action="scan-up" icon={"arrowsmallright"} /></Cell>
-				</Row>
+	render: ({currentStation, onTune}) => {
+    return <div className={css.compact}>
+				<Cell><LabeledItemBase css={css.label} label="Artist - Song">{currentStation} MHZ</LabeledItemBase></Cell>
+      <Row className={css.row}>
+				<Cell><Button onClick={onTune} action="tune-down" icon={"arrowsmallleft"} /></Cell>
+				Tune
+				<Cell><Button onClick={onTune} action="tune-up" icon={"arrowsmallright"} /></Cell>
+      </Row>
+      <Row className={css.row}>
+				<Cell><IncrementSlider
+				  defaultValue={15}
+					max={30}
+					min={0}
+					step={1}
+				/></Cell>
+			</Row>
+
+
 			</div>
 	}
 });
