@@ -95,10 +95,8 @@ const ColorPickerSetting = AppStateConnect((context) => ({
 	color: context.userSettings.color,
 }))(ColorPickerItem)
 
-
 const FontSizeSetting = AppStateConnect((context) => ({
 	fontSize: context.userSettings.fontSize,
 }))(FontSizeItem)
-
 
 export default DisplaySettings;

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import produce from "immer"
-import { Pure } from '@enact/ui/internal/Pure/Pure';
+import {Pure} from '@enact/ui/internal/Pure/Pure';
 
 const Context = React.createContext();
 
