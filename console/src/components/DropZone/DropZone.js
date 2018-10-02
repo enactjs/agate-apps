@@ -1,3 +1,4 @@
+// import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
@@ -158,21 +159,51 @@ const DropZone = compose(
 	DropZoneBase
 );
 
+const DraggableContainerContext = React.createContext(null);
+
 const Draggable = (Wrapped) => setDisplayName('Draggable')(
 	// ({arrangement, name, ...rest}) => <Wrapped {...rest} data-slot={arrangement && arrangement[name] || name} draggable="true" />
 	// If something is marked explicitly as *not* draggable (everything using this is normally)
 	// don't assign it a data-slot, so it can't be dragged(A) or dropped on(B).
-	({arrangement, draggable = true, name, slot, ...rest}) =>
-		<Wrapped
-			{...rest}
-			draggable={draggable}
-			data-slot={draggable ? (arrangement && (arrangement[name] || arrangement[slot]) || (name || slot)) : null}
-			data-slot-name={slot}
-		/>
+	({arrangement, containerShape, draggable = true, name, slot, ...rest}) =>
+		<DraggableContainerContext.Provider value={{containerShape}}>
+			<Wrapped
+				{...rest}
+				draggable={draggable}
+				data-slot={draggable ? (arrangement && (arrangement[name] || arrangement[slot]) || (name || slot)) : null}
+				data-slot-name={slot}
+			/>
+		</DraggableContainerContext.Provider>
 );
+
+const ResponsiveBox = (Wrapped) => setDisplayName('ResponsiveBox')(
+	(props) => {
+		console.log('props:', props);
+		return (
+			<DraggableContainerContext.Consumer>
+				{({containerShape}) => {
+					console.log('containerShape:', containerShape);
+					return (<Wrapped containerShape={containerShape} {...props} />);
+				}}
+			</DraggableContainerContext.Consumer>
+		);
+	}
+);
+// const ResponsiveBox = kind({
+// 	name: 'ResponsiveBox',
+// 	render: ({component: Component, ...rest}) => (
+// 		<DraggableContainerContext.Consumer>
+// 			{(containerShape) => (
+// 				<Component containerShape={containerShape} {...rest} />
+// 			)}
+// 		</DraggableContainerContext.Consumer>
+// 	)
+// });
+
 
 export default DropZone;
 export {
 	DropZone,
-	Draggable
+	Draggable,
+	ResponsiveBox
 };

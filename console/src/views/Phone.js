@@ -5,6 +5,8 @@ import Input from '@enact/agate/Input';
 import Changeable from '@enact/ui/Changeable';
 import Toggleable from '@enact/ui/Toggleable';
 import Scroller from '@enact/ui/Scroller';
+import VirtualList from '@enact/ui/VirtualList';
+import ri from '@enact/ui/resolution';
 import {Column, Cell} from '@enact/ui/Layout';
 import {adaptEvent, forKey, forward, handle, oneOf} from '@enact/core/handle';
 import kind from '@enact/core/kind';
@@ -13,6 +15,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import CustomLayout from '../components/CustomLayout';
+import {ResponsiveBox} from '../components/DropZone';
 import Dialer from '../components/Dialer';
 import CallPopup from '../components/CallPopup';
 import ContactThumbnail from '../components/ContactThumbnail';
@@ -53,6 +56,48 @@ const appendValue = appender => adaptEvent(
 	(ev, {value}) => ({value: `${value}${appender(ev)}`}),
 	forward('onChange')
 );
+
+const renderContact = ({index, ...rest}) => (
+	<ContactThumbnail {...rest}
+		key={contacts[index].name}
+		contact={contacts[index]}
+		// onSelect={onContactClick}
+	/>
+);
+
+const ResponsiveScroller = ResponsiveBox(({containerShape, onContactClick, style = {}, ...rest}) => {
+	console.log('ResponsiveScrollerBase containerShape:', containerShape);
+	const portrait = (containerShape && containerShape.orientation === 'portrait');
+	if (!portrait) style.height = ri.scale(96);
+	return (
+		<VirtualList
+			{...rest}
+			direction={portrait ? 'vertical' : 'horizontal'}
+			// cbScrollTo={this.getScrollTo}
+			dataSize={contacts.length}
+			// focusableScrollbar
+			itemRenderer={renderContact}
+			itemSize={ri.scale(portrait ? 96 : 300)}
+			style={style}
+		/>
+
+	)
+	// return (
+	// 	<Scroller
+	// 		{...rest}
+	// 		direction={containerShape.orientation === 'portrait' ? 'vertical' : 'horizontal'}
+	// 	>
+	// 		{contacts.map(contact => (
+	// 			<ContactThumbnail
+	// 				key={contact.name}
+	// 				contact={contact}
+	// 				onSelect={onContactClick}
+	// 			/>
+	// 		))}
+	// 	</Scroller>
+	// )
+});
+// const ResponsiveScroller = ResponsiveBox(ResponsiveScrollerBase);
 
 const PhoneBase = kind({
 	name: 'Phone',
@@ -129,20 +174,10 @@ const PhoneBase = kind({
 						phoneNumber={value}
 					/>
 					<bottom>
-						<Cell
-							component={Scroller}
-							shrink
+						<ResponsiveScroller
 							className={css.contactsList}
-							direction="horizontal"
-						>
-							{contacts.map(contact => (
-								<ContactThumbnail
-									key={contact.name}
-									contact={contact}
-									onSelect={onContactClick}
-								/>
-							))}
-						</Cell>
+							onContactClick={onContactClick}
+						/>
 					</bottom>
 				</CustomLayout>
 			</Panel>

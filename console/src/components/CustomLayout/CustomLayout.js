@@ -49,16 +49,16 @@ const CustomLayoutBase = kind({
 				</Cell>
 				<Cell>
 					<Layout className={css.bodyRow}>
-						{left || arranging ? <DroppableCell size={(!left && arranging) ? 30 : '30%'} className={css.left}  arrangement={arrangement} name="left">{left}</DroppableCell> : null}
+						{left || arranging ? <DroppableCell containerShape={{edge: true, horizontalEdge: true, verticalEdge: false, orientation: 'portrait'}} size={(!left && arranging) ? 30 : '30%'} className={css.left}  arrangement={arrangement} name="left">{left}</DroppableCell> : null}
 						<DroppableCell className={css.body}  arrangement={arrangement} name="children">{children}</DroppableCell>
-						{right || arranging ? <DroppableCell size={(!right && arranging) ? 30 : '30%'} className={css.right} arrangement={arrangement} name="right">{right}</DroppableCell> : null}
+						{right || arranging ? <DroppableCell containerShape={{edge: true, horizontalEdge: true, verticalEdge: false, orientation: 'portrait'}} size={(!right && arranging) ? 30 : '30%'} className={css.right} arrangement={arrangement} name="right">{right}</DroppableCell> : null}
 					</Layout>
 				</Cell>
 				<Cell shrink>
 					<Layout>
-						{bottomLeft || arranging ? <DroppableCell size={(!bottomLeft && arranging) ? 30 : '30%'} className={css.bottomLeft}  arrangement={arrangement} name="bottomLeft">{bottomLeft}</DroppableCell> : null}
-						{(bottom || bottomLeft || bottomRight) || arranging ? <DroppableCell className={css.bottom} arrangement={arrangement} name="bottom">{bottom}</DroppableCell> : null}
-						{bottomRight || arranging ? <DroppableCell size={(!bottomRight && arranging) ? 30 : '30%'} className={css.bottomRight} arrangement={arrangement} name="bottomRight">{bottomRight}</DroppableCell> : null}
+						{bottomLeft || arranging ? <DroppableCell containerShape={{edge: true, horizontalEdge: false, verticalEdge: true, orientation: 'landscape'}} size={(!bottomLeft && arranging) ? 30 : '30%'} className={css.bottomLeft}  arrangement={arrangement} name="bottomLeft">{bottomLeft}</DroppableCell> : null}
+						{(bottom || bottomLeft || bottomRight) || arranging ? <DroppableCell containerShape={{edge: true, horizontalEdge: false, verticalEdge: true, orientation: 'landscape'}} className={css.bottom} arrangement={arrangement} name="bottom">{bottom}</DroppableCell> : null}
+						{bottomRight || arranging ? <DroppableCell containerShape={{edge: true, horizontalEdge: false, verticalEdge: true, orientation: 'landscape'}} size={(!bottomRight && arranging) ? 30 : '30%'} className={css.bottomRight} arrangement={arrangement} name="bottomRight">{bottomRight}</DroppableCell> : null}
 					</Layout>
 				</Cell>
 			</Layout>
