@@ -23,7 +23,7 @@ import DisplaySettings from '../views/DisplaySettings';
 
 import css from './App.less';
 
-const AppContext = React.createContext();
+import AppContextConnect from './AppContextConnect';
 
 add('backspace', 8);
 
@@ -141,49 +141,6 @@ const AppState = hoc((configHoc, Wrapped) => {
 			};
 		}
 
-		componentDidMount(){
-			this.loadUserSettings(this.state.userId);
-		}
-
-		loadUserSettings = (userId) => {
-			if(!JSON.parse(window.localStorage.getItem(`user${this.state.userId}`))){
-				window.localStorage.setItem(`user${this.state.userId}`, JSON.stringify({...this.state.userSettings}));
-			}
-
-			this.setState(
-				produce((draft) => {
-					draft.userSettings = JSON.parse(window.localStorage.getItem(`user${userId}`))
-				})
-			)
-		}
-
-		saveUserSettingsLocally = (userId, hasChanged) => {
-			if(hasChanged){
-				window.localStorage.setItem(`user${userId}`, JSON.stringify(this.state.userSettings))
-			}
-		}
-
-		// Catch all way to update state
-		updateAppState = (cb) => {
-			const prevUserSettings = this.state.userSettings
-			this.setState(
-				produce(cb),
-				() => {
-					this.saveUserSettingsLocally(this.state.userId, this.state.userSettings !== prevUserSettings)
-				}
-			)
-		}
-
-		// If you want to be more specific about updating state. Similar to a redux action/reducer.
-		onSwitchUser = ({value}) => {
-			this.setState(
-				produce((draft) => {
-					draft.userId = value + 1
-				}),
-				() => this.loadUserSettings(this.state.userId)
-			)
-		}
-
 		onSelect = handle(
 			forward('onSelect'),
 			(ev) => {
@@ -211,34 +168,34 @@ const AppState = hoc((configHoc, Wrapped) => {
 			delete props.defaultSkin;
 
 			return (
-				<AppContext.Provider value={this.state}>
-					<Wrapped
-						{...props}
-						index={this.state.index}
-						onSelect={this.onSelect}
-						updateAppState={this.updateAppState}
-						onTogglePopup={this.onTogglePopup}
-						onToggleBasicPopup={this.onToggleBasicPopup}
-						onToggleDateTimePopup={this.onToggleDateTimePopup}
-						orientation={(this.state.userSettings.skin === 'titanium') ? 'horizontal' : 'vertical'}
-						showPopup={this.state.showPopup}
-						showBasicPopup={this.state.showBasicPopup}
-						showDateTimePopup={this.state.showDateTimePopup}
-						skin={this.state.userSettings.skin}
-						skinName={this.state.userSettings.skin}
-					/>
-				</AppContext.Provider>
+				<Wrapped
+					{...props}
+					index={this.state.index}
+					onSelect={this.onSelect}
+					onTogglePopup={this.onTogglePopup}
+					onToggleBasicPopup={this.onToggleBasicPopup}
+					onToggleDateTimePopup={this.onToggleDateTimePopup}
+					orientation={(this.props.skin === 'titanium') ? 'horizontal' : 'vertical'}
+					showPopup={this.state.showPopup}
+					showBasicPopup={this.state.showBasicPopup}
+					showDateTimePopup={this.state.showDateTimePopup}
+					skinName={this.props.skin}
+				/>
 			);
 		}
 	};
 });
 
 const AppDecorator = compose(
+	AppContextConnect((context) => ({
+		skin: context.userSettings.skin
+	})),
 	AppState,
 	AgateDecorator
 );
 
+
+
 const App = AppDecorator(AppBase);
 
 export default App;
-export {AppContext}

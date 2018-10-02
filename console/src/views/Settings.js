@@ -5,7 +5,7 @@ import {Panel} from '@enact/agate/Panels';
 import React from 'react';
 import SwitchItem from '@enact/agate/SwitchItem';
 import SliderButton from '@enact/agate/SliderButton';
-import {AppContext} from '../App/App'
+import {AppContext} from '../App/AppContextProvider'
 
 import viewCss from './Settings.less';
 
