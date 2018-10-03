@@ -17,7 +17,7 @@ const CompactHvac = kind({
 		className: 'compact'
 	},
 
-  defaultProps: {
+	defaultProps: {
     temp: 73
   },
 
