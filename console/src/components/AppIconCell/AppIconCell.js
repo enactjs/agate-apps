@@ -7,13 +7,14 @@ import css from './AppIconCell.less';
 
 const AppIconCell = kind({
 	name: 'AppIconCell',
+
 	styles: {
 		css,
 		className: 'iconCell'
 	},
 
-	render: ({children, ...rest}) => (
-		<Cell component={LabeledIconButton} align="center" size={"40%"} {...rest}>{children}</Cell>
+	render: ({children, size, ...rest}) => (
+		<Cell component={LabeledIconButton} align="center" size={size} {...rest}>{children}</Cell>
 	)
 });
 

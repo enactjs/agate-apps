@@ -8,10 +8,10 @@ import React, {Component} from 'react';
 import css from './CompactRadio.less';
 
 
-const RadioBase = kind({
-	name: 'Radio',
+const CompactRadioBase = kind({
+	name: 'CompactRadio',
 
-  styles: {
+	styles: {
     className: 'radio-compact'
   },
 
@@ -49,9 +49,9 @@ const RadioBase = kind({
 		}
 	},
 
-	render: ({currentStation, onTune}) => {
-    return <div className={css.compact}>
-				<Cell><LabeledItemBase css={css.label} label="Artist - Song">{currentStation} MHZ</LabeledItemBase></Cell>
+	render: ({currentStation, onTune}) => (
+    <div className={css.compact}>
+			<Cell><LabeledItemBase css={css.label} label="Artist - Song">{currentStation} MHZ</LabeledItemBase></Cell>
       <Row className={css.row}>
 				<Cell><Button onClick={onTune} action="tune-down" icon={"arrowsmallleft"} /></Cell>
 				Tune
@@ -65,10 +65,8 @@ const RadioBase = kind({
 					step={1}
 				/></Cell>
 			</Row>
-
-
-			</div>
-	}
+		</div>
+	)
 });
 
 class RadioCompact extends Component {
@@ -109,7 +107,7 @@ class RadioCompact extends Component {
 
 	render() {
 		return (
-			<RadioBase
+			<CompactRadioBase
 				changeFrequency={this.changeFrequency}
 				changePreset={this.changePreset}
 				changeStation={this.changeStation}

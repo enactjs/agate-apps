@@ -138,7 +138,7 @@ const RadioBase = kind({
 	)
 });
 
-class RadioPanel extends Component {
+class Radio extends Component {
 	constructor() {
 		super();
 
@@ -190,4 +190,4 @@ class RadioPanel extends Component {
 	}
 }
 
-export default RadioPanel;
+export default Radio;

@@ -1,13 +1,13 @@
-import Divider               from '@enact/agate/Divider';
-import {Panel}               from '@enact/agate/Panels';
-import Picker                from '@enact/agate/Picker';
-import SliderButton          from '@enact/agate/SliderButton';
-import ToggleButton          from '@enact/agate/ToggleButton';
-import kind                  from '@enact/core/kind';
-import {Row}                 from '@enact/ui/Layout';
-import React                 from 'react';
+import Divider from '@enact/agate/Divider';
+import {Panel} from '@enact/agate/Panels';
+import Picker from '@enact/agate/Picker';
+import SliderButton from '@enact/agate/SliderButton';
+import ToggleButton from '@enact/agate/ToggleButton';
+import kind from '@enact/core/kind';
+import {Row} from '@enact/ui/Layout';
+import React from 'react';
 
-import css                   from './HVAC.less';
+import css from './HVAC.less';
 
 const temps = ['HI', '74°', '73°', '72°', '71°', '70°', '69°', '68°', '67°', '66°', 'LO'];
 
