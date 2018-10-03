@@ -54,15 +54,9 @@ class AppContextProvider extends Component {
 		)
 	}
 
-	updateAppState = (cb, afterCB) => {
-		const prevState = this.state;
+	updateAppState = (cb) => {
 		this.setState(
-			produce(cb),
-			() => {
-				if(afterCB){
-					afterCB(this.state, prevState);
-				}
-			}
+			produce(cb)
 		)
 	}
 
