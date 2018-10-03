@@ -5,7 +5,7 @@ import kind from '@enact/core/kind';
 import {Row, Cell} from '@enact/ui/Layout';
 import React, {Component} from 'react';
 
-import css from './Radio.less';
+import css from './CompactRadio.less';
 
 
 const RadioBase = kind({
@@ -91,7 +91,7 @@ class RadioCompact extends Component {
 		this.setState({currentPreset: index});
 	}
 
-	changeStation = (station, index) => {
+	changeStation = (station) => {
 		this.setState({currentStation: station});
 	}
 

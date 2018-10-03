@@ -1,7 +1,7 @@
 import {ItemBase} from '@enact/agate/Item';
 import {LabeledItemBase} from '@enact/agate/LabeledItem';
 
-import {forward, handle} from '@enact/core/handle';
+import {forward} from '@enact/core/handle';
 import Spottable from '@enact/spotlight/Spottable';
 import Pure from '@enact/ui/internal/Pure';
 import SlotItem from '@enact/ui/SlotItem';
@@ -31,7 +31,7 @@ const PresetItemBase = kind({
 		}
 	},
 
-	render: ({children, css, disabled, icon, label, ...rest}) => (
+	render: ({children, css, disabled, label, ...rest}) => (
 		<SlotItem
 			component={ItemBase}
 			disabled={disabled}

@@ -1,18 +1,15 @@
-import Divider               from '@enact/agate/Divider';
-import {Panel}               from '@enact/agate/Panels';
 import Picker                from '@enact/agate/Picker';
-import SliderButton          from '@enact/agate/SliderButton';
 import ToggleButton          from '@enact/agate/ToggleButton';
 import {LabeledItemBase}     from '@enact/agate/LabeledItem';
 import kind                  from '@enact/core/kind';
-import {Cell, Row}                 from '@enact/ui/Layout';
+import {Row}                 from '@enact/ui/Layout';
 import React                 from 'react';
 
-import css                   from './HVAC.less';
+import css                   from './CompactHVAC.less';
 
 const temps = ['HI', '74°', '73°', '72°', '71°', '70°', '69°', '68°', '67°', '66°', 'LO'];
 
-const HvacCompact = kind({
+const CompactHvac = kind({
 	name: 'HVAC',
 
 	styles: {
@@ -56,4 +53,4 @@ const HvacCompact = kind({
 	)
 });
 
-export default HvacCompact;
+export default CompactHvac;

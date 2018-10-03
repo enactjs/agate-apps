@@ -158,7 +158,7 @@ class RadioPanel extends Component {
 		this.setState({currentPreset: index});
 	}
 
-	changeStation = (station, index) => {
+	changeStation = (station) => {
 		this.setState({currentStation: station});
 	}
 
