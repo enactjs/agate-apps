@@ -69,8 +69,7 @@ class AppContextProvider extends Component {
 	render() {
 		const context = {
 			...this.state,
-			updateAppState: this.updateAppState,
-			onSwitchUser: this.onSwitchUser
+			updateAppState: this.updateAppState
 		}
 
 		return (
