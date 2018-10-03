@@ -6,7 +6,7 @@ import ToggleButton from '@enact/agate/ToggleButton';
 import kind from '@enact/core/kind';
 import React, {Component} from 'react';
 
-import PresetItem from '../components/PresetItem';
+import PresetItem from '../../components/PresetItem';
 
 import css from './Radio.less';
 
@@ -158,7 +158,7 @@ class Radio extends Component {
 		this.setState({currentPreset: index});
 	}
 
-	changeStation = (station, index) => {
+	changeStation = (station) => {
 		this.setState({currentStation: station});
 	}
 
