@@ -22,9 +22,7 @@ const SwitchItemCell =  kind({
 	render: ({css, ...rest}) => {
 		delete rest.noToggle;
 		return (
-			<Cell shrink>
-				<SwitchItem css={css} {...rest} />
-			</Cell>
+			<Cell shrink component={SwitchItem} css={css} {...rest} />
 		);
 	}
 });
@@ -45,70 +43,62 @@ const Settings = kind({
 	render: ({css, onSelect, onSwitchUser, userId, onToggleDateTimePopup, ...rest}) => (
 		<Panel {...rest}>
 			<Row className="enact-fit" align=" center">
-				<Cell
-					className={css.content}
-					component={Column}
-					size="40%"
-				>
-					<Cell
-						size="80%"
-					>
-						<Cell>
-							<Cell
-								className={css.header}
-								component={Divider}
-								shrink
-								spacing="small"
-							>
-								Settings
-							</Cell>
-							<Cell>
-								<SliderButton
-									onChange={onSwitchUser}
-									value={userId - 1}
-								>
-									{['User 1','User 2']}
-								</SliderButton>
-							</Cell>
-							<SwitchItemCell
-								icon="user"
-								noToggle
-								data-tabindex={5}
-								onTap={onSelect}
-							>
-								Display
-							</SwitchItemCell>
-							<SwitchItemCell
-								icon="ellipsis"
-								noToggle
-								onTap={onToggleDateTimePopup}
-							>
-								Date & Time
-							</SwitchItemCell>
-							<SwitchItemCell
-								icon="bulletlist"
-							>
-								Bluetooth
-							</SwitchItemCell>
-							<SwitchItemCell
-								icon="gear"
-							>
-								WiFi
-							</SwitchItemCell>
-							<SwitchItemCell
-								icon="fan"
-							>
-								Turbo
-							</SwitchItemCell>
-							<SwitchItemCell
-								icon="heatseatright"
-								offText="disarmed"
-								onText="armed"
-							>
-								Ejection Seat
-							</SwitchItemCell>
+				<Cell size="40%">
+					<Column className={css.content}>
+						<Cell
+							className={css.header}
+							component={Divider}
+							shrink
+							spacing="small"
+						>
+							Settings
 						</Cell>
-					</Cell>
+						<Cell shrink>
+							<SliderButton
+								onChange={onSwitchUser}
+								value={userId - 1}
+							>
+								{['User 1','User 2']}
+							</SliderButton>
+						</Cell>
+						<SwitchItemCell
+							icon="user"
+							noToggle
+							data-tabindex={5}
+							onTap={onSelect}
+						>
+							Display
+						</SwitchItemCell>
+						<SwitchItemCell
+							icon="ellipsis"
+							noToggle
+							onTap={onToggleDateTimePopup}
+						>
+							Date & Time
+						</SwitchItemCell>
+						<SwitchItemCell
+							icon="bulletlist"
+						>
+							Bluetooth
+						</SwitchItemCell>
+						<SwitchItemCell
+							icon="gear"
+						>
+							WiFi
+						</SwitchItemCell>
+						<SwitchItemCell
+							icon="fan"
+						>
+							Turbo
+						</SwitchItemCell>
+						<SwitchItemCell
+							icon="heatseatright"
+							offText="disarmed"
+							onText="armed"
+						>
+							Ejection Seat
+						</SwitchItemCell>
+					</Column>
 				</Cell>
 			</Row>
 		</Panel>
