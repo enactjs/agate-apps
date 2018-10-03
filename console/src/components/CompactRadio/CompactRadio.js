@@ -50,7 +50,7 @@ const CompactRadioBase = kind({
 	},
 
 	render: ({currentStation, onTune}) => (
-    	<div className={css.compact}>
+		<div className={css.compact}>
 			<Cell><LabeledItemBase css={css.label} label="Artist - Song">{currentStation} MHZ</LabeledItemBase></Cell>
       		<Row className={css.row}>
 				<Cell><Button onClick={onTune} action="tune-down" icon={"arrowsmallleft"} /></Cell>
@@ -58,12 +58,14 @@ const CompactRadioBase = kind({
 				<Cell><Button onClick={onTune} action="tune-up" icon={"arrowsmallright"} /></Cell>
 			</Row>
 			<Row className={css.row}>
-				<Cell><IncrementSlider
-				  defaultValue={15}
-					max={30}
-					min={0}
-					step={1}
-				/></Cell>
+				<Cell>
+					<IncrementSlider
+						defaultValue={15}
+						max={30}
+						min={0}
+						step={1}
+					/>
+				</Cell>
 			</Row>
 		</div>
 	)
