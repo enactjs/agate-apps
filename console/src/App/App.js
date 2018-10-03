@@ -16,6 +16,7 @@ import Clock from '../components/Clock';
 import Home from '../views/Home';
 import HVAC from '../views/HVAC';
 import Phone from '../views/Phone';
+import Radio from '../views/Radio';
 import Settings from '../views/Settings';
 
 import css from './App.less';
@@ -59,7 +60,8 @@ const AppBase = kind({
 					tabs={[
 						{title: 'Home', icon: 'denselist'},
 						{title: 'Phone', icon: 'phone'},
-						{title: 'Climate', icon: 'temperature'}
+						{title: 'Climate', icon: 'temperature'},
+						{title: 'Radio', icon: 'audio'}
 					]}
 					onSelect={onSelect}
 					selected={index}
@@ -85,6 +87,7 @@ const AppBase = kind({
 					<Phone />
 					{/* eslint-disable-next-line */}
 					<HVAC />
+					<Radio />
 					<Settings
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
@@ -133,23 +136,18 @@ const AppState = hoc((configHoc, Wrapped) => {
 				showPopup: false,
 				showBasicPopup: false,
 				showDateTimePopup: false,
+				showRadio: false,
 				skin: props.defaultSkin || 'carbon' // 'titanium' alternate.
 			};
-		}
-
-		onSelect = (ev) => {
-			const index = ev.selected;
-			this.props.onSelect({index});
-			this.setState(state => state.index === index ? null : {index})
 		}
 
 		onSelect = handle(
 			forward('onSelect'),
 			(ev) => {
-				const index = ev.selected;
+				const {index} = ev;
 				this.setState(state => state.index === index ? null : {index});
 			}
-		).bind(this)
+		).bind(this);
 
 		onColorChangeAccent = (ev) => {
 			// console.log({value: ev.target.value});
@@ -164,11 +162,6 @@ const AppState = hoc((configHoc, Wrapped) => {
 		onSkinChange = () => {
 			this.setState(({skin}) => ({skin: (skin === 'carbon' ? 'titanium' : 'carbon')}));
 		};
-
-		onTabChange = (index) => {
-			this.props.onSelect({index});
-			this.setState(state => state.index === index ? null : {index})
-		}
 
 		onTogglePopup = () => {
 			this.setState(({showPopup}) => ({showPopup: !showPopup}));

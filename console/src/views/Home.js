@@ -24,7 +24,7 @@ const Home = kind({
 	handlers: {
 		onTabChange: (ev, {onSelect}) => {
 			if ((ev.keyCode === 13 || ev.type === 'click') && ev.currentTarget.dataset.tabindex) {
-				onSelect({selected: parseInt(ev.currentTarget.dataset.tabindex)});
+				onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
 			}
 		}
 	},
@@ -42,7 +42,7 @@ const Home = kind({
 					</Cell>
 					<Cell shrink>
 						<Row align="start center">
-							<HomeIconCell icon="audio">Radio</HomeIconCell>
+							<HomeIconCell icon="audio" data-tabindex={3} onKeyUp={onTabChange} onClick={onTabChange}>Radio</HomeIconCell>
 							<HomeIconCell icon="resumeplay">Multimedia</HomeIconCell>
 							<HomeIconCell icon="repeat" onKeyUp={onPopupOpen} onClick={onToggleBasicPopup}>Connect</HomeIconCell>
 						</Row>
@@ -50,7 +50,7 @@ const Home = kind({
 					<Cell shrink>
 						<Row align="start center">
 							<HomeIconCell icon="repeatdownload">Dashboard</HomeIconCell>
-							<HomeIconCell icon="gear" data-tabindex={3} onKeyUp={onTabChange} onClick={onTabChange}>Settings</HomeIconCell>
+							<HomeIconCell icon="gear" data-tabindex={4} onKeyUp={onTabChange} onClick={onTabChange}>Settings</HomeIconCell>
 							<HomeIconCell icon="closex" onClick={onTogglePopup}>Point of Interest</HomeIconCell>
 						</Row>
 					</Cell>
