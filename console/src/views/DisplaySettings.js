@@ -19,30 +19,33 @@ const DisplaySettings = kind({
 
 	render: ({css, ...rest}) => (
 		<Panel {...rest}>
-			<Row className="enact-fit">
-				<Cell />
+			<Row className="enact-fit" align=" center">
 				<Cell
 					className={css.content}
 					component={Column}
+					size="50%"
 				>
-					<Cell />
 					<Cell
-						className={css.header}
-						component={Divider}
-						shrink
-						spacing="small"
+						size="80%"
 					>
-						Display Settings
+						<Cell
+							className={css.header}
+							component={Divider}
+							shrink
+							spacing="medium"
+						>
+							Display Settings
+						</Cell>
+						<Cell>
+							<Cell>
+								<ColorPickerSetting />
+							</Cell>
+							<Cell>
+								<FontSizeSetting />
+							</Cell>
+						</Cell>
 					</Cell>
-					<Cell>
-						<ColorPickerSetting />
-					</Cell>
-					<Cell>
-						<FontSizeSetting />
-					</Cell>
-					<Cell />
 				</Cell>
-				<Cell />
 			</Row>
 		</Panel>
 	)
@@ -53,7 +56,7 @@ const ColorPickerItem = kind({
 	name: 'ColorPickerItem',
 
 	handlers: {
-		changeColor: ({value}, {updateAppState}) =>{
+		changeColor: ({value}, {updateAppState}) => {
 			updateAppState((draft) => {
 				draft.userSettings.color = value;
 			});
@@ -63,6 +66,7 @@ const ColorPickerItem = kind({
 	render: ({color, changeColor}) => (
 		<React.Fragment>
 			<label>Color:</label>
+			<br/>
 			<ColorPicker value={color} onChange={changeColor} />
 		</React.Fragment>
 	)
@@ -72,7 +76,7 @@ const FontSizeItem = kind({
 	name: 'FontSizeItem',
 
 	handlers: {
-		changeFontSize:({value}, {updateAppState}) =>{
+		changeFontSize:({value}, {updateAppState}) => {
 			updateAppState((draft) => {
 				draft.userSettings.fontSize = value;
 			});

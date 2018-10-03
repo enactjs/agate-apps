@@ -44,69 +44,72 @@ const Settings = kind({
 
 	render: ({css, onSelect, onSwitchUser, userId, onToggleDateTimePopup, ...rest}) => (
 		<Panel {...rest}>
-			<Row className="enact-fit">
-				<Cell />
+			<Row className="enact-fit" align=" center">
 				<Cell
 					className={css.content}
 					component={Column}
+					size="40%"
 				>
-					<Cell />
 					<Cell
-						className={css.header}
-						component={Divider}
-						shrink
-						spacing="small"
+						size="80%"
 					>
-						Settings
+						<Cell>
+							<Cell
+								className={css.header}
+								component={Divider}
+								shrink
+								spacing="small"
+							>
+								Settings
+							</Cell>
+							<Cell>
+								<SliderButton
+									onChange={onSwitchUser}
+									value={userId - 1}
+								>
+									{['User 1','User 2']}
+								</SliderButton>
+							</Cell>
+							<SwitchItemCell
+								icon="user"
+								noToggle
+								data-tabindex={5}
+								onTap={onSelect}
+							>
+								Display
+							</SwitchItemCell>
+							<SwitchItemCell
+								icon="ellipsis"
+								noToggle
+								onTap={onToggleDateTimePopup}
+							>
+								Date & Time
+							</SwitchItemCell>
+							<SwitchItemCell
+								icon="bulletlist"
+							>
+								Bluetooth
+							</SwitchItemCell>
+							<SwitchItemCell
+								icon="gear"
+							>
+								WiFi
+							</SwitchItemCell>
+							<SwitchItemCell
+								icon="fan"
+							>
+								Turbo
+							</SwitchItemCell>
+							<SwitchItemCell
+								icon="heatseatright"
+								offText="disarmed"
+								onText="armed"
+							>
+								Ejection Seat
+							</SwitchItemCell>
+						</Cell>
 					</Cell>
-					<Cell>
-						<SliderButton
-							onChange={onSwitchUser}
-							value={userId - 1}
-						>
-							{['User 1','User 2']}
-						</SliderButton>
-					</Cell>
-					<SwitchItemCell
-						icon="user"
-						noToggle
-						data-tabindex={5}
-						onTap={onSelect}
-					>
-						Display
-					</SwitchItemCell>
-					<SwitchItemCell
-						icon="ellipsis"
-						noToggle
-						onTap={onToggleDateTimePopup}
-					>
-						Date & Time
-					</SwitchItemCell>
-					<SwitchItemCell
-						icon="bulletlist"
-					>
-						Bluetooth
-					</SwitchItemCell>
-					<SwitchItemCell
-						icon="gear"
-					>
-						WiFi
-					</SwitchItemCell>
-					<SwitchItemCell
-						icon="fan"
-					>
-						Turbo
-					</SwitchItemCell>
-					<SwitchItemCell
-						icon="heatseatright"
-						offText="disarmed"
-						onText="armed"
-					>
-						Ejection Seat
-					</SwitchItemCell>
-					<Cell />
 				</Cell>
-				<Cell />
 			</Row>
 		</Panel>
 	)
