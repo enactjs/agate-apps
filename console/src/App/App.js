@@ -149,14 +149,12 @@ const AppState = hoc((configHoc, Wrapped) => {
 			}
 		).bind(this);
 
-		onColorChangeAccent = (ev) => {
-			// console.log({value: ev.target.value});
-			this.setState({colorAccent: ev.target.value});
+		onColorChangeAccent = ({value}) => {
+			this.setState({colorAccent: value});
 		};
 
-		onColorChangeHighlight = (ev) => {
-			// console.log({value: ev.target.value});
-			this.setState({colorHighlight: ev.target.value});
+		onColorChangeHighlight = ({value}) => {
+			this.setState({colorHighlight: value});
 		};
 
 		onSkinChange = () => {
