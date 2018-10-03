@@ -5,7 +5,6 @@ import {Panel} from '@enact/agate/Panels';
 import React from 'react';
 import SwitchItem from '@enact/agate/SwitchItem';
 import SliderButton from '@enact/agate/SliderButton';
-import {AppContext} from '../App/AppContextProvider'
 
 import viewCss from './Settings.less';
 import AppContextConnect from '../App/AppContextConnect';
@@ -38,7 +37,7 @@ const Settings = kind({
 
 	handlers: {
 		onSelect: (ev, {onSelect}) => {
-			onSelect({index: ev.currentTarget.dataset.tabindex});
+			onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
 		}
 	},
 

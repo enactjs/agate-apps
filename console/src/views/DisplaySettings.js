@@ -8,6 +8,7 @@ import Divider from '@enact/agate/Divider';
 import viewCss from './Settings.less';
 
 import AppContextConnect from '../App/AppContextConnect';
+import Button from '@enact/agate/Button/Button';
 
 const DisplaySettings = kind({
 	name: 'DisplaySettings',
@@ -17,7 +18,13 @@ const DisplaySettings = kind({
 		className: 'settingsView'
 	},
 
-	render: ({css, ...rest}) => (
+	handlers: {
+		onSelect: (ev, {onSelect}) => {
+			onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
+		}
+	},
+
+	render: ({css, onSelect, ...rest}) => (
 		<Panel {...rest}>
 			<Row className="enact-fit" align=" center">
 				<Cell
@@ -42,6 +49,11 @@ const DisplaySettings = kind({
 							</Cell>
 							<Cell>
 								<FontSizeSetting />
+							</Cell>
+							<Cell>
+								<Button onTap={onSelect} data-tabindex={4}>
+									Go Back
+								</Button>
 							</Cell>
 						</Cell>
 					</Cell>
@@ -97,10 +109,12 @@ const FontSizeItem = kind({
 
 const ColorPickerSetting = AppContextConnect((context) => ({
 	color: context.userSettings.color,
+	updateAppState: context.updateAppState
 }))(ColorPickerItem)
 
 const FontSizeSetting = AppContextConnect((context) => ({
 	fontSize: context.userSettings.fontSize,
+	updateAppState: context.updateAppState
 }))(FontSizeItem)
 
 export default DisplaySettings;

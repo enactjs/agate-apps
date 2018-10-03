@@ -88,7 +88,7 @@ const AppBase = kind({
 						onSelect={onSelect}
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
-					<DisplaySettings/>
+					<DisplaySettings onSelect={onSelect}/>
 				</TabbedPanels>
 				<Popup
 					onClose={onToggleBasicPopup}
@@ -186,7 +186,8 @@ const AppState = hoc((configHoc, Wrapped) => {
 
 const AppDecorator = compose(
 	AppContextConnect((context) => ({
-		skin: context.userSettings.skin
+		skin: context.userSettings.skin,
+		updateAppState: context.updateAppState
 	})),
 	AppState,
 	AgateDecorator
