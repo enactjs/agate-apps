@@ -12,8 +12,8 @@ const CompactRadioBase = kind({
 	name: 'CompactRadio',
 
 	styles: {
-    className: 'radio-compact'
-  },
+		className: 'radio-compact'
+	},
 
 	handlers: {
 		onTune: (ev, {currentStation, changeStation}) => {
@@ -50,14 +50,14 @@ const CompactRadioBase = kind({
 	},
 
 	render: ({currentStation, onTune}) => (
-    <div className={css.compact}>
+    	<div className={css.compact}>
 			<Cell><LabeledItemBase css={css.label} label="Artist - Song">{currentStation} MHZ</LabeledItemBase></Cell>
-      <Row className={css.row}>
+      		<Row className={css.row}>
 				<Cell><Button onClick={onTune} action="tune-down" icon={"arrowsmallleft"} /></Cell>
 				Tune
 				<Cell><Button onClick={onTune} action="tune-up" icon={"arrowsmallright"} /></Cell>
-      </Row>
-      <Row className={css.row}>
+			</Row>
+			<Row className={css.row}>
 				<Cell><IncrementSlider
 				  defaultValue={15}
 					max={30}
