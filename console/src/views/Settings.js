@@ -42,7 +42,7 @@ const Settings = kind({
 		}
 	},
 
-	render: ({css, onSelect, onToggleDateTimePopup, ...rest}) => (
+	render: ({css, onSelect, onSwitchUser, userId, onToggleDateTimePopup, ...rest}) => (
 		<Panel {...rest}>
 			<Row className="enact-fit">
 				<Cell />
@@ -60,17 +60,12 @@ const Settings = kind({
 						Settings
 					</Cell>
 					<Cell>
-					<AppContext.Consumer>
-						{({onSwitchUser, userId}) => (
-							<SliderButton
-								onChange={onSwitchUser}
-								value={userId - 1}
-								>{[
-								'User 1',
-								'User 2'
-							]}</SliderButton>
-						)}
-					</AppContext.Consumer>
+						<SliderButton
+							onChange={onSwitchUser}
+							value={userId - 1}
+						>
+							{['User 1','User 2']}
+						</SliderButton>
 					</Cell>
 					<SwitchItemCell
 						icon="user"

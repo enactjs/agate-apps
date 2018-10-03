@@ -62,7 +62,7 @@ const ColorPickerItem = kind({
 
 	render: ({color, changeColor}) => (
 		<React.Fragment>
-			<p>Color:</p>
+			<label>Color:</label>
 			<ColorPicker value={color} onChange={changeColor} />
 		</React.Fragment>
 	)
@@ -80,7 +80,7 @@ const FontSizeItem = kind({
 	},
 	render: ({changeFontSize, fontSize}) => (
 		<React.Fragment>
-			<p>Text Size:</p>
+			<label>Text Size:</label>
 			<SliderButton
 				onChange={changeFontSize}
 				value={fontSize}

@@ -11,8 +11,6 @@ import DateTimePicker from '@enact/agate/DateTimePicker';
 import React from 'react';
 import {TabbedPanels} from '@enact/agate/Panels';
 
-import produce from "immer"
-
 import Clock from '../components/Clock';
 import Home from '../views/Home';
 import HVAC from '../views/HVAC';
