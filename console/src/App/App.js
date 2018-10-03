@@ -39,11 +39,6 @@ const colors = {
 const AppBase = kind({
 	name: 'App',
 
-	defaultProps: {
-		colorAccent: colors.carbon.accent, // technically, these should be dynamically assigned, based on the current skin...
-		colorHighlight: colors.carbon.highlight
-	},
-
 	styles: {
 		css,
 		className: 'app'
@@ -66,6 +61,8 @@ const AppBase = kind({
 		skinName,
 		...rest
 	}) => {
+		if (!colorAccent && skinName) colorAccent = colors[skinName].accent;
+		if (!colorHighlight && skinName) colorHighlight = colors[skinName].highlight;
 		return (
 			<div>
 				<TabbedPanels
