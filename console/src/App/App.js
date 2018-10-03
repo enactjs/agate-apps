@@ -23,12 +23,25 @@ import css from './App.less';
 
 add('backspace', 8);
 
+// Define these here and apply them to both the base defaults and the HOC, because apparently it's
+// possible to accidentally impose a value mismatch during the initial render...
+const colors = {
+	carbon: {
+		accent: '#8fd43a',
+		highlight: '#6abe0b'
+	},
+	titanium: {
+		accent: '#cccccc',
+		highlight: '#4141d8'
+	}
+};
+
 const AppBase = kind({
 	name: 'App',
 
 	defaultProps: {
-		colorAccent: '#0033cc',
-		colorHighlight: '#0033cc'
+		colorAccent: colors.carbon.accent, // technically, these should be dynamically assigned, based on the current skin...
+		colorHighlight: colors.carbon.highlight
 	},
 
 	styles: {
@@ -131,13 +144,16 @@ const AppState = hoc((configHoc, Wrapped) => {
 		static displayName = 'AppState';
 		constructor (props) {
 			super(props);
+			const defaultSkin = props.defaultSkin || 'carbon'; // 'titanium' alternate.
 			this.state = {
+				colorAccent: props.accent || colors[defaultSkin].accent,
+				colorHighlight: props.highlight || colors[defaultSkin].highlight,
 				index: props.defaultIndex || 0,
 				showPopup: false,
 				showBasicPopup: false,
 				showDateTimePopup: false,
 				showRadio: false,
-				skin: props.defaultSkin || 'carbon' // 'titanium' alternate.
+				skin: defaultSkin
 			};
 		}
 
@@ -158,7 +174,11 @@ const AppState = hoc((configHoc, Wrapped) => {
 		};
 
 		onSkinChange = () => {
-			this.setState(({skin}) => ({skin: (skin === 'carbon' ? 'titanium' : 'carbon')}));
+			this.setState(({skin}) => ({
+				skin: (skin === 'carbon' ? 'titanium' : 'carbon'),
+				colorAccent: this.props.accent || colors[skin].accent,
+				colorHighlight: this.props.highlight || colors[skin].highlight
+			}));
 		};
 
 		onTogglePopup = () => {
