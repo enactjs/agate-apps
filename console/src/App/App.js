@@ -16,7 +16,7 @@ import Clock from '../components/Clock';
 import Home from '../views/Home';
 import HVAC from '../views/HVAC';
 import Phone from '../views/Phone';
-import Radio from '../views/Radio';
+import AppList from '../views/AppList';
 import Settings from '../views/Settings';
 
 import css from './App.less';
@@ -71,7 +71,7 @@ const AppBase = kind({
 						{title: 'Home', icon: 'denselist'},
 						{title: 'Phone', icon: 'phone'},
 						{title: 'Climate', icon: 'temperature'},
-						{title: 'Radio', icon: 'audio'}
+						{title: 'Apps', icon: 'list'}
 					]}
 					onSelect={onSelect}
 					selected={index}
@@ -91,13 +91,13 @@ const AppBase = kind({
 					</afterTabs>
 					<Home
 						onSelect={onSelect}
-						onTogglePopup={onTogglePopup}
-						onToggleBasicPopup={onToggleBasicPopup}
 					/>
 					<Phone />
 					{/* eslint-disable-next-line */}
 					<HVAC />
-					<Radio />
+					<AppList
+						onTogglePopup={onTogglePopup}
+						onToggleBasicPopup={onToggleBasicPopup}/>
 					<Settings
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
@@ -149,7 +149,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 				showPopup: false,
 				showBasicPopup: false,
 				showDateTimePopup: false,
-				showRadio: false,
+				showAppList: false,
 				skin: defaultSkin
 			};
 		}
