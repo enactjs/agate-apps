@@ -22,7 +22,9 @@ const SwitchItemCell =  kind({
 	render: ({css, ...rest}) => {
 		delete rest.noToggle;
 		return (
-			<Cell shrink component={SwitchItem} css={css} {...rest} />
+			<Cell shrink>
+				<SwitchItem css={css} {...rest} />
+			</Cell>
 		);
 	}
 });
