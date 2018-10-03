@@ -32,13 +32,7 @@ const AppBase = kind({
 		css,
 		className: 'app'
 	},
-	handlers: {
-		onSkinChange: (update) => () => {
-			update((draft) => {
-				draft.userSettings.skin = draft.userSettings.skin === 'carbon' ? 'titanium' : 'carbon'
-			})
-		}
-	},
+
 	render: ({
 		index,
 		onSelect,
@@ -50,7 +44,6 @@ const AppBase = kind({
 		showBasicPopup,
 		showDateTimePopup,
 		skinName,
-		updateAppState,
 		...rest
 	}) => {
 		return (
@@ -72,7 +65,7 @@ const AppBase = kind({
 							<Cell shrink>
 								<Clock />
 							</Cell>
-							<Cell shrink component={Button} type="grid" icon="fullscreen" small onTap={onSkinChange(updateAppState)} />
+							<Cell shrink component={Button} type="grid" icon="fullscreen" small onTap={onSkinChange} />
 						</Column>
 					</afterTabs>
 					<Home
@@ -185,9 +178,13 @@ const AppState = hoc((configHoc, Wrapped) => {
 });
 
 const AppDecorator = compose(
-	AppContextConnect((context) => ({
-		skin: context.userSettings.skin,
-		updateAppState: context.updateAppState
+	AppContextConnect(({userSettings, updateAppState}) => ({
+		skin: userSettings.skin,
+		onSkinChange:() => {
+			updateAppState((draft) => {
+				draft.userSettings.skin = draft.userSettings.skin === 'carbon' ? 'titanium' : 'carbon'
+			});
+		}
 	})),
 	AppState,
 	AgateDecorator

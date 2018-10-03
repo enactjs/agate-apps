@@ -106,9 +106,14 @@ const Settings = kind({
 	)
 });
 
-const ConnectedSettings = AppContextConnect((context) => ({
-	userId: context.userId,
-	onSwitchUser: context.onSwitchUser
+const ConnectedSettings = AppContextConnect(({userId, updateAppState}) => ({
+	userId: userId,
+	onSwitchUser: ({value}) => {
+		updateAppState((draft) => {
+				draft.userId = value + 1
+			}
+		)
+	}
 }))(Settings)
 
 export default ConnectedSettings;

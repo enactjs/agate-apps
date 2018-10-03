@@ -12,58 +12,69 @@ class AppContextProvider extends Component {
 				color: '#FFFFFF',
 				fontSize: 0,
 				skin: props.defaultSkin || 'carbon',
-			},
-			updateAppState: this.updateAppState,
-			onSwitchUser: this.onSwitchUser
+			}
 		}
 	}
 
 	componentDidMount(){
-		this.loadUserSettings(this.state.userId);
+		this.setUserSettings(this.state.userId);
 	}
 
-	loadUserSettings = (userId) => {
-		if(!JSON.parse(window.localStorage.getItem(`user${this.state.userId}`))){
+	componentWillUpdate(nextProps, nextState){
+		if(this.state.userId !== nextState.userId && this.state.userSettings === nextState.userSettings){
+			this.setUserSettings(nextState.userId);
+		}
+
+		if(this.state.userId === nextState.userId && this.state.userSettings !== nextState.userSettings){
+			this.saveUserSettings(nextState.userId, nextState.userSettings, this.state.userSettings)
+		}
+	}
+
+	loadSavedUserSettings = (userId) => {
+		if(!JSON.parse(window.localStorage.getItem(`user${userId}`))){
 			window.localStorage.setItem(`user${this.state.userId}`, JSON.stringify({...this.state.userSettings}));
 		}
 
+		return JSON.parse(window.localStorage.getItem(`user${userId}`));
+	}
+
+	saveUserSettings = (userId, userSettings, prevUserSettings) => {
+		if(userSettings !== prevUserSettings){
+			window.localStorage.setItem(`user${userId}`, JSON.stringify(userSettings))
+		}
+	}
+
+	setUserSettings = (userId) => {
+		const settings = this.loadSavedUserSettings(userId);
+
 		this.setState(
 			produce((draft) => {
-				draft.userSettings = JSON.parse(window.localStorage.getItem(`user${userId}`))
+				draft.userSettings = settings
 			})
 		)
 	}
 
-	saveUserSettingsLocally = (userId, hasChanged) => {
-		if(hasChanged){
-			window.localStorage.setItem(`user${userId}`, JSON.stringify(this.state.userSettings))
-		}
-	}
-
-	// Catch all way to update state
-	updateAppState = (cb) => {
-		const prevUserSettings = this.state.userSettings
+	updateAppState = (cb, afterCB) => {
+		const prevState = this.state;
 		this.setState(
 			produce(cb),
 			() => {
-				this.saveUserSettingsLocally(this.state.userId, this.state.userSettings !== prevUserSettings)
+				if(afterCB){
+					afterCB(this.state, prevState);
+				}
 			}
 		)
 	}
 
-	// If you want to be more specific about updating state. Similar to a redux action/reducer.
-	onSwitchUser = ({value}) => {
-		this.setState(
-			produce((draft) => {
-				draft.userId = value + 1
-			}),
-			() => this.loadUserSettings(this.state.userId)
-		)
-	}
-
 	render() {
+		const context = {
+			...this.state,
+			updateAppState: this.updateAppState,
+			onSwitchUser: this.onSwitchUser
+		}
+
 		return (
-			<Context.Provider value={this.state}>
+			<Context.Provider value={context}>
 				<PureFragment>
 					{this.props.children}
 				</PureFragment>

@@ -8,7 +8,7 @@ import Divider from '@enact/agate/Divider';
 import viewCss from './Settings.less';
 
 import AppContextConnect from '../App/AppContextConnect';
-import Button from '@enact/agate/Button/Button';
+import LabeledIconButton from '@enact/agate/LabeledIconButton';
 
 const DisplaySettings = kind({
 	name: 'DisplaySettings',
@@ -35,6 +35,13 @@ const DisplaySettings = kind({
 					<Cell
 						size="80%"
 					>
+						<Row align=" flex-end">
+							<Cell shrink>
+								<LabeledIconButton onClick={onSelect} data-tabindex={4} icon="arrowhookleft">
+									Back
+								</LabeledIconButton>
+							</Cell>
+						</Row>
 						<Cell
 							className={css.header}
 							component={Divider}
@@ -50,11 +57,6 @@ const DisplaySettings = kind({
 							<Cell>
 								<FontSizeSetting />
 							</Cell>
-							<Cell>
-								<Button onTap={onSelect} data-tabindex={4}>
-									Go Back
-								</Button>
-							</Cell>
 						</Cell>
 					</Cell>
 				</Cell>
@@ -66,14 +68,6 @@ const DisplaySettings = kind({
 // Example to show how to optimize rerenders.
 const ColorPickerItem = kind({
 	name: 'ColorPickerItem',
-
-	handlers: {
-		changeColor: ({value}, {updateAppState}) => {
-			updateAppState((draft) => {
-				draft.userSettings.color = value;
-			});
-		}
-	},
 
 	render: ({color, changeColor}) => (
 		<React.Fragment>
@@ -87,13 +81,6 @@ const ColorPickerItem = kind({
 const FontSizeItem = kind({
 	name: 'FontSizeItem',
 
-	handlers: {
-		changeFontSize:({value}, {updateAppState}) => {
-			updateAppState((draft) => {
-				draft.userSettings.fontSize = value;
-			});
-		}
-	},
 	render: ({changeFontSize, fontSize}) => (
 		<React.Fragment>
 			<label>Text Size:</label>
@@ -107,14 +94,24 @@ const FontSizeItem = kind({
 	)
 })
 
-const ColorPickerSetting = AppContextConnect((context) => ({
-	color: context.userSettings.color,
-	updateAppState: context.updateAppState
+const ColorPickerSetting = AppContextConnect(({userSettings, updateAppState}) => ({
+	color: userSettings.color,
+	changeColor: ({value}) => {
+		updateAppState((draft) => {
+				draft.userSettings.color = value;
+			}
+		);
+	}
 }))(ColorPickerItem)
 
-const FontSizeSetting = AppContextConnect((context) => ({
-	fontSize: context.userSettings.fontSize,
-	updateAppState: context.updateAppState
+const FontSizeSetting = AppContextConnect(({userSettings, updateAppState}) => ({
+	fontSize: userSettings.fontSize,
+	changeFontSize: ({value}) => {
+		updateAppState((draft) => {
+				draft.userSettings.fontSize = value;
+			}
+		)
+	}
 }))(FontSizeItem)
 
 export default DisplaySettings;
