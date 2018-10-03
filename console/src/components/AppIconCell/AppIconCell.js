@@ -13,8 +13,8 @@ const AppIconCell = kind({
 		className: 'iconCell'
 	},
 
-	render: ({children, size, ...rest}) => (
-		<Cell component={LabeledIconButton} align="center" size={size} {...rest}>{children}</Cell>
+	render: ({children, ...rest}) => (
+		<Cell component={LabeledIconButton} size={180} {...rest}>{children}</Cell>
 	)
 });
 

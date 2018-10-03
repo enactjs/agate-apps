@@ -22,35 +22,24 @@ const Home = kind({
 	render: ({onTabChange, ...rest}) => {
 		return(
 			<Panel {...rest}>
-		    <Column>
-		        <Cell>
-		            <Row>
-		                <Cell>
-		                    <CompactRadio />
-		                </Cell>
-		                <Cell>
-		                    <CompactHvac />
-		                </Cell>
-		            </Row>
-		        </Cell>
-		        <Cell>
-		            <Row>
-		                <Cell>
-		                    <Row align="start center">
-		                        <AppIconCell size={"40%"} icon="compass">Navigation</AppIconCell>
-		                        <AppIconCell size={"40%"} icon="audio" data-tabindex={3} onKeyUp={onTabChange} onClick={onTabChange}>Audio</AppIconCell>
-		                    </Row>
-		                    <Row align="start center">
-		                        <AppIconCell size={"40%"} icon="resumeplay">Multimedia</AppIconCell>
-		                        <AppIconCell size={"40%"} icon="gear" data-tabindex={4} onKeyUp={onTabChange} onClick={onTabChange}>Settings</AppIconCell>
-		                    </Row>
-		                </Cell>
-		                <Cell className={css.quadFour}>
-		                    GPS
-		                </Cell>
-		            </Row>
-		        </Cell>
-		    </Column>
+				<Column>
+					<Cell><Row><Cell><CompactRadio /></Cell><Cell><CompactHvac /></Cell></Row></Cell>
+					<Cell>
+						<Row>
+							<Cell>
+								<Row align="start center">
+									<AppIconCell size="40%" icon="compass">Navigation</AppIconCell>
+									<AppIconCell size="40%" icon="audio" data-tabindex={3} onKeyUp={onTabChange} onClick={onTabChange}>Audio</AppIconCell>
+								</Row>
+								<Row align="start center">
+									<AppIconCell size="40%" icon="resumeplay">Multimedia</AppIconCell>
+									<AppIconCell size="40%" icon="gear" data-tabindex={4} onKeyUp={onTabChange} onClick={onTabChange}>Settings</AppIconCell>
+								</Row>
+							</Cell>
+							<Cell className={css.quadFour}>GPS</Cell>
+						</Row>
+					</Cell>
+				</Column>
 			</Panel>
 		);
 	}
