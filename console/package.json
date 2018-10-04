@@ -23,7 +23,7 @@
 		"template": "html-template.ejs"
 	},
 	"eslintConfig": {
-		"extends": "enact"
+		"extends": "enact/strict"
 	},
 	"eslintIgnore": [
 		"node_modules/*",
