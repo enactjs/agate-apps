@@ -41,7 +41,7 @@ const Settings = kind({
 		}
 	},
 
-	render: ({css, onSelect, onSwitchUser, userId, onToggleDateTimePopup, ...rest}) => (
+	render: ({css, onSelect, updateUser, userId, onToggleDateTimePopup, ...rest}) => (
 		<Panel {...rest}>
 			<Row className="enact-fit" align=" center">
 				<Cell size="40%">
@@ -56,7 +56,7 @@ const Settings = kind({
 						</Cell>
 						<Cell shrink>
 							<SliderButton
-								onChange={onSwitchUser}
+								onChange={updateUser}
 								value={userId - 1}
 							>
 								{['User 1','User 2']}
@@ -108,9 +108,9 @@ const Settings = kind({
 
 const ConnectedSettings = AppContextConnect(({userId, updateAppState}) => ({
 	userId: userId,
-	onSwitchUser: ({value}) => {
-		updateAppState((draft) => {
-				draft.userId = value + 1
+	updateUser: ({value}) => {
+		updateAppState((state) => {
+				state.userId = value + 1
 			}
 		)
 	}

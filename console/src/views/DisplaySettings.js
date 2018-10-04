@@ -69,11 +69,11 @@ const DisplaySettings = kind({
 const ColorPickerItem = kind({
 	name: 'ColorPickerItem',
 
-	render: ({color, changeColor}) => (
+	render: ({color, updateColor}) => (
 		<React.Fragment>
 			<label>Color:</label>
 			<br/>
-			<ColorPicker value={color} onChange={changeColor} />
+			<ColorPicker value={color} onChange={updateColor} />
 		</React.Fragment>
 	)
 })
@@ -81,11 +81,11 @@ const ColorPickerItem = kind({
 const FontSizeItem = kind({
 	name: 'FontSizeItem',
 
-	render: ({changeFontSize, fontSize}) => (
+	render: ({updateFontSize, fontSize}) => (
 		<React.Fragment>
 			<label>Text Size:</label>
 			<SliderButton
-				onChange={changeFontSize}
+				onChange={updateFontSize}
 				value={fontSize}
 			>
 				{['S', 'M', 'L', 'XL']}
@@ -96,9 +96,9 @@ const FontSizeItem = kind({
 
 const ColorPickerSetting = AppContextConnect(({userSettings, updateAppState}) => ({
 	color: userSettings.color,
-	changeColor: ({value}) => {
-		updateAppState((draft) => {
-				draft.userSettings.color = value;
+	updateColor: ({value}) => {
+		updateAppState((state) => {
+				state.userSettings.color = value;
 			}
 		);
 	}
@@ -106,9 +106,9 @@ const ColorPickerSetting = AppContextConnect(({userSettings, updateAppState}) =>
 
 const FontSizeSetting = AppContextConnect(({userSettings, updateAppState}) => ({
 	fontSize: userSettings.fontSize,
-	changeFontSize: ({value}) => {
-		updateAppState((draft) => {
-				draft.userSettings.fontSize = value;
+	updateFontSize: ({value}) => {
+		updateAppState((state) => {
+				state.userSettings.fontSize = value;
 			}
 		)
 	}

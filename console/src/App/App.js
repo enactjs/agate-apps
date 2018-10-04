@@ -36,7 +36,7 @@ const AppBase = kind({
 	render: ({
 		index,
 		onSelect,
-		onSkinChange,
+		updateSkin,
 		onTogglePopup,
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
@@ -65,7 +65,7 @@ const AppBase = kind({
 							<Cell shrink>
 								<Clock />
 							</Cell>
-							<Cell shrink component={Button} type="grid" icon="fullscreen" small onTap={onSkinChange} />
+							<Cell shrink component={Button} type="grid" icon="fullscreen" small onTap={updateSkin} />
 						</Column>
 					</afterTabs>
 					<Home
@@ -75,6 +75,7 @@ const AppBase = kind({
 					{/* eslint-disable-next-line */}
 					<HVAC />
 					<AppList
+						onSelect={onSelect}
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}/>
 					<Settings
@@ -127,8 +128,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 				showPopup: false,
 				showBasicPopup: false,
 				showDateTimePopup: false,
-				showAppList: false,
-				skin: props.defaultSkin || 'carbon' // 'titanium' alternate.
+				showAppList: false
 			};
 		}
 
@@ -180,9 +180,9 @@ const AppState = hoc((configHoc, Wrapped) => {
 const AppDecorator = compose(
 	AppContextConnect(({userSettings, updateAppState}) => ({
 		skin: userSettings.skin,
-		onSkinChange:() => {
-			updateAppState((draft) => {
-				draft.userSettings.skin = draft.userSettings.skin === 'carbon' ? 'titanium' : 'carbon'
+		updateSkin:() => {
+			updateAppState((state) => {
+				state.userSettings.skin = state.userSettings.skin === 'carbon' ? 'titanium' : 'carbon'
 			});
 		}
 	})),

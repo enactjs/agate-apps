@@ -16,7 +16,7 @@ class AppContextProvider extends Component {
 		}
 	}
 
-	componentDidMount(){
+	componentWillMount(){
 		this.setUserSettings(this.state.userId);
 	}
 
