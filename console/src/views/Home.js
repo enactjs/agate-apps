@@ -2,47 +2,39 @@ import {Panel} from '@enact/agate/Panels';
 import kind from '@enact/core/kind';
 import {Row, Column, Cell} from '@enact/ui/Layout';
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import CompactRadio from '../components/CompactRadio';
 import CompactHvac from '../components/CompactHVAC';
-import AppIconCell from '../components/AppIconCell';
+import CompactAppList from '../components/CompactAppList';
 
 import css from './Home.less';
 
 const Home = kind({
 	name: 'Home',
 
-	handlers: {
-		onTabChange: (ev, {onSelect}) => {
-			if ((ev.keyCode === 13 || ev.type === 'click') && ev.currentTarget.dataset.tabindex) {
-				onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
-			}
-		}
+	propTypes: {
+		onSelect: PropTypes.func
 	},
 
-	render: ({onTabChange, ...rest}) => {
-		return(
-			<Panel {...rest}>
-				<Column>
-					<Cell><Row><Cell><CompactRadio /></Cell><Cell><CompactHvac /></Cell></Row></Cell>
-					<Cell>
-						<Row>
-							<Cell>
-								<Row align="start center">
-									<AppIconCell size="40%" icon="compass">Navigation</AppIconCell>
-									<AppIconCell size="40%" icon="audio" data-tabindex={3} onKeyUp={onTabChange} onClick={onTabChange}>Audio</AppIconCell>
-								</Row>
-								<Row align="start center">
-									<AppIconCell size="40%" icon="resumeplay">Multimedia</AppIconCell>
-									<AppIconCell size="40%" icon="gear" data-tabindex={4} onKeyUp={onTabChange} onClick={onTabChange}>Settings</AppIconCell>
-								</Row>
-							</Cell>
-							<Cell className={css.quadFour}>GPS</Cell>
-						</Row>
-					</Cell>
-				</Column>
-			</Panel>
-		);
-	}
+	render: ({onSelect, ...rest}) => (
+		<Panel {...rest}>
+			<Column>
+				<Cell>
+					<Row>
+						<Cell><CompactRadio /></Cell>
+						<Cell><CompactHvac /></Cell>
+					</Row>
+				</Cell>
+				<Cell>
+					<Row>
+						<Cell><CompactAppList onSelect={onSelect} /></Cell>
+						<Cell className={css.quadFour}>GPS</Cell>
+					</Row>
+				</Cell>
+			</Column>
+		</Panel>
+	)
 });
 
 export default Home;
