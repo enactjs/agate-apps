@@ -1,7 +1,7 @@
 {
-	"name": "iframe-app",
+	"name": "copilot",
 	"version": "1.0.0",
-	"description": "A general template for an Enact Moonstone application.",
+	"description": "A way to send content into a render frame.",
 	"author": "",
 	"main": "src/index.js",
 	"scripts": {
