@@ -1,9 +1,9 @@
+import React from 'react';
+import kind from '@enact/core/kind';
+import {Row, Cell} from '@enact/ui/Layout';
 import Picker from '@enact/agate/Picker';
 import ToggleButton from '@enact/agate/ToggleButton';
 import {LabeledItemBase} from '@enact/agate/LabeledItem';
-import kind from '@enact/core/kind';
-import {Row} from '@enact/ui/Layout';
-import React from 'react';
 
 import css from './CompactHVAC.less';
 
@@ -14,7 +14,7 @@ const CompactHvac = kind({
 
 	styles: {
 		css,
-		className: 'compact'
+		className: 'compactHvac'
 	},
 
 	defaultProps: {
@@ -22,30 +22,32 @@ const CompactHvac = kind({
 	},
 
 	render: ({temp, ...rest}) => (
-		<div className={css.compact} {...rest}>
-			<Row><LabeledItemBase label="Mostly sunny">{temp}°</LabeledItemBase></Row>
-			{temp >= 66 && temp <= 74 && <div>
+		<div {...rest}>
+			<LabeledItemBase className={css.title} label="Mostly sunny">{temp}°</LabeledItemBase>
+			{(temp >= 66 && temp <= 74) && <div>
 				<Row className={css.row} align="center space-around">
-					<ToggleButton type="grid" className={css.button}>A/C</ToggleButton>
-					<ToggleButton type="grid" className={css.button}>AUTO</ToggleButton>
+					<Cell component={ToggleButton} size="30%" type="grid" className={css.button}>A/C</Cell>
+					<Cell component={ToggleButton} size="30%" type="grid" className={css.button}>AUTO</Cell>
 				</Row>
 				<Row className={css.row} align="center space-around">
-					<ToggleButton icon="airdown" />
-					<ToggleButton icon="airup" />
-					<ToggleButton icon="airright" />
+					<Cell shrink><ToggleButton icon="airdown" /></Cell>
+					<Cell shrink><ToggleButton icon="airup" /></Cell>
+					<Cell shrink><ToggleButton icon="airright" /></Cell>
 				</Row>
 			</div>}
-			{temp < 66 && <div>
-				<ToggleButton icon="heatseatleft" type="grid" className={css.button} underline />
-				<ToggleButton icon="heatseatright" type="grid" className={css.button} underline />
-				<ToggleButton icon="defrosterback" />
-				<ToggleButton icon="defrosterfront" />
+			{(temp < 66) && <div>
+				<Row align="center space-around">
+					<Cell shrink><ToggleButton icon="heatseatleft" type="grid" className={css.button} underline /></Cell>
+					<Cell shrink><ToggleButton icon="heatseatright" type="grid" className={css.button} underline /></Cell>
+					<Cell shrink><ToggleButton icon="defrosterback" /></Cell>
+					<Cell shrink><ToggleButton icon="defrosterfront" /></Cell>
+				</Row>
 				<Picker orientation="vertical" className={css.picker}>{temps}</Picker>
 			</div>}
-			{temp > 74 && <div>
-				<div className={css.stackedButtons}>
-				<ToggleButton type="grid" icon="aircirculation" className={css.button} />
-				</div>
+			{(temp > 74) && <div>
+				<Row align="center space-around">
+					<Cell shrink><ToggleButton type="grid" icon="aircirculation" className={css.button} /></Cell>
+				</Row>
 			</div>}
 		</div>
 	)
