@@ -4,6 +4,7 @@ import IncrementSlider from '@enact/agate/IncrementSlider';
 import kind from '@enact/core/kind';
 import {Row, Cell} from '@enact/ui/Layout';
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 
 import css from './CompactRadio.less';
 
@@ -15,6 +16,11 @@ const CompactRadioBase = kind({
 		className: 'compactRadio'
 	},
 
+	propTypes: {
+		changeStation: PropTypes.func,
+		currentStation: PropTypes.func
+	},
+
 	handlers: {
 		onTune: (ev, {currentStation, changeStation}) => {
 			const action = ev.currentTarget.getAttribute('action');
@@ -24,25 +30,25 @@ const CompactRadioBase = kind({
 				if (currentStation >= 108) {
 					newStation = 87.8;
 				} else {
-					newStation = (currentStation*10 + 1)/10;
+					newStation = (currentStation * 10 + 1) / 10;
 				}
 			} else if (action === 'tune-down') {
 				if (currentStation <= 87.8) {
 					newStation = 108;
 				} else {
-					newStation = (currentStation*10 - 1)/10;
+					newStation = (currentStation * 10 - 1) / 10;
 				}
 			} else if (action === 'scan-up') {
 				if (currentStation >= 108) {
 					newStation = 87.8;
 				} else {
-					newStation = (currentStation*10 + 20)/10;
+					newStation = (currentStation * 10 + 20) / 10;
 				}
 			} else if (action === 'scan-down') {
 				if (currentStation <= 87.8) {
 					newStation = 108;
 				} else {
-					newStation = (currentStation*10 - 20)/10
+					newStation = (currentStation * 10 - 20) / 10;
 				}
 			}
 			changeStation(newStation);
@@ -70,12 +76,12 @@ const CompactRadioBase = kind({
 					step={1}
 				/>
 			</div>
-		)
+		);
 	}
 });
 
 class RadioCompact extends Component {
-	constructor() {
+	constructor () {
 		super();
 
 		this.state = {
@@ -83,7 +89,7 @@ class RadioCompact extends Component {
 			currentStation: 87.8,
 			frequency: 'FM',
 			presets: [93.1, 105.1, 88.1, 92.1, 120.1]
-		}
+		};
 	}
 
 	changeFrequency = (frequency) => {
@@ -108,11 +114,11 @@ class RadioCompact extends Component {
 				}
 			});
 
-			return {presets: updatedPresets}
+			return {presets: updatedPresets};
 		});
 	}
 
-	render() {
+	render () {
 		return (
 			<CompactRadioBase
 				// changeFrequency={this.changeFrequency}
@@ -124,7 +130,7 @@ class RadioCompact extends Component {
 				// presets={this.state.presets}
 				// updatePresets={this.updatePresets}
 			/>
-		)
+		);
 	}
 }
 
