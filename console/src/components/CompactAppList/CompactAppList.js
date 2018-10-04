@@ -19,8 +19,8 @@ const CompactAppList = kind({
 		}
 	},
 
-	render: ({onTabChange}) => (
-		<React.Fragment>
+	render: ({onTabChange, ...rest}) => (
+		<div props={rest}>
 			<Row align="start center">
 				<AppIconCell size="40%" icon="compass">Navigation</AppIconCell>
 				<AppIconCell size="40%" icon="audio">Audio</AppIconCell>
@@ -29,7 +29,7 @@ const CompactAppList = kind({
 				<AppIconCell size="40%" icon="resumeplay">Multimedia</AppIconCell>
 				<AppIconCell size="40%" icon="gear" data-tabindex={4} onKeyUp={onTabChange} onClick={onTabChange}>Settings</AppIconCell>
 			</Row>
-		</React.Fragment>
+		</div>
 	)
 });
 
