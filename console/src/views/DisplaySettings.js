@@ -27,38 +27,32 @@ const DisplaySettings = kind({
 	render: ({css, onSelect, ...rest}) => (
 		<Panel {...rest}>
 			<Row className="enact-fit" align=" center">
-				<Cell
-					className={css.content}
-					component={Column}
-					size="50%"
-				>
-					<Cell
-						size="80%"
-					>
-						<Row align=" flex-end">
+				<Cell size="40%">
+					<Column className={css.content}>
+						<Cell size="90%">
 							<Cell shrink>
-								<LabeledIconButton onClick={onSelect} data-tabindex={4} icon="arrowhookleft">
-									Back
-								</LabeledIconButton>
+								<Row align=" flex-end">
+									<LabeledIconButton onClick={onSelect} data-tabindex={4} icon="arrowhookleft">
+										Back
+									</LabeledIconButton>
+								</Row>
 							</Cell>
-						</Row>
-						<Cell
-							className={css.header}
-							component={Divider}
-							shrink
-							spacing="medium"
-						>
-							Display Settings
-						</Cell>
-						<Cell>
-							<Cell>
+							<Cell
+								className={css.header}
+								component={Divider}
+								shrink
+								spacing="medium"
+							>
+								Display Settings
+							</Cell>
+							<Cell shrink>
 								<ColorPickerSetting />
 							</Cell>
-							<Cell>
+							<Cell shrink>
 								<FontSizeSetting />
 							</Cell>
 						</Cell>
-					</Cell>
+					</Column>
 				</Cell>
 			</Row>
 		</Panel>
