@@ -6,6 +6,7 @@ import compose from 'ramda/src/compose';
 import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
+import ColorPicker from '@enact/agate/ColorPicker';
 import Popup from '@enact/agate/Popup';
 import DateTimePicker from '@enact/agate/DateTimePicker';
 import React from 'react';
@@ -22,6 +23,19 @@ import css from './App.less';
 
 add('backspace', 8);
 
+// Define these here and apply them to both the base defaults and the HOC, because apparently it's
+// possible to accidentally impose a value mismatch during the initial render...
+const colors = {
+	carbon: {
+		accent: '#8fd43a',
+		highlight: '#6abe0b'
+	},
+	titanium: {
+		accent: '#cccccc',
+		highlight: '#4141d8'
+	}
+};
+
 const AppBase = kind({
 	name: 'App',
 
@@ -31,7 +45,11 @@ const AppBase = kind({
 	},
 
 	render: ({
+		colorAccent,
+		colorHighlight,
 		index,
+		onColorChangeAccent,
+		onColorChangeHighlight,
 		onSelect,
 		onSkinChange,
 		onTogglePopup,
@@ -43,6 +61,8 @@ const AppBase = kind({
 		skinName,
 		...rest
 	}) => {
+		if (!colorAccent && skinName) colorAccent = colors[skinName].accent;
+		if (!colorHighlight && skinName) colorHighlight = colors[skinName].highlight;
 		return (
 			<div>
 				<TabbedPanels
@@ -57,6 +77,11 @@ const AppBase = kind({
 					selected={index}
 					index={index}
 				>
+					<beforeTabs>
+						<ColorPicker onChange={onColorChangeAccent} defaultValue={colorAccent} small />
+						{skinName === 'carbon' ? <br /> : null}
+						<ColorPicker onChange={onColorChangeHighlight} defaultValue={colorHighlight} small />
+					</beforeTabs>
 					<afterTabs>
 						<Column align="center space-evenly">
 							<Cell shrink>
@@ -117,13 +142,16 @@ const AppState = hoc((configHoc, Wrapped) => {
 		static displayName = 'AppState';
 		constructor (props) {
 			super(props);
+			const defaultSkin = props.defaultSkin || 'carbon'; // 'titanium' alternate.
 			this.state = {
+				colorAccent: props.accent || colors[defaultSkin].accent,
+				colorHighlight: props.highlight || colors[defaultSkin].highlight,
 				index: props.defaultIndex || 0,
 				showPopup: false,
 				showBasicPopup: false,
 				showDateTimePopup: false,
 				showAppList: false,
-				skin: props.defaultSkin || 'carbon' // 'titanium' alternate.
+				skin: defaultSkin
 			};
 		}
 
@@ -135,8 +163,20 @@ const AppState = hoc((configHoc, Wrapped) => {
 			}
 		).bind(this);
 
+		onColorChangeAccent = ({value}) => {
+			this.setState({colorAccent: value});
+		};
+
+		onColorChangeHighlight = ({value}) => {
+			this.setState({colorHighlight: value});
+		};
+
 		onSkinChange = () => {
-			this.setState(({skin}) => ({skin: (skin === 'carbon' ? 'titanium' : 'carbon')}));
+			this.setState(({skin}) => ({
+				skin: (skin === 'carbon' ? 'titanium' : 'carbon'),
+				colorAccent: this.props.accent || colors[skin].accent,
+				colorHighlight: this.props.highlight || colors[skin].highlight
+			}));
 		};
 
 		onTogglePopup = () => {
@@ -160,7 +200,11 @@ const AppState = hoc((configHoc, Wrapped) => {
 			return (
 				<Wrapped
 					{...props}
+					accent={this.state.colorAccent}
+					highlight={this.state.colorHighlight}
 					index={this.state.index}
+					onColorChangeAccent={this.onColorChangeAccent}
+					onColorChangeHighlight={this.onColorChangeHighlight}
 					onSelect={this.onSelect}
 					onSkinChange={this.onSkinChange}
 					onTogglePopup={this.onTogglePopup}
