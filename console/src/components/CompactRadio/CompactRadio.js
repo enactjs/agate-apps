@@ -7,12 +7,12 @@ import React, {Component} from 'react';
 
 import css from './CompactRadio.less';
 
-
 const CompactRadioBase = kind({
 	name: 'CompactRadio',
 
 	styles: {
-		className: 'radio-compact'
+		css,
+		className: 'compactRadio'
 	},
 
 	handlers: {
@@ -49,26 +49,29 @@ const CompactRadioBase = kind({
 		}
 	},
 
-	render: ({currentStation, onTune}) => (
-		<div className={css.compact}>
-			<Cell><LabeledItemBase css={css.label} label="Artist - Song">{currentStation} MHZ</LabeledItemBase></Cell>
-      		<Row className={css.row}>
-				<Cell><Button onClick={onTune} action="tune-down" icon={"arrowsmallleft"} /></Cell>
-				Tune
-				<Cell><Button onClick={onTune} action="tune-up" icon={"arrowsmallright"} /></Cell>
-			</Row>
-			<Row className={css.row}>
-				<Cell>
-					<IncrementSlider
-						defaultValue={15}
-						max={30}
-						min={0}
-						step={1}
-					/>
-				</Cell>
-			</Row>
-		</div>
-	)
+	render: ({currentStation, onTune, ...rest}) => {
+		delete rest.changeStation;
+		return (
+			<div {...rest}>
+				<LabeledItemBase className={css.title} label="Artist - Song">{currentStation} MHz</LabeledItemBase>
+				<Row align="center space-evenly" className={css.row}>
+					<Cell shrink>
+						<Button onClick={onTune} action="tune-down" icon="arrowsmallleft" />
+					</Cell>
+					Tune
+					<Cell shrink>
+						<Button onClick={onTune} action="tune-up" icon="arrowsmallright" />
+					</Cell>
+				</Row>
+				<IncrementSlider
+					defaultValue={15}
+					max={30}
+					min={0}
+					step={1}
+				/>
+			</div>
+		)
+	}
 });
 
 class RadioCompact extends Component {
@@ -96,28 +99,30 @@ class RadioCompact extends Component {
 	}
 
 	updatePresets = (station, index) => {
-		const updatedPresets = this.state.presets.map((presetStation, currentIndex) => {
-			if (parseInt(index) === currentIndex) {
-				return station;
-			} else {
-				return presetStation;
-			}
-		});
+		this.setState(({presets}) => {
+			const updatedPresets = presets.map((presetStation, currentIndex) => {
+				if (parseInt(index) === currentIndex) {
+					return station;
+				} else {
+					return presetStation;
+				}
+			});
 
-		this.setState({presets: updatedPresets});
+			return {presets: updatedPresets}
+		});
 	}
 
 	render() {
 		return (
 			<CompactRadioBase
-				changeFrequency={this.changeFrequency}
-				changePreset={this.changePreset}
+				// changeFrequency={this.changeFrequency}
+				// changePreset={this.changePreset}
 				changeStation={this.changeStation}
-				currentPreset={this.state.currentPreset}
+				// currentPreset={this.state.currentPreset}
 				currentStation={this.state.currentStation}
-				frequency={this.state.frequency}
-				presets={this.state.presets}
-				updatePresets={this.updatePresets}
+				// frequency={this.state.frequency}
+				// presets={this.state.presets}
+				// updatePresets={this.updatePresets}
 			/>
 		)
 	}
