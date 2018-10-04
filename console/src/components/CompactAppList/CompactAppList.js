@@ -20,7 +20,7 @@ const CompactAppList = kind({
 	},
 
 	render: ({onTabChange, ...rest}) => (
-		<div props={rest}>
+		<div {...rest}>
 			<Row align="start center">
 				<AppIconCell size="40%" icon="compass">Navigation</AppIconCell>
 				<AppIconCell size="40%" icon="audio">Audio</AppIconCell>
