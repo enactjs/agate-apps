@@ -1,10 +1,10 @@
 import kind from '@enact/core/kind';
-import {Cell, Row} from '@enact/ui/Layout';
+import {Row} from '@enact/ui/Layout';
 import React from 'react';
 import AppIconCell from '../AppIconCell';
 
-const CompactHvac = kind({
-	name: 'CompactHVAC',
+const CompactAppList = kind({
+	name: 'CompactAppList',
 
 	styles: {
 		className: 'compact'
@@ -19,17 +19,17 @@ const CompactHvac = kind({
 	},
 
 	render: ({onTabChange, ...rest}) => (
-    <Cell props={rest}>
-      <Row align="start center">
+		<div>
+			<Row align="start center">
         <AppIconCell size="40%" icon="compass">Navigation</AppIconCell>
-        <AppIconCell size="40%" icon="audio" data-tabindex={3} onKeyUp={onTabChange} onClick={onTabChange}>Audio</AppIconCell>
+        <AppIconCell size="40%" icon="audio">Audio</AppIconCell>
       </Row>
       <Row align="start center">
         <AppIconCell size="40%" icon="resumeplay">Multimedia</AppIconCell>
         <AppIconCell size="40%" icon="gear" data-tabindex={4} onKeyUp={onTabChange} onClick={onTabChange}>Settings</AppIconCell>
       </Row>
-    </Cell>
-)
+    </div>
+	)
 });
 
-export default CompactHvac;
+export default CompactAppList;

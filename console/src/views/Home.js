@@ -18,7 +18,7 @@ const Home = kind({
 					<Cell><Row><Cell><CompactRadio /></Cell><Cell><CompactHvac /></Cell></Row></Cell>
 					<Cell>
 						<Row>
-						<CompactAppList onSelect={onSelect}/>
+							<Cell><CompactAppList onSelect={onSelect}/></Cell>
 							<Cell className={css.quadFour}>GPS</Cell>
 						</Row>
 					</Cell>
