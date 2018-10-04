@@ -11,14 +11,14 @@ import css from './CompactRadio.less';
 const CompactRadioBase = kind({
 	name: 'CompactRadio',
 
-	styles: {
-		css,
-		className: 'compactRadio'
-	},
-
 	propTypes: {
 		changeStation: PropTypes.func,
 		currentStation: PropTypes.func
+	},
+
+	styles: {
+		css,
+		className: 'compactRadio'
 	},
 
 	handlers: {

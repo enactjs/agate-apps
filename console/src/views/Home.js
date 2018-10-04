@@ -20,7 +20,12 @@ const Home = kind({
 	render: ({onSelect, ...rest}) => (
 		<Panel {...rest}>
 			<Column>
-				<Cell><Row><Cell><CompactRadio /></Cell><Cell><CompactHvac /></Cell></Row></Cell>
+				<Cell>
+					<Row>
+						<Cell><CompactRadio /></Cell>
+						<Cell><CompactHvac /></Cell>
+					</Row>
+				</Cell>
 				<Cell>
 					<Row>
 						<Cell><CompactAppList onSelect={onSelect} /></Cell>
