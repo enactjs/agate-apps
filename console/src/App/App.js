@@ -79,6 +79,7 @@ const AppBase = kind({
 				>
 					<beforeTabs>
 						<ColorPicker onChange={onColorChangeAccent} defaultValue={colorAccent} small />
+						{skinName === 'carbon' ? <br /> : null}
 						<ColorPicker onChange={onColorChangeHighlight} defaultValue={colorHighlight} small />
 					</beforeTabs>
 					<afterTabs>
