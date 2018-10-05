@@ -1,10 +1,10 @@
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import kind from '@enact/core/kind';
+import {Row, Cell} from '@enact/ui/Layout';
 import Button from '@enact/agate/Button';
 import {LabeledItemBase} from '@enact/agate/LabeledItem';
 import IncrementSlider from '@enact/agate/IncrementSlider';
-import kind from '@enact/core/kind';
-import {Row, Cell} from '@enact/ui/Layout';
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 
 import css from './CompactRadio.less';
 
@@ -13,7 +13,7 @@ const CompactRadioBase = kind({
 
 	propTypes: {
 		changeStation: PropTypes.func,
-		currentStation: PropTypes.func
+		currentStation: PropTypes.number
 	},
 
 	styles: {

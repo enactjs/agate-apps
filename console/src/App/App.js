@@ -6,16 +6,19 @@ import compose from 'ramda/src/compose';
 import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
+import ColorPicker from '@enact/agate/ColorPicker';
 import Popup from '@enact/agate/Popup';
 import DateTimePicker from '@enact/agate/DateTimePicker';
 import React from 'react';
 import {TabbedPanels} from '@enact/agate/Panels';
 
 import Clock from '../components/Clock';
+import CustomLayout from '../components/CustomLayout';
+import AppList from '../views/AppList';
 import Home from '../views/Home';
 import HVAC from '../views/HVAC';
 import Phone from '../views/Phone';
-import AppList from '../views/AppList';
+import Radio from '../views/Radio';
 import Settings from '../views/Settings';
 
 import css from './App.less';
@@ -31,7 +34,11 @@ const AppBase = kind({
 	},
 
 	render: ({
+		accent,
+		highlight,
 		index,
+		onColorChangeAccent,
+		onColorChangeHighlight,
 		onSelect,
 		onSkinChange,
 		onTogglePopup,
@@ -51,12 +58,17 @@ const AppBase = kind({
 						{title: 'Home', icon: 'denselist'},
 						{title: 'Phone', icon: 'phone'},
 						{title: 'Climate', icon: 'temperature'},
+						{title: 'Radio', icon: 'audio'},
 						{title: 'Apps', icon: 'list'}
 					]}
 					onSelect={onSelect}
 					selected={index}
 					index={index}
 				>
+					<beforeTabs>
+						<ColorPicker onChange={onColorChangeAccent} defaultValue={accent} small />
+						<ColorPicker onChange={onColorChangeHighlight} defaultValue={highlight} small />
+					</beforeTabs>
 					<afterTabs>
 						<Column align="center space-evenly">
 							<Cell shrink>
@@ -71,12 +83,25 @@ const AppBase = kind({
 					<Phone />
 					{/* eslint-disable-next-line */}
 					<HVAC />
+					<Radio />
 					<AppList
 						onTogglePopup={onTogglePopup}
-						onToggleBasicPopup={onToggleBasicPopup}/>
+						onToggleBasicPopup={onToggleBasicPopup}
+					/>
 					<Settings
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
+					{/* arrangement={{right: 'left', left: 'bottom'}}  defaultArrangement={{right: 'left', left: 'right'}} */}
+					<CustomLayout onArrange={console.log}>
+						{/* <top>red top content</top> */}
+						<left>yellow left content <Button>Transport Mode</Button></left>
+						green body content
+						<right>blue right content</right>
+						<bottom>
+							purple bottom content
+							<Button type="grid" icon="fullscreen" small onTap={onSkinChange} />
+						</bottom>
+					</CustomLayout>
 				</TabbedPanels>
 				<Popup
 					onClose={onToggleBasicPopup}
@@ -105,7 +130,7 @@ const AppBase = kind({
 					<title>
 						Date & Time
 					</title>
-					<DateTimePicker onClose={onToggleDateTimePopup}/>
+					<DateTimePicker onClose={onToggleDateTimePopup} />
 				</Popup>
 			</div>
 		);
@@ -118,6 +143,8 @@ const AppState = hoc((configHoc, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.state = {
+				colorAccent: '#cccccc',
+				colorHighlight: '#66aabb',
 				index: props.defaultIndex || 0,
 				showPopup: false,
 				showBasicPopup: false,
@@ -134,6 +161,14 @@ const AppState = hoc((configHoc, Wrapped) => {
 				this.setState(state => state.index === index ? null : {index});
 			}
 		).bind(this);
+
+		onColorChangeAccent = ({value}) => {
+			this.setState({colorAccent: value});
+		};
+
+		onColorChangeHighlight = ({value}) => {
+			this.setState({colorHighlight: value});
+		};
 
 		onSkinChange = () => {
 			this.setState(({skin}) => ({skin: (skin === 'carbon' ? 'titanium' : 'carbon')}));
@@ -160,7 +195,11 @@ const AppState = hoc((configHoc, Wrapped) => {
 			return (
 				<Wrapped
 					{...props}
+					accent={this.state.colorAccent}
+					highlight={this.state.colorHighlight}
 					index={this.state.index}
+					onColorChangeAccent={this.onColorChangeAccent}
+					onColorChangeHighlight={this.onColorChangeHighlight}
 					onSelect={this.onSelect}
 					onSkinChange={this.onSkinChange}
 					onTogglePopup={this.onTogglePopup}
