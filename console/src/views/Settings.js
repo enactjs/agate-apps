@@ -59,13 +59,13 @@ const Settings = kind({
 								onChange={updateUser}
 								value={userId - 1}
 							>
-								{['User 1','User 2']}
+								{['User 1', 'User 2']}
 							</SliderButton>
 						</Cell>
 						<SwitchItemCell
 							icon="user"
 							noToggle
-							data-tabindex={5}
+							data-tabindex={6}
 							onTap={onSelect}
 						>
 							Display
@@ -110,10 +110,10 @@ const ConnectedSettings = AppContextConnect(({userId, updateAppState}) => ({
 	userId: userId,
 	updateUser: ({value}) => {
 		updateAppState((state) => {
-				state.userId = value + 1
-			}
-		)
+			state.userId = value + 1;
+		}
+		);
 	}
-}))(Settings)
+}))(Settings);
 
 export default ConnectedSettings;

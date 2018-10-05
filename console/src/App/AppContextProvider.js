@@ -1,37 +1,38 @@
 import React, {Component} from 'react';
-import produce from "immer";
+import produce from 'immer';
 
 const Context = React.createContext();
 
 class AppContextProvider extends Component {
-	constructor(props){
-		super(props)
+	constructor (props) {
+		super(props);
 		this.state = {
 			userId: 1,
 			userSettings: {
-				color: '#FFFFFF',
+				colorAccent: '#cccccc',
+				colorHighlight: '#66aabb',
 				fontSize: 0,
-				skin: props.defaultSkin || 'carbon',
+				skin: (props.defaultSkin || 'carbon') // 'titanium' alternate.
 			}
-		}
+		};
 	}
 
-	componentWillMount(){
+	componentWillMount () {
 		this.setUserSettings(this.state.userId);
 	}
 
-	componentWillUpdate(nextProps, nextState){
-		if(this.state.userId !== nextState.userId && this.state.userSettings === nextState.userSettings){
+	componentWillUpdate (nextProps, nextState) {
+		if (this.state.userId !== nextState.userId && this.state.userSettings === nextState.userSettings) {
 			this.setUserSettings(nextState.userId);
 		}
 
-		if(this.state.userId === nextState.userId && this.state.userSettings !== nextState.userSettings){
-			this.saveUserSettings(nextState.userId, nextState.userSettings, this.state.userSettings)
+		if (this.state.userId === nextState.userId && this.state.userSettings !== nextState.userSettings) {
+			this.saveUserSettings(nextState.userId, nextState.userSettings, this.state.userSettings);
 		}
 	}
 
 	loadSavedUserSettings = (userId) => {
-		if(!JSON.parse(window.localStorage.getItem(`user${userId}`))){
+		if (!JSON.parse(window.localStorage.getItem(`user${userId}`))) {
 			window.localStorage.setItem(`user${this.state.userId}`, JSON.stringify({...this.state.userSettings}));
 		}
 
@@ -39,8 +40,8 @@ class AppContextProvider extends Component {
 	}
 
 	saveUserSettings = (userId, userSettings, prevUserSettings) => {
-		if(userSettings !== prevUserSettings){
-			window.localStorage.setItem(`user${userId}`, JSON.stringify(userSettings))
+		if (userSettings !== prevUserSettings) {
+			window.localStorage.setItem(`user${userId}`, JSON.stringify(userSettings));
 		}
 	}
 
@@ -49,22 +50,22 @@ class AppContextProvider extends Component {
 
 		this.setState(
 			produce((draft) => {
-				draft.userSettings = settings
+				draft.userSettings = settings;
 			})
-		)
+		);
 	}
 
 	updateAppState = (cb) => {
 		this.setState(
 			produce(cb)
-		)
+		);
 	}
 
-	render() {
+	render () {
 		const context = {
 			...this.state,
 			updateAppState: this.updateAppState
-		}
+		};
 
 		return (
 			<Context.Provider value={context}>
@@ -77,7 +78,7 @@ class AppContextProvider extends Component {
 }
 
 class PureFragment extends React.PureComponent {
-	render() {
+	render () {
 		return (
 			<React.Fragment>
 				{this.props.children}
@@ -87,4 +88,4 @@ class PureFragment extends React.PureComponent {
 }
 
 export default AppContextProvider;
-export {AppContextProvider, Context as AppContext}
+export {AppContextProvider, Context as AppContext};

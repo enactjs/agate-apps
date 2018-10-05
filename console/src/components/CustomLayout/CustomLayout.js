@@ -4,7 +4,7 @@ import Slottable from '@enact/ui/Slottable';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Rearrangeable from '../Rearrangeable';
+import Rearrangeable from '@enact/agate/Rearrangeable';
 import DropManager, {Draggable} from '@enact/agate/DropManager';
 
 import css from './CustomLayout.less';
