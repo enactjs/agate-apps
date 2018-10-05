@@ -39,7 +39,6 @@ const HomeDefaultLayout = kind({
 	},
 
 	render: ({arrangement, bottomLeft, bottomRight, topLeft, topRight, ...rest}) => {
-		delete rest.arranging;
 		return (
 			<Column {...rest}>
 				<Cell size="40%">

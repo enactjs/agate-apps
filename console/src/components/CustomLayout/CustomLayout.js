@@ -66,7 +66,7 @@ const CustomLayoutBase = kind({
 	}
 });
 
-const CustomLayout = DropManager(
+const CustomLayout = DropManager({arrangingProp: 'arranging'},
 	// Don't provide the "children" slot to Slottable
 	Slottable({slots: allSlotNames.filter(slot => slot !== 'children')},
 		Rearrangeable({slots: allSlotNames},
