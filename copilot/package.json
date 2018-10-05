@@ -1,8 +1,8 @@
 {
-	"name": "console",
+	"name": "copilot",
 	"version": "1.0.0",
-	"description": "A basic starting point for Agate samples.",
-	"author": "Dave Freeman <dave.freeman@lge.com>",
+	"description": "A way to send content into a render frame.",
+	"author": "",
 	"main": "src/index.js",
 	"scripts": {
 		"serve": "enact serve",
@@ -19,8 +19,7 @@
 	"private": true,
 	"repository": "",
 	"enact": {
-		"theme": "agate",
-		"template": "html-template.ejs"
+		"theme": "agate"
 	},
 	"eslintConfig": {
 		"extends": "enact/strict"
@@ -31,15 +30,12 @@
 		"dist/*"
 	],
 	"dependencies": {
-		"@enact/agate": "enactjs/agate#master",
+		"@enact/agate": "github:enactjs/agate#master",
 		"@enact/core": "^2.1.1",
 		"@enact/i18n": "^2.1.1",
-		"@enact/spotlight": "^2.1.1",
 		"@enact/ui": "^2.1.1",
-		"immer": "^1.7.2",
 		"prop-types": "^15.6.2",
-		"query-string": "^6.1.0",
-		"ramda": "^0.25.0",
+		"query-string": "^6.2.0",
 		"react": "^16.4.2",
 		"react-dom": "^16.4.2"
 	}

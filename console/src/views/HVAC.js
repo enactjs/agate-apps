@@ -4,8 +4,10 @@ import Picker from '@enact/agate/Picker';
 import SliderButton from '@enact/agate/SliderButton';
 import ToggleButton from '@enact/agate/ToggleButton';
 import kind from '@enact/core/kind';
-import {Row} from '@enact/ui/Layout';
+import Layout, {Cell, Row} from '@enact/ui/Layout';
 import React from 'react';
+
+import CustomLayout          from '../components/CustomLayout';
 
 import css from './HVAC.less';
 
@@ -21,39 +23,43 @@ const Hvac = kind({
 
 	render: (props) => (
 		<Panel {...props}>
-			<Divider>
-				Fan Speed
-			</Divider>
-			<SliderButton>
-				{'Off'}
-				{'Low'}
-				{'Medium'}
-				{'High'}
-			</SliderButton>
-			<Row className={css.above} align="center space-around">
-				<ToggleButton icon="heatseatleft" type="grid" className={css.button} underline />
-				<ToggleButton type="grid" className={css.button}>A/C</ToggleButton>
-				<ToggleButton icon="heatseatright" type="grid" className={css.button} underline />
-			</Row>
-			<Row className={css.below} align="center space-around">
-				<Picker orientation="vertical" className={css.picker}>
-					{temps}
-				</Picker>
-				<div className={css.stackedButtons}>
-					<ToggleButton type="grid" className={css.button}>AUTO</ToggleButton>
-					<ToggleButton type="grid" icon="aircirculation" className={css.button} />
-				</div>
-				<Picker orientation="vertical" className={css.picker}>
-					{temps}
-				</Picker>
-			</Row>
-			<Row className={css.spaced}>
-				<ToggleButton icon="airdown" />
-				<ToggleButton icon="airup" />
-				<ToggleButton icon="airright" />
-				<ToggleButton icon="defrosterback" />
-				<ToggleButton icon="defrosterfront" />
-			</Row>
+			<CustomLayout>
+				<top>
+					<Divider>
+						Fan Speed
+					</Divider>
+					<SliderButton>
+						{['Off', 'Low', 'Medium', 'High']}
+					</SliderButton>
+				</top>
+				<Row className={css.above} align="center space-around">
+					<Cell component={ToggleButton} shrink icon="heatseatleft" type="grid" className={css.button} underline />
+					<Cell component={ToggleButton} shrink type="grid" className={css.button}>A/C</Cell>
+					<Cell component={ToggleButton} shrink icon="heatseatright" type="grid" className={css.button} underline />
+				</Row>
+				<Row className={css.below} align="center space-around">
+					<Picker orientation="vertical" className={css.picker}>
+						{temps}
+					</Picker>
+					<div className={css.stackedButtons}>
+						<ToggleButton type="grid" className={css.button}>AUTO</ToggleButton>
+						<ToggleButton type="grid" icon="aircirculation" className={css.button} />
+					</div>
+					<Picker orientation="vertical" className={css.picker}>
+						{temps}
+					</Picker>
+				</Row>
+				<bottom>
+					{/*<Row className={css.spaced}>*/}
+					<Layout align="center space-around" wrap>
+						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="airdown" />
+						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="airup" />
+						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="airright" />
+						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="defrosterback" />
+						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="defrosterfront" />
+					</Layout>
+				</bottom>
+			</CustomLayout>
 		</Panel>
 	)
 });

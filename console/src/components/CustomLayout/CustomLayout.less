@@ -1,0 +1,43 @@
+// CustomLayout.less
+//
+
+@import "~@enact/agate/styles/mixins.less";
+
+.customLayout {
+	.bodyRow {
+		height: 100%;
+	}
+
+	&:global(.debug.drag) {
+		// Customize the colors of debug mode to make things a little easier to sort out.
+		[data-slot="topLeft"] {
+			background-color: fade(magenta, 20%);
+		}
+		[data-slot="top"] {
+			background-color: fade(red, 20%);
+		}
+		[data-slot="topRight"] {
+			background-color: fade(orange, 20%);
+		}
+		[data-slot="left"] {
+			background-color: fade(yellow, 20%);
+			color: darkgray;
+		}
+		[data-slot="children"] {
+			background-color: fade(green, 20%);
+		}
+		[data-slot="right"] {
+			background-color: fade(cyan, 20%);
+			color: darkgray;
+		}
+		[data-slot="bottomLeft"] {
+			background-color: fade(blue, 20%);
+		}
+		[data-slot="bottom"] {
+			background-color: fade(purple, 20%);
+		}
+		[data-slot="bottomRight"] {
+			background-color: fade(violet, 20%);
+		}
+	}
+}

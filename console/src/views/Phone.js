@@ -12,6 +12,7 @@ import {Panel} from '@enact/agate/Panels';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import CustomLayout from '../components/CustomLayout';
 import Dialer from '../components/Dialer';
 import CallPopup from '../components/CallPopup';
 import ContactThumbnail from '../components/ContactThumbnail';
@@ -90,57 +91,60 @@ const PhoneBase = kind({
 		onSelectDigit: handle(appendValue(ev => ev.value))
 	},
 
-
 	render: ({handleInputKeyDown, onContactClick, onChange, onClear, onSelectDigit, onTogglePopup, showPopup, value, ...rest}) => {
 		return (
 			<Panel {...rest}>
-				<Column align="center">
-					<Cell shrink className="number-field">
-						<Icon>user</Icon>
-						<Input
-							dismissOnEnter
-							onKeyDown={handleInputKeyDown}
-							onChange={onChange}
-							placeholder="Phone Number ..."
-							value={value}
-						/>
-						<Icon onClick={onClear} css={css} >\u232B</Icon>
-					</Cell>
-					<Cell className="dialer-grid">
-						<Dialer align="center center" onSelectDigit={onSelectDigit} />
-					</Cell>
-					<Cell shrink className="call">
-						<Button
-							disabled={!value}
-							onClick={onTogglePopup}
-							type="grid"
-							highlighted
-							style={{width: '300px'}}
-						>
-							Call
-						</Button>
-					</Cell>
-					<Cell
-						component={Scroller}
-						shrink
-						className={css.contactsList}
-						direction="horizontal"
-					>
-						{contacts.map(contact => (
-							<ContactThumbnail
-								key={contact.name}
-								contact={contact}
-								onSelect={onContactClick}
+				<CustomLayout>
+					<Column align="center">
+						<Cell shrink className="number-field">
+							<Icon>user</Icon>
+							<Input
+								dismissOnEnter
+								onKeyDown={handleInputKeyDown}
+								onChange={onChange}
+								placeholder="Phone Number ..."
+								value={value}
 							/>
-						))}
-					</Cell>
-				</Column>
-				<CallPopup
-					contactName=""
-					onCallEnd={onTogglePopup}
-					open={showPopup}
-					phoneNumber={value}
-				/>
+							<Icon onClick={onClear} css={css} >\u232B</Icon>
+						</Cell>
+						<Cell className="dialer-grid">
+							<Dialer align="center center" onSelectDigit={onSelectDigit} />
+						</Cell>
+						<Cell shrink className="call">
+							<Button
+								disabled={!value}
+								onClick={onTogglePopup}
+								type="grid"
+								highlighted
+								style={{width: '300px'}}
+							>
+								Call
+							</Button>
+						</Cell>
+					</Column>
+					<CallPopup
+						contactName=""
+						onCallEnd={onTogglePopup}
+						open={showPopup}
+						phoneNumber={value}
+					/>
+					<bottom>
+						<Cell
+							component={Scroller}
+							shrink
+							className={css.contactsList}
+							direction="horizontal"
+						>
+							{contacts.map(contact => (
+								<ContactThumbnail
+									key={contact.name}
+									contact={contact}
+									onSelect={onContactClick}
+								/>
+							))}
+						</Cell>
+					</bottom>
+				</CustomLayout>
 			</Panel>
 		)
 	}

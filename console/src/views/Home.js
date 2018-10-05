@@ -2,47 +2,92 @@ import {Panel} from '@enact/agate/Panels';
 import kind from '@enact/core/kind';
 import {Row, Column, Cell} from '@enact/ui/Layout';
 import React from 'react';
+import PropTypes from 'prop-types';
+import Slottable from '@enact/ui/Slottable';
+import DropManager, {Draggable} from '@enact/agate/DropManager';
+
+import Rearrangeable from '../components/Rearrangeable';
 import CompactRadio from '../components/CompactRadio';
 import CompactHvac from '../components/CompactHVAC';
-import AppIconCell from '../components/AppIconCell';
+import CompactAppList from '../components/CompactAppList';
 
 import css from './Home.less';
+
+const allSlotNames = ['bottomLeft', 'bottomRight', 'topLeft', 'topRight'];
+
+const DroppableCell = Draggable(Cell);
+
+const HomeDefaultLayout = kind({
+	name: 'HomeDefaultLayout',
+
+	propTypes: {
+		arrangement: PropTypes.object,
+		arranging: PropTypes.bool,
+		bottomLeft: PropTypes.node,
+		bottomRight: PropTypes.node,
+		topLeft: PropTypes.node,
+		topRight: PropTypes.node
+	},
+
+	styles: {
+		css,
+		className: 'home'
+	},
+
+	computed: {
+		className: ({arranging, styler}) => styler.append({arranging})
+	},
+
+	render: ({arrangement, bottomLeft, bottomRight, topLeft, topRight, ...rest}) => {
+		return (
+			<Column {...rest}>
+				<Cell size="40%">
+					<Row className={css.row}>
+						<DroppableCell size="30%" className={css.topLeft} arrangement={arrangement} name="topLeft">{topLeft}</DroppableCell>
+						<DroppableCell className={css.topRight} arrangement={arrangement} name="topRight">{topRight}</DroppableCell>
+					</Row>
+				</Cell>
+				<Cell>
+					<Row className={css.row}>
+						<DroppableCell size="30%" className={css.bottomLeft} arrangement={arrangement} name="bottomLeft">{bottomLeft}</DroppableCell>
+						<DroppableCell className={css.bottomRight} arrangement={arrangement} name="bottomRight">{bottomRight}</DroppableCell>
+					</Row>
+				</Cell>
+			</Column>
+		);
+	}
+});
+
+const HomeLayout = DropManager(
+	Slottable({slots: allSlotNames},
+		Rearrangeable({slots: allSlotNames},
+			HomeDefaultLayout
+		)
+	)
+);
 
 const Home = kind({
 	name: 'Home',
 
-	handlers: {
-		onTabChange: (ev, {onSelect}) => {
-			if ((ev.keyCode === 13 || ev.type === 'click') && ev.currentTarget.dataset.tabindex) {
-				onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
-			}
-		}
+	propTypes: {
+		onSelect: PropTypes.func
 	},
 
-	render: ({onTabChange, ...rest}) => {
-		return(
-			<Panel {...rest}>
-				<Column>
-					<Cell><Row><Cell><CompactRadio /></Cell><Cell><CompactHvac /></Cell></Row></Cell>
-					<Cell>
-						<Row>
-							<Cell>
-								<Row align="start center">
-									<AppIconCell size="40%" icon="compass">Navigation</AppIconCell>
-									<AppIconCell size="40%" icon="audio" data-tabindex={3} onKeyUp={onTabChange} onClick={onTabChange}>Audio</AppIconCell>
-								</Row>
-								<Row align="start center">
-									<AppIconCell size="40%" icon="resumeplay">Multimedia</AppIconCell>
-									<AppIconCell size="40%" icon="gear" data-tabindex={4} onKeyUp={onTabChange} onClick={onTabChange}>Settings</AppIconCell>
-								</Row>
-							</Cell>
-							<Cell className={css.quadFour}>GPS</Cell>
-						</Row>
-					</Cell>
-				</Column>
-			</Panel>
-		);
-	}
+	styles: {
+		css,
+		className: 'homePanel'
+	},
+
+	render: ({onSelect, ...rest}) => (
+		<Panel {...rest}>
+			<HomeLayout>
+				<topLeft><CompactRadio /></topLeft>
+				<topRight><CompactHvac /></topRight>
+				<bottomLeft><CompactAppList align="center space-evenly" onSelect={onSelect} /></bottomLeft>
+				<bottomRight><div className={css.quadFour}>GPS</div></bottomRight>
+			</HomeLayout>
+		</Panel>
+	)
 });
 
 export default Home;

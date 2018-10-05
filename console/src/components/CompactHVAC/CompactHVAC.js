@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import kind from '@enact/core/kind';
 import {Row, Cell} from '@enact/ui/Layout';
 import Picker from '@enact/agate/Picker';
@@ -12,13 +13,17 @@ const temps = ['HI', '74°', '73°', '72°', '71°', '70°', '69°', '68°', '67
 const CompactHvac = kind({
 	name: 'CompactHVAC',
 
-	styles: {
-		css,
-		className: 'compactHvac'
+	propTypes: {
+		temp: PropTypes.number
 	},
 
 	defaultProps: {
 		temp: 73
+	},
+
+	styles: {
+		css,
+		className: 'compactHvac'
 	},
 
 	render: ({temp, ...rest}) => (
