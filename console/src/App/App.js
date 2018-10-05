@@ -14,10 +14,11 @@ import {TabbedPanels} from '@enact/agate/Panels';
 
 import Clock from '../components/Clock';
 import CustomLayout from '../components/CustomLayout';
+import AppList from '../views/AppList';
 import Home from '../views/Home';
 import HVAC from '../views/HVAC';
 import Phone from '../views/Phone';
-import AppList from '../views/AppList';
+import Radio from '../views/Radio';
 import Settings from '../views/Settings';
 
 import css from './App.less';
@@ -55,9 +56,9 @@ const AppBase = kind({
 					{...rest}
 					tabs={[
 						{title: 'Home', icon: 'denselist'},
-						{title: 'Layout', icon: 'series'},
 						{title: 'Phone', icon: 'phone'},
 						{title: 'Climate', icon: 'temperature'},
+						{title: 'Radio', icon: 'audio'},
 						{title: 'Apps', icon: 'list'}
 					]}
 					onSelect={onSelect}
@@ -79,36 +80,28 @@ const AppBase = kind({
 					<Home
 						onSelect={onSelect}
 					/>
-					{/*<CustomLayout>
-					{
-						[
-							null,
-							'left',
-							'Body Content space',
-							null,
-							'bottom'
-						]
-					}
-					</CustomLayout>*/}
-					{/* arrangement={{right: 'left', left: 'bottom'}}  defaultArrangement={{right: 'left', left: 'right'}} */}
-					<CustomLayout onArrange={console.log}>
-						{/*<top>red top content</top>*/}
-						<left>yellow left content <Button>Transport Mode</Button></left>
-						green body content
-						<right>blue right content</right>
-						<bottom>purple bottom content
-							<Button type="grid" icon="fullscreen" small onTap={onSkinChange} />
-						</bottom>
-					</CustomLayout>
 					<Phone />
 					{/* eslint-disable-next-line */}
 					<HVAC />
+					<Radio />
 					<AppList
 						onTogglePopup={onTogglePopup}
-						onToggleBasicPopup={onToggleBasicPopup}/>
+						onToggleBasicPopup={onToggleBasicPopup}
+					/>
 					<Settings
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
+					{/* arrangement={{right: 'left', left: 'bottom'}}  defaultArrangement={{right: 'left', left: 'right'}} */}
+					<CustomLayout onArrange={console.log}>
+						{/* <top>red top content</top> */}
+						<left>yellow left content <Button>Transport Mode</Button></left>
+						green body content
+						<right>blue right content</right>
+						<bottom>
+							purple bottom content
+							<Button type="grid" icon="fullscreen" small onTap={onSkinChange} />
+						</bottom>
+					</CustomLayout>
 				</TabbedPanels>
 				<Popup
 					onClose={onToggleBasicPopup}
@@ -137,7 +130,7 @@ const AppBase = kind({
 					<title>
 						Date & Time
 					</title>
-					<DateTimePicker onClose={onToggleDateTimePopup}/>
+					<DateTimePicker onClose={onToggleDateTimePopup} />
 				</Popup>
 			</div>
 		);

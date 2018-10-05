@@ -17,18 +17,23 @@ const Home = kind({
 		onSelect: PropTypes.func
 	},
 
+	styles: {
+		css,
+		className: 'home'
+	},
+
 	render: ({onSelect, ...rest}) => (
 		<Panel {...rest}>
 			<Column>
 				<Cell>
-					<Row>
+					<Row className={css.row}>
 						<Cell><CompactRadio /></Cell>
 						<Cell><CompactHvac /></Cell>
 					</Row>
 				</Cell>
 				<Cell>
-					<Row>
-						<Cell><CompactAppList onSelect={onSelect} /></Cell>
+					<Row className={css.row}>
+						<Cell><CompactAppList align="center space-evenly" onSelect={onSelect} /></Cell>
 						<Cell className={css.quadFour}>GPS</Cell>
 					</Row>
 				</Cell>

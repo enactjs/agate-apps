@@ -1,5 +1,5 @@
 import kind from '@enact/core/kind';
-import {Row} from '@enact/ui/Layout';
+import {Cell, Column, Row} from '@enact/ui/Layout';
 import Slottable from '@enact/ui/Slottable';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -29,16 +29,20 @@ const CompactAppList = kind({
 	},
 
 	render: ({onTabChange, ...rest}) => (
-		<div {...rest}>
-			<DropZoneRow align="start center" id="row0">
-				<AppIconCell id="slot01" data-slot="00" size="40%" icon="compass">Navigation</AppIconCell>
-				<AppIconCell id="slot02" data-slot="01" size="40%" icon="audio" onKeyUp={onTabChange} onClick={onTabChange}>Audio</AppIconCell>
-			</DropZoneRow>
-			<DropZoneRow align="start center" id="row1">
-				<AppIconCell id="slot01" data-slot="00" size="40%" icon="resumeplay">Multimedia</AppIconCell>
-				<AppIconCell id="slot02" data-slot="01" size="40%" icon="gear" data-tabindex={5} onKeyUp={onTabChange} onClick={onTabChange}>Settings</AppIconCell>
-			</DropZoneRow>
-		</div>
+		<Column {...rest}>
+			<Cell shrink>
+				<DropZoneRow align="start space-evenly" id="row0">
+					<AppIconCell id="slot01" data-slot="00" icon="compass">Navigation</AppIconCell>
+					<AppIconCell id="slot02" data-slot="01" icon="audio" onKeyUp={onTabChange} onClick={onTabChange}>Audio</AppIconCell>
+				</DropZoneRow>
+			</Cell>
+			<Cell shrink>
+				<DropZoneRow align="start space-evenly" id="row1">
+					<AppIconCell id="slot01" data-slot="00" icon="resumeplay">Multimedia</AppIconCell>
+					<AppIconCell id="slot02" data-slot="01" icon="gear" data-tabindex={5} onKeyUp={onTabChange} onClick={onTabChange}>Settings</AppIconCell>
+				</DropZoneRow>
+			</Cell>
+		</Column>
 	)
 });
 
