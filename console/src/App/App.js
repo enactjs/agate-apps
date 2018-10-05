@@ -6,7 +6,6 @@ import compose from 'ramda/src/compose';
 import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
-import ColorPicker from '@enact/agate/ColorPicker';
 import Popup from '@enact/agate/Popup';
 import DateTimePicker from '@enact/agate/DateTimePicker';
 import React from 'react';
@@ -20,8 +19,11 @@ import HVAC from '../views/HVAC';
 import Phone from '../views/Phone';
 import Radio from '../views/Radio';
 import Settings from '../views/Settings';
+import DisplaySettings from '../views/DisplaySettings';
 
 import css from './App.less';
+
+import AppContextConnect from './AppContextConnect';
 
 add('backspace', 8);
 
@@ -40,7 +42,7 @@ const AppBase = kind({
 		onColorChangeAccent,
 		onColorChangeHighlight,
 		onSelect,
-		onSkinChange,
+		updateSkin,
 		onTogglePopup,
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
@@ -65,16 +67,12 @@ const AppBase = kind({
 					selected={index}
 					index={index}
 				>
-					<beforeTabs>
-						<ColorPicker onChange={onColorChangeAccent} defaultValue={accent} small />
-						<ColorPicker onChange={onColorChangeHighlight} defaultValue={highlight} small />
-					</beforeTabs>
 					<afterTabs>
 						<Column align="center space-evenly">
 							<Cell shrink>
 								<Clock />
 							</Cell>
-							<Cell shrink component={Button} type="grid" icon="fullscreen" small onTap={onSkinChange} />
+							<Cell shrink component={Button} type="grid" icon="fullscreen" small onTap={updateSkin} />
 						</Column>
 					</afterTabs>
 					<Home
@@ -85,12 +83,15 @@ const AppBase = kind({
 					<HVAC />
 					<Radio />
 					<AppList
+						onSelect={onSelect}
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}
 					/>
 					<Settings
+						onSelect={onSelect}
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
+					<DisplaySettings onSelect={onSelect} />
 					{/* arrangement={{right: 'left', left: 'bottom'}}  defaultArrangement={{right: 'left', left: 'right'}} */}
 					<CustomLayout onArrange={console.log}>
 						{/* <top>red top content</top> */}
@@ -99,7 +100,7 @@ const AppBase = kind({
 						<right>blue right content</right>
 						<bottom>
 							purple bottom content
-							<Button type="grid" icon="fullscreen" small onTap={onSkinChange} />
+							<Button type="grid" icon="fullscreen" small onTap={updateSkin} />
 						</bottom>
 					</CustomLayout>
 				</TabbedPanels>
@@ -143,14 +144,11 @@ const AppState = hoc((configHoc, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.state = {
-				colorAccent: '#cccccc',
-				colorHighlight: '#66aabb',
 				index: props.defaultIndex || 0,
 				showPopup: false,
 				showBasicPopup: false,
 				showDateTimePopup: false,
-				showAppList: false,
-				skin: props.defaultSkin || 'carbon' // 'titanium' alternate.
+				showAppList: false
 			};
 		}
 
@@ -161,18 +159,6 @@ const AppState = hoc((configHoc, Wrapped) => {
 				this.setState(state => state.index === index ? null : {index});
 			}
 		).bind(this);
-
-		onColorChangeAccent = ({value}) => {
-			this.setState({colorAccent: value});
-		};
-
-		onColorChangeHighlight = ({value}) => {
-			this.setState({colorHighlight: value});
-		};
-
-		onSkinChange = () => {
-			this.setState(({skin}) => ({skin: (skin === 'carbon' ? 'titanium' : 'carbon')}));
-		};
 
 		onTogglePopup = () => {
 			this.setState(({showPopup}) => ({showPopup: !showPopup}));
@@ -187,30 +173,27 @@ const AppState = hoc((configHoc, Wrapped) => {
 		};
 
 		render () {
-			const props = {...this.props};
+			const {colorAccent, colorHighlight, skin, ...rest} = this.props;
 
-			delete props.defaultIndex;
-			delete props.defaultSkin;
+			delete rest.defaultIndex;
+			delete rest.defaultSkin;
 
 			return (
 				<Wrapped
-					{...props}
-					accent={this.state.colorAccent}
-					highlight={this.state.colorHighlight}
+					{...rest}
+					accent={colorAccent}
+					highlight={colorHighlight}
 					index={this.state.index}
-					onColorChangeAccent={this.onColorChangeAccent}
-					onColorChangeHighlight={this.onColorChangeHighlight}
 					onSelect={this.onSelect}
-					onSkinChange={this.onSkinChange}
 					onTogglePopup={this.onTogglePopup}
 					onToggleBasicPopup={this.onToggleBasicPopup}
 					onToggleDateTimePopup={this.onToggleDateTimePopup}
-					orientation={(this.state.skin === 'titanium') ? 'horizontal' : 'vertical'}
+					orientation={(skin === 'titanium') ? 'horizontal' : 'vertical'}
 					showPopup={this.state.showPopup}
 					showBasicPopup={this.state.showBasicPopup}
 					showDateTimePopup={this.state.showDateTimePopup}
-					skin={this.state.skin}
-					skinName={this.state.skin}
+					skin={skin}
+					skinName={skin}
 				/>
 			);
 		}
@@ -218,6 +201,16 @@ const AppState = hoc((configHoc, Wrapped) => {
 });
 
 const AppDecorator = compose(
+	AppContextConnect(({userSettings, updateAppState}) => ({
+		skin: userSettings.skin,
+		colorAccent: userSettings.colorAccent,
+		colorHighlight: userSettings.colorHighlight,
+		updateSkin:() => {
+			updateAppState((state) => {
+				state.userSettings.skin = (state.userSettings.skin === 'carbon' ? 'titanium' : 'carbon');
+			});
+		}
+	})),
 	AppState,
 	AgateDecorator
 );

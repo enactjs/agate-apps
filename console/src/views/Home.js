@@ -5,8 +5,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Slottable from '@enact/ui/Slottable';
 import DropManager, {Draggable} from '@enact/agate/DropManager';
+import Rearrangeable from '@enact/agate/Rearrangeable';
 
-import Rearrangeable from '../components/Rearrangeable';
 import CompactRadio from '../components/CompactRadio';
 import CompactHvac from '../components/CompactHVAC';
 import CompactAppList from '../components/CompactAppList';

@@ -5,6 +5,7 @@ import qs from 'query-string';
 import {render} from 'react-dom';
 
 import App from './App';
+import AppContextProvider from './App/AppContextProvider'
 
 let appElement = <App />;
 
@@ -17,11 +18,12 @@ if (typeof window !== 'undefined') {
 	const onSelect = (ev) => window.history.pushState(ev, '', `?index=${ev.index}`)
 
 	appElement = (
-		<App
-			defaultIndex={index}
-			defaultSkin={skin}
-			onSelect={onSelect}
-		/>
+		<AppContextProvider defaultSkin={skin}>
+			<App
+				defaultIndex={index}
+				onSelect={onSelect}
+			/>
+		</AppContextProvider>
 	);
 
 	render(appElement, document.getElementById('root'));
