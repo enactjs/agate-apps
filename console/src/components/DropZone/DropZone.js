@@ -5,6 +5,8 @@ import {compose, setDisplayName} from 'recompose';
 import React from 'react';
 import Changeable from '@enact/ui/Changeable';
 
+import css from './DropZone.less';
+
 // https://stackoverflow.com/questions/9907419/how-to-get-a-key-in-a-javascript-object-by-its-value
 // By: ZER0 - Mar 28 '12 at 12:51
 const getKeyByValue = (obj, value) =>
@@ -135,7 +137,7 @@ const DropZoneBase = hoc((configHoc, Wrapped) => {
 			return (
 				<Wrapped
 					{...rest}
-					className={classnames(className, {dragging: this.state.dragging})}
+					className={classnames(className, css.dropZone, {dragging: this.state.dragging})}
 					arrangement={this.state.arrangement}
 					arranging={this.state.dragging}
 					// draggable="true"
@@ -173,4 +175,4 @@ export default DropZone;
 export {
 	DropZone,
 	Draggable
-}
+};
