@@ -1,7 +1,16 @@
 import React, {Component} from 'react';
 import produce from 'immer';
+import {token} from '../config.json';
 
 const Context = React.createContext();
+
+const getWeather = async (latitude, longitude) => {
+	const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${token}`;
+	const response = await window.fetch(url);
+	const json = await response.json();
+
+	return json;
+};
 
 class AppContextProvider extends Component {
 	constructor (props) {
@@ -12,13 +21,16 @@ class AppContextProvider extends Component {
 				colorAccent: '#cccccc',
 				colorHighlight: '#66aabb',
 				fontSize: 0,
-				skin: (props.defaultSkin || 'carbon') // 'titanium' alternate.
-			}
+				skin: props.defaultSkin || 'carbon'
+			},
+			location: {},
+			weather: {}
 		};
 	}
 
 	componentWillMount () {
 		this.setUserSettings(this.state.userId);
+		this.setLocation();
 	}
 
 	componentWillUpdate (nextProps, nextState) {
@@ -47,7 +59,6 @@ class AppContextProvider extends Component {
 
 	setUserSettings = (userId) => {
 		const settings = this.loadSavedUserSettings(userId);
-		console.log(settings);
 
 		this.setState(
 			produce((draft) => {
