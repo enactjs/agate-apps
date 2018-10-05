@@ -4,9 +4,9 @@ import {Row, Column, Cell} from '@enact/ui/Layout';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Slottable from '@enact/ui/Slottable';
+import DropManager, {Draggable} from '@enact/agate/DropManager';
 
 import Rearrangeable from '../components/Rearrangeable';
-import DropZone, {Draggable} from '../components/DropZone';
 import CompactRadio from '../components/CompactRadio';
 import CompactHvac from '../components/CompactHVAC';
 import CompactAppList from '../components/CompactAppList';
@@ -59,7 +59,7 @@ const HomeDefaultLayout = kind({
 	}
 });
 
-const HomeLayout = DropZone(
+const HomeLayout = DropManager(
 	Slottable({slots: allSlotNames},
 		Rearrangeable({slots: allSlotNames},
 			HomeDefaultLayout
