@@ -96,9 +96,11 @@ const AppBase = kind({
 							<Row>
 							<Cell
 								component={SkinButton}
+								highlighted={skinName === 'carbon'}
 								joinedPosition="left"
 								shrink
-								skinOption="carbon"
+								skinoption="carbon"
+								selected={skinName === 'carbon'}
 								small
 								onTap={updateSkin}
 							>
@@ -106,9 +108,11 @@ const AppBase = kind({
 							</Cell>
 							<Cell
 								component={SkinButton}
+								highlighted={skinName === 'titanium'}
 								joinedPosition="center"
 								shrink
-								skinOption="titanium"
+								skinoption="titanium"
+								selected={skinName === 'titanium'}
 								small
 								onTap={updateSkin}
 							>
@@ -116,9 +120,11 @@ const AppBase = kind({
 							</Cell>
 							<Cell
 								component={SkinButton}
+								highlighted={skinName === 'electro'}
 								joinedPosition="right"
 								shrink
-								skinOption="electro"
+								skinoption="electro"
+								selected={skinName === 'electro'}
 								small
 								onTap={updateSkin}
 							>

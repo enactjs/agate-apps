@@ -9,8 +9,8 @@ const SkinButton = kind({
 	name: 'SkinButton',
 
 	handlers: {
-		onTap: (ev, {skinOption, ...props}) => {
-			forward('onTap', {skinOption}, props)
+		onTap: (ev, {skinoption, ...props}) => {
+			forward('onTap', {skinoption}, props)
 		}
 	},
 
