@@ -33,7 +33,7 @@ class AppContextProvider extends Component {
 
 	loadSavedUserSettings = (userId) => {
 		if (!JSON.parse(window.localStorage.getItem(`user${userId}`))) {
-			window.localStorage.setItem(`user${this.state.userId}`, JSON.stringify({...this.state.userSettings}));
+			window.localStorage.setItem(`user${userId}`, JSON.stringify({...this.state.userSettings}));
 		}
 
 		return JSON.parse(window.localStorage.getItem(`user${userId}`));
@@ -47,6 +47,7 @@ class AppContextProvider extends Component {
 
 	setUserSettings = (userId) => {
 		const settings = this.loadSavedUserSettings(userId);
+		console.log(settings);
 
 		this.setState(
 			produce((draft) => {
