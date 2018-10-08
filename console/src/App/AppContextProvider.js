@@ -60,11 +60,21 @@ class AppContextProvider extends Component {
 	setUserSettings = (userId) => {
 		const settings = this.loadSavedUserSettings(userId);
 
-		this.setState(
-			produce((draft) => {
-				draft.userSettings = settings;
-			})
-		);
+		this.updateAppState((state) => {
+			state.userSettings = settings;
+		});
+	}
+
+	setLocation = () => {
+		if (window.navigator.geolocation) {
+			window.navigator.geolocation.getCurrentPosition((position) => {
+				this.updateAppState((state) => {
+					state.location.latitude = position.coords.latitude;
+					state.location.longitude = position.coords.longitude;
+				});
+				this.setWeather(position.coords.latitude, position.coords.longitude);
+			});
+		}
 	}
 
 	updateAppState = (cb) => {

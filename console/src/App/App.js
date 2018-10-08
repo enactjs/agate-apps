@@ -20,6 +20,7 @@ import Phone from '../views/Phone';
 import Radio from '../views/Radio';
 import Settings from '../views/Settings';
 import DisplaySettings from '../views/DisplaySettings';
+import Weather from '../views/Weather';
 
 import css from './App.less';
 
@@ -90,6 +91,7 @@ const AppBase = kind({
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
 					<DisplaySettings onSelect={onSelect} />
+					<Weather></Weather>
 					{/* arrangement={{right: 'left', left: 'bottom'}}  defaultArrangement={{right: 'left', left: 'right'}} */}
 					<CustomLayout onArrange={console.log}>
 						{/* <top>red top content</top> */}
