@@ -1,6 +1,7 @@
 @import "~@enact/agate/styles/skin.less";
 
 .settingsView {
+	@settings-vertical-spacing: 1em;
 
 	.content {
 		justify-content: center;
@@ -26,8 +27,20 @@
 	}
 
 	.applySkins({
-		.header, .item {
+		.header,
+		.item {
 			border-bottom: @agate-divider-border-width solid @agate-divider-border-color;
+		}
+
+		.formRow {
+			.label {
+				text-align: right;
+				margin: @agate-component-spacing;
+			}
+		}
+
+		.spacedItem {
+			margin-bottom: @settings-vertical-spacing;
 		}
 	});
 }

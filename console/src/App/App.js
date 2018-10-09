@@ -36,11 +36,7 @@ const AppBase = kind({
 	},
 
 	render: ({
-		accent,
-		highlight,
 		index,
-		onColorChangeAccent,
-		onColorChangeHighlight,
 		onSelect,
 		updateSkin,
 		onTogglePopup,
@@ -52,6 +48,8 @@ const AppBase = kind({
 		skinName,
 		...rest
 	}) => {
+		delete rest.accent;
+		delete rest.highlight;
 		return (
 			<div>
 				<TabbedPanels
@@ -207,7 +205,13 @@ const AppDecorator = compose(
 		colorHighlight: userSettings.colorHighlight,
 		updateSkin:() => {
 			updateAppState((state) => {
-				state.userSettings.skin = (state.userSettings.skin === 'carbon' ? 'titanium' : 'carbon');
+				let newSkin;
+				switch (state.userSettings.skin) {
+					// case 'titanium': newSkin = 'electro'; break;
+					case 'carbon': newSkin = 'titanium'; break;
+					default: newSkin = 'carbon';
+				}
+				state.userSettings.skin = newSkin;
 			});
 		}
 	})),

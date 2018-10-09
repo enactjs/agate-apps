@@ -3,20 +3,69 @@ import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
 import ColorPicker from '@enact/agate/ColorPicker';
 import {Row, Column, Cell} from '@enact/ui/Layout';
-import UiLabeledIcon from '@enact/ui/LabeledIcon';
 import SliderButton from '@enact/agate/SliderButton';
 import Divider from '@enact/agate/Divider';
 
 import AppContextConnect from '../App/AppContextConnect';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
 
-import viewCss from './Settings.less';
+import componentCss from './Settings.less';
+
+// Skin setup area
+const skinCollection = {
+	carbon: 'Carbon',
+	// electro: 'Electro',
+	titanium: 'Titanium'
+};
+const skinList = Object.keys(skinCollection);
+const skinNames = skinList.map((skin) => skinCollection[skin]);  // Build the names list based on the skin list array, so the indexes always match up, in case the object keys don't return in the same order.
+
+
+const FormRow = kind({
+	name: 'FormRow',
+	styles: {
+		css: componentCss,
+		className: 'formRow'
+	},
+	render: ({children, css, label, ...rest}) => (
+		<Row align="center" {...rest}>
+			<Cell component="label" className={css.label} size="20%">{label}</Cell>
+			{children}
+		</Row>
+	)
+});
+
+const ColorPickerItem = kind({
+	name: 'ColorPickerItem',
+
+	render: ({label, ...rest}) => (
+		<Cell style={{textAlign: 'center'}}>
+			<ColorPicker {...rest} />
+			<label style={{display: 'block'}}>{label}</label>
+		</Cell>
+	)
+});
+
+const SliderButtonItem = kind({
+	name: 'SliderButtonItem',
+	styles: {
+		css: componentCss,
+		className: 'sliderButtonRow'
+	},
+	render: ({label, ...rest}) => (
+		<FormRow label={label}>
+			<Cell><SliderButton {...rest} /></Cell>
+		</FormRow>
+	)
+});
+
+
 
 const DisplaySettings = kind({
 	name: 'DisplaySettings',
 
 	styles: {
-		css: viewCss,
+		css: componentCss,
 		className: 'settingsView'
 	},
 
@@ -28,34 +77,39 @@ const DisplaySettings = kind({
 
 	render: ({css, onSelect, ...rest}) => (
 		<Panel {...rest}>
-			<Row className="enact-fit" align=" center">
+			<Row align=" start">
+				<Cell shrink>
+					<LabeledIconButton onClick={onSelect} labelPosition="after" data-tabindex={5} icon="arrowhookleft">
+						Back
+					</LabeledIconButton>
+				</Cell>
+			</Row>
+			<Row align=" center">
 				<Cell size="40%">
 					<Column className={css.content}>
-						<Cell size="90%">
-							<Cell shrink>
-								<Row align=" flex-end">
-									<LabeledIconButton onClick={onSelect} data-tabindex={4} icon="arrowhookleft">
-										Back
-									</LabeledIconButton>
-								</Row>
-							</Cell>
-							<Cell
-								className={css.header}
-								component={Divider}
-								shrink
-								spacing="medium"
-							>
+						<Cell
+							className={css.header}
+							component={Divider}
+							shrink
+							spacing="medium"
+						>
 								Display Settings
-							</Cell>
-							<Cell shrink>
-								<Row align="start space-evenly">
-									<AccentColorSetting>Accent Color</AccentColorSetting>
-									<HighlightColorSetting>Highlight Color</HighlightColorSetting>
-								</Row>
-							</Cell>
-							<Cell shrink>
-								<FontSizeSetting />
-							</Cell>
+						</Cell>
+						<Cell shrink className={css.spacedItem}>
+							<FormRow align="center space-evenly">
+								<AccentColorSetting label="Accent Color" />
+								<HighlightColorSetting label="Highlight Color" />
+							</FormRow>
+						</Cell>
+						<Cell shrink className={css.spacedItem}>
+							<SkinSetting label="Skin:">
+								{skinNames}
+							</SkinSetting>
+						</Cell>
+						<Cell shrink>
+							<FontSizeSetting label="Text Size:">
+								{['S', 'M', 'L', 'XL']}
+							</FontSizeSetting>
 						</Cell>
 					</Column>
 				</Cell>
@@ -65,60 +119,33 @@ const DisplaySettings = kind({
 });
 
 // Example to show how to optimize rerenders.
-const ColorPickerItem = kind({
-	name: 'ColorPickerItem',
-
-	render: ({color, updateColor, ...rest}) => (
-		UiLabeledIcon.inline({
-			...rest,
-			iconComponent: (props) => (
-				<ColorPicker {...props} value={color} onChange={updateColor} />
-			)
-		})
-	)
-});
-
-const FontSizeItem = kind({
-	name: 'FontSizeItem',
-
-	render: ({updateFontSize, fontSize}) => (
-		<React.Fragment>
-			<label>Text Size:</label>
-			<SliderButton
-				onChange={updateFontSize}
-				value={fontSize}
-			>
-				{['S', 'M', 'L', 'XL']}
-			</SliderButton>
-		</React.Fragment>
-	)
-});
-
-const AccentColorSetting = AppContextConnect(({userSettings, updateAppState}) => ({
-	color: userSettings.colorAccent,
-	updateColor: ({value}) => {
+const SaveableSettings = (settingName, propName = 'value') => AppContextConnect(({userSettings, updateAppState}) => ({
+	[propName]: userSettings[settingName],
+	onChange: ({value}) => {
 		updateAppState((state) => {
-			state.userSettings.colorAccent = value;
+			state.userSettings[settingName] = value;
 		});
 	}
-}))(ColorPickerItem);
+}));
 
-const HighlightColorSetting = AppContextConnect(({userSettings, updateAppState}) => ({
-	color: userSettings.colorHighlight,
-	updateColor: ({value}) => {
+// Save the `colorAccent` user setting, read from the default prop (value), of the supplied ColorPickerItem
+const AccentColorSetting = SaveableSettings('colorAccent')(ColorPickerItem);
+
+// Save the `colorAccent` user setting, read from the default prop (value), of the supplied ColorPickerItem
+const HighlightColorSetting = SaveableSettings('colorHighlight')(ColorPickerItem);
+
+// Save the `colorAccent` user setting, read from the default prop (value), of the supplied SliderButtonItem
+const FontSizeSetting = SaveableSettings('fontSize')(SliderButtonItem);
+
+// Make and apply a custom saver that can do additional operations (look ups from a list)
+const SkinSetting = AppContextConnect(({userSettings, updateAppState}) => ({
+	value: skinList.indexOf(userSettings.skin),
+	onChange: ({value}) => {
 		updateAppState((state) => {
-			state.userSettings.colorHighlight = value;
+			state.userSettings.skin = skinList[value].toLowerCase();
 		});
 	}
-}))(ColorPickerItem);
+}))(SliderButtonItem);
 
-const FontSizeSetting = AppContextConnect(({userSettings, updateAppState}) => ({
-	fontSize: userSettings.fontSize,
-	updateFontSize: ({value}) => {
-		updateAppState((state) => {
-			state.userSettings.fontSize = value;
-		});
-	}
-}))(FontSizeItem);
 
 export default DisplaySettings;
