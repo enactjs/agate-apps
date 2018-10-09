@@ -50,7 +50,7 @@ const AppList = kind({
 				</Cell>
 				<Cell shrink>
 					<Row align="start center">
-						<AppIconCell icon="gear" data-tabindex={7} onKeyUp={onTabChange} onClick={onTabChange}>Weather</AppIconCell>
+						<AppIconCell icon="star" data-tabindex={7} onKeyUp={onTabChange} onClick={onTabChange}>Weather</AppIconCell>
 					</Row>
 				</Cell>
 			</Column>

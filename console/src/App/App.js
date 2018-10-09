@@ -20,7 +20,7 @@ import Phone from '../views/Phone';
 import Radio from '../views/Radio';
 import Settings from '../views/Settings';
 import DisplaySettings from '../views/DisplaySettings';
-import Weather from '../views/Weather';
+import Weather from '../views/WeatherPanel';
 
 import css from './App.less';
 

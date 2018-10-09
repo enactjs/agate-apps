@@ -5,7 +5,7 @@ import {token} from '../config.json';
 const Context = React.createContext();
 
 const getWeather = async (latitude, longitude) => {
-	const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${token}`;
+	const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${token}&units=imperial`;
 	const response = await window.fetch(url);
 	const json = await response.json();
 
@@ -75,6 +75,24 @@ class AppContextProvider extends Component {
 				this.setWeather(position.coords.latitude, position.coords.longitude);
 			});
 		}
+	}
+
+	setWeather = async (latitude, longitude) => {
+		let weatherData;
+		try {
+			weatherData = await getWeather(latitude, longitude);
+		} catch (error) {
+			this.updateAppState((state) => {
+				state.weather.status = 'error';
+			});
+
+			return;
+		}
+
+		this.updateAppState((state) => {
+			state.weather.status = 'success';
+			state.weather = weatherData;
+		});
 	}
 
 	updateAppState = (cb) => {
