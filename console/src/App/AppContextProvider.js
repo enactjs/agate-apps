@@ -90,8 +90,8 @@ class AppContextProvider extends Component {
 		}
 
 		this.updateAppState((state) => {
-			state.weather.status = 'success';
 			state.weather = weatherData;
+			state.weather.status = {status: 'success'};
 		});
 	}
 

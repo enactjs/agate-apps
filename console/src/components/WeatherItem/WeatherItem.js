@@ -17,7 +17,6 @@ const WeatherItem = kind({
 		className: ({featured, styler}) => styler.append(featured ? css.featured : '')
 	},
 
-
 	render: ({day, high, low, featured, ...rest}) => (
 		<Column {...rest} align="center center">
 			<Cell className={css.item} size={'20%'}>
@@ -29,6 +28,9 @@ const WeatherItem = kind({
 			</Cell>
 			<Cell className={css.item} size={'20%'}>
 				<img className={css.icon} src={SunIcon} alt="" />
+			</Cell>
+			<Cell className={css.item} size={'20%'}>
+				<div className={css.text}>{description}</div>
 			</Cell>
 			<Cell className={css.item} size={'20%'}>
 				<Row>

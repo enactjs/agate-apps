@@ -28,16 +28,16 @@ const Weather = kind({
 				<Cell size="30%">
 					<Row className={css.row} align="center space-evenly">
 						<Cell size="25%">
-							<WeatherItem featured day="Now" high={70} />
+							<WeatherItem featured day="Now" high={70} description="sunny" />
 						</Cell>
 						<Cell size="25%">
-							<WeatherItem className={css.weatherItem} day="12:00 PM" high={70} />
+							<WeatherItem className={css.weatherItem} day="12:00 PM" high={70} description="sunny" />
 						</Cell>
 						<Cell size="25%">
-							<WeatherItem className={css.weatherItem} day="3:00 PM" high={70} />
+							<WeatherItem className={css.weatherItem} day="3:00 PM" high={70} description="sunny" />
 						</Cell>
 						<Cell size="25%">
-							<WeatherItem className={css.weatherItem} day="6:00 PM" high={70} />
+							<WeatherItem className={css.weatherItem} day="6:00 PM" high={70} description="sunny" />
 						</Cell>
 					</Row>
 				</Cell>
@@ -51,16 +51,16 @@ const Weather = kind({
 				<Cell size="30%">
 					<Row className={css.row} align="center space-evenly">
 						<Cell size="25%">
-							<WeatherItem day="Mon" high={70} low={59} />
+							<WeatherItem day="Mon" high={70} low={59} description="sunny" />
 						</Cell>
 						<Cell size="25%">
-							<WeatherItem className={css.weatherItem} day="Tue" high={70} low={59} />
+							<WeatherItem className={css.weatherItem} day="Tue" high={70} low={59} description="sunny" />
 						</Cell>
 						<Cell size="25%">
-							<WeatherItem className={css.weatherItem} day="Wed" high={70} low={59} />
+							<WeatherItem className={css.weatherItem} day="Wed" high={70} low={59} description="sunny" />
 						</Cell>
 						<Cell size="25%">
-							<WeatherItem className={css.weatherItem} day="Thu" high={70} low={59} />
+							<WeatherItem className={css.weatherItem} day="Thu" high={70} low={59} description="sunny" />
 						</Cell>
 					</Row>
 				</Cell>
