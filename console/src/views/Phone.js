@@ -4,18 +4,18 @@ import Icon from '@enact/agate/Icon';
 import Input from '@enact/agate/Input';
 import Changeable from '@enact/ui/Changeable';
 import Toggleable from '@enact/ui/Toggleable';
-import Scroller from '@enact/ui/Scroller';
+// import Scroller from '@enact/ui/Scroller';
 import VirtualList from '@enact/ui/VirtualList';
 import ri from '@enact/ui/resolution';
 import {Column, Cell} from '@enact/ui/Layout';
 import {adaptEvent, forKey, forward, handle, oneOf} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
+import {ResponsiveBox} from '@enact/agate/DropManager';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import CustomLayout from '../components/CustomLayout';
-import {ResponsiveBox} from '../components/DropZone';
 import Dialer from '../components/Dialer';
 import CallPopup from '../components/CallPopup';
 import ContactThumbnail from '../components/ContactThumbnail';
@@ -42,7 +42,7 @@ const contacts = [
 		name: 'Goo',
 		number:  '444 444 4444'
 	}
-]
+];
 
 const forwardClear = adaptEvent(
 	(ev, {value}) => ({value: value ? value.substring(0, value.length - 1) : ''}),
@@ -58,7 +58,8 @@ const appendValue = appender => adaptEvent(
 );
 
 const renderContact = ({index, ...rest}) => (
-	<ContactThumbnail {...rest}
+	<ContactThumbnail
+		{...rest}
 		key={contacts[index].name}
 		contact={contacts[index]}
 		// onSelect={onContactClick}
@@ -81,7 +82,7 @@ const ResponsiveScroller = ResponsiveBox(({containerShape, onContactClick, style
 			style={style}
 		/>
 
-	)
+	);
 	// return (
 	// 	<Scroller
 	// 		{...rest}
@@ -181,7 +182,7 @@ const PhoneBase = kind({
 					</bottom>
 				</CustomLayout>
 			</Panel>
-		)
+		);
 	}
 });
 

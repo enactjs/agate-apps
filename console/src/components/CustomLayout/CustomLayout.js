@@ -4,8 +4,8 @@ import Slottable from '@enact/ui/Slottable';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Rearrangeable from '../Rearrangeable';
-import DropZone, {Draggable} from '../DropZone';
+import Rearrangeable from '@enact/agate/Rearrangeable';
+import DropManager, {Draggable} from '@enact/agate/DropManager';
 
 import css from './CustomLayout.less';
 
@@ -66,7 +66,7 @@ const CustomLayoutBase = kind({
 	}
 });
 
-const CustomLayout = DropZone(
+const CustomLayout = DropManager({arrangingProp: 'arranging'},
 	// Don't provide the "children" slot to Slottable
 	Slottable({slots: allSlotNames.filter(slot => slot !== 'children')},
 		Rearrangeable({slots: allSlotNames},
