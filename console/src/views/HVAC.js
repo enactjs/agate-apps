@@ -7,13 +7,13 @@ import kind from '@enact/core/kind';
 import Layout, {Cell, Row} from '@enact/ui/Layout';
 import React from 'react';
 
-import CustomLayout          from '../components/CustomLayout';
+import CustomLayout, {SaveLayoutArrangement} from '../components/CustomLayout';
 
 import css from './HVAC.less';
 
 const temps = ['HI', '74°', '73°', '72°', '71°', '70°', '69°', '68°', '67°', '66°', 'LO'];
 
-const Hvac = kind({
+const HvacBase = kind({
 	name: 'HVAC',
 
 	styles: {
@@ -21,9 +21,9 @@ const Hvac = kind({
 		className: 'hvac'
 	},
 
-	render: (props) => (
-		<Panel {...props}>
-			<CustomLayout>
+	render: ({arrangement, onArrange, ...rest}) => (
+		<Panel {...rest}>
+			<CustomLayout arrangement={arrangement} onArrange={onArrange}>
 				<top>
 					<Divider>
 						Fan Speed
@@ -64,8 +64,10 @@ const Hvac = kind({
 	)
 });
 
+const Hvac = SaveLayoutArrangement('hvac')(HvacBase);
+
 export default Hvac;
 export {
-	Hvac as App,
-	Hvac
+	Hvac,
+	HvacBase
 };

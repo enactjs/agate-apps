@@ -9,6 +9,11 @@ class AppContextProvider extends Component {
 		this.state = {
 			userId: 1,
 			userSettings: {
+				arrangements: {
+					home: {},
+					hvac: {},
+					phone: {}
+				},
 				colorAccent: '#cccccc',
 				colorHighlight: '#66aabb',
 				fontSize: 0,

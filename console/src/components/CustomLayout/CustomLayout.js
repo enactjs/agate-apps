@@ -6,6 +6,8 @@ import React from 'react';
 
 import Rearrangeable from '@enact/agate/Rearrangeable';
 import DropManager, {Draggable} from '@enact/agate/DropManager';
+import AppContextConnect from '../../App/AppContextConnect';
+
 
 import css from './CustomLayout.less';
 
@@ -66,16 +68,29 @@ const CustomLayoutBase = kind({
 	}
 });
 
-const CustomLayout = DropManager({arrangingProp: 'arranging'},
+const SaveLayoutArrangement = (layoutName) => AppContextConnect(({userSettings, updateAppState}) => ({
+	arrangement: (userSettings.arrangements && {...userSettings.arrangements[layoutName]}),
+	onArrange: ({arrangement}) => {
+		updateAppState((state) => {
+			if (!state.userSettings.arrangements) state.userSettings.arrangements = {};
+			state.userSettings.arrangements[layoutName] = {...arrangement};
+		});
+	}
+}));
+
+
+const CustomLayout =
+	DropManager({arrangingProp: 'arranging'},
 	// Don't provide the "children" slot to Slottable
-	Slottable({slots: allSlotNames.filter(slot => slot !== 'children')},
-		Rearrangeable({slots: allSlotNames},
-			CustomLayoutBase
+		Slottable({slots: allSlotNames.filter(slot => slot !== 'children')},
+			Rearrangeable({slots: allSlotNames},
+				CustomLayoutBase
+			)
 		)
-	)
-);
+	);
 
 export default CustomLayout;
 export {
-	CustomLayout
+	CustomLayout,
+	SaveLayoutArrangement
 };
