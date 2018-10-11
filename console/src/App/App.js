@@ -91,7 +91,7 @@ const AppBase = kind({
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
 					<DisplaySettings onSelect={onSelect} />
-					<Weather></Weather>
+					<Weather />
 					{/* arrangement={{right: 'left', left: 'bottom'}}  defaultArrangement={{right: 'left', left: 'right'}} */}
 					<CustomLayout onArrange={console.log}>
 						{/* <top>red top content</top> */}
