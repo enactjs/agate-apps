@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import produce from 'immer';
-import {token} from '../config.json';
 
 const Context = React.createContext();
 
 const getWeather = async (latitude, longitude) => {
-	const currentUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${token}&units=imperial`;
-	const threeHourUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${token}&units=imperial`;
+	const key = process.env.REACT_APP_WEATHER_KEY; // eslint-disable-line
+
+	const currentUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${key}&units=imperial`;
+	const threeHourUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${key}&units=imperial`;
 
 	const response = await window.fetch(currentUrl);
 	const json = await response.json();
@@ -14,6 +15,7 @@ const getWeather = async (latitude, longitude) => {
 	const hoursResponse = await window.fetch(threeHourUrl);
 	const hourJson = await hoursResponse.json();
 
+	console.log(json);
 
 	return {
 		current: json,
