@@ -1,3 +1,5 @@
+@import "~@enact/agate/styles/skin.less";
+
 .weatherItem{
 	&.featured {
 		.item {
@@ -12,12 +14,17 @@
 		}
 	}
 
-	.item{
-		.text{
+	.item {
+		.text {
 			font-size: 28px;
 		}
 	}
-	
+	.applySkins({
+		.header {
+			color: @agate-accent;
+		}
+	});
+
 	.icon {
 		width: 100px;
 		height: 100px;

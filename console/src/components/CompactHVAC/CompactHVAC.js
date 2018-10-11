@@ -4,7 +4,6 @@ import kind from '@enact/core/kind';
 import {Row, Cell} from '@enact/ui/Layout';
 import Picker from '@enact/agate/Picker';
 import ToggleButton from '@enact/agate/ToggleButton';
-import {LabeledItemBase} from '@enact/agate/LabeledItem';
 
 import css from './CompactHVAC.less';
 
@@ -28,7 +27,6 @@ const CompactHvac = kind({
 
 	render: ({temp, ...rest}) => (
 		<div {...rest}>
-			<LabeledItemBase className={css.title} label="Mostly sunny">{temp}°</LabeledItemBase>
 			{(temp >= 66 && temp <= 74) && <div>
 				<Row className={css.row} align="center space-around">
 					<Cell component={ToggleButton} size="30%" type="grid" className={css.button}>A/C</Cell>

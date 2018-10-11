@@ -5,11 +5,20 @@ import {token} from '../config.json';
 const Context = React.createContext();
 
 const getWeather = async (latitude, longitude) => {
-	const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${token}&units=imperial`;
-	const response = await window.fetch(url);
+	const currentUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${token}&units=imperial`;
+	const threeHourUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${token}&units=imperial`;
+
+	const response = await window.fetch(currentUrl);
 	const json = await response.json();
 
-	return json;
+	const hoursResponse = await window.fetch(threeHourUrl);
+	const hourJson = await hoursResponse.json();
+
+
+	return {
+		current: json,
+		hours: hourJson
+	};
 };
 
 class AppContextProvider extends Component {
@@ -73,7 +82,8 @@ class AppContextProvider extends Component {
 					state.location.longitude = position.coords.longitude;
 				});
 				this.setWeather(position.coords.latitude, position.coords.longitude);
-			});
+			}, () => {/* some error*/},
+			{enableHighAccuracy: true});
 		}
 	}
 
