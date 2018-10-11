@@ -1,7 +1,8 @@
 import React from 'react';
 import mapboxgl from 'mapbox-gl';
+console.log(process.env.REACT_APP_MAPBOX)// eslint-disable-line
 
-// mapboxgl.accessToken = 'pk.eyJ1IjoiaGFpbGV5ciIsImEiOiJjam12N3Y3YTIweDVtM3BtenlxOXZxbjQwIn0.JV5LDLmsmx6mMMSYVb2a4Q';
+mapboxgl.accessToken = process.env.REACT_APP_MAPBOX; // eslint-disable-line
 
 const getRoute = async (start, end) => {
 	const response = await window.fetch('https://api.mapbox.com/directions/v5/mapbox/driving/' + start[0] + ',' + start[1] + ';' + end[0] + ',' + end[1] + '?geometries=geojson&access_token=' + mapboxgl.accessToken);
