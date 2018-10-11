@@ -1,6 +1,7 @@
 import Divider from '@enact/agate/Divider';
 import {Panel} from '@enact/agate/Panels';
 import Picker from '@enact/agate/Picker';
+import {ResponsiveBox} from '@enact/agate/DropManager';
 import SliderButton from '@enact/agate/SliderButton';
 import ToggleButton from '@enact/agate/ToggleButton';
 import kind from '@enact/core/kind';
@@ -12,6 +13,18 @@ import CustomLayout          from '../components/CustomLayout';
 import css from './HVAC.less';
 
 const temps = ['HI', '74°', '73°', '72°', '71°', '70°', '69°', '68°', '67°', '66°', 'LO'];
+
+const ResponsiveLayout = ResponsiveBox(({containerShape, ...rest}) => {
+	const portrait = (containerShape.orientation === 'portrait');
+	let axisAlign = 'center';
+	if (containerShape.edges.left) axisAlign = 'start';
+	if (containerShape.edges.right) axisAlign = 'end';
+
+	// console.log('axisAlign:', axisAlign);
+	return (
+		<Layout align={axisAlign + ' space-around'} orientation={portrait ? 'vertical' : 'horizontal'} {...rest} />
+	);
+});
 
 const Hvac = kind({
 	name: 'HVAC',
@@ -50,14 +63,13 @@ const Hvac = kind({
 					</Picker>
 				</Row>
 				<bottom>
-					{/*<Row className={css.spaced}>*/}
-					<Layout align="center space-around" wrap>
+					<ResponsiveLayout wrap>
 						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="airdown" />
 						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="airup" />
 						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="airright" />
 						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="defrosterback" />
 						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="defrosterfront" />
-					</Layout>
+					</ResponsiveLayout>
 				</bottom>
 			</CustomLayout>
 		</Panel>

@@ -1,7 +1,7 @@
 import kind from '@enact/core/kind';
 import {Cell, Column, Row} from '@enact/ui/Layout';
 import Slottable from '@enact/ui/Slottable';
-import DropManager from '@enact/agate/DropManager';
+import DropManager, {ResponsiveBox} from '@enact/agate/DropManager';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -46,4 +46,13 @@ const CompactAppList = kind({
 	)
 });
 
-export default CompactAppList;
+const ResponsiveCompactAppList = ResponsiveBox(({containerShape, ...rest}) => {
+	console.log('ResponsiveCompactAppList containerShape:', containerShape);
+	const portrait = (containerShape && containerShape.orientation === 'portrait');
+	// if (!portrait) style.height = ri.scale(96);
+	return (
+		<CompactAppList {...rest} />
+	);
+});
+
+export default ResponsiveCompactAppList;

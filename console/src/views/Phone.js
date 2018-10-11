@@ -57,12 +57,14 @@ const appendValue = appender => adaptEvent(
 	forward('onChange')
 );
 
-const renderContact = ({index, ...rest}) => (
+// eslint-disable-next-line enact/display-name, enact/prop-types
+const renderContact = ({onContactClick}) => ({index, key, ...rest}) => (
 	<ContactThumbnail
+		// {...console.log('contact rest:', rest) ? {rel: 'test'} : null}
 		{...rest}
-		key={contacts[index].name}
+		key={'contact' + key}
 		contact={contacts[index]}
-		// onSelect={onContactClick}
+		onSelect={onContactClick}
 	/>
 );
 
@@ -77,11 +79,11 @@ const ResponsiveScroller = ResponsiveBox(({containerShape, onContactClick, style
 			// cbScrollTo={this.getScrollTo}
 			dataSize={contacts.length}
 			// focusableScrollbar
-			itemRenderer={renderContact}
+			itemRenderer={renderContact({onContactClick})}
 			itemSize={ri.scale(portrait ? 96 : 300)}
 			style={style}
+			// onContactClick={onContactClick}
 		/>
-
 	);
 	// return (
 	// 	<Scroller
@@ -158,11 +160,11 @@ const PhoneBase = kind({
 						</Cell>
 						<Cell shrink className="call">
 							<Button
+								className={css.callButton}
 								disabled={!value}
 								onClick={onTogglePopup}
 								type="grid"
 								highlighted
-								style={{width: '300px'}}
 							>
 								Call
 							</Button>
