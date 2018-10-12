@@ -5,7 +5,7 @@ import {Row, Column, Cell} from '@enact/ui/Layout';
 import css from './WeatherItem.less';
 import SunIcon from './icons/wi-day-sunny.svg';
 import Skinnable from '@enact/agate/Skinnable';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 const WeatherItemBase = kind({
 	name: 'WeatherItem',

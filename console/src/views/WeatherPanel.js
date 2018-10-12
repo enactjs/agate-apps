@@ -14,7 +14,6 @@ const Weather = kind({
 		css: viewCSS,
 		className: 'weatherPanel'
 	},
-	handlers: {},
 
 	computed: {
 		currentWeather: ({weather}) => {
@@ -49,7 +48,8 @@ const Weather = kind({
 		}
 	},
 
-	render: ({css, weather, currentWeather, hourlyWeather, ...rest}) => {
+	render: ({css, currentWeather, hourlyWeather, ...rest}) => {
+		delete rest.weather;
 		return (
 			<Panel {...rest}>
 				<Column className="enact-fit" align=" space-evenly">
@@ -86,7 +86,7 @@ const Weather = kind({
 							</Divider>
 						</Row>
 					</Cell>
-					{/*Did not connect these parts. This is more to show layout. We may need to switch api for daily weather.*/ }
+					{/* Did not connect these parts. This is more to show layout. We may need to switch api for daily weather. */}
 					<Cell size="30%">
 						<Row className={css.row} align="center space-evenly">
 							<Cell size="25%">
@@ -105,8 +105,7 @@ const Weather = kind({
 					</Cell>
 				</Column>
 			</Panel>
-		)
-		;
+		);
 	}
 });
 

@@ -39,6 +39,7 @@ const panelIndexMap = [
 	'applist',
 	'settings',
 	'settings/display',
+	'weather',
 	'layoutsample'
 ];
 // Look up a panel index by name, using the above list as the directory listing.
