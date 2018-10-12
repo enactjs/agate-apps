@@ -1,10 +1,8 @@
-
 import Button from '@enact/agate/Button';
 import Icon from '@enact/agate/Icon';
 import Input from '@enact/agate/Input';
 import Changeable from '@enact/ui/Changeable';
 import Toggleable from '@enact/ui/Toggleable';
-// import Scroller from '@enact/ui/Scroller';
 import VirtualList from '@enact/ui/VirtualList';
 import ri from '@enact/ui/resolution';
 import {Column, Cell} from '@enact/ui/Layout';
@@ -68,39 +66,22 @@ const renderContact = ({onContactClick}) => ({index, key, ...rest}) => (
 	/>
 );
 
-const ResponsiveScroller = ResponsiveBox(({containerShape, onContactClick, style = {}, ...rest}) => {
-	console.log('ResponsiveScrollerBase containerShape:', containerShape);
+const ResponsiveVirtualList = ResponsiveBox(({containerShape, onContactClick, style = {}, ...rest}) => {
+	// console.log('ResponsiveVirtualListBase containerShape:', containerShape);
 	const portrait = (containerShape && containerShape.orientation === 'portrait');
+	const orientation = (portrait ? 'vertical' : 'horizontal');
 	if (!portrait) style.height = ri.scale(96);
 	return (
 		<VirtualList
 			{...rest}
-			direction={portrait ? 'vertical' : 'horizontal'}
-			// cbScrollTo={this.getScrollTo}
+			direction={orientation}
 			dataSize={contacts.length}
-			// focusableScrollbar
 			itemRenderer={renderContact({onContactClick})}
 			itemSize={ri.scale(portrait ? 96 : 300)}
 			style={style}
-			// onContactClick={onContactClick}
 		/>
 	);
-	// return (
-	// 	<Scroller
-	// 		{...rest}
-	// 		direction={containerShape.orientation === 'portrait' ? 'vertical' : 'horizontal'}
-	// 	>
-	// 		{contacts.map(contact => (
-	// 			<ContactThumbnail
-	// 				key={contact.name}
-	// 				contact={contact}
-	// 				onSelect={onContactClick}
-	// 			/>
-	// 		))}
-	// 	</Scroller>
-	// )
 });
-// const ResponsiveScroller = ResponsiveBox(ResponsiveScrollerBase);
 
 const PhoneBase = kind({
 	name: 'Phone',
@@ -177,7 +158,7 @@ const PhoneBase = kind({
 						phoneNumber={value}
 					/>
 					<bottom>
-						<ResponsiveScroller
+						<ResponsiveVirtualList
 							className={css.contactsList}
 							onContactClick={onContactClick}
 						/>

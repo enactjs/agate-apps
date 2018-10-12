@@ -8,21 +8,20 @@ import kind from '@enact/core/kind';
 import Layout, {Cell, Row} from '@enact/ui/Layout';
 import React from 'react';
 
-import CustomLayout          from '../components/CustomLayout';
+import CustomLayout from '../components/CustomLayout';
 
 import css from './HVAC.less';
 
 const temps = ['HI', '74°', '73°', '72°', '71°', '70°', '69°', '68°', '67°', '66°', 'LO'];
 
 const ResponsiveLayout = ResponsiveBox(({containerShape, ...rest}) => {
-	const portrait = (containerShape.orientation === 'portrait');
+	const orientation = (containerShape.orientation === 'portrait') ? 'vertical' : 'horizontal';
 	let axisAlign = 'center';
 	if (containerShape.edges.left) axisAlign = 'start';
 	if (containerShape.edges.right) axisAlign = 'end';
 
-	// console.log('axisAlign:', axisAlign);
 	return (
-		<Layout align={axisAlign + ' space-around'} orientation={portrait ? 'vertical' : 'horizontal'} {...rest} />
+		<Layout align={axisAlign + ' space-around'} orientation={orientation} {...rest} />
 	);
 });
 

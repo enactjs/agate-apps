@@ -1,5 +1,5 @@
 import kind from '@enact/core/kind';
-import {Cell, Column, Row} from '@enact/ui/Layout';
+import {Row} from '@enact/ui/Layout';
 import Slottable from '@enact/ui/Slottable';
 import DropManager, {ResponsiveBox} from '@enact/agate/DropManager';
 import React from 'react';
@@ -29,29 +29,21 @@ const CompactAppList = kind({
 	},
 
 	render: ({onTabChange, ...rest}) => (
-		<Column {...rest}>
-			<Cell shrink>
-				<DropRow align="start space-evenly" id="row0">
-					<AppIconCell id="slot01" data-slot="00" icon="compass">Navigation</AppIconCell>
-					<AppIconCell id="slot02" data-slot="01" icon="audio" onKeyUp={onTabChange} onClick={onTabChange}>Audio</AppIconCell>
-				</DropRow>
-			</Cell>
-			<Cell shrink>
-				<DropRow align="start space-evenly" id="row1">
-					<AppIconCell id="slot01" data-slot="00" icon="resumeplay">Multimedia</AppIconCell>
-					<AppIconCell id="slot02" data-slot="01" icon="gear" data-tabindex={5} onKeyUp={onTabChange} onClick={onTabChange}>Settings</AppIconCell>
-				</DropRow>
-			</Cell>
-		</Column>
+		<DropRow align="start space-evenly" {...rest} wrap>
+			<AppIconCell data-slot="00" icon="compass">Navigation</AppIconCell>
+			<AppIconCell data-slot="01" icon="audio" onKeyUp={onTabChange} onClick={onTabChange}>Audio</AppIconCell>
+			<AppIconCell data-slot="02" icon="resumeplay">Multimedia</AppIconCell>
+			<AppIconCell data-slot="03" icon="gear" data-tabindex={5} onKeyUp={onTabChange} onClick={onTabChange}>Settings</AppIconCell>
+		</DropRow>
 	)
 });
 
 const ResponsiveCompactAppList = ResponsiveBox(({containerShape, ...rest}) => {
-	console.log('ResponsiveCompactAppList containerShape:', containerShape);
-	const portrait = (containerShape && containerShape.orientation === 'portrait');
-	// if (!portrait) style.height = ri.scale(96);
+	let axisAlign = 'center';
+	if (containerShape.edges.left) axisAlign = 'start';
+	if (containerShape.edges.right) axisAlign = 'end';
 	return (
-		<CompactAppList {...rest} />
+		<CompactAppList align={axisAlign + ' space-evenly'} {...rest} />
 	);
 });
 

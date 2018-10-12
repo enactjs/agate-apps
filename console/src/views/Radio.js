@@ -32,13 +32,6 @@ const wrapFrequency = (frequency, factor) => {
 
 import css from './Radio.less';
 
-// const ResponsiveLayout = ResponsiveBox(({containerShape, ...rest}) => {
-// 	const portrait = (containerShape && containerShape.orientation === 'portrait');
-// 	return (
-// 		<Layout orientation={portrait ? 'vertical' : 'horizontal'} {...rest} />
-// 	);
-// });
-
 const ResponsiveTuner = ResponsiveBox(({containerShape, children, onUp, onDown, ...rest}) => {
 	const orientation = (containerShape && containerShape.orientation === 'portrait') ? 'vertical' : 'horizontal';
 	const vertical = (orientation === 'vertical');

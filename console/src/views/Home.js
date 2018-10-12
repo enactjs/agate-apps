@@ -43,14 +43,14 @@ const HomeDefaultLayout = kind({
 			<Column {...rest}>
 				<Cell size="40%">
 					<Row className={css.row}>
-						<DroppableCell size="30%" className={css.topLeft} containerShape={{size: {relative: 'small'}}} arrangement={arrangement} name="topLeft">{topLeft}</DroppableCell>
-						<DroppableCell className={css.topRight} containerShape={{size: {relative: 'medium'}, orientation: 'landscape'}} arrangement={arrangement} name="topRight">{topRight}</DroppableCell>
+						<DroppableCell size="30%" className={css.topLeft} containerShape={{edges: {top: true, left: true}, size: {relative: 'small'}}} arrangement={arrangement} name="topLeft">{topLeft}</DroppableCell>
+						<DroppableCell className={css.topRight} containerShape={{edges: {top: true, right: true}, size: {relative: 'medium'}, orientation: 'landscape'}} arrangement={arrangement} name="topRight">{topRight}</DroppableCell>
 					</Row>
 				</Cell>
 				<Cell>
 					<Row className={css.row}>
-						<DroppableCell size="30%" className={css.bottomLeft} containerShape={{size: {relative: 'medium'}, orientation: 'portrait'}} arrangement={arrangement} name="bottomLeft">{bottomLeft}</DroppableCell>
-						<DroppableCell className={css.bottomRight} containerShape={{size: {relative: 'large'}, orientation: 'landscape'}} arrangement={arrangement} name="bottomRight">{bottomRight}</DroppableCell>
+						<DroppableCell size="30%" className={css.bottomLeft} containerShape={{edges: {bottom: true, left: true}, size: {relative: 'medium'}, orientation: 'portrait'}} arrangement={arrangement} name="bottomLeft">{bottomLeft}</DroppableCell>
+						<DroppableCell className={css.bottomRight} containerShape={{edges: {bottom: true, right: true}, size: {relative: 'large'}, orientation: 'landscape'}} arrangement={arrangement} name="bottomRight">{bottomRight}</DroppableCell>
 					</Row>
 				</Cell>
 			</Column>
