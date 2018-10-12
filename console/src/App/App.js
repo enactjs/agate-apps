@@ -27,6 +27,22 @@ import AppContextConnect from './AppContextConnect';
 
 add('backspace', 8);
 
+// Maintain synchronization of this list with the panels included below. This maps names of panels
+// panel indexes so when a new panel is updated, any references to/from other panels don't need to
+// be updated.
+const panelIndexMap = [
+	'home',
+	'phone',
+	'hvac',
+	'radio',
+	'applist',
+	'settings',
+	'settings/display',
+	'layoutsample'
+];
+// Look up a panel index by name, using the above list as the directory listing.
+const getPanelIndexOf = (panelName) => panelIndexMap.indexOf(panelName);
+
 const AppBase = kind({
 	name: 'App',
 
@@ -222,3 +238,7 @@ const AppDecorator = compose(
 const App = AppDecorator(AppBase);
 
 export default App;
+export {
+	App,
+	getPanelIndexOf
+};

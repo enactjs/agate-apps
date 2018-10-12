@@ -6,6 +6,7 @@ import {Row, Column, Cell} from '@enact/ui/Layout';
 import SliderButton from '@enact/agate/SliderButton';
 import Divider from '@enact/agate/Divider';
 
+import {getPanelIndexOf} from '../App';
 import AppContextConnect from '../App/AppContextConnect';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
 
@@ -79,7 +80,7 @@ const DisplaySettings = kind({
 		<Panel {...rest}>
 			<Row align=" start">
 				<Cell shrink>
-					<LabeledIconButton onClick={onSelect} labelPosition="after" data-tabindex={5} icon="arrowhookleft">
+					<LabeledIconButton onClick={onSelect} labelPosition="after" data-tabindex={getPanelIndexOf('settings')} icon="arrowhookleft">
 						Back
 					</LabeledIconButton>
 				</Cell>
