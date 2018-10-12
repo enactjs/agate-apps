@@ -75,6 +75,7 @@ const AppBase = kind({
 					</afterTabs>
 					<Home
 						onSelect={onSelect}
+						skinName={skinName}
 					/>
 					<Phone />
 					{/* eslint-disable-next-line */}
