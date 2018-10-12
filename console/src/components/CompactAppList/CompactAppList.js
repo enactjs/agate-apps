@@ -6,6 +6,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import AppIconCell from '../AppIconCell';
+import {getPanelIndexOf} from '../../App';
 
 const DropReadyRow = ({...props}) => {
 	delete props.arranging;
@@ -39,7 +40,7 @@ const CompactAppList = kind({
 			<Cell shrink>
 				<DropRow align="start space-evenly" id="row1">
 					<AppIconCell id="slot01" data-slot="00" icon="resumeplay">Multimedia</AppIconCell>
-					<AppIconCell id="slot02" data-slot="01" icon="gear" data-tabindex={5} onKeyUp={onTabChange} onClick={onTabChange}>Settings</AppIconCell>
+					<AppIconCell id="slot02" data-slot="01" icon="gear" data-tabindex={getPanelIndexOf('settings')} onKeyUp={onTabChange} onClick={onTabChange}>Settings</AppIconCell>
 				</DropRow>
 			</Cell>
 		</Column>

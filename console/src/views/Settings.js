@@ -7,6 +7,7 @@ import SwitchItem from '@enact/agate/SwitchItem';
 import SliderButton from '@enact/agate/SliderButton';
 
 import viewCss from './Settings.less';
+import {getPanelIndexOf} from '../App';
 import AppContextConnect from '../App/AppContextConnect';
 
 const SwitchItemCell =  kind({
@@ -65,7 +66,7 @@ const Settings = kind({
 						<SwitchItemCell
 							icon="user"
 							noToggle
-							data-tabindex={6}
+							data-tabindex={getPanelIndexOf('settings/display')}
 							onTap={onSelect}
 						>
 							Display
