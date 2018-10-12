@@ -62,13 +62,24 @@ const markerLayer = {
 };
 
 class CompactGps extends React.Component {
+	constructor (props) {
+		super(props);
+		if (this.props.theme === 'carbon') {
+			this.style = 'mapbox://styles/haileyr/cjn4x0ynt04jq2qpf5sb21jc5';
+		} else if (this.props.theme === 'titanium') {
+			this.style = 'mapbox://styles/mapbox/dark-v9';
+		}
+	}
+
+
+
 	componentDidMount () {
 		let start = [-121.979125, 37.405189];
 		this.map = new mapboxgl.Map({
-			container: 'map', // this.mapContainer,
-			style: 'mapbox://styles/haileyr/cjn4x0ynt04jq2qpf5sb21jc5',
-			center: [-121.979125, 37.405189], // starting position
-			zoom: 12 // starting zoom
+			container: 'map',
+			style: this.style,
+			center: [-121.979125, 37.405189],
+			zoom: 12
 		});
 		this.map.addControl(new mapboxgl.GeolocateControl({
 			positionOptions: {
@@ -91,6 +102,14 @@ class CompactGps extends React.Component {
 			this.drawDirection(start, coordinates);
 			this.map.flyTo({center: [(coordinates[0] + start[0]) / 2, (coordinates[1] + start[1]) / 2]});
 		});
+	}
+
+	componentWillUpdate () {
+		if (this.props.theme === 'carbon') {
+			this.map.setStyle('mapbox://styles/haileyr/cjn4x0ynt04jq2qpf5sb21jc5');
+		} else if (this.props.theme === 'titanium') {
+			this.map.setStyle('mapbox://styles/mapbox/dark-v9');
+		}
 	}
 
 	componentWillUnmount () {
