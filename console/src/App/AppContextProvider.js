@@ -15,12 +15,12 @@ const getWeather = async (latitude, longitude) => {
 	const response = await window.fetch(currentUrl);
 	const json = await response.json();
 
-	const hoursResponse = await window.fetch(threeHourUrl);
-	const hourJson = await hoursResponse.json();
+	const threeHoursResponse = await window.fetch(threeHourUrl);
+	const threeHourJson = await threeHoursResponse.json();
 
 	return {
 		current: json,
-		hours: hourJson
+		threeHour: threeHourJson
 	};
 };
 

@@ -19,7 +19,7 @@ const Weather = kind({
 		currentWeather: ({weather}) => {
 			const weatherObj = {};
 			if (weather.current) {
-				weatherObj.high = parseInt(weather.current.main.temp_max);
+				weatherObj.high = parseInt(weather.current.main.temp);
 				weatherObj.low = parseInt(weather.current.main.temp_min);
 				weatherObj.description = weather.current.weather[0].description;
 				weatherObj.cityName = weather.current.name;
@@ -27,29 +27,29 @@ const Weather = kind({
 
 			return weatherObj;
 		},
-		hourlyWeather: ({weather}) => {
-			let hourly = [];
+		threeHourlyWeather: ({weather}) => {
+			let threeHourly = [];
 			for (let index = 0; index < 3; index++) {
 				const weatherObj = {};
-				if (weather.hours) {
-					const hour = weather.hours.list[index];
+				if (weather.threeHour) {
+					const threeHour = weather.threeHour.list[index];
 
-					weatherObj.high = parseInt(hour.main.temp_max);
-					weatherObj.low = parseInt(hour.main.temp_min);
-					weatherObj.description = hour.weather[0].description;
-					weatherObj.time = new Date(`${hour.dt_txt} UTC`);
+					weatherObj.high = parseInt(threeHour.main.temp_max);
+					weatherObj.low = parseInt(threeHour.main.temp_min);
+					weatherObj.description = threeHour.weather[0].description;
+					weatherObj.time = new Date(`${threeHour.dt_txt} UTC`);
 					weatherObj.time = `${weatherObj.time.getHours() % 12}:00`;
 
-					hourly.push(weatherObj);
+					threeHourly.push(weatherObj);
 				}
 
 			}
 
-			return hourly;
+			return threeHourly;
 		}
 	},
 
-	render: ({css, currentWeather, hourlyWeather, ...rest}) => {
+	render: ({css, currentWeather, threeHourlyWeather, ...rest}) => {
 		delete rest.weather;
 		return (
 			<Panel {...rest}>
@@ -66,7 +66,7 @@ const Weather = kind({
 							<Cell>
 								<WeatherItem featured className={css.weatherItem} label="Now" high={currentWeather.high} description="sunny" />
 							</Cell>
-							{hourlyWeather.map((hours) => {
+							{threeHourlyWeather.map((hours) => {
 								return (
 									<Cell key={hours.time}>
 										<WeatherItem
