@@ -15,7 +15,7 @@ import componentCss from './Settings.less';
 // Skin setup area
 const skinCollection = {
 	carbon: 'Carbon',
-	// electro: 'Electro',
+	electro: 'Electro',
 	titanium: 'Titanium'
 };
 const skinList = Object.keys(skinCollection);
@@ -28,9 +28,9 @@ const FormRow = kind({
 		css: componentCss,
 		className: 'formRow'
 	},
-	render: ({children, css, label, ...rest}) => (
+	render: ({alignLabel, children, css, label, ...rest}) => (
 		<Row align="center" {...rest}>
-			<Cell component="label" className={css.label} size="20%">{label}</Cell>
+			<Cell component="label" className={css.label} align={alignLabel} size="20%">{label}</Cell>
 			{children}
 		</Row>
 	)
@@ -53,8 +53,8 @@ const SliderButtonItem = kind({
 		css: componentCss,
 		className: 'sliderButtonRow'
 	},
-	render: ({label, ...rest}) => (
-		<FormRow label={label}>
+	render: ({alignLabel, label, ...rest}) => (
+		<FormRow alignLabel={alignLabel} label={label}>
 			<Cell><SliderButton {...rest} /></Cell>
 		</FormRow>
 	)
@@ -86,7 +86,7 @@ const DisplaySettings = kind({
 				</Cell>
 			</Row>
 			<Row align=" center">
-				<Cell size="40%">
+				<Cell size="70%">
 					<Column className={css.content}>
 						<Cell
 							className={css.header}
@@ -97,7 +97,7 @@ const DisplaySettings = kind({
 								Display Settings
 						</Cell>
 						<Cell shrink className={css.spacedItem}>
-							<FormRow align="center space-evenly">
+							<FormRow align="start space-evenly" alignLabel="center">
 								<AccentColorSetting label="Accent Color" />
 								<HighlightColorSetting label="Highlight Color" />
 							</FormRow>

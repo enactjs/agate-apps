@@ -205,7 +205,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 					onTogglePopup={this.onTogglePopup}
 					onToggleBasicPopup={this.onToggleBasicPopup}
 					onToggleDateTimePopup={this.onToggleDateTimePopup}
-					orientation={(skin === 'titanium') ? 'horizontal' : 'vertical'}
+					orientation={(skin !== 'carbon') ? 'horizontal' : 'vertical'}
 					showPopup={this.state.showPopup}
 					showBasicPopup={this.state.showBasicPopup}
 					showDateTimePopup={this.state.showDateTimePopup}
@@ -226,7 +226,7 @@ const AppDecorator = compose(
 			updateAppState((state) => {
 				let newSkin;
 				switch (state.userSettings.skin) {
-					// case 'titanium': newSkin = 'electro'; break;
+					case 'titanium': newSkin = 'electro'; break;
 					case 'carbon': newSkin = 'titanium'; break;
 					default: newSkin = 'carbon';
 				}
