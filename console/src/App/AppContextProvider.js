@@ -6,7 +6,7 @@ const Context = React.createContext();
 const getWeather = async (latitude, longitude) => {
 	const key = process.env.REACT_APP_WEATHER_KEY; // eslint-disable-line
 	if (!key) {
-		console.error('Please enter an API key');
+		console.error('Please set environment variable REACT_APP_WEATHER_KEY to your own openweathermap.org API key when you start the app.');
 	}
 
 	const currentUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${key}&units=imperial`;
