@@ -1,9 +1,10 @@
 import React from 'react';
 import mapboxgl from 'mapbox-gl';
-console.log(process.env.REACT_APP_MAPBOX)// eslint-disable-line
 
+if (!process.env.REACT_APP_MAPBOX) { // eslint-disable-line
+	console.error('Please set environment variable REACT_APP_MAPBOX to your own Mapbox API key when you start the app.');
+}
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX; // eslint-disable-line
-
 const getRoute = async (start, end) => {
 	const response = await window.fetch('https://api.mapbox.com/directions/v5/mapbox/driving/' + start[0] + ',' + start[1] + ';' + end[0] + ',' + end[1] + '?geometries=geojson&access_token=' + mapboxgl.accessToken);
 	return await response.json();
@@ -62,18 +63,13 @@ const markerLayer = {
 };
 
 class CompactGps extends React.Component {
-	constructor (props) {
-		super(props);
-		if (this.props.theme === 'carbon') {
-			this.style = 'mapbox://styles/haileyr/cjn4x0ynt04jq2qpf5sb21jc5';
-		} else if (this.props.theme === 'titanium') {
-			this.style = 'mapbox://styles/mapbox/dark-v9';
-		}
-	}
-
-
-
 	componentDidMount () {
+		if (this.props.theme === 'carbon') {
+			this.style = 'mapbox://styles/mapbox/dark-v9';
+		} else if (this.props.theme === 'titanium') {
+			this.style = 'mapbox://styles/haileyr/cjn4x0ynt04jq2qpf5sb21jc5';
+		}
+
 		let start = [-121.979125, 37.405189];
 		this.map = new mapboxgl.Map({
 			container: 'map',
@@ -104,11 +100,11 @@ class CompactGps extends React.Component {
 		});
 	}
 
-	componentWillUpdate () {
-		if (this.props.theme === 'carbon') {
-			this.map.setStyle('mapbox://styles/haileyr/cjn4x0ynt04jq2qpf5sb21jc5');
-		} else if (this.props.theme === 'titanium') {
+	componentWillUpdate (nextProps) {
+		if (nextProps.theme === 'carbon') {
 			this.map.setStyle('mapbox://styles/mapbox/dark-v9');
+		} else if (nextProps.theme === 'titanium') {
+			this.map.setStyle('mapbox://styles/haileyr/cjn4x0ynt04jq2qpf5sb21jc5');
 		}
 	}
 
