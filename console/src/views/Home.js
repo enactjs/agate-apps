@@ -27,6 +27,7 @@ const HomeDefaultLayout = kind({
 		arranging: PropTypes.bool,
 		bottomLeft: PropTypes.node,
 		bottomRight: PropTypes.node,
+		topCenter: PropTypes.node,
 		topLeft: PropTypes.node,
 		topRight: PropTypes.node
 	},
@@ -106,9 +107,9 @@ const HomeWeather = ({cityName, high, description}) => (
 	</div>
 );
 
-const ConnectedHomeWeather= AppStateConnect(({weather}) => {
+const ConnectedHomeWeather = AppStateConnect(({weather}) => {
 	const weatherObj = {};
-	if (weather.current) {
+	if (weather.current && weather.current.temp) {
 		weatherObj.high = parseInt(weather.current.main.temp);
 		weatherObj.description = weather.current.weather[0].description;
 		weatherObj.cityName = weather.current.name;
