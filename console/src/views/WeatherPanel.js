@@ -22,6 +22,7 @@ const Weather = kind({
 				weatherObj.high = parseInt(weather.current.main.temp_max);
 				weatherObj.low = parseInt(weather.current.main.temp_min);
 				weatherObj.description = weather.current.weather[0].description;
+				weatherObj.cityName = weather.current.name;
 			}
 
 			return weatherObj;
@@ -56,18 +57,18 @@ const Weather = kind({
 					<Cell size="5%">
 						<Row className={css.row} align="center space-evenly">
 							<Divider spacing="small">
-							Today
+								{`${currentWeather.cityName} Weather`}
 							</Divider>
 						</Row>
 					</Cell>
 					<Cell size="30%">
 						<Row className={css.row} align="center space-evenly">
-							<Cell size="25%">
+							<Cell>
 								<WeatherItem featured className={css.weatherItem} label="Now" high={currentWeather.high} description="sunny" />
 							</Cell>
 							{hourlyWeather.map((hours) => {
 								return (
-									<Cell key={hours.time} size="25%">
+									<Cell key={hours.time}>
 										<WeatherItem
 											className={css.weatherItem}
 											label={hours.time}
@@ -89,16 +90,16 @@ const Weather = kind({
 					{/* Did not connect these parts. This is more to show layout. We may need to switch api for daily weather. */}
 					<Cell size="30%">
 						<Row className={css.row} align="center space-evenly">
-							<Cell size="25%">
+							<Cell>
 								<WeatherItem className={css.weatherItem} label="Mon" high={70} low={59} description="sunny" />
 							</Cell>
-							<Cell size="25%">
+							<Cell>
 								<WeatherItem className={css.weatherItem} label="Tue" high={70} low={59} description="sunny" />
 							</Cell>
-							<Cell size="25%">
+							<Cell>
 								<WeatherItem className={css.weatherItem} label="Wed" high={70} low={59} description="sunny" />
 							</Cell>
-							<Cell size="25%">
+							<Cell>
 								<WeatherItem className={css.weatherItem} label="Thu" high={70} low={59} description="sunny" />
 							</Cell>
 						</Row>

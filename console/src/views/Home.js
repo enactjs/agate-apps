@@ -15,7 +15,7 @@ import AppStateConnect from '../App/AppContextConnect';
 
 import css from './Home.less';
 
-const allSlotNames = ['bottomLeft', 'bottomRight', 'topLeft', 'topRight', 'topMiddle'];
+const allSlotNames = ['bottomLeft', 'bottomRight', 'topLeft', 'topRight', 'topCenter'];
 
 const DroppableCell = Draggable(Cell);
 
@@ -40,13 +40,13 @@ const HomeDefaultLayout = kind({
 		className: ({arranging, styler}) => styler.append({arranging})
 	},
 
-	render: ({arrangement, bottomLeft, bottomRight, topLeft, topRight, topMiddle, ...rest}) => {
+	render: ({arrangement, bottomLeft, bottomRight, topLeft, topRight, topCenter, ...rest}) => {
 		return (
 			<Column {...rest}>
 				<Cell size="40%">
 					<Row className={css.row}>
 						<DroppableCell size="30%" className={css.topLeft} arrangement={arrangement} name="topLeft">{topLeft}</DroppableCell>
-						<DroppableCell className={css.topMiddle} arrangement={arrangement} name="topMiddle">{topMiddle}</DroppableCell>
+						<DroppableCell className={css.topCenter} arrangement={arrangement} name="topCenter">{topCenter}</DroppableCell>
 						<DroppableCell className={css.topRight} arrangement={arrangement} name="topRight">{topRight}</DroppableCell>
 					</Row>
 				</Cell>
@@ -85,7 +85,9 @@ const Home = kind({
 		<Panel {...rest}>
 			<HomeLayout>
 				<topLeft><CompactRadio /></topLeft>
-				<topMiddle><ConnectedWeatherItem featured label="Current" /></topMiddle>
+				<topCenter>
+					<ConnectedHomeWeather />
+				</topCenter>
 				<topRight><CompactHvac /></topRight>
 				<bottomLeft><CompactAppList align="center space-evenly" onSelect={onSelect} /></bottomLeft>
 				<bottomRight><div className={css.quadFour}>GPS</div></bottomRight>
@@ -95,14 +97,23 @@ const Home = kind({
 });
 
 
-const ConnectedWeatherItem = AppStateConnect(({weather}) => {
+const HomeWeather = ({cityName, high, description}) => (
+	<div>
+		<Row align=" center">
+			<p>{cityName}</p>
+		</Row>
+		<WeatherItem featured label="Current" high={high} description={description} />
+	</div>
+);
+
+const ConnectedHomeWeather= AppStateConnect(({weather}) => {
 	const weatherObj = {};
 	if (weather.current) {
-		weatherObj.high = parseInt(weather.current.main.temp_max);
+		weatherObj.high = parseInt(weather.current.main.temp);
 		weatherObj.description = weather.current.weather[0].description;
+		weatherObj.cityName = weather.current.name;
 	}
-
 	return {...weatherObj};
-})(WeatherItem);
+})(HomeWeather);
 
 export default Home;

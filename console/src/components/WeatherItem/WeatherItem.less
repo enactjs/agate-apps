@@ -1,33 +1,29 @@
-@import "~@enact/agate/styles/skin.less";
+@import "../../styles/console-variables.less";
 
-.weatherItem{
-	&.featured {
-		.item {
-			.text{
-				font-size: 36px;
+.weatherItem {
+	.applySkins({
+		&.featured {
+			.item {
+				font-size: @weather-featured-item-font-size;
+			}
+
+			.icon {
+				width: @weather-featured-icon-size;
+				height: @weather-featured-icon-size;
 			}
 		}
-		.icon {
-			width: 150px;
-			height: 150px;
-			object-fit: cover;
-		}
-	}
 
-	.item {
-		.text {
-			font-size: 28px;
+		.item {
+			font-size: @weather-item-font-size;
 		}
-	}
-	.applySkins({
+
 		.header {
-			color: @agate-accent;
+			color: @weather-accent-text;
+		}
+		
+		.icon {
+			width: @weather-icon-size;
+			height: @weather-icon-size;
 		}
 	});
-
-	.icon {
-		width: 100px;
-		height: 100px;
-		object-fit: cover;
-	}
 }

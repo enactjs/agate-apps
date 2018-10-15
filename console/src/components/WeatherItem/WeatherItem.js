@@ -5,7 +5,7 @@ import {Row, Column, Cell} from '@enact/ui/Layout';
 import css from './WeatherItem.less';
 import SunIcon from './icons/wi-day-sunny.svg';
 import Skinnable from '@enact/agate/Skinnable';
-// import PropTypes from 'prop-types';
+import Divider from '@enact/agate/Divider';
 
 const WeatherItemBase = kind({
 	name: 'WeatherItem',
@@ -16,7 +16,7 @@ const WeatherItemBase = kind({
 	},
 	handlers: {},
 	computed: {
-		className: ({featured, styler}) => styler.append(featured ? css.featured : '')
+		className: ({featured, styler}) => styler.append({featured})
 	},
 
 	render: ({label, description, high, low, ...rest}) => {
@@ -24,33 +24,21 @@ const WeatherItemBase = kind({
 
 		return (
 			<Column {...rest} align="center">
-				<Cell className={css.item} shrink>
-					<Row align=" center" className={`${css.text} ${css.header}`}>
-						<Cell size={'100%'}>
-							{label}
-						</Cell>
-					</Row>
+				<Cell className={css.item} component={Divider} shrink>
+					{label}
 				</Cell>
 				<Cell className={css.item} shrink>
 					<img className={css.icon} src={SunIcon} alt="" />
 				</Cell>
 				<Cell className={css.item} shrink>
-					<div className={css.text}>{description}</div>
+					{description}
 				</Cell>
 				<Cell className={css.item} shrink>
-					<Row>
-						<Cell size={'100%'} className={css.text}>
-							{high}°
-						</Cell>
-					</Row>
+					{high}°
 				</Cell>
 				{low ?
 					<Cell className={css.item} shrink>
-						<Row>
-							<Cell size={'100%'} className={css.text}>
-								{low}°
-							</Cell>
-						</Row>
+						{low}°
 					</Cell> :
 					null
 				}
