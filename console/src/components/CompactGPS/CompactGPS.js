@@ -1,5 +1,6 @@
 import React from 'react';
 import mapboxgl from 'mapbox-gl';
+import css from './CompactGPS.less';
 
 if (!process.env.REACT_APP_MAPBOX) { // eslint-disable-line
 	console.error('Please set environment variable REACT_APP_MAPBOX to your own Mapbox API key when you start the app.');
@@ -64,6 +65,12 @@ const markerLayer = {
 };
 
 class CompactGps extends React.Component {
+	componentWillMount () {
+		if (!mapboxgl.accessToken) {
+			this.message = 'Map is not available.';
+		}
+	}
+
 	componentDidMount () {
 		if (this.props.theme === 'carbon') {
 			this.style = 'mapbox://styles/mapbox/dark-v9';
@@ -73,34 +80,36 @@ class CompactGps extends React.Component {
 
 		let start = [-121.979125, 37.405189];
 		// stop drawing map if accessToken is not set.
-		if (!mapboxgl.accessToken) return;
-		this.map = new mapboxgl.Map({
-			container: 'map',
-			style: this.style,
-			center: [-121.979125, 37.405189],
-			zoom: 12
-		});
-		this.map.addControl(new mapboxgl.GeolocateControl({
-			positionOptions: {
-				enableHighAccuracy: true
-			},
-			trackUserLocation: true
-		}));
-		this.map.on('load', () => {
-			this.map.addLayer(markerLayer);
-		});
-		this.map.on('click', 'symbols', (e) => {
-			let coordinates = e.features[0].geometry.coordinates.slice();
-			let description = e.features[0].properties.description;
+		if (mapboxgl.accessToken) {
+			this.map = new mapboxgl.Map({
+				container: 'map',
+				style: this.style,
+				center: [-121.979125, 37.405189],
+				zoom: 12
+			});
+			console.log(this.map)
+			this.map.addControl(new mapboxgl.GeolocateControl({
+				positionOptions: {
+					enableHighAccuracy: true
+				},
+				trackUserLocation: true
+			}));
+			this.map.on('load', () => {
+				this.map.addLayer(markerLayer);
+			});
+			this.map.on('click', 'symbols', (e) => {
+				let coordinates = e.features[0].geometry.coordinates.slice();
+				let description = e.features[0].properties.description;
 
-			while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-				coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-			}
+				while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+					coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+				}
 
-			this.showPopup(coordinates, description);
-			this.drawDirection(start, coordinates);
-			this.map.flyTo({center: [(coordinates[0] + start[0]) / 2, (coordinates[1] + start[1]) / 2]});
-		});
+				this.showPopup(coordinates, description);
+				this.drawDirection(start, coordinates);
+				this.map.flyTo({center: [(coordinates[0] + start[0]) / 2, (coordinates[1] + start[1]) / 2]});
+			});
+		}
 	}
 
 	componentWillUpdate (nextProps) {
@@ -205,10 +214,10 @@ class CompactGps extends React.Component {
 	}
 
 	render () {
-		const style = {
-			position: 'absolute', top: 0, bottom: 0, width: '100%', color: 'black'
-		};
-		return <div style={style} id="map" />;
+		return <div className={css.container}>
+			<div align="center" className={css.message}>{this.message}</div>
+			<div className={css.canvas} id="map" />
+		</div>;
 	}
 }
 
