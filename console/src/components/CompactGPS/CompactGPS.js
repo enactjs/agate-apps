@@ -106,6 +106,10 @@ class CompactGps extends React.Component {
 		} else if (nextProps.theme === 'titanium') {
 			this.map.setStyle('mapbox://styles/haileyr/cjn4x0ynt04jq2qpf5sb21jc5');
 		}
+		if (this.props.theme !== nextProps.theme) {
+			// make sure the map is resized after the container updates
+			setTimeout(this.map.resize.bind(this.map), 0);
+		}
 	}
 
 	componentWillUnmount () {
