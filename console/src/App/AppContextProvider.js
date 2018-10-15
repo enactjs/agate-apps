@@ -27,6 +27,7 @@ const getWeather = async (latitude, longitude) => {
 class AppContextProvider extends Component {
 	constructor (props) {
 		super(props);
+		this.watchPositionId = null;  // Store the reference to the position watcher.
 		this.state = {
 			userId: 1,
 			userSettings: {
@@ -55,6 +56,10 @@ class AppContextProvider extends Component {
 		}
 	}
 
+	componentWillUnmount () {
+		this.unsetLocationMonitoring();
+	}
+
 	loadSavedUserSettings = (userId) => {
 		if (!JSON.parse(window.localStorage.getItem(`user${userId}`))) {
 			window.localStorage.setItem(`user${userId}`, JSON.stringify({...this.state.userSettings}));
@@ -79,15 +84,21 @@ class AppContextProvider extends Component {
 
 	setLocation = () => {
 		if (window.navigator.geolocation) {
-			window.navigator.geolocation.getCurrentPosition((position) => {
+			this.watchPositionId = window.navigator.geolocation.watchPosition((position) => {
 				this.updateAppState((state) => {
 					state.location.latitude = position.coords.latitude;
 					state.location.longitude = position.coords.longitude;
 				});
 				this.setWeather(position.coords.latitude, position.coords.longitude);
-			}, () => {/* some error*/},
+			}, (error) => {
+				console.error('Location error:', error);
+			},
 			{enableHighAccuracy: true});
 		}
+	}
+
+	unsetLocationMonitoring = () => {
+		window.navigator.geolocation.clearWatch(this.watchPositionId);
 	}
 
 	setWeather = async (latitude, longitude) => {
@@ -95,6 +106,7 @@ class AppContextProvider extends Component {
 		try {
 			weatherData = await getWeather(latitude, longitude);
 		} catch (error) {
+			console.error('Weather error:', error);
 			this.updateAppState((state) => {
 				state.weather.status = 'error';
 			});

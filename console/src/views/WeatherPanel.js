@@ -18,7 +18,7 @@ const Weather = kind({
 	computed: {
 		currentWeather: ({weather}) => {
 			const weatherObj = {};
-			if (weather.current) {
+			if (weather.current && weather.current.main) {
 				weatherObj.high = parseInt(weather.current.main.temp);
 				weatherObj.low = parseInt(weather.current.main.temp_min);
 				weatherObj.description = weather.current.weather[0].description;
@@ -31,7 +31,7 @@ const Weather = kind({
 			let threeHourly = [];
 			for (let index = 0; index < 3; index++) {
 				const weatherObj = {};
-				if (weather.threeHour) {
+				if (weather.threeHour && weather.threeHour.list) {
 					const threeHour = weather.threeHour.list[index];
 
 					weatherObj.high = parseInt(threeHour.main.temp_max);
@@ -53,13 +53,9 @@ const Weather = kind({
 		delete rest.weather;
 		return (
 			<Panel {...rest}>
-				<Column className="enact-fit" align=" space-evenly">
-					<Cell size="5%">
-						<Row className={css.row} align="center space-evenly">
-							<Divider spacing="small">
-								{`${currentWeather.cityName} Weather`}
-							</Divider>
-						</Row>
+				<Column className="enact-fit" align="center space-evenly">
+					<Cell component={Divider} shrink spacing="small">
+						{currentWeather.cityName} Weather
 					</Cell>
 					<Cell size="30%">
 						<Row className={css.row} align="center space-evenly">
@@ -80,15 +76,11 @@ const Weather = kind({
 							})}
 						</Row>
 					</Cell>
-					<Cell size="5%">
-						<Row className={css.row} align="center space-evenly">
-							<Divider spacing="small">
-							4-Day
-							</Divider>
-						</Row>
+					<Cell component={Divider} shrink spacing="small">
+						4-Day
 					</Cell>
 					{/* Did not connect these parts. This is more to show layout. We may need to switch api for daily weather. */}
-					<Cell size="30%">
+					<Cell size="30%" style={{width: '100%'}}>
 						<Row className={css.row} align="center space-evenly">
 							<Cell>
 								<WeatherItem className={css.weatherItem} label="Mon" high={70} low={59} description="sunny" />
