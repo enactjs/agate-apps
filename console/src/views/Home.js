@@ -86,7 +86,7 @@ const Home = kind({
 				<topLeft><CompactRadio /></topLeft>
 				<topRight><CompactHvac /></topRight>
 				<bottomLeft><CompactAppList align="center space-evenly" onSelect={onSelect} /></bottomLeft>
-				<bottomRight><div className={css.quadFour}><CompactGps theme={skinName} /></div></bottomRight>
+				<bottomRight><CompactGps theme={skinName} /></bottomRight>
 			</HomeLayout>
 		</Panel>
 	)
