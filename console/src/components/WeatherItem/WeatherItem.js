@@ -1,11 +1,11 @@
 import React from 'react';
 import kind from '@enact/core/kind';
-import {Row, Column, Cell} from '@enact/ui/Layout';
+import {Column, Cell} from '@enact/ui/Layout';
+import Divider from '@enact/agate/Divider';
+import Skinnable from '@enact/agate/Skinnable';
 
 import css from './WeatherItem.less';
 import SunIcon from './icons/wi-day-sunny.svg';
-import Skinnable from '@enact/agate/Skinnable';
-import Divider from '@enact/agate/Divider';
 
 const WeatherItemBase = kind({
 	name: 'WeatherItem',
@@ -14,7 +14,7 @@ const WeatherItemBase = kind({
 		css,
 		className: 'weatherItem'
 	},
-	handlers: {},
+
 	computed: {
 		className: ({featured, styler}) => styler.append({featured})
 	},
@@ -52,3 +52,8 @@ const WeatherItemDecorator = Skinnable;
 const WeatherItem = WeatherItemDecorator(WeatherItemBase);
 
 export default WeatherItem;
+export {
+	WeatherItem,
+	WeatherItemBase,
+	WeatherItemDecorator
+};
