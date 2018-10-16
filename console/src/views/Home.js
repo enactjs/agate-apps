@@ -12,7 +12,7 @@ import CompactHvac from '../components/CompactHVAC';
 import CompactAppList from '../components/CompactAppList';
 import CompactWeather from '../components/CompactWeather';
 
-import CompactGps from '../components/CompactGPS';
+import CompactMap from '../components/CompactMap';
 
 import css from './Home.less';
 
@@ -83,14 +83,14 @@ const Home = kind({
 		className: 'homePanel'
 	},
 
-	render: ({onSelect, skinName, ...rest}) => (
+	render: ({onSelect, ...rest}) => (
 		<Panel {...rest}>
 			<HomeLayout>
 				<topLeft><CompactRadio /></topLeft>
 				<topCenter><CompactWeather /></topCenter>
 				<topRight><CompactHvac /></topRight>
 				<bottomLeft><CompactAppList align="center space-evenly" onSelect={onSelect} /></bottomLeft>
-				<bottomRight><CompactGps theme={skinName} /></bottomRight>
+				<bottomRight><CompactMap onSelect={onSelect} /></bottomRight>
 			</HomeLayout>
 		</Panel>
 	)

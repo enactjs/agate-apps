@@ -16,11 +16,14 @@ import CustomLayout from '../components/CustomLayout';
 import AppList from '../views/AppList';
 import Home from '../views/Home';
 import HVAC from '../views/HVAC';
+import MapView from '../views/Map';
 import Phone from '../views/Phone';
 import Radio from '../views/Radio';
 import Settings from '../views/Settings';
 import DisplaySettings from '../views/DisplaySettings';
 import Weather from '../views/WeatherPanel';
+
+import AppContextConnect from './AppContextConnect';
 
 import css from './App.less';
 
@@ -37,6 +40,7 @@ const panelIndexMap = [
 	'hvac',
 	'radio',
 	'applist',
+	'map',
 	'settings',
 	'settings/display',
 	'weather',
@@ -93,7 +97,6 @@ const AppBase = kind({
 					</afterTabs>
 					<Home
 						onSelect={onSelect}
-						skinName={skinName}
 					/>
 					<Phone />
 					{/* eslint-disable-next-line */}
@@ -104,6 +107,7 @@ const AppBase = kind({
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}
 					/>
+					<MapView />
 					<Settings
 						onSelect={onSelect}
 						onToggleDateTimePopup={onToggleDateTimePopup}
