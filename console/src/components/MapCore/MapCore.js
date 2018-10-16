@@ -232,6 +232,7 @@ class MapCoreBase extends React.Component {
 }
 
 const SkinnableMap = AppContextConnect(({userSettings}) => ({
+	// We should import the app-level variable for our current location then feed that in as the "start"
 	skin: userSettings.skin
 }));
 
