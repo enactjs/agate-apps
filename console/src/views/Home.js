@@ -10,12 +10,13 @@ import Rearrangeable from '@enact/agate/Rearrangeable';
 import CompactRadio from '../components/CompactRadio';
 import CompactHvac from '../components/CompactHVAC';
 import CompactAppList from '../components/CompactAppList';
+import CompactWeather from '../components/CompactWeather';
 
 import CompactMap from '../components/CompactMap';
 
 import css from './Home.less';
 
-const allSlotNames = ['bottomLeft', 'bottomRight', 'topLeft', 'topRight'];
+const allSlotNames = ['bottomLeft', 'bottomRight', 'topLeft', 'topRight', 'topCenter'];
 
 const DroppableCell = Draggable(Cell);
 
@@ -27,6 +28,7 @@ const HomeDefaultLayout = kind({
 		arranging: PropTypes.bool,
 		bottomLeft: PropTypes.node,
 		bottomRight: PropTypes.node,
+		topCenter: PropTypes.node,
 		topLeft: PropTypes.node,
 		topRight: PropTypes.node
 	},
@@ -40,12 +42,13 @@ const HomeDefaultLayout = kind({
 		className: ({arranging, styler}) => styler.append({arranging})
 	},
 
-	render: ({arrangement, bottomLeft, bottomRight, topLeft, topRight, ...rest}) => {
+	render: ({arrangement, bottomLeft, bottomRight, topLeft, topRight, topCenter, ...rest}) => {
 		return (
 			<Column {...rest}>
 				<Cell size="40%">
 					<Row className={css.row}>
 						<DroppableCell size="30%" className={css.topLeft} arrangement={arrangement} name="topLeft">{topLeft}</DroppableCell>
+						<DroppableCell className={css.topCenter} arrangement={arrangement} name="topCenter">{topCenter}</DroppableCell>
 						<DroppableCell className={css.topRight} arrangement={arrangement} name="topRight">{topRight}</DroppableCell>
 					</Row>
 				</Cell>
@@ -84,6 +87,7 @@ const Home = kind({
 		<Panel {...rest}>
 			<HomeLayout>
 				<topLeft><CompactRadio /></topLeft>
+				<topCenter><CompactWeather /></topCenter>
 				<topRight><CompactHvac /></topRight>
 				<bottomLeft><CompactAppList align="center space-evenly" onSelect={onSelect} /></bottomLeft>
 				<bottomRight><CompactMap onSelect={onSelect} /></bottomRight>

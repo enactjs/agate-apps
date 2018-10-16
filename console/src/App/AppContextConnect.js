@@ -22,3 +22,6 @@ const AppStateConnect = (mapContextToProps) => (Wrapped) => {
 };
 
 export default AppStateConnect;
+export {
+	AppStateConnect
+};
