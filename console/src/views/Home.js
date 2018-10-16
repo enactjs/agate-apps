@@ -11,7 +11,7 @@ import CompactRadio from '../components/CompactRadio';
 import CompactHvac from '../components/CompactHVAC';
 import CompactAppList from '../components/CompactAppList';
 
-import CompactGps from '../components/CompactGPS';
+import CompactMap from '../components/CompactMap';
 
 import css from './Home.less';
 
@@ -86,7 +86,7 @@ const Home = kind({
 				<topLeft><CompactRadio /></topLeft>
 				<topRight><CompactHvac /></topRight>
 				<bottomLeft><CompactAppList align="center space-evenly" onSelect={onSelect} /></bottomLeft>
-				<bottomRight><CompactGps /></bottomRight>
+				<bottomRight><CompactMap /></bottomRight>
 			</HomeLayout>
 		</Panel>
 	)

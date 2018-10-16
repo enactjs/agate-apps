@@ -74,7 +74,7 @@ const skinStyles = {
 	titanium: 'mapbox://styles/haileyr/cjn4x0ynt04jq2qpf5sb21jc5'
 };
 
-class CompactGps extends React.Component {
+class CompactMapBase extends React.Component {
 	static propTypes = {
 		skin: PropTypes.string
 	}
@@ -235,6 +235,6 @@ const SkinnableMap = AppContextConnect(({userSettings}) => ({
 	skin: userSettings.skin
 }));
 
-const CompactMap = SkinnableMap(CompactGps);
+const CompactMap = SkinnableMap(CompactMapBase);
 
 export default CompactMap;
