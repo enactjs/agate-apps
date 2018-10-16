@@ -1,0 +1,114 @@
+import React from 'react';
+import kind from '@enact/core/kind';
+import {Panel} from '@enact/agate/Panels';
+import {Row, Cell, Column} from '@enact/ui/Layout';
+import Divider from '@enact/agate/Divider';
+import viewCSS from './WeatherPanel.less';
+import WeatherItem from '../components/WeatherItem';
+import AppStateConnect from '../App/AppContextConnect';
+
+const Weather = kind({
+	name: 'Weather',
+
+	styles: {
+		css: viewCSS,
+		className: 'weatherPanel'
+	},
+
+	computed: {
+		currentWeather: ({weather}) => {
+			const weatherObj = {};
+			if (weather.current && weather.current.main) {
+				weatherObj.high = parseInt(weather.current.main.temp);
+				weatherObj.low = parseInt(weather.current.main.temp_min);
+				weatherObj.description = weather.current.weather[0].description;
+				weatherObj.cityName = weather.current.name;
+			}
+
+			return weatherObj;
+		},
+		threeHourlyWeather: ({weather}) => {
+			let threeHourly = [];
+			for (let index = 0; index < 3; index++) {
+				const weatherObj = {};
+				if (weather.threeHour && weather.threeHour.list) {
+					const threeHour = weather.threeHour.list[index];
+
+					weatherObj.high = parseInt(threeHour.main.temp_max);
+					weatherObj.low = parseInt(threeHour.main.temp_min);
+					weatherObj.description = threeHour.weather[0].description;
+					weatherObj.time = new Date(`${threeHour.dt_txt} UTC`);
+					weatherObj.time = `${weatherObj.time.getHours() % 12}:00`;
+
+					threeHourly.push(weatherObj);
+				}
+
+			}
+
+			return threeHourly;
+		}
+	},
+
+	render: ({css, currentWeather, threeHourlyWeather, ...rest}) => {
+		delete rest.weather;
+		return (
+			<Panel {...rest}>
+				<Column className="enact-fit" align="center space-evenly">
+					<Cell component={Divider} shrink spacing="small">
+						{currentWeather.cityName} Weather
+					</Cell>
+					<Cell size="30%" style={{width: '100%'}}>
+						<Row className={css.row} align="center space-evenly">
+							<Cell>
+								<WeatherItem featured className={css.weatherItem} label="Now" high={currentWeather.high} description="sunny" />
+							</Cell>
+							{threeHourlyWeather.map((hours) => {
+								return (
+									<Cell key={hours.time}>
+										<WeatherItem
+											className={css.weatherItem}
+											label={hours.time}
+											high={hours.high}
+											description={hours.description}
+										/>
+									</Cell>
+								);
+							})}
+						</Row>
+					</Cell>
+					<Cell component={Divider} shrink spacing="small">
+						4-Day
+					</Cell>
+					{/* Did not connect these parts. This is more to show layout. We may need to switch api for daily weather. */}
+					<Cell size="30%" style={{width: '100%'}}>
+						<Row className={css.row} align="center space-evenly">
+							<Cell>
+								<WeatherItem className={css.weatherItem} label="Mon" high={70} low={59} description="sunny" />
+							</Cell>
+							<Cell>
+								<WeatherItem className={css.weatherItem} label="Tue" high={70} low={59} description="sunny" />
+							</Cell>
+							<Cell>
+								<WeatherItem className={css.weatherItem} label="Wed" high={70} low={59} description="sunny" />
+							</Cell>
+							<Cell>
+								<WeatherItem className={css.weatherItem} label="Thu" high={70} low={59} description="sunny" />
+							</Cell>
+						</Row>
+					</Cell>
+				</Column>
+			</Panel>
+		);
+	}
+});
+
+const WeatherDecorator = AppStateConnect(({weather}) => {
+	return {
+		weather
+	};
+});
+
+const WeatherPanel = WeatherDecorator(Weather);
+
+export default WeatherPanel;
+

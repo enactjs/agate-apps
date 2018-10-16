@@ -20,10 +20,11 @@ import Phone from '../views/Phone';
 import Radio from '../views/Radio';
 import Settings from '../views/Settings';
 import DisplaySettings from '../views/DisplaySettings';
+import Weather from '../views/WeatherPanel';
 
 import css from './App.less';
 
-import AppContextConnect from './AppContextConnect';
+import AppStateConnect from './AppContextConnect';
 
 add('backspace', 8);
 
@@ -38,6 +39,7 @@ const panelIndexMap = [
 	'applist',
 	'settings',
 	'settings/display',
+	'weather',
 	'layoutsample'
 ];
 // Look up a panel index by name, using the above list as the directory listing.
@@ -107,6 +109,7 @@ const AppBase = kind({
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
 					<DisplaySettings onSelect={onSelect} />
+					<Weather />
 					{/* arrangement={{right: 'left', left: 'bottom'}}  defaultArrangement={{right: 'left', left: 'right'}} */}
 					<CustomLayout onArrange={console.log}>
 						{/* <top>red top content</top> */}
@@ -216,7 +219,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 });
 
 const AppDecorator = compose(
-	AppContextConnect(({userSettings, updateAppState}) => ({
+	AppStateConnect(({userSettings, updateAppState}) => ({
 		skin: userSettings.skin,
 		colorAccent: userSettings.colorAccent,
 		colorHighlight: userSettings.colorHighlight,

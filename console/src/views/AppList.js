@@ -49,6 +49,11 @@ const AppList = kind({
 						<AppIconCell icon="closex" onClick={onTogglePopup}>Point of Interest</AppIconCell>
 					</Row>
 				</Cell>
+				<Cell shrink>
+					<Row align="start center">
+						<AppIconCell icon="star" data-tabindex={getPanelIndexOf('weather')} onKeyUp={onTabChange} onClick={onTabChange}>Weather</AppIconCell>
+					</Row>
+				</Cell>
 			</Column>
 		</Panel>
 	)
