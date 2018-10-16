@@ -31,7 +31,7 @@ const AppList = kind({
 				<Cell shrink>
 					<Row align="start center">
 						<AppIconCell icon="temperature" data-tabindex={getPanelIndexOf('hvac')} onKeyUp={onTabChange} onClick={onTabChange}>Climate</AppIconCell>
-						<AppIconCell icon="compass">Navigation</AppIconCell>
+						<AppIconCell icon="compass" data-tabindex={getPanelIndexOf('map')} onKeyUp={onTabChange} onClick={onTabChange}>Navigation</AppIconCell>
 						<AppIconCell icon="phone" data-tabindex={getPanelIndexOf('phone')} onKeyUp={onTabChange} onClick={onTabChange}>Phone</AppIconCell>
 					</Row>
 				</Cell>

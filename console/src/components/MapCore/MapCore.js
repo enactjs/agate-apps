@@ -4,12 +4,12 @@ import mapboxgl from 'mapbox-gl';
 import classnames from 'classnames';
 import AppContextConnect from '../../App/AppContextConnect';
 
-import css from './CompactMap.less';
+import css from './MapCore.less';
 
-if (!process.env.REACT_APP_MAPBOX) { // eslint-disable-line
-	console.error('Please set environment variable REACT_APP_MAPBOX to your own Mapbox API key when you start the app.');
+if (!process.env.REACT_APP_MAPBOX_API_KEY) { // eslint-disable-line
+	console.error('Please set environment variable REACT_APP_MAPBOX_API_KEY to your own Mapbox API key when you start the app.');
 }
-mapboxgl.accessToken = process.env.REACT_APP_MAPBOX; // eslint-disable-line
+mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API_KEY; // eslint-disable-line
 
 const getRoute = async (start, end) => {
 	const response = await window.fetch('https://api.mapbox.com/directions/v5/mapbox/driving/' + start[0] + ',' + start[1] + ';' + end[0] + ',' + end[1] + '?geometries=geojson&access_token=' + mapboxgl.accessToken);
@@ -74,7 +74,7 @@ const skinStyles = {
 	titanium: 'mapbox://styles/haileyr/cjn4x0ynt04jq2qpf5sb21jc5'
 };
 
-class CompactMapBase extends React.Component {
+class MapCoreBase extends React.Component {
 	static propTypes = {
 		skin: PropTypes.string
 	}
@@ -235,6 +235,6 @@ const SkinnableMap = AppContextConnect(({userSettings}) => ({
 	skin: userSettings.skin
 }));
 
-const CompactMap = SkinnableMap(CompactMapBase);
+const MapCore = SkinnableMap(MapCoreBase);
 
-export default CompactMap;
+export default MapCore;

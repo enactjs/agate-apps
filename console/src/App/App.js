@@ -16,6 +16,7 @@ import CustomLayout from '../components/CustomLayout';
 import AppList from '../views/AppList';
 import Home from '../views/Home';
 import HVAC from '../views/HVAC';
+import MapView from '../views/Map';
 import Phone from '../views/Phone';
 import Radio from '../views/Radio';
 import Settings from '../views/Settings';
@@ -36,6 +37,7 @@ const panelIndexMap = [
 	'hvac',
 	'radio',
 	'applist',
+	'map',
 	'settings',
 	'settings/display',
 	'layoutsample'
@@ -101,6 +103,7 @@ const AppBase = kind({
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}
 					/>
+					<MapView />
 					<Settings
 						onSelect={onSelect}
 						onToggleDateTimePopup={onToggleDateTimePopup}

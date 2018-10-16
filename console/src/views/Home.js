@@ -86,7 +86,7 @@ const Home = kind({
 				<topLeft><CompactRadio /></topLeft>
 				<topRight><CompactHvac /></topRight>
 				<bottomLeft><CompactAppList align="center space-evenly" onSelect={onSelect} /></bottomLeft>
-				<bottomRight><CompactMap /></bottomRight>
+				<bottomRight><CompactMap onSelect={onSelect} /></bottomRight>
 			</HomeLayout>
 		</Panel>
 	)
