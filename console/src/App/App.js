@@ -21,9 +21,9 @@ import Radio from '../views/Radio';
 import Settings from '../views/Settings';
 import DisplaySettings from '../views/DisplaySettings';
 
-import css from './App.less';
-
 import AppContextConnect from './AppContextConnect';
+
+import css from './App.less';
 
 add('backspace', 8);
 
@@ -91,7 +91,6 @@ const AppBase = kind({
 					</afterTabs>
 					<Home
 						onSelect={onSelect}
-						skinName={skinName}
 					/>
 					<Phone />
 					{/* eslint-disable-next-line */}

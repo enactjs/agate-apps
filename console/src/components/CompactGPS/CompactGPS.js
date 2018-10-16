@@ -1,5 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
+import classnames from 'classnames';
+import AppContextConnect from '../../App/AppContextConnect';
+
+import css from './CompactMap.less';
 
 if (!process.env.REACT_APP_MAPBOX) { // eslint-disable-line
 	console.error('Please set environment variable REACT_APP_MAPBOX to your own Mapbox API key when you start the app.');
@@ -63,32 +68,42 @@ const markerLayer = {
 	}
 };
 
-class CompactGps extends React.Component {
-	componentDidMount () {
-		if (this.props.theme === 'carbon') {
-			this.style = 'mapbox://styles/mapbox/dark-v9';
-		} else if (this.props.theme === 'titanium') {
-			this.style = 'mapbox://styles/haileyr/cjn4x0ynt04jq2qpf5sb21jc5';
-		}
+const skinStyles = {
+	carbon: 'mapbox://styles/mapbox/dark-v9',
+	electro: '',
+	titanium: 'mapbox://styles/haileyr/cjn4x0ynt04jq2qpf5sb21jc5'
+};
 
-		let start = [-121.979125, 37.405189];
+class CompactGps extends React.Component {
+	static propTypes = {
+		skin: PropTypes.string
+	}
+
+	componentDidMount () {
+		const style = skinStyles[this.props.skin] || skinStyles.titanium;
+		const start = [-121.979125, 37.405189];
+
 		// stop drawing map if accessToken is not set.
 		if (!mapboxgl.accessToken) return;
+
 		this.map = new mapboxgl.Map({
-			container: 'map',
-			style: this.style,
-			center: [-121.979125, 37.405189],
+			container: this.mapNode,
+			style,
+			center: start,
 			zoom: 12
 		});
+
 		this.map.addControl(new mapboxgl.GeolocateControl({
 			positionOptions: {
 				enableHighAccuracy: true
 			},
 			trackUserLocation: true
 		}));
+
 		this.map.on('load', () => {
 			this.map.addLayer(markerLayer);
 		});
+
 		this.map.on('click', 'symbols', (e) => {
 			let coordinates = e.features[0].geometry.coordinates.slice();
 			let description = e.features[0].properties.description;
@@ -104,12 +119,10 @@ class CompactGps extends React.Component {
 	}
 
 	componentWillUpdate (nextProps) {
-		if (nextProps.theme === 'carbon') {
-			this.map.setStyle('mapbox://styles/mapbox/dark-v9');
-		} else if (nextProps.theme === 'titanium') {
-			this.map.setStyle('mapbox://styles/haileyr/cjn4x0ynt04jq2qpf5sb21jc5');
-		}
-		if (this.props.theme !== nextProps.theme) {
+		if (this.props.skin !== nextProps.skin) {
+			const style = skinStyles[nextProps.skin] || skinStyles.titanium;
+			this.map.setStyle(style);
+
 			// make sure the map is resized after the container updates
 			setTimeout(this.map.resize.bind(this.map), 0);
 		}
@@ -204,12 +217,24 @@ class CompactGps extends React.Component {
 		}
 	}
 
+	setMapNode = (node) => (this.mapNode = node)
+
 	render () {
-		const style = {
-			position: 'absolute', top: 0, bottom: 0, width: '100%', color: 'black'
-		};
-		return <div style={style} id="map" />;
+		const {className, ...rest} = this.props;
+		return (
+			<div
+				{...rest}
+				ref={this.setMapNode}
+				className={classnames(className, css.map)}
+			/>
+		);
 	}
 }
 
-export default CompactGps;
+const SkinnableMap = AppContextConnect(({userSettings}) => ({
+	skin: userSettings.skin
+}));
+
+const CompactMap = SkinnableMap(CompactGps);
+
+export default CompactMap;

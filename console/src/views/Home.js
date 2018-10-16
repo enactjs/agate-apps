@@ -80,13 +80,13 @@ const Home = kind({
 		className: 'homePanel'
 	},
 
-	render: ({onSelect, skinName, ...rest}) => (
+	render: ({onSelect, ...rest}) => (
 		<Panel {...rest}>
 			<HomeLayout>
 				<topLeft><CompactRadio /></topLeft>
 				<topRight><CompactHvac /></topRight>
 				<bottomLeft><CompactAppList align="center space-evenly" onSelect={onSelect} /></bottomLeft>
-				<bottomRight><CompactGps theme={skinName} /></bottomRight>
+				<bottomRight><CompactGps /></bottomRight>
 			</HomeLayout>
 		</Panel>
 	)
