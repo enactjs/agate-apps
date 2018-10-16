@@ -10,8 +10,7 @@ import Rearrangeable from '@enact/agate/Rearrangeable';
 import CompactRadio from '../components/CompactRadio';
 import CompactHvac from '../components/CompactHVAC';
 import CompactAppList from '../components/CompactAppList';
-import WeatherItem from '../components/WeatherItem';
-import AppStateConnect from '../App/AppContextConnect';
+import CompactWeather from '../components/CompactWeather';
 
 import css from './Home.less';
 
@@ -86,9 +85,7 @@ const Home = kind({
 		<Panel {...rest}>
 			<HomeLayout>
 				<topLeft><CompactRadio /></topLeft>
-				<topCenter>
-					<ConnectedHomeWeather />
-				</topCenter>
+				<topCenter><CompactWeather /></topCenter>
 				<topRight><CompactHvac /></topRight>
 				<bottomLeft><CompactAppList align="center space-evenly" onSelect={onSelect} /></bottomLeft>
 				<bottomRight><div className={css.quadFour}>GPS</div></bottomRight>
@@ -96,25 +93,5 @@ const Home = kind({
 		</Panel>
 	)
 });
-
-
-const HomeWeather = ({cityName, high, description}) => (
-	<div>
-		<Row align=" center">
-			<p>{cityName}</p>
-		</Row>
-		<WeatherItem featured label="Current" high={high} description={description} />
-	</div>
-);
-
-const ConnectedHomeWeather = AppStateConnect(({weather}) => {
-	const weatherObj = {};
-	if (weather.current && weather.current.main) {
-		weatherObj.high = parseInt(weather.current.main.temp);
-		weatherObj.description = weather.current.weather[0].description;
-		weatherObj.cityName = weather.current.name;
-	}
-	return {...weatherObj};
-})(HomeWeather);
 
 export default Home;

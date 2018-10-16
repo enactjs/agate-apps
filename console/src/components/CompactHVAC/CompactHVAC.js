@@ -4,13 +4,14 @@ import kind from '@enact/core/kind';
 import {Row, Cell} from '@enact/ui/Layout';
 import Picker from '@enact/agate/Picker';
 import ToggleButton from '@enact/agate/ToggleButton';
-import {LabeledItemBase} from '@enact/agate/LabeledItem';
+
+import AppStateConnect from '../../App/AppContextConnect';
 
 import css from './CompactHVAC.less';
 
 const temps = ['HI', '74°', '73°', '72°', '71°', '70°', '69°', '68°', '67°', '66°', 'LO'];
 
-const CompactHvac = kind({
+const CompactHvacBase = kind({
 	name: 'CompactHVAC',
 
 	propTypes: {
@@ -28,7 +29,6 @@ const CompactHvac = kind({
 
 	render: ({temp, ...rest}) => (
 		<div {...rest}>
-			<LabeledItemBase className={css.title} label="Mostly sunny">{temp}°</LabeledItemBase>
 			{(temp >= 66 && temp <= 74) && <div>
 				<Row className={css.row} align="center space-around">
 					<Cell component={ToggleButton} size="30%" type="grid" className={css.button}>A/C</Cell>
@@ -57,5 +57,10 @@ const CompactHvac = kind({
 		</div>
 	)
 });
+
+const CompactHvac = AppStateConnect(({weather}) => ({
+	// SUPER Safely fetch the temperature
+	temp: (weather && weather.current && weather.current.main && weather.current.main.temp)
+}))(CompactHvacBase);
 
 export default CompactHvac;
