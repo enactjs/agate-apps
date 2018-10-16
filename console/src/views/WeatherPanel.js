@@ -57,7 +57,7 @@ const Weather = kind({
 					<Cell component={Divider} shrink spacing="small">
 						{currentWeather.cityName} Weather
 					</Cell>
-					<Cell size="30%">
+					<Cell size="30%" style={{width: '100%'}}>
 						<Row className={css.row} align="center space-evenly">
 							<Cell>
 								<WeatherItem featured className={css.weatherItem} label="Now" high={currentWeather.high} description="sunny" />
