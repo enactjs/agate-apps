@@ -28,8 +28,8 @@ const CompactHvac = kind({
 
 	render: ({temp, ...rest}) => (
 		<div {...rest}>
+			<LabeledItemBase className={css.title} label="Mostly sunny">{temp}°</LabeledItemBase>
 			{(temp >= 66 && temp <= 74) && <div>
-				<LabeledItemBase className={css.title} label="Mostly sunny">{temp}°</LabeledItemBase>
 				<Row className={css.row} align="center space-around">
 					<Cell component={ToggleButton} size="30%" type="grid" className={css.button}>A/C</Cell>
 					<Cell component={ToggleButton} size="30%" type="grid" className={css.button}>AUTO</Cell>
