@@ -109,7 +109,7 @@ const HomeWeather = ({cityName, high, description}) => (
 
 const ConnectedHomeWeather = AppStateConnect(({weather}) => {
 	const weatherObj = {};
-	if (weather.current && weather.current.temp) {
+	if (weather.current && weather.current.main) {
 		weatherObj.high = parseInt(weather.current.main.temp);
 		weatherObj.description = weather.current.weather[0].description;
 		weatherObj.cityName = weather.current.name;
