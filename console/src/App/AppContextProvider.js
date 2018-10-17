@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
 import produce from 'immer';
+import appConfig from '../../config';
 
 const Context = React.createContext();
 
 const getWeather = async (latitude, longitude) => {
-	const key = process.env.REACT_APP_WEATHER_KEY; // eslint-disable-line
+	const key = appConfig.weatherApiKey; // eslint-disable-line
 	if (!key) {
-		console.error('Please set environment variable REACT_APP_WEATHER_KEY to your own openweathermap.org API key when you start the app.');
+		console.error('Please set `weatherApiKey` key in your `config.js` file to your own openweathermap.org API key.');
 	}
 
 	const currentUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${key}&units=imperial`;
