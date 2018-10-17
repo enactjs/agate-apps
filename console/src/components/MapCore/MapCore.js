@@ -136,7 +136,7 @@ class MapCoreBase extends React.Component {
 	}
 
 	componentWillUnmount () {
-		this.map.remove();
+		if (this.map) this.map.remove();
 	}
 
 	showPopup (coordinates, description) {

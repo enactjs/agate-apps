@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import produce from 'immer';
 import {mergeDeepRight} from 'ramda';
 import appConfig from '../../config';
+import openSocket from 'socket.io-client';
 
 const Context = React.createContext();
 
@@ -53,6 +54,11 @@ class AppContextProvider extends Component {
 	componentWillMount () {
 		this.setUserSettings(this.state.userId);
 		this.setLocation();
+		const socket = openSocket('http://localhost:3000');
+		socket.on('server event', event => console.log(event));
+		socket.emit('video', {
+			url: 'https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2F9gag%2Fvideos%2F10155906890961840%2F&show_text=0&width=476'
+		});
 	}
 
 	componentWillUpdate (nextProps, nextState) {
