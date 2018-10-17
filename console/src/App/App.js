@@ -1,7 +1,7 @@
 import {forward, handle} from '@enact/core/handle';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
-import {Cell, Column, Row} from '@enact/ui/Layout';
+import {Cell, Column} from '@enact/ui/Layout';
 import compose from 'ramda/src/compose';
 import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
@@ -12,7 +12,6 @@ import React from 'react';
 import {TabbedPanels} from '@enact/agate/Panels';
 
 import Clock from '../components/Clock';
-import SkinButton from '../components/SkinButton';
 import CustomLayout from '../components/CustomLayout';
 import AppList from '../views/AppList';
 import Home from '../views/Home';
@@ -93,44 +92,7 @@ const AppBase = kind({
 							<Cell shrink>
 								<Clock />
 							</Cell>
-							<Row>
-							<Cell
-								component={SkinButton}
-								highlighted={skinName === 'carbon'}
-								joinedPosition="left"
-								shrink
-								skinoption="carbon"
-								selected={skinName === 'carbon'}
-								small
-								onTap={updateSkin}
-							>
-								⭐
-							</Cell>
-							<Cell
-								component={SkinButton}
-								highlighted={skinName === 'titanium'}
-								joinedPosition="center"
-								shrink
-								skinoption="titanium"
-								selected={skinName === 'titanium'}
-								small
-								onTap={updateSkin}
-							>
-								🌟
-							</Cell>
-							<Cell
-								component={SkinButton}
-								highlighted={skinName === 'electro'}
-								joinedPosition="right"
-								shrink
-								skinoption="electro"
-								selected={skinName === 'electro'}
-								small
-								onTap={updateSkin}
-							>
-								⚡
-							</Cell>
-							</Row>
+							<Cell shrink component={Button} type="grid" icon="fullscreen" small onTap={updateSkin} />
 						</Column>
 					</afterTabs>
 					<Home

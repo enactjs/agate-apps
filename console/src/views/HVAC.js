@@ -28,26 +28,24 @@ const Hvac = kind({
 					<Divider>
 						Fan Speed
 					</Divider>
-					<div style={{margin: '0 24px'}}>
-						<SliderButton>
-							{['Off', 'Low', 'Medium', 'High']}
-						</SliderButton>
-					</div>
+					<SliderButton>
+						{['Off', 'Low', 'Medium', 'High']}
+					</SliderButton>
 				</top>
 				<Row className={css.above} align="center space-around">
 					<Cell component={ToggleButton} shrink icon="heatseatleft" type="grid" className={css.button} underline />
 					<Cell component={ToggleButton} shrink type="grid" className={css.button}>A/C</Cell>
 					<Cell component={ToggleButton} shrink icon="heatseatright" type="grid" className={css.button} underline />
 				</Row>
-				<Row className={css.below} align="start space-around">
-					<Picker className={css.picker}>
+				<Row className={css.below} align="center space-around">
+					<Picker orientation="vertical" className={css.picker}>
 						{temps}
 					</Picker>
 					<div className={css.stackedButtons}>
 						<ToggleButton type="grid" className={css.button}>AUTO</ToggleButton>
 						<ToggleButton type="grid" icon="aircirculation" className={css.button} />
 					</div>
-					<Picker className={css.picker}>
+					<Picker orientation="vertical" className={css.picker}>
 						{temps}
 					</Picker>
 				</Row>
