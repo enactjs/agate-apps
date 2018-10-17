@@ -1,28 +1,67 @@
 import AgateDecorator from '@enact/agate/AgateDecorator';
-import kind from '@enact/core/kind';
+import Item from '@enact/agate/Item';
+import openSocket from 'socket.io-client';
 import qs from 'query-string';
 import React from 'react';
-
+import Button from '@enact/agate/Button';
 import css from './App.less';
 
 const args = qs.parse(typeof window !== 'undefined' ? window.location.search : '');
 
-const App = kind({
-	name: 'App',
+class App extends React.Component {
+	constructor (props) {
+		super(props);
+		this.state = {
+			url: '',
+			navOpen: false,
+			itemList: [{title: 'lofi music live', url: 'https://www.youtube.com/embed/LsBrT6vbQa8?autoplay=1'}],
+			index: 0
+		};
+	}
 
-	styles: {
-		css,
-		className: 'app'
-	},
+	componentWillMount () {
+		const socket = openSocket('http://localhost:3000');
+		socket.on('video', (item) => {
+			const itemList = this.state.itemList.concat(item);
 
-	render: (props) => {
+			this.setState({
+				itemList
+			});
+		});
+		socket.on('msg', event => console.log(event));
+		socket.emit('msg', 'Copilot data.');
+	}
+
+	onToggle = () => {
+		this.setState({
+			navOpen: !this.state.navOpen
+		});
+	}
+
+	play = (url, index) => () => {
+		this.setState({index});
+	}
+
+	render () {
 		const {url} = args;
 		return (
-			<div {...props}>
-				<iframe src={url} />
+			<div {...this.props} className={css.app}>
+				<nav role="navigation">
+					<div id="menuToggle">
+						<Button icon={this.state.navOpen ? 'closex' : 'list'} onClick={this.onToggle} />
+						<ul id="menu" className={css.list}>
+							{
+								this.state.itemList.map((item, index) => {
+									return <Item style={{color:'white'}} onClick={this.play(item.url, index)}>{item.title}</Item>;
+								})
+							}
+						</ul>
+					</div>
+				</nav>
+				<iframe className={css.iframe} src={this.state.itemList[this.state.index].url} allow="autoplay" />
 			</div>
 		);
 	}
-});
+}
 
 export default AgateDecorator(App);

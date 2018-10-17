@@ -22,6 +22,7 @@ import Radio from '../views/Radio';
 import Settings from '../views/Settings';
 import DisplaySettings from '../views/DisplaySettings';
 import Weather from '../views/WeatherPanel';
+import Multimedia from '../views/MultimediaPanel';
 
 import AppContextConnect from './AppContextConnect';
 
@@ -44,7 +45,8 @@ const panelIndexMap = [
 	'settings',
 	'settings/display',
 	'weather',
-	'layoutsample'
+	'layoutsample',
+	'multimedia'
 ];
 // Look up a panel index by name, using the above list as the directory listing.
 const getPanelIndexOf = (panelName) => panelIndexMap.indexOf(panelName);
@@ -125,6 +127,7 @@ const AppBase = kind({
 							<Button type="grid" icon="fullscreen" small onTap={updateSkin} />
 						</bottom>
 					</CustomLayout>
+					<Multimedia />
 				</TabbedPanels>
 				<Popup
 					onClose={onToggleBasicPopup}
