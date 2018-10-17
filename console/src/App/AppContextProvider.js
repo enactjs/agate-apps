@@ -5,7 +5,7 @@ import appConfig from '../../config';
 const Context = React.createContext();
 
 const getWeather = async (latitude, longitude) => {
-	const key = appConfig.weatherApiKey; // eslint-disable-line
+	const key = appConfig.weatherApiKey;
 	if (!key) {
 		console.error('Please set `weatherApiKey` key in your `config.js` file to your own openweathermap.org API key.');
 	}
