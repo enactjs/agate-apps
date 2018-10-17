@@ -16,14 +16,18 @@ import CustomLayout from '../components/CustomLayout';
 import AppList from '../views/AppList';
 import Home from '../views/Home';
 import HVAC from '../views/HVAC';
+import MapView from '../views/Map';
 import Phone from '../views/Phone';
 import Radio from '../views/Radio';
 import Settings from '../views/Settings';
 import DisplaySettings from '../views/DisplaySettings';
+import Weather from '../views/WeatherPanel';
+
+import AppContextConnect from './AppContextConnect';
 
 import css from './App.less';
 
-import AppContextConnect from './AppContextConnect';
+import AppStateConnect from './AppContextConnect';
 
 add('backspace', 8);
 
@@ -36,8 +40,10 @@ const panelIndexMap = [
 	'hvac',
 	'radio',
 	'applist',
+	'map',
 	'settings',
 	'settings/display',
+	'weather',
 	'layoutsample'
 ];
 // Look up a panel index by name, using the above list as the directory listing.
@@ -101,11 +107,13 @@ const AppBase = kind({
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}
 					/>
+					<MapView />
 					<Settings
 						onSelect={onSelect}
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
 					<DisplaySettings onSelect={onSelect} />
+					<Weather />
 					{/* arrangement={{right: 'left', left: 'bottom'}}  defaultArrangement={{right: 'left', left: 'right'}} */}
 					<CustomLayout onArrange={console.log}>
 						{/* <top>red top content</top> */}
@@ -202,7 +210,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 					onTogglePopup={this.onTogglePopup}
 					onToggleBasicPopup={this.onToggleBasicPopup}
 					onToggleDateTimePopup={this.onToggleDateTimePopup}
-					orientation={(skin === 'titanium') ? 'horizontal' : 'vertical'}
+					orientation={(skin !== 'carbon') ? 'horizontal' : 'vertical'}
 					showPopup={this.state.showPopup}
 					showBasicPopup={this.state.showBasicPopup}
 					showDateTimePopup={this.state.showDateTimePopup}
@@ -215,7 +223,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 });
 
 const AppDecorator = compose(
-	AppContextConnect(({userSettings, updateAppState}) => ({
+	AppStateConnect(({userSettings, updateAppState}) => ({
 		skin: userSettings.skin,
 		colorAccent: userSettings.colorAccent,
 		colorHighlight: userSettings.colorHighlight,
@@ -223,7 +231,7 @@ const AppDecorator = compose(
 			updateAppState((state) => {
 				let newSkin;
 				switch (state.userSettings.skin) {
-					// case 'titanium': newSkin = 'electro'; break;
+					case 'titanium': newSkin = 'electro'; break;
 					case 'carbon': newSkin = 'titanium'; break;
 					default: newSkin = 'carbon';
 				}

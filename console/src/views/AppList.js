@@ -31,7 +31,7 @@ const AppList = kind({
 				<Cell shrink>
 					<Row align="start center">
 						<AppIconCell icon="temperature" data-tabindex={getPanelIndexOf('hvac')} onKeyUp={onTabChange} onClick={onTabChange}>Climate</AppIconCell>
-						<AppIconCell icon="compass">Navigation</AppIconCell>
+						<AppIconCell icon="compass" data-tabindex={getPanelIndexOf('map')} onKeyUp={onTabChange} onClick={onTabChange}>Navigation</AppIconCell>
 						<AppIconCell icon="phone" data-tabindex={getPanelIndexOf('phone')} onKeyUp={onTabChange} onClick={onTabChange}>Phone</AppIconCell>
 					</Row>
 				</Cell>
@@ -47,6 +47,11 @@ const AppList = kind({
 						<AppIconCell icon="repeatdownload">Dashboard</AppIconCell>
 						<AppIconCell icon="gear" data-tabindex={getPanelIndexOf('settings')} onKeyUp={onTabChange} onClick={onTabChange}>Settings</AppIconCell>
 						<AppIconCell icon="closex" onClick={onTogglePopup}>Point of Interest</AppIconCell>
+					</Row>
+				</Cell>
+				<Cell shrink>
+					<Row align="start center">
+						<AppIconCell icon="star" data-tabindex={getPanelIndexOf('weather')} onKeyUp={onTabChange} onClick={onTabChange}>Weather</AppIconCell>
 					</Row>
 				</Cell>
 			</Column>

@@ -1,0 +1,20 @@
+// CompactMap.less
+//
+
+@import "~@enact/agate/styles/mixins.less";
+@import "~@enact/agate/styles/skin.less";
+
+.compactMap {
+	.applySkins({
+		position: absolute;
+		.position(0);
+
+		.tools {
+			position: absolute;
+			top: 0;
+			right: 0;
+			z-index: 10;
+			padding-top: @agate-component-spacing;
+		}
+	});
+}

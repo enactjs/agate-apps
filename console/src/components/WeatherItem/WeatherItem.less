@@ -1,0 +1,25 @@
+@import "../../styles/console-variables.less";
+
+.weatherItem {
+	.applySkins({
+		&.featured {
+			.item {
+				font-size: @weather-featured-item-font-size;
+			}
+
+			.icon {
+				width: @weather-featured-icon-size;
+				height: @weather-featured-icon-size;
+			}
+		}
+
+		.item {
+			font-size: @weather-item-font-size;
+		}
+
+		.icon {
+			width: @weather-icon-size;
+			height: @weather-icon-size;
+		}
+	});
+}
