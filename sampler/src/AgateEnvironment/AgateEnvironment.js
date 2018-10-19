@@ -108,7 +108,8 @@ const StorybookDecorator = (story, config) => {
 			highlight: '#2a48ca'
 		}
 	};
-	const currentSkin = getPropFromURL('skin');
+	const skinFromURL = getPropFromURL('skin');
+	const currentSkin = skinFromURL ? skinFromURL : 'carbon';
 
 	return (
 		<Agate
