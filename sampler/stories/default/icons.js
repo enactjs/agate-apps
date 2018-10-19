@@ -7,6 +7,11 @@ import {icons} from '@enact/agate/Icon';
 
 const decrementIcons = [
 	'minus',
+	'arrowlargedown',
+	'arrowlargeleft',
+	'arrowsmalldown',
+	'arrowsmallleft',
+	'arrowhookright',
 	'backward',
 	'skipbackward',
 	'pausebackward',
@@ -19,6 +24,11 @@ const decrementIcons = [
 
 const incrementIcons = [
 	'plus',
+	'arrowlargeup',
+	'arrowlargeright',
+	'arrowsmallup',
+	'arrowsmallright',
+	'arrowhookleft',
 	'forward',
 	'skipforward',
 	'pauseforward',
