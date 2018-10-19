@@ -210,7 +210,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 					onTogglePopup={this.onTogglePopup}
 					onToggleBasicPopup={this.onToggleBasicPopup}
 					onToggleDateTimePopup={this.onToggleDateTimePopup}
-					orientation={(skin === 'titanium') ? 'horizontal' : 'vertical'}
+					orientation={(skin !== 'carbon') ? 'horizontal' : 'vertical'}
 					showPopup={this.state.showPopup}
 					showBasicPopup={this.state.showBasicPopup}
 					showDateTimePopup={this.state.showDateTimePopup}
@@ -221,7 +221,6 @@ const AppState = hoc((configHoc, Wrapped) => {
 		}
 	};
 });
-
 
 const AppDecorator = compose(
 	AppStateConnect(({userSettings, updateAppState}) => ({
