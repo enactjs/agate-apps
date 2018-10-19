@@ -21,9 +21,8 @@ class App extends React.Component {
 
 	componentWillMount () {
 		const socket = openSocket('http://localhost:3000');
-		socket.on('video', (item) => {
+		socket.on('VIDEO_ADD_COPILOT', (item) => {
 			const itemList = this.state.itemList.concat(item);
-
 			this.setState({
 				itemList
 			});
