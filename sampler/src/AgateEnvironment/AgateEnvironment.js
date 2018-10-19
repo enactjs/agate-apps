@@ -3,6 +3,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {color} from '@storybook/addon-knobs';
 import {Column, Cell} from '@enact/ui/Layout';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Divider from '@enact/agate/Divider';
@@ -77,13 +78,17 @@ const getPropFromURL = (propName, fallbackValue) => {
 
 		if (locationParams.indexOf('&', keyIndex) > -1 ) {
 			const valueIndex = locationParams.indexOf('&', keyIndex);
-			return locationParams.substring(keyIndex + 1, valueIndex);
+			return decodeURIComponent(locationParams.substring(keyIndex + 1, valueIndex));
 		} else {
-			return locationParams.substring(keyIndex + 1, locationParams.length);
+			return decodeURIComponent(locationParams.substring(keyIndex + 1, locationParams.length));
 		}
 	}
 
 	return fallbackValue;
+};
+
+const memory = {
+	skin: null
 };
 
 const StorybookDecorator = (story, config) => {
@@ -94,12 +99,34 @@ const StorybookDecorator = (story, config) => {
 		},
 		groupId: globalGroup
 	};
+	const defaultColors = {
+		carbon: {
+			accent: '#8fd43a',
+			highlight: '#6abe0b'
+		},
+		electro: {
+			accent: '#0359f0',
+			highlight: '#ff8100'
+		},
+		titanium: {
+			accent: '#a6a6a6',
+			highlight: '#2a48ca'
+		}
+	};
+	const skinFromURL = getPropFromURL('skin');
+	const currentSkin = skinFromURL ? skinFromURL : 'carbon';
+	const newSkin = (memory.skin !== currentSkin);
+	memory.skin = currentSkin;  // Remember the skin for the next time we load.
+	const accentFromURL = getPropFromURL('accent');
+	const highlightFromURL = getPropFromURL('highlight');
 
 	return (
 		<Agate
 			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
-			skin={select('skin', skins, Config, getPropFromURL('skin'))}
+			skin={select('skin', skins, Config, currentSkin)}
+			accent={color('accent', (!newSkin && accentFromURL ? accentFromURL : defaultColors[currentSkin].accent), Config.groupId)}
+			highlight={color('highlight', (!newSkin && highlightFromURL ? highlightFromURL : defaultColors[currentSkin].highlight), Config.groupId)}
 		>
 			{sample}
 		</Agate>
