@@ -12,8 +12,8 @@ const getWeather = async (latitude, longitude) => {
 		console.error('Please set `weatherApiKey` key in your `config.js` file to your own openweathermap.org API key.');
 	}
 
-	const currentUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${key}&units=imperial`;
-	const threeHourUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${key}&units=imperial`;
+	const currentUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&APPID=${key}&units=imperial`;
+	const threeHourUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&APPID=${key}&units=imperial`;
 
 	const response = await window.fetch(currentUrl);
 	const json = await response.json();
