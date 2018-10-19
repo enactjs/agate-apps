@@ -3,6 +3,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {color} from '@storybook/addon-knobs';
 import {Column, Cell} from '@enact/ui/Layout';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Divider from '@enact/agate/Divider';
@@ -93,12 +94,29 @@ const StorybookDecorator = (story, config) => {
 		},
 		groupId: globalGroup
 	};
+	const defaultColors = {
+		carbon: {
+			accent: '#8fd43a',
+			highlight: '#6abe0b'
+		},
+		electro: {
+			accent: '#0359f0',
+			highlight: '#ff8100'
+		},
+		titanium: {
+			accent: '#a6a6a6',
+			highlight: '#2a48ca'
+		}
+	};
+	const currentSkin = getPropFromURL('skin');
 
 	return (
 		<Agate
 			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
-			skin={select('skin', skins, Config, getPropFromURL('skin'))}
+			skin={select('skin', skins, Config, currentSkin)}
+			accent={color('accent', defaultColors[currentSkin].accent, Config.groupId)}
+			highlight={color('highlight', defaultColors[currentSkin].highlight, Config.groupId)}
 		>
 			{sample}
 		</Agate>
