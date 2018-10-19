@@ -63,6 +63,7 @@ const AgateFullscreen = AgateDecorator({overlay: false}, FullscreenBase);
 
 const skins = {
 	'Carbon': 'carbon',
+	'Electro': 'electro',
 	'Titanium': 'titanium'
 };
 
@@ -77,13 +78,17 @@ const getPropFromURL = (propName, fallbackValue) => {
 
 		if (locationParams.indexOf('&', keyIndex) > -1 ) {
 			const valueIndex = locationParams.indexOf('&', keyIndex);
-			return locationParams.substring(keyIndex + 1, valueIndex);
+			return decodeURIComponent(locationParams.substring(keyIndex + 1, valueIndex));
 		} else {
-			return locationParams.substring(keyIndex + 1, locationParams.length);
+			return decodeURIComponent(locationParams.substring(keyIndex + 1, locationParams.length));
 		}
 	}
 
 	return fallbackValue;
+};
+
+const memory = {
+	skin: null
 };
 
 const StorybookDecorator = (story, config) => {
@@ -110,14 +115,18 @@ const StorybookDecorator = (story, config) => {
 	};
 	const skinFromURL = getPropFromURL('skin');
 	const currentSkin = skinFromURL ? skinFromURL : 'carbon';
+	const newSkin = (memory.skin !== currentSkin);
+	memory.skin = currentSkin;  // Remember the skin for the next time we load.
+	const accentFromURL = getPropFromURL('accent');
+	const highlightFromURL = getPropFromURL('highlight');
 
 	return (
 		<Agate
 			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
 			skin={select('skin', skins, Config, currentSkin)}
-			accent={color('accent', defaultColors[currentSkin].accent, Config.groupId)}
-			highlight={color('highlight', defaultColors[currentSkin].highlight, Config.groupId)}
+			accent={color('accent', (!newSkin && accentFromURL ? accentFromURL : defaultColors[currentSkin].accent), Config.groupId)}
+			highlight={color('highlight', (!newSkin && highlightFromURL ? highlightFromURL : defaultColors[currentSkin].highlight), Config.groupId)}
 		>
 			{sample}
 		</Agate>
