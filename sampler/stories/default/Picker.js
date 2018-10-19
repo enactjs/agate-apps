@@ -14,10 +14,12 @@ storiesOf('Agate', module)
 		withInfo({
 			text: 'Basic usage of Item'
 		})(() => (
-			<Picker
-				onChange={action('onChange')}
-			>
-				{['LO', '16\xB0', '17\xB0', '18\xB0', '19\xB0', 'HI']}
-			</Picker>
+			<div style={{padding: '0 20%'}}>
+				<Picker
+					onChange={action('onChange')}
+				>
+					{['LO', '16\xB0', '17\xB0', '18\xB0', '19\xB0', 'HI']}
+				</Picker>
+			</div>
 		))
 	);

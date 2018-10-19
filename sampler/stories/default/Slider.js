@@ -4,7 +4,7 @@ import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 import {withInfo} from '@storybook/addon-info';
 
-import {boolean} from '../../src/enact-knobs';
+import {boolean, number, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
 Slider.displayName = 'Slider';
@@ -17,8 +17,17 @@ storiesOf('Agate', module)
 			text: 'The basic Slider'
 		})(() => (
 			<Slider
-				onChange={action('onChange')}
+				activateOnFocus={boolean('activateOnFocus', Config)}
+				active={boolean('active', Config)}
 				disabled={boolean('disabled', Config)}
+				focused={boolean('focused', Config)}
+				max={number('max', Config)}
+				min={number('min', Config)}
+				onActivate={action('onActivate')}
+				onKeyDown={action('onKeyDown')}
+				onKeyUp={action('onKeyUp')}
+				orientation={select('orientation', ['horizontal', 'vertical'], Config, 'horizontal')}
+				step={number('step', Config)}
 			/>
 		))
 	);

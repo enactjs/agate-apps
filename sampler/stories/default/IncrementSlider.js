@@ -5,7 +5,7 @@ import {action} from '@storybook/addon-actions';
 import {withInfo} from '@storybook/addon-info';
 
 import {decrementIcons, incrementIcons} from './icons';
-import {boolean, select} from '../../src/enact-knobs';
+import {boolean, number, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
 IncrementSlider.displayName = 'IncrementSlider';
@@ -18,10 +18,20 @@ storiesOf('Agate', module)
 			text: 'The basic IncrementSlider'
 		})(() => (
 			<IncrementSlider
-				onChange={action('onChange')}
-				disabled={boolean('disabled', Config)}
+				active={boolean('active', Config)}
 				decrementIcon={select('decrementIcon', decrementIcons, Config)}
 				incrementIcon={select('incrementIcon', incrementIcons, Config)}
+				disabled={boolean('disabled', Config)}
+				focused={boolean('focused', Config)}
+				knobStep={number('knobStep', Config)}
+				max={number('max', Config)}
+				min={number('min', Config)}
+				onActivate={action('onActivate')}
+				onChange={action('onChange')}
+				onDragEnd={action('onDragEnd')}
+				onDragStart={action('onDragStart')}
+				orientation={select('orientation', ['horizontal', 'vertical'], Config, 'horizontal')}
+				step={number('step', Config)}
 			/>
 		))
 	);
