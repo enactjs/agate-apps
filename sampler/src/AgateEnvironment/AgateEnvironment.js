@@ -62,6 +62,7 @@ const AgateFullscreen = AgateDecorator({overlay: false}, FullscreenBase);
 
 const skins = {
 	'Carbon': 'carbon',
+	'Electro': 'electro',
 	'Titanium': 'titanium'
 };
 
