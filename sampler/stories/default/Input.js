@@ -29,6 +29,7 @@ storiesOf('Agate', module)
 				placeholder={text('placeholder', Config, 'Input text here')}
 				small={boolean('small', Config)}
 				type={text('type', Config)}
+				defaultValue=""
 			/>
 		))
 	);
