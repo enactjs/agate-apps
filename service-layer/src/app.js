@@ -1,21 +1,20 @@
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+let db = require('../db');
+let io = require('socket.io')(http);
+let http = require('http').createServer();
 
+db.initDB().then(() => {
+	http.listen(3000, () => {
+		console.log('listening on *:3000');
+	});
 
-app.get('/', function(req, res){
-  res.send('<h1>Hello !! world</h1>');
+	io.on('connection', socket => {
+		console.log('a user connected');
+		socket.on('VIDEO_ADD_CONSOLE', video => {
+			db.saveItems(video).then(res => {
+				console.log(res);
+				io.emit('VIDEO_ADD_COPILOT', video);
+			});
+		});
+	});
 });
 
-io.on('connection', socket => {
-    console.log('a user connected');
-    socket.on('video', url => {
-        console.log('log', url);
-        io.emit('video', url);
-    })
-});
-
-
-http.listen(3000, () => {
-  console.log('listening on *:3000');
-});
