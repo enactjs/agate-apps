@@ -8,7 +8,7 @@ import appConfig from '../../../config';
 import css from './MapCore.less';
 
 if (!appConfig.mapApiKey) {
-	console.error('Please set `mapApiKey` key in your `config.js` file to your own Mapbox API key.');
+	Error('Please set `mapApiKey` key in your `config.js` file to your own Mapbox API key.');
 }
 mapboxgl.accessToken = appConfig.mapApiKey;
 
@@ -77,7 +77,15 @@ const skinStyles = {
 
 class MapCoreBase extends React.Component {
 	static propTypes = {
+		follow: PropTypes.bool, // Should the centering position follow the current location?
+		location: PropTypes.array, // Our actual current location on the world
+		position: PropTypes.array, // The map's centering position
 		skin: PropTypes.string
+	}
+
+	constructor (props) {
+		super(props);
+		this.localinfo = {};  // A copy of queried data for quick comparisons
 	}
 
 	componentDidMount () {
@@ -115,7 +123,7 @@ class MapCoreBase extends React.Component {
 
 			this.showPopup(coordinates, description);
 			this.drawDirection(start, coordinates);
-			this.map.flyTo({center: [(coordinates[0] + start[0]) / 2, (coordinates[1] + start[1]) / 2]});
+			this.centerMap({center: [(coordinates[0] + start[0]) / 2, (coordinates[1] + start[1]) / 2]});
 		});
 	}
 
@@ -127,10 +135,32 @@ class MapCoreBase extends React.Component {
 			// make sure the map is resized after the container updates
 			setTimeout(this.map.resize.bind(this.map), 0);
 		}
+		// if following
+		if (nextProps.follow) {
+			// and the location != new location
+			// OR if the map center is different from the last true center
+			if (
+				nextProps.location[0] !== this.props.location[0] ||
+				nextProps.location[1] !== this.props.location[1] ||
+				this.localinfo.center !== this.map.getCenter()) {
+				// update the map, instantly
+				this.centerMap({center: nextProps.location, instant: true});
+			}
+		} else if (nextProps.position[0] !== this.props.position[0] || nextProps.position[1] !== this.props.position[1]) {
+			// else
+			// and position changes
+			// update map with casual fly
+			this.centerMap({center: nextProps.position});
+		}
 	}
 
 	componentWillUnmount () {
 		this.map.remove();
+	}
+
+	centerMap ({center, instant = false}) {
+		this.map.flyTo({center, maxDuration: (instant ? 1 : this.props.centeringDuration)});
+		this.localinfo.center = this.map.getCenter(); // save a copy in their format for comparison
 	}
 
 	showPopup (coordinates, description) {
@@ -232,9 +262,10 @@ class MapCoreBase extends React.Component {
 	}
 }
 
-const SkinnableMap = AppContextConnect(({userSettings}) => ({
+const SkinnableMap = AppContextConnect(({location, userSettings}) => ({
 	// We should import the app-level variable for our current location then feed that in as the "start"
-	skin: userSettings.skin
+	skin: userSettings.skin,
+	location: [location.longitude, location.latitude]
 }));
 
 const MapCore = SkinnableMap(MapCoreBase);
