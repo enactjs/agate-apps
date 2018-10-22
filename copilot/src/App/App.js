@@ -51,7 +51,7 @@ class App extends React.Component {
 						<ul id="menu" className={css.list}>
 							{
 								this.state.itemList.map((item, index) => {
-									return <Item style={{color:'white'}} onClick={this.play(item.url, index)}>{item.title}</Item>;
+									return <Item style={{color:'white'}} key={index} onClick={this.play(item.url, index)}>{item.title}</Item>;
 								})
 							}
 						</ul>

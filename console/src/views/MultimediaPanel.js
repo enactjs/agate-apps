@@ -23,8 +23,9 @@ class Multimedia extends React.Component {
 			<Row className="enact-fit" align=" center">
 				<Cell>
 					{
-						this.videos.map(video => {
+						this.videos.map((video, index) => {
 							return <Item
+								key={index}
 								onClick={this.onVideoSelect({
 									type: 'youtube',
 									title: video.snippet.title,
