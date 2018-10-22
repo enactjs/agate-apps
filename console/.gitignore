@@ -13,3 +13,7 @@ dist
 # misc
 .DS_Store
 npm-debug.log
+
+# possibly private customization files
+.env
+config.js

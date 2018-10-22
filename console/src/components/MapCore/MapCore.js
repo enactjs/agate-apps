@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
 import classnames from 'classnames';
 import AppContextConnect from '../../App/AppContextConnect';
+import appConfig from '../../../config';
 
 import css from './MapCore.less';
 
-if (!process.env.REACT_APP_MAPBOX) { // eslint-disable-line
-	console.error('Please set environment variable REACT_APP_MAPBOX to your own Mapbox API key when you start the app.');
+if (!appConfig.mapApiKey) {
+	console.error('Please set `mapApiKey` key in your `config.js` file to your own Mapbox API key.');
 }
-mapboxgl.accessToken = process.env.REACT_APP_MAPBOX; // eslint-disable-line
+mapboxgl.accessToken = appConfig.mapApiKey;
 
 const getRoute = async (start, end) => {
 	const response = await window.fetch('https://api.mapbox.com/directions/v5/mapbox/driving/' + start[0] + ',' + start[1] + ';' + end[0] + ',' + end[1] + '?geometries=geojson&access_token=' + mapboxgl.accessToken);
