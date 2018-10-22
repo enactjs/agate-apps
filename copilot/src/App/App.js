@@ -23,8 +23,8 @@ class App extends React.Component {
 		const socket = openSocket('http://localhost:3000');
 		socket.on('VIDEO_ADD_COPILOT', (item) => {
 			const itemList = this.state.itemList.concat(item);
-			this.setState({
-				itemList
+			this.setState(() => {
+				return {itemList};
 			});
 		});
 		socket.on('msg', event => console.log(event));
@@ -32,8 +32,8 @@ class App extends React.Component {
 	}
 
 	onToggle = () => {
-		this.setState({
-			navOpen: !this.state.navOpen
+		this.setState(({navOpen}) => {
+			return {navOpen: !navOpen};
 		});
 	}
 
