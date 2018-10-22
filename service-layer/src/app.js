@@ -1,6 +1,6 @@
 let db = require('../db');
-let io = require('socket.io')(http);
 let http = require('http').createServer();
+let io = require('socket.io')(http);
 
 db.initDB().then(() => {
 	http.listen(3000, () => {
