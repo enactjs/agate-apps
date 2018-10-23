@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import produce from 'immer';
+import {mergeDeepRight} from 'ramda';
 import appConfig from '../../config';
 
 const Context = React.createContext();
@@ -71,7 +72,10 @@ class AppContextProvider extends Component {
 			window.localStorage.setItem(`user${userId}`, JSON.stringify({...this.state.userSettings}));
 		}
 
-		return JSON.parse(window.localStorage.getItem(`user${userId}`));
+		const userStorage = JSON.parse(window.localStorage.getItem(`user${userId}`));
+
+		// Apply a consistent (predictable) set of object keys for consumers, merging in new keys since their last visit
+		return mergeDeepRight(this.state.userSettings, userStorage);
 	}
 
 	saveUserSettings = (userId, userSettings, prevUserSettings) => {
