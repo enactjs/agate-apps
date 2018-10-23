@@ -34,9 +34,11 @@ class AppContextProvider extends Component {
 			userId: 1,
 			userSettings: {
 				arrangements: {
+					arrangeable: false,
 					home: {},
 					hvac: {},
-					phone: {}
+					phone: {},
+					radio: {}
 				},
 				colorAccent: '#cccccc',
 				colorHighlight: '#66aabb',

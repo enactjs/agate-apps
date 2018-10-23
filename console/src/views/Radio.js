@@ -11,7 +11,9 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import PresetItem from '../components/PresetItem';
-import CustomLayout from '../components/CustomLayout';
+import CustomLayout, {SaveLayoutArrangement} from '../components/CustomLayout';
+
+import css from './Radio.less';
 
 const wrapFrequency = (frequency, factor) => {
 	// case 'tune-up':
@@ -29,8 +31,6 @@ const wrapFrequency = (frequency, factor) => {
 	if (newFrequency <= min) return max;
 	return newFrequency;
 };
-
-import css from './Radio.less';
 
 const ResponsiveTuner = ResponsiveBox(({containerShape, children, onUp, onDown, ...rest}) => {
 	const orientation = (containerShape && containerShape.orientation === 'portrait') ? 'vertical' : 'horizontal';
@@ -60,7 +60,6 @@ const RadioBase = kind({
 		onPresetClick: PropTypes.func,
 		onPresetDown: PropTypes.func,
 		onPresetHold: PropTypes.func,
-		// onTune: PropTypes.func,
 		preset: PropTypes.number,
 		presets: PropTypes.array,
 		updatePresets: PropTypes.func
@@ -112,7 +111,7 @@ const RadioBase = kind({
 		// }
 	},
 
-	render: ({band, frequency, onBandToggle, onPresetClick, onPresetDown, onPresetHold, onTune, onTuneUp, onTuneDown, onScanUp, onScanDown, presets, ...rest}) => {
+	render: ({arrangeable, arrangement, onArrange, band, frequency, onBandToggle, onPresetClick, onPresetDown, onPresetHold, onTuneUp, onTuneDown, onScanUp, onScanDown, presets, ...rest}) => {
 		delete rest.changeBand;
 		delete rest.changePreset;
 		delete rest.changeFrequency;
@@ -121,7 +120,7 @@ const RadioBase = kind({
 
 		return (
 			<Panel {...rest}>
-				<CustomLayout>
+				<CustomLayout arrangeable={arrangeable} arrangement={arrangement} onArrange={onArrange}>
 					<topLeft>
 						{/* Tune */}
 						<ResponsiveTuner onUp={onTuneUp} onDown={onTuneDown} className={css.tune}>
@@ -234,6 +233,7 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 		render () {
 			return (
 				<Wrapped
+					{...this.props}
 					changeBand={this.changeBand}
 					changePreset={this.changePreset}
 					changeFrequency={this.changeFrequency}
@@ -248,7 +248,7 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 	};
 });
 
-const Radio = RadioDecorator(RadioBase);
+const Radio = SaveLayoutArrangement('radio')(RadioDecorator(RadioBase));
 
 export default Radio;
 export {

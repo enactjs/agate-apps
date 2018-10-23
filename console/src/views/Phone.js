@@ -120,10 +120,10 @@ const PhoneBase = kind({
 		onSelectDigit: handle(appendValue(ev => ev.value))
 	},
 
-	render: ({arrangement, onArrange, handleInputKeyDown, onContactClick, onChange, onClear, onSelectDigit, onTogglePopup, showPopup, value, ...rest}) => {
+	render: ({arrangeable, arrangement, onArrange, handleInputKeyDown, onContactClick, onChange, onClear, onSelectDigit, onTogglePopup, showPopup, value, ...rest}) => {
 		return (
 			<Panel {...rest}>
-				<CustomLayout arrangement={arrangement} onArrange={onArrange}>
+				<CustomLayout arrangeable={arrangeable} arrangement={arrangement} onArrange={onArrange}>
 					<Column align="center">
 						<Cell shrink className="number-field">
 							<Icon>user</Icon>

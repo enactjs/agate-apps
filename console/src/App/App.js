@@ -15,7 +15,7 @@ import Clock from '../components/Clock';
 import CustomLayout from '../components/CustomLayout';
 import AppList from '../views/AppList';
 import Home from '../views/Home';
-import HVAC from '../views/HVAC';
+import Hvac from '../views/HVAC';
 import MapView from '../views/Map';
 import Phone from '../views/Phone';
 import Radio from '../views/Radio';
@@ -59,6 +59,8 @@ const AppBase = kind({
 		index,
 		onSelect,
 		updateSkin,
+		layoutArrangeableToggle,
+		layoutArrangeable,
 		onTogglePopup,
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
@@ -90,16 +92,19 @@ const AppBase = kind({
 							<Cell shrink>
 								<Clock />
 							</Cell>
-							<Cell shrink component={Button} type="grid" icon="fullscreen" small onTap={updateSkin} />
+							<Cell shrink>
+								<Button type="grid" icon="fullscreen" small onTap={updateSkin} />
+								<Button type="grid" icon="arrowhookright" small onTap={layoutArrangeableToggle} />
+							</Cell>
 						</Column>
 					</afterTabs>
 					<Home
 						onSelect={onSelect}
+						arrangeable={layoutArrangeable}
 					/>
-					<Phone />
-					{/* eslint-disable-next-line */}
-					<HVAC />
-					<Radio />
+					<Phone arrangeable={layoutArrangeable} />
+					<Hvac arrangeable={layoutArrangeable} />
+					<Radio arrangeable={layoutArrangeable} />
 					<AppList
 						onSelect={onSelect}
 						onTogglePopup={onTogglePopup}
@@ -225,6 +230,12 @@ const AppDecorator = compose(
 		skin: userSettings.skin,
 		colorAccent: userSettings.colorAccent,
 		colorHighlight: userSettings.colorHighlight,
+		layoutArrangeable: userSettings.arrangements.arrangeable,
+		layoutArrangeableToggle:() => {
+			updateAppState((state) => {
+				state.userSettings.arrangements.arrangeable = !state.userSettings.arrangements.arrangeable;
+			});
+		},
 		updateSkin:() => {
 			updateAppState((state) => {
 				let newSkin;

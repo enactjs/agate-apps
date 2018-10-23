@@ -33,9 +33,9 @@ const HvacBase = kind({
 		className: 'hvac'
 	},
 
-	render: ({arrangement, onArrange, ...rest}) => (
+	render: ({arrangeable, arrangement, onArrange, ...rest}) => (
 		<Panel {...rest}>
-			<CustomLayout arrangement={arrangement} onArrange={onArrange}>
+			<CustomLayout arrangeable={arrangeable} arrangement={arrangement} onArrange={onArrange}>
 				<top>
 					<Divider>
 						Fan Speed
