@@ -4,6 +4,8 @@ import Droppable, {Draggable} from '@enact/agate/DropManager';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import AppContextConnect from '../../App/AppContextConnect';
+
 import css from './CustomLayout.less';
 
 const allSlotNames = ['bottom', 'bottomLeft', 'bottomRight', 'children', 'top', 'topLeft', 'topRight', 'left', 'right'];
@@ -73,11 +75,23 @@ const CustomLayoutBase = kind({
 	}
 });
 
+const SaveLayoutArrangement = (layoutName) => AppContextConnect(({userSettings, updateAppState}) => ({
+	arrangement: (userSettings.arrangements && {...userSettings.arrangements[layoutName]}),
+	onArrange: ({arrangement}) => {
+		updateAppState((state) => {
+			if (!state.userSettings.arrangements) state.userSettings.arrangements = {};
+			state.userSettings.arrangements[layoutName] = {...arrangement};
+		});
+	}
+}));
+
+
 const CustomLayout = Droppable({arrangingProp: 'arranging', slots: allSlotNames},
 	CustomLayoutBase
 );
 
 export default CustomLayout;
 export {
-	CustomLayout
+	CustomLayout,
+	SaveLayoutArrangement
 };

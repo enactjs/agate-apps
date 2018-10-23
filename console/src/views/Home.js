@@ -5,6 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Droppable, {Draggable} from '@enact/agate/DropManager';
 
+import AppContextConnect from '../App/AppContextConnect';
 import CompactRadio from '../components/CompactRadio';
 import CompactHvac from '../components/CompactHVAC';
 import CompactAppList from '../components/CompactAppList';
@@ -54,10 +55,24 @@ const HomeDefaultLayout = kind({
 	}
 });
 
-// const HomeLayout = Droppable({arrangementProp: 'myLayout', slots: allSlotNames},
-const HomeLayout = Droppable({slots: allSlotNames},
-	HomeDefaultLayout
-);
+const LayoutSetting = AppContextConnect(({userSettings, updateAppState}) => ({
+	arrangement: (userSettings.arrangements ? {...userSettings.arrangements.home} : {}),
+	onArrange: ({arrangement}) => {
+		updateAppState((state) => {
+			if (!state.userSettings.arrangements) state.userSettings.arrangements = {};
+			state.userSettings.arrangements.home = {...arrangement};
+		});
+	}
+}));
+
+
+const HomeLayout =
+	LayoutSetting(
+		// Droppable({arrangementProp: 'myLayout', slots: allSlotNames},
+		Droppable({slots: allSlotNames},
+			HomeDefaultLayout
+		)
+	);
 
 const Home = kind({
 	name: 'Home',

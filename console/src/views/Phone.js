@@ -13,7 +13,7 @@ import {ResponsiveBox} from '@enact/agate/DropManager';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import CustomLayout from '../components/CustomLayout';
+import CustomLayout, {SaveLayoutArrangement} from '../components/CustomLayout';
 import Dialer from '../components/Dialer';
 import CallPopup from '../components/CallPopup';
 import ContactThumbnail from '../components/ContactThumbnail';
@@ -120,10 +120,10 @@ const PhoneBase = kind({
 		onSelectDigit: handle(appendValue(ev => ev.value))
 	},
 
-	render: ({handleInputKeyDown, onContactClick, onChange, onClear, onSelectDigit, onTogglePopup, showPopup, value, ...rest}) => {
+	render: ({arrangement, onArrange, handleInputKeyDown, onContactClick, onChange, onClear, onSelectDigit, onTogglePopup, showPopup, value, ...rest}) => {
 		return (
 			<Panel {...rest}>
-				<CustomLayout>
+				<CustomLayout arrangement={arrangement} onArrange={onArrange}>
 					<Column align="center">
 						<Cell shrink className="number-field">
 							<Icon>user</Icon>
@@ -172,7 +172,9 @@ const PhoneBase = kind({
 const Phone = Toggleable(
 	{prop: 'showPopup', toggle: 'onTogglePopup'},
 	Changeable(
-		PhoneBase
+		SaveLayoutArrangement('phone')(
+			PhoneBase
+		)
 	)
 );
 
