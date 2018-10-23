@@ -1,6 +1,7 @@
 import {forward, handle} from '@enact/core/handle';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
+import ToggleButton from '@enact/agate/ToggleButton';
 import {Cell, Column} from '@enact/ui/Layout';
 import compose from 'ramda/src/compose';
 import hoc from '@enact/core/hoc';
@@ -93,8 +94,8 @@ const AppBase = kind({
 								<Clock />
 							</Cell>
 							<Cell shrink>
-								<Button type="grid" icon="fullscreen" small onTap={updateSkin} />
-								<Button type="grid" icon="arrowhookright" small onTap={layoutArrangeableToggle} />
+								<Button type="grid" icon="series" small onTap={updateSkin} />
+								<ToggleButton defaultSelected={layoutArrangeable} underline type="grid" toggleOnLabel="Finish" toggleOffLabel="Edit" small onToggle={layoutArrangeableToggle} />
 							</Cell>
 						</Column>
 					</afterTabs>
@@ -231,9 +232,9 @@ const AppDecorator = compose(
 		colorAccent: userSettings.colorAccent,
 		colorHighlight: userSettings.colorHighlight,
 		layoutArrangeable: userSettings.arrangements.arrangeable,
-		layoutArrangeableToggle:() => {
+		layoutArrangeableToggle:({selected}) => {
 			updateAppState((state) => {
-				state.userSettings.arrangements.arrangeable = !state.userSettings.arrangements.arrangeable;
+				state.userSettings.arrangements.arrangeable = selected;
 			});
 		},
 		updateSkin:() => {
