@@ -1,6 +1,3 @@
-import {ItemBase} from '@enact/agate/Item';
-import {LabeledItemBase} from '@enact/agate/LabeledItem';
-
 import {forward} from '@enact/core/handle';
 import Spottable from '@enact/spotlight/Spottable';
 import Pure from '@enact/ui/internal/Pure';
@@ -9,6 +6,8 @@ import Touchable from '@enact/ui/Touchable';
 import compose from 'ramda/src/compose';
 import kind from '@enact/core/kind';
 import React from 'react';
+import {ItemBase} from '@enact/agate/Item';
+import {LabeledItemBase} from '@enact/agate/LabeledItem';
 
 import componentCss from './PresetItem.less';
 
@@ -24,10 +23,10 @@ const PresetItemBase = kind({
 
 	handlers: {
 		onClick: (ev, props) => {
-			forward('onClick', {presetIndex: props.preset}, props)
+			forward('onClick', {presetIndex: props.preset}, props);
 		},
 		onMouseDown: (ev, props) => {
-			forward('onMouseDown', {presetIndex: props.preset, ...ev}, props)
+			forward('onMouseDown', {presetIndex: props.preset, ...ev}, props);
 		}
 	},
 
