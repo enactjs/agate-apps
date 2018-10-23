@@ -1,7 +1,6 @@
 import kind from '@enact/core/kind';
 import {Row} from '@enact/ui/Layout';
-import Slottable from '@enact/ui/Slottable';
-import DropManager, {ResponsiveBox} from '@enact/agate/DropManager';
+import Droppable, {Draggable, ResponsiveBox} from '@enact/agate/DropManager';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -9,10 +8,10 @@ import AppIconCell from '../AppIconCell';
 import {getPanelIndexOf} from '../../App';
 
 const DropReadyRow = ({...props}) => {
-	delete props.arranging;
 	return (<Row {...props} />);
 };
-const DropRow = Slottable({slots: ['00', '01']}, DropManager(DropReadyRow));
+const DropRow = Droppable({slots: ['00', '01']}, DropReadyRow);
+const DraggableAppIcon = Draggable(AppIconCell);
 
 const CompactAppList = kind({
 	name: 'CompactAppList',
@@ -31,10 +30,10 @@ const CompactAppList = kind({
 
 	render: ({onTabChange, ...rest}) => (
 		<DropRow align="start space-evenly" {...rest} wrap>
-			<AppIconCell data-slot="00" icon="compass">Navigation</AppIconCell>
-			<AppIconCell data-slot="01" icon="audio" onKeyUp={onTabChange} onClick={onTabChange}>Audio</AppIconCell>
-			<AppIconCell data-slot="02" icon="resumeplay">Multimedia</AppIconCell>
-			<AppIconCell data-slot="03" icon="gear" data-tabindex={getPanelIndexOf('settings')} onKeyUp={onTabChange} onClick={onTabChange}>Settings</AppIconCell>
+			<DraggableAppIcon name="00" icon="compass">Navigation</DraggableAppIcon>
+			<DraggableAppIcon name="01" icon="audio" onKeyUp={onTabChange} onClick={onTabChange}>Audio</DraggableAppIcon>
+			<DraggableAppIcon name="02" icon="resumeplay">Multimedia</DraggableAppIcon>
+			<DraggableAppIcon name="03" icon="gear" data-tabindex={getPanelIndexOf('settings')} onKeyUp={onTabChange} onClick={onTabChange}>Settings</DraggableAppIcon>
 		</DropRow>
 	)
 });

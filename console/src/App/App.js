@@ -23,11 +23,9 @@ import Settings from '../views/Settings';
 import DisplaySettings from '../views/DisplaySettings';
 import Weather from '../views/WeatherPanel';
 
-import AppContextConnect from './AppContextConnect';
+import AppStateConnect from './AppContextConnect';
 
 import css from './App.less';
-
-import AppStateConnect from './AppContextConnect';
 
 add('backspace', 8);
 
