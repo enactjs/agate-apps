@@ -64,12 +64,13 @@ function saveItems (request) {
 }
 
 function getItems (request) {
-	return Item.all();
+	return Item.findAll();
 }
 
-function deleteItem (request) {
-	console.log(request)
-	return Item.destroy({id: request.id});
+function deleteItem (id) {
+	return Item.destroy({
+		where: {id}
+	}).then(() => Item.findAll());
 }
 
 module.exports = {saveItems, getItems, deleteItem, initDB};
