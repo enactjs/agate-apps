@@ -63,4 +63,13 @@ function saveItems (request) {
 	});
 }
 
-module.exports = {saveItems, initDB};
+function getItems (request) {
+	return Item.all();
+}
+
+function deleteItem (request) {
+	console.log(request)
+	return Item.destroy({id: request.id});
+}
+
+module.exports = {saveItems, getItems, deleteItem, initDB};
