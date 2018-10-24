@@ -18,13 +18,11 @@ db.initDB().then(() => {
 	app.get('/items', function (req, res) {
 		db.getItems().then(data => {
 			res.send(data);
-
 		});
 	});
 
-	app.delete('/items', (req, res) => {
-		console.log(req)
-		// db.deleteItem()
+	app.delete('/items/:id', (req, res) => {
+		res.send(db.deleteItem(req.params.id));
 	})
 
 	http.listen(3000, () => {
@@ -36,7 +34,6 @@ db.initDB().then(() => {
 		console.log('a user connected');
 		socket.on('VIDEO_ADD_CONSOLE', video => {
 			db.saveItems(video).then(res => {
-				console.log(res);
 				io.emit('VIDEO_ADD_COPILOT', video);
 			});
 		});
