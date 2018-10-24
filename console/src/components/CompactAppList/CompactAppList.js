@@ -1,17 +1,17 @@
 import kind from '@enact/core/kind';
-import {Cell, Column, Row} from '@enact/ui/Layout';
-import Slottable from '@enact/ui/Slottable';
-import DropManager from '@enact/agate/DropManager';
+import {Row} from '@enact/ui/Layout';
+import Droppable, {Draggable, ResponsiveBox} from '@enact/agate/DropManager';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import AppIconCell from '../AppIconCell';
+import {getPanelIndexOf} from '../../App';
 
 const DropReadyRow = ({...props}) => {
-	delete props.arranging;
 	return (<Row {...props} />);
 };
-const DropRow = Slottable({slots: ['00', '01']}, DropManager(DropReadyRow));
+const DropRow = Droppable({slots: ['00', '01']}, DropReadyRow);
+const DraggableAppIcon = Draggable(AppIconCell);
 
 const CompactAppList = kind({
 	name: 'CompactAppList',
@@ -29,21 +29,22 @@ const CompactAppList = kind({
 	},
 
 	render: ({onTabChange, ...rest}) => (
-		<Column {...rest}>
-			<Cell shrink>
-				<DropRow align="start space-evenly" id="row0">
-					<AppIconCell id="slot01" data-slot="00" icon="compass">Navigation</AppIconCell>
-					<AppIconCell id="slot02" data-slot="01" icon="audio" onKeyUp={onTabChange} onClick={onTabChange}>Audio</AppIconCell>
-				</DropRow>
-			</Cell>
-			<Cell shrink>
-				<DropRow align="start space-evenly" id="row1">
-					<AppIconCell id="slot01" data-slot="00" icon="resumeplay">Multimedia</AppIconCell>
-					<AppIconCell id="slot02" data-slot="01" icon="gear" data-tabindex={5} onKeyUp={onTabChange} onClick={onTabChange}>Settings</AppIconCell>
-				</DropRow>
-			</Cell>
-		</Column>
+		<DropRow align="start space-evenly" {...rest} wrap>
+			<DraggableAppIcon name="00" icon="compass">Navigation</DraggableAppIcon>
+			<DraggableAppIcon name="01" icon="audio" onKeyUp={onTabChange} onClick={onTabChange}>Audio</DraggableAppIcon>
+			<DraggableAppIcon name="02" icon="resumeplay">Multimedia</DraggableAppIcon>
+			<DraggableAppIcon name="03" icon="gear" data-tabindex={getPanelIndexOf('settings')} onKeyUp={onTabChange} onClick={onTabChange}>Settings</DraggableAppIcon>
+		</DropRow>
 	)
 });
 
-export default CompactAppList;
+const ResponsiveCompactAppList = ResponsiveBox(({containerShape, ...rest}) => {
+	let axisAlign = 'center';
+	if (containerShape.edges.left) axisAlign = 'start';
+	if (containerShape.edges.right) axisAlign = 'end';
+	return (
+		<CompactAppList align={axisAlign + ' space-evenly'} {...rest} />
+	);
+});
+
+export default ResponsiveCompactAppList;

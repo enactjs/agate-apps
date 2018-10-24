@@ -1,6 +1,7 @@
 import {forward, handle} from '@enact/core/handle';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
+import ToggleButton from '@enact/agate/ToggleButton';
 import {Cell, Column} from '@enact/ui/Layout';
 import compose from 'ramda/src/compose';
 import hoc from '@enact/core/hoc';
@@ -15,17 +16,37 @@ import Clock from '../components/Clock';
 import CustomLayout from '../components/CustomLayout';
 import AppList from '../views/AppList';
 import Home from '../views/Home';
-import HVAC from '../views/HVAC';
+import Hvac from '../views/HVAC';
+import MapView from '../views/Map';
 import Phone from '../views/Phone';
 import Radio from '../views/Radio';
 import Settings from '../views/Settings';
 import DisplaySettings from '../views/DisplaySettings';
+import Weather from '../views/WeatherPanel';
+
+import AppStateConnect from './AppContextConnect';
 
 import css from './App.less';
 
-import AppContextConnect from './AppContextConnect';
-
 add('backspace', 8);
+
+// Maintain synchronization of this list with the panels included below. This maps names of panels
+// panel indexes so when a new panel is updated, any references to/from other panels don't need to
+// be updated.
+const panelIndexMap = [
+	'home',
+	'phone',
+	'hvac',
+	'radio',
+	'applist',
+	'map',
+	'settings',
+	'settings/display',
+	'weather',
+	'layoutsample'
+];
+// Look up a panel index by name, using the above list as the directory listing.
+const getPanelIndexOf = (panelName) => panelIndexMap.indexOf(panelName);
 
 const AppBase = kind({
 	name: 'App',
@@ -39,6 +60,8 @@ const AppBase = kind({
 		index,
 		onSelect,
 		updateSkin,
+		layoutArrangeableToggle,
+		layoutArrangeable,
 		onTogglePopup,
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
@@ -70,27 +93,31 @@ const AppBase = kind({
 							<Cell shrink>
 								<Clock />
 							</Cell>
-							<Cell shrink component={Button} type="grid" icon="fullscreen" small onTap={updateSkin} />
+							<Cell shrink>
+								<Button type="grid" icon="series" small onTap={updateSkin} />
+								<ToggleButton defaultSelected={layoutArrangeable} underline type="grid" toggleOnLabel="Finish" toggleOffLabel="Edit" small onToggle={layoutArrangeableToggle} />
+							</Cell>
 						</Column>
 					</afterTabs>
 					<Home
 						onSelect={onSelect}
-						skinName={skinName}
+						arrangeable={layoutArrangeable}
 					/>
-					<Phone />
-					{/* eslint-disable-next-line */}
-					<HVAC />
-					<Radio />
+					<Phone arrangeable={layoutArrangeable} />
+					<Hvac arrangeable={layoutArrangeable} />
+					<Radio arrangeable={layoutArrangeable} />
 					<AppList
 						onSelect={onSelect}
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}
 					/>
+					<MapView />
 					<Settings
 						onSelect={onSelect}
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
 					<DisplaySettings onSelect={onSelect} />
+					<Weather />
 					{/* arrangement={{right: 'left', left: 'bottom'}}  defaultArrangement={{right: 'left', left: 'right'}} */}
 					<CustomLayout onArrange={console.log}>
 						{/* <top>red top content</top> */}
@@ -187,7 +214,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 					onTogglePopup={this.onTogglePopup}
 					onToggleBasicPopup={this.onToggleBasicPopup}
 					onToggleDateTimePopup={this.onToggleDateTimePopup}
-					orientation={(skin === 'titanium') ? 'horizontal' : 'vertical'}
+					orientation={(skin !== 'carbon') ? 'horizontal' : 'vertical'}
 					showPopup={this.state.showPopup}
 					showBasicPopup={this.state.showBasicPopup}
 					showDateTimePopup={this.state.showDateTimePopup}
@@ -200,15 +227,21 @@ const AppState = hoc((configHoc, Wrapped) => {
 });
 
 const AppDecorator = compose(
-	AppContextConnect(({userSettings, updateAppState}) => ({
+	AppStateConnect(({userSettings, updateAppState}) => ({
 		skin: userSettings.skin,
 		colorAccent: userSettings.colorAccent,
 		colorHighlight: userSettings.colorHighlight,
+		layoutArrangeable: userSettings.arrangements.arrangeable,
+		layoutArrangeableToggle:({selected}) => {
+			updateAppState((state) => {
+				state.userSettings.arrangements.arrangeable = selected;
+			});
+		},
 		updateSkin:() => {
 			updateAppState((state) => {
 				let newSkin;
 				switch (state.userSettings.skin) {
-					// case 'titanium': newSkin = 'electro'; break;
+					case 'titanium': newSkin = 'electro'; break;
 					case 'carbon': newSkin = 'titanium'; break;
 					default: newSkin = 'carbon';
 				}
@@ -223,3 +256,7 @@ const AppDecorator = compose(
 const App = AppDecorator(AppBase);
 
 export default App;
+export {
+	App,
+	getPanelIndexOf
+};

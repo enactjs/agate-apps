@@ -3,30 +3,28 @@ import kind from '@enact/core/kind';
 import {Row, Column, Cell} from '@enact/ui/Layout';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Slottable from '@enact/ui/Slottable';
-import DropManager, {Draggable} from '@enact/agate/DropManager';
-import Rearrangeable from '@enact/agate/Rearrangeable';
+import Droppable, {Draggable} from '@enact/agate/DropManager';
 
+import AppContextConnect from '../App/AppContextConnect';
 import CompactRadio from '../components/CompactRadio';
 import CompactHvac from '../components/CompactHVAC';
 import CompactAppList from '../components/CompactAppList';
-
-import CompactGps from '../components/CompactGPS';
+import CompactWeather from '../components/CompactWeather';
+import CompactMap from '../components/CompactMap';
 
 import css from './Home.less';
 
-const allSlotNames = ['bottomLeft', 'bottomRight', 'topLeft', 'topRight'];
+const allSlotNames = ['bottomLeft', 'bottomRight', 'topLeft', 'topRight', 'topCenter'];
 
-const DroppableCell = Draggable(Cell);
+const DraggableCell = Draggable(Cell);
 
 const HomeDefaultLayout = kind({
 	name: 'HomeDefaultLayout',
 
 	propTypes: {
-		arrangement: PropTypes.object,
-		arranging: PropTypes.bool,
 		bottomLeft: PropTypes.node,
 		bottomRight: PropTypes.node,
+		topCenter: PropTypes.node,
 		topLeft: PropTypes.node,
 		topRight: PropTypes.node
 	},
@@ -36,23 +34,20 @@ const HomeDefaultLayout = kind({
 		className: 'home'
 	},
 
-	computed: {
-		className: ({arranging, styler}) => styler.append({arranging})
-	},
-
-	render: ({arrangement, bottomLeft, bottomRight, topLeft, topRight, ...rest}) => {
+	render: ({bottomLeft, bottomRight, topLeft, topRight, topCenter, ...rest}) => {
 		return (
 			<Column {...rest}>
 				<Cell size="40%">
 					<Row className={css.row}>
-						<DroppableCell size="30%" className={css.topLeft} arrangement={arrangement} name="topLeft">{topLeft}</DroppableCell>
-						<DroppableCell className={css.topRight} arrangement={arrangement} name="topRight">{topRight}</DroppableCell>
+						<DraggableCell size="30%" className={css.topLeft} containerShape={{edges: {top: true, left: true}, size: {relative: 'small'}}} name="topLeft">{topLeft}</DraggableCell>
+						<DraggableCell className={css.topCenter} name="topCenter">{topCenter}</DraggableCell>
+						<DraggableCell className={css.topRight} containerShape={{edges: {top: true, right: true}, size: {relative: 'medium'}, orientation: 'landscape'}} name="topRight">{topRight}</DraggableCell>
 					</Row>
 				</Cell>
 				<Cell>
 					<Row className={css.row}>
-						<DroppableCell size="30%" className={css.bottomLeft} arrangement={arrangement} name="bottomLeft">{bottomLeft}</DroppableCell>
-						<DroppableCell className={css.bottomRight} arrangement={arrangement} name="bottomRight">{bottomRight}</DroppableCell>
+						<DraggableCell size="30%" className={css.bottomLeft} containerShape={{edges: {bottom: true, left: true}, size: {relative: 'medium'}, orientation: 'portrait'}} name="bottomLeft">{bottomLeft}</DraggableCell>
+						<DraggableCell className={css.bottomRight} containerShape={{edges: {bottom: true, right: true}, size: {relative: 'large'}, orientation: 'landscape'}} name="bottomRight">{bottomRight}</DraggableCell>
 					</Row>
 				</Cell>
 			</Column>
@@ -60,18 +55,30 @@ const HomeDefaultLayout = kind({
 	}
 });
 
-const HomeLayout = DropManager(
-	Slottable({slots: allSlotNames},
-		Rearrangeable({slots: allSlotNames},
+const LayoutSetting = AppContextConnect(({userSettings, updateAppState}) => ({
+	arrangement: (userSettings.arrangements ? {...userSettings.arrangements.home} : {}),
+	onArrange: ({arrangement}) => {
+		updateAppState((state) => {
+			if (!state.userSettings.arrangements) state.userSettings.arrangements = {};
+			state.userSettings.arrangements.home = {...arrangement};
+		});
+	}
+}));
+
+
+const HomeLayout =
+	LayoutSetting(
+		// Droppable({arrangementProp: 'myLayout', slots: allSlotNames},
+		Droppable({slots: allSlotNames},
 			HomeDefaultLayout
 		)
-	)
-);
+	);
 
 const Home = kind({
 	name: 'Home',
 
 	propTypes: {
+		arrangeable: PropTypes.bool,
 		onSelect: PropTypes.func
 	},
 
@@ -80,13 +87,14 @@ const Home = kind({
 		className: 'homePanel'
 	},
 
-	render: ({onSelect, skinName, ...rest}) => (
+	render: ({arrangeable, onSelect, ...rest}) => (
 		<Panel {...rest}>
-			<HomeLayout>
+			<HomeLayout arrangeable={arrangeable}>
 				<topLeft><CompactRadio /></topLeft>
+				<topCenter><CompactWeather /></topCenter>
 				<topRight><CompactHvac /></topRight>
 				<bottomLeft><CompactAppList align="center space-evenly" onSelect={onSelect} /></bottomLeft>
-				<bottomRight><CompactGps theme={skinName} /></bottomRight>
+				<bottomRight><CompactMap onSelect={onSelect} /></bottomRight>
 			</HomeLayout>
 		</Panel>
 	)

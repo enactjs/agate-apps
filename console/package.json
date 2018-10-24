@@ -5,10 +5,11 @@
 	"author": "Dave Freeman <dave.freeman@lge.com>",
 	"main": "src/index.js",
 	"scripts": {
-		"serve": "enact serve",
-		"pack": "enact pack",
-		"pack-p": "enact pack -p",
-		"watch": "enact pack --watch",
+		"prepare-config": "cpy --no-overwrite --rename=config.js config.sample.js .",
+		"serve": "npm run prepare-config && enact serve",
+		"pack": "npm run prepare-config && enact pack",
+		"pack-p": "npm run prepare-config && enact pack -p",
+		"watch": "npm run prepare-config && enact pack --watch",
 		"clean": "enact clean",
 		"lint": "enact lint .",
 		"license": "enact license",
@@ -36,6 +37,7 @@
 		"@enact/i18n": "^2.1.1",
 		"@enact/spotlight": "^2.1.1",
 		"@enact/ui": "^2.1.1",
+		"classnames": "^2.2.6",
 		"immer": "^1.7.2",
 		"mapbox-gl": "^0.49.0",
 		"prop-types": "^15.6.2",
@@ -43,5 +45,8 @@
 		"ramda": "^0.25.0",
 		"react": "^16.4.2",
 		"react-dom": "^16.4.2"
+	},
+	"devDependencies": {
+		"cpy-cli": "^2.0.0"
 	}
 }

@@ -1,0 +1,26 @@
+@import "../../styles/console-variables.less";
+
+.weatherItem {
+	.applySkins({
+		.item {
+			--weather-sun-fill-color: var(--agate-highlight-color);
+			font-size: @weather-item-font-size;
+		}
+
+		.icon {
+			width: @weather-icon-size;
+			height: @weather-icon-size;
+		}
+
+		&.featured {
+			.item {
+				font-size: @weather-featured-item-font-size;
+			}
+
+			.icon {
+				width: @weather-featured-icon-size;
+				height: @weather-featured-icon-size;
+			}
+		}
+	});
+}

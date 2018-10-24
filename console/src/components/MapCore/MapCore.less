@@ -1,0 +1,18 @@
+// MapCore.less
+//
+
+@import "https://api.tiles.mapbox.com/mapbox-gl-js/v0.49.0/mapbox-gl.css";
+@import "~@enact/agate/styles/mixins.less";
+
+.map {
+	&,
+	.mapNode {
+		position: absolute;
+		.position(0);
+	}
+
+	.message {
+		position: absolute;
+		z-index: 100;
+	}
+}
