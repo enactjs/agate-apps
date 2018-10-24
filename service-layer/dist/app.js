@@ -23,9 +23,8 @@ db.initDB().then(function () {
 		});
 	});
 
-	app.delete('/items', function (req, res) {
-		console.log(req);
-		// db.deleteItem()
+	app.delete('/items/:id', function (req, res) {
+		res.send(db.deleteItem(req.params.id));
 	});
 
 	http.listen(3000, function () {
@@ -36,7 +35,6 @@ db.initDB().then(function () {
 		console.log('a user connected');
 		socket.on('VIDEO_ADD_CONSOLE', function (video) {
 			db.saveItems(video).then(function (res) {
-				console.log(res);
 				io.emit('VIDEO_ADD_COPILOT', video);
 			});
 		});

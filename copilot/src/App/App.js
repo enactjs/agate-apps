@@ -8,13 +8,16 @@ import css from './App.less';
 
 const args = qs.parse(typeof window !== 'undefined' ? window.location.search : '');
 
+const getItems = () => window.fetch('http://localhost:3000/items').then(response => {
+	return response.json();
+});
+
 class App extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
 			url: '',
 			navOpen: false,
-			// itemList: [{title: 'lofi music live', url: 'https://www.youtube.com/embed/LsBrT6vbQa8?autoplay=1'}],
 			itemList: [],
 			index: 0
 		};
@@ -32,10 +35,8 @@ class App extends React.Component {
 	}
 
 	componentDidMount () {
-		window.fetch('http://localhost:3000/items').then(response => {
-			return response.json();
-		}).then(itemList => this.setState({itemList}))
-			.catch(err => console.log(err));
+		getItems().then(itemList => this.setState({itemList}))
+			.catch(err => console.error(err));
 	}
 
 	onToggle = () => {
@@ -45,11 +46,10 @@ class App extends React.Component {
 	}
 
 	deleteItem = (id) => () => {
-		window.fetch('http://localhost:3000/items', {method: 'delete', data: {id}}).then(response => {
-			console.log(response)
+		window.fetch(`http://localhost:3000/items/${id}`, {method: 'delete'}).then(response => {
 			return response.json();
-		}).then(res => console.log(res))
-			.catch(err => console.log(err));
+		}).then(() => getItems().then(itemList => this.setState({itemList})))
+			.catch(err => console.error('Request failed', err));
 	}
 
 	play = (url, index) => () => {
@@ -57,7 +57,7 @@ class App extends React.Component {
 	}
 
 	render () {
-		const {url} = args;
+		console.log(this.state.itemList.length)
 		return (
 			<div {...this.props} className={css.app}>
 				<nav role="navigation">
@@ -67,8 +67,8 @@ class App extends React.Component {
 							{
 								this.state.itemList.map((item, index) => {
 									console.log(item);
-									return <div style={{'display': 'inline'}}>
-										<Button small icon={'closex'} onClick={this.deleteItem(item.id)} />
+									return <div key={index} style={{'display': 'inline'}}>
+										<Button small icon={'closex'} id={item.id} onClick={this.deleteItem(item.id)} />
 										<Item
 											style={{color:'white'}}
 											key={index}
@@ -82,7 +82,7 @@ class App extends React.Component {
 						</ul>
 					</div>
 				</nav>
-				{this.state.itemList.length > 1 && <iframe className={css.iframe} src={this.state.itemList[this.state.index].url} allow="autoplay" />}
+				{this.state.itemList.length > 0 && <iframe className={css.iframe} src={this.state.itemList[this.state.index].url} allow="autoplay" />}
 			</div>
 		);
 	}
