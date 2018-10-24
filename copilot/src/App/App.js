@@ -14,7 +14,8 @@ class App extends React.Component {
 		this.state = {
 			url: '',
 			navOpen: false,
-			itemList: [{title: 'lofi music live', url: 'https://www.youtube.com/embed/LsBrT6vbQa8?autoplay=1'}],
+			// itemList: [{title: 'lofi music live', url: 'https://www.youtube.com/embed/LsBrT6vbQa8?autoplay=1'}],
+			itemList: [],
 			index: 0
 		};
 	}
@@ -27,14 +28,28 @@ class App extends React.Component {
 				return {itemList};
 			});
 		});
-		socket.on('msg', event => console.log(event));
-		socket.emit('msg', 'Copilot data.');
+		socket.emit('GET_VIDEOS', 'Copilot data.');
+	}
+
+	componentDidMount () {
+		window.fetch('http://localhost:3000/items').then(response => {
+			return response.json();
+		}).then(itemList => this.setState({itemList}))
+			.catch(err => console.log(err));
 	}
 
 	onToggle = () => {
 		this.setState(({navOpen}) => {
 			return {navOpen: !navOpen};
 		});
+	}
+
+	deleteItem = (id) => () => {
+		window.fetch('http://localhost:3000/items', {method: 'delete', data: {id}}).then(response => {
+			console.log(response)
+			return response.json();
+		}).then(res => console.log(res))
+			.catch(err => console.log(err));
 	}
 
 	play = (url, index) => () => {
@@ -51,13 +66,23 @@ class App extends React.Component {
 						<ul id="menu" className={css.list}>
 							{
 								this.state.itemList.map((item, index) => {
-									return <Item style={{color:'white'}} key={index} onClick={this.play(item.url, index)}>{item.title}</Item>;
+									console.log(item);
+									return <div style={{'display': 'inline'}}>
+										<Button small icon={'closex'} onClick={this.deleteItem(item.id)} />
+										<Item
+											style={{color:'white'}}
+											key={index}
+											onClick={this.play(item.url, index)}
+										>
+											{item.title}
+										</Item>
+									</div>;
 								})
 							}
 						</ul>
 					</div>
 				</nav>
-				<iframe className={css.iframe} src={this.state.itemList[this.state.index].url} allow="autoplay" />
+				{this.state.itemList.length > 1 && <iframe className={css.iframe} src={this.state.itemList[this.state.index].url} allow="autoplay" />}
 			</div>
 		);
 	}
