@@ -22,7 +22,7 @@ import Radio from '../views/Radio';
 import Settings from '../views/Settings';
 import DisplaySettings from '../views/DisplaySettings';
 import Weather from '../views/WeatherPanel';
-import Multimedia from '../views/Multimedia';
+import Multimedia from '../views/MultimediaPanel';
 
 import AppContextConnect from './AppContextConnect';
 
