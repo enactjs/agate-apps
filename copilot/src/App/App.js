@@ -4,13 +4,10 @@ import openSocket from 'socket.io-client';
 import qs from 'query-string';
 import React from 'react';
 import Button from '@enact/agate/Button';
+import SliderButton from '@enact/agate/SliderButton';
 import css from './App.less';
 
 const args = qs.parse(typeof window !== 'undefined' ? window.location.search : '');
-
-const getItems = () => window.fetch('http://localhost:3000/items').then(response => {
-	return response.json();
-});
 
 class App extends React.Component {
 	constructor (props) {
@@ -19,24 +16,30 @@ class App extends React.Component {
 			url: '',
 			navOpen: false,
 			itemList: [],
-			index: 0
+			index: 0,
+			screenId: 1
 		};
 	}
 
 	componentWillMount () {
-		const socket = openSocket('http://localhost:3000');
-		socket.on('VIDEO_ADD_COPILOT', (item) => {
-			const itemList = this.state.itemList.concat(item);
-			this.setState(() => {
-				return {itemList};
-			});
-		});
-		socket.emit('GET_VIDEOS', 'Copilot data.');
+		this.socket = openSocket('http://localhost:3000');
+		this.listenForVideoChange(this.state.screenId);
 	}
 
-	componentDidMount () {
-		getItems().then(itemList => this.setState({itemList}))
-			.catch(err => console.error(err));
+	componentDidUpdate (prevProps, prevState) {
+		if (prevState.screenId !== this.state.screenId) {
+			this.socket.removeAllListeners(`VIDEO_ADD_COPILOT/${prevState.screenId}`);
+			this.listenForVideoChange(this.state.screenId);
+		}
+	}
+
+	listenForVideoChange = (screenId) => {
+		this.socket.on(`VIDEO_ADD_COPILOT/${screenId}`, (item) => {
+			console.log('he')
+			this.setState(() => {
+				return {url: item.url};
+			});
+		});
 	}
 
 	onToggle = () => {
@@ -45,11 +48,10 @@ class App extends React.Component {
 		});
 	}
 
-	deleteItem = (id) => () => {
-		window.fetch(`http://localhost:3000/items/${id}`, {method: 'delete'}).then(response => {
-			return response.json();
-		}).then(() => getItems().then(itemList => this.setState({itemList})))
-			.catch(err => console.error('Request failed', err));
+	switchUser = ({value}) => {
+		this.setState(() => {
+			return {screenId: value + 1};
+		});
 	}
 
 	play = (url, index) => () => {
@@ -57,32 +59,15 @@ class App extends React.Component {
 	}
 
 	render () {
-		console.log(this.state.itemList.length)
 		return (
 			<div {...this.props} className={css.app}>
 				<nav role="navigation">
 					<div id="menuToggle">
 						<Button icon={this.state.navOpen ? 'closex' : 'list'} onClick={this.onToggle} />
-						<ul id="menu" className={css.list}>
-							{
-								this.state.itemList.map((item, index) => {
-									console.log(item);
-									return <div key={index} style={{'display': 'inline'}}>
-										<Button small icon={'closex'} id={item.id} onClick={this.deleteItem(item.id)} />
-										<Item
-											style={{color:'white'}}
-											key={index}
-											onClick={this.play(item.url, index)}
-										>
-											{item.title}
-										</Item>
-									</div>;
-								})
-							}
-						</ul>
+						<SliderButton value={this.state.screenId - 1} onChange={this.switchUser}>{['User 1', 'User 2']}</SliderButton>
 					</div>
 				</nav>
-				{this.state.itemList.length > 0 && <iframe className={css.iframe} src={this.state.itemList[this.state.index].url} allow="autoplay" />}
+				<iframe className={css.iframe} src={this.state.url} allow="autoplay" />
 			</div>
 		);
 	}

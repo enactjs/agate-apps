@@ -1,21 +1,58 @@
 import {Cell, Row} from '@enact/ui/Layout';
 import Item from '@enact/agate/Item';
-// import {stringify} from 'query-string';
 import {Panel} from '@enact/agate/Panels';
 import React from 'react';
 import openSocket from 'socket.io-client';
 import youtubeVideos from './youtubeapi.json';
-// import AppContextConnect from '../App/AppContextConnect';
-const socket = openSocket('http://localhost:3000');
-// socket.on('server event', event => console.log(event));
+import Popup from '@enact/agate/Popup';
+import Button from '@enact/agate/Button';
 
 class Multimedia extends React.Component {
-    videos = [];
-    componentDidMount () {
+	constructor (props) {
+		super(props);
+		this.state = {
+			open: false
+		};
+		this.selectedVideo = {};
+	}
+
+	componentDidMount () {
+		this.socket = openSocket('http://localhost:3000');
 		this.videos = youtubeVideos.items;
-    }
+	}
+
+	videos = []
+
 	onVideoSelect = (video) => () => {
-		socket.emit('VIDEO_ADD_CONSOLE', video);
+		console.log('here');
+		this.socket.emit('SEND_DATA', {...video, route: `VIDEO_ADD_COPILOT/${1}`});
+	}
+
+	selectVideo = (video) => () => {
+		console.log('h')
+		this.selectedVideo = video;
+		this.onVideoSelect(video)();
+	}
+
+	togglePopup = () => {
+		this.setState({
+			open: !this.state.open
+		});
+	}
+
+	setScreen = (screenId) => () => {
+		const video = {
+			type: 'youtube',
+			title: this.selectedVideo.title,
+			url: `https://www.youtube.com/embed/${this.selectedVideo.id}?autoplay=1`,
+			screenId: screenId
+		};
+
+		this.onVideoSelect(video);
+
+
+
+		// this.togglePopup();
 	}
 
 	render () {
@@ -26,11 +63,12 @@ class Multimedia extends React.Component {
 						this.videos.map((video, index) => {
 							return <Item
 								key={index}
-								onClick={this.onVideoSelect({
+								onClick={this.selectVideo({
 									type: 'youtube',
 									title: video.snippet.title,
 									url: `https://www.youtube.com/embed/${video.id}?autoplay=1`
 								})}
+
 							>
 								<img src={video.snippet.thumbnails.default.url} />
 								{video.snippet.title}
@@ -43,14 +81,5 @@ class Multimedia extends React.Component {
 	}
 }
 
-// const ConnectedSettings = AppContextConnect(({userId, updateAppState}) => ({
-// 	userId: userId,
-// 	updateUser: ({value}) => {
-// 		updateAppState((state) => {
-// 			state.userId = value + 1;
-// 		}
-// 		);
-// 	}
-// }))(Multimedia);
 
 export default Multimedia;
