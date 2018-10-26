@@ -1,12 +1,9 @@
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Item from '@enact/agate/Item';
 import openSocket from 'socket.io-client';
-import qs from 'query-string';
 import React from 'react';
 import Button from '@enact/agate/Button';
 import css from './App.less';
-
-const args = qs.parse(typeof window !== 'undefined' ? window.location.search : '');
 
 const getItems = () => window.fetch('http://localhost:3000/items').then(response => {
 	return response.json();
@@ -57,16 +54,17 @@ class App extends React.Component {
 	}
 
 	render () {
-		console.log(this.state.itemList.length)
+		console.log(this.state.navOpen, css)
 		return (
 			<div {...this.props} className={css.app}>
-				<nav role="navigation">
+				<Button
+					icon={this.state.navOpen ? 'closex' : 'list'}
+					onClick={this.onToggle} />
+				<nav role="navigation" className={this.state.navOpen ? css.open : css.close}>
 					<div id="menuToggle">
-						<Button icon={this.state.navOpen ? 'closex' : 'list'} onClick={this.onToggle} />
 						<ul id="menu" className={css.list}>
 							{
 								this.state.itemList.map((item, index) => {
-									console.log(item);
 									return <div key={index} style={{'display': 'inline'}}>
 										<Button small icon={'closex'} id={item.id} onClick={this.deleteItem(item.id)} />
 										<Item

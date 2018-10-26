@@ -3,12 +3,23 @@
 	width: 100%;
 	.list {
 		color: white;
+		padding: 0;
 	}
 	nav {
 		position: absolute;
 		height: 100%;
 		width: 30%;
 		background-color: black;
+		transition: all 0.5s;
+		-webkit-transition: all 0.5s;
+		&.open {
+			-webkit-transform: translate3d(0, 0, 0);
+			transform: translate3d(0, 0, 0);
+		}
+		&.close {
+			-webkit-transform: translate3d(-100%, 0, 0);
+			transform: translate3d(-100%, 0, 0);
+		}
 	}
 	.iframe {
 		border: 0;
