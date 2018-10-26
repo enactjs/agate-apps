@@ -28,7 +28,9 @@ const WeatherItemBase = kind({
 					{label}
 				</Cell>
 				<Cell className={css.item} shrink>
-					<img className={css.icon} src={SunIcon} alt="" />
+					<svg viewBox="0 0 30 30" className={css.icon}>
+						<use href={SunIcon + '#weather-icon'} xlinkHref={SunIcon + '#weather-icon'} />
+					</svg>
 				</Cell>
 				<Cell className={css.item} shrink>
 					{description}

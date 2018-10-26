@@ -1,6 +1,7 @@
 import {forward, handle} from '@enact/core/handle';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
+import ToggleButton from '@enact/agate/ToggleButton';
 import {Cell, Column} from '@enact/ui/Layout';
 import compose from 'ramda/src/compose';
 import hoc from '@enact/core/hoc';
@@ -15,19 +16,18 @@ import Clock from '../components/Clock';
 import CustomLayout from '../components/CustomLayout';
 import AppList from '../views/AppList';
 import Home from '../views/Home';
-import HVAC from '../views/HVAC';
+import Hvac from '../views/HVAC';
 import MapView from '../views/Map';
 import Phone from '../views/Phone';
 import Radio from '../views/Radio';
 import Settings from '../views/Settings';
 import DisplaySettings from '../views/DisplaySettings';
 import Weather from '../views/WeatherPanel';
-
-import AppContextConnect from './AppContextConnect';
-
-import css from './App.less';
+import Dashboard from '../views/Dashboard';
 
 import AppStateConnect from './AppContextConnect';
+
+import css from './App.less';
 
 add('backspace', 8);
 
@@ -44,7 +44,8 @@ const panelIndexMap = [
 	'settings',
 	'settings/display',
 	'weather',
-	'layoutsample'
+	'layoutsample',
+	'dashboard'
 ];
 // Look up a panel index by name, using the above list as the directory listing.
 const getPanelIndexOf = (panelName) => panelIndexMap.indexOf(panelName);
@@ -61,6 +62,8 @@ const AppBase = kind({
 		index,
 		onSelect,
 		updateSkin,
+		layoutArrangeableToggle,
+		layoutArrangeable,
 		onTogglePopup,
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
@@ -92,16 +95,19 @@ const AppBase = kind({
 							<Cell shrink>
 								<Clock />
 							</Cell>
-							<Cell shrink component={Button} type="grid" icon="fullscreen" small onTap={updateSkin} />
+							<Cell shrink>
+								<Button type="grid" icon="series" small onTap={updateSkin} />
+								<ToggleButton defaultSelected={layoutArrangeable} underline type="grid" toggleOnLabel="Finish" toggleOffLabel="Edit" small onToggle={layoutArrangeableToggle} />
+							</Cell>
 						</Column>
 					</afterTabs>
 					<Home
 						onSelect={onSelect}
+						arrangeable={layoutArrangeable}
 					/>
-					<Phone />
-					{/* eslint-disable-next-line */}
-					<HVAC />
-					<Radio />
+					<Phone arrangeable={layoutArrangeable} />
+					<Hvac arrangeable={layoutArrangeable} />
+					<Radio arrangeable={layoutArrangeable} />
 					<AppList
 						onSelect={onSelect}
 						onTogglePopup={onTogglePopup}
@@ -125,6 +131,10 @@ const AppBase = kind({
 							<Button type="grid" icon="fullscreen" small onTap={updateSkin} />
 						</bottom>
 					</CustomLayout>
+					<Dashboard
+						arrangeable={layoutArrangeable}
+						onSelect={onSelect}
+					/>
 				</TabbedPanels>
 				<Popup
 					onClose={onToggleBasicPopup}
@@ -227,6 +237,12 @@ const AppDecorator = compose(
 		skin: userSettings.skin,
 		colorAccent: userSettings.colorAccent,
 		colorHighlight: userSettings.colorHighlight,
+		layoutArrangeable: userSettings.arrangements.arrangeable,
+		layoutArrangeableToggle:({selected}) => {
+			updateAppState((state) => {
+				state.userSettings.arrangements.arrangeable = selected;
+			});
+		},
 		updateSkin:() => {
 			updateAppState((state) => {
 				let newSkin;

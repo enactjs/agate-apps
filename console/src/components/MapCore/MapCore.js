@@ -88,6 +88,12 @@ class MapCoreBase extends React.Component {
 		this.localinfo = {};  // A copy of queried data for quick comparisons
 	}
 
+	componentWillMount () {
+		if (!mapboxgl.accessToken) {
+			this.message = 'MapBox API key is not set. The map cannot be loaded.';
+		}
+	}
+
 	componentDidMount () {
 		const style = skinStyles[this.props.skin] || skinStyles.titanium;
 		const start = [-121.979125, 37.405189];
@@ -253,11 +259,13 @@ class MapCoreBase extends React.Component {
 	render () {
 		const {className, ...rest} = this.props;
 		return (
-			<div
-				{...rest}
-				ref={this.setMapNode}
-				className={classnames(className, css.map)}
-			/>
+			<div {...rest} className={classnames(className, css.map)}>
+				{this.message ? <div className={css.message}>{this.message}</div> : null}
+				<div
+					ref={this.setMapNode}
+					className={css.mapNode}
+				/>
+			</div>
 		);
 	}
 }
