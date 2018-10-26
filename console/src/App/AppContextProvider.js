@@ -35,6 +35,7 @@ class AppContextProvider extends Component {
 			userSettings: {
 				arrangements: {
 					arrangeable: false,
+					dashboard: {},
 					home: {},
 					hvac: {},
 					phone: {},

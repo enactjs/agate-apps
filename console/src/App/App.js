@@ -132,6 +132,7 @@ const AppBase = kind({
 						</bottom>
 					</CustomLayout>
 					<Dashboard
+						arrangeable={layoutArrangeable}
 						onSelect={onSelect}
 					/>
 				</TabbedPanels>
