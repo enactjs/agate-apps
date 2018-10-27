@@ -152,7 +152,7 @@ class MapCoreBase extends React.Component {
 				// update the map, instantly
 				this.centerMap({center: nextProps.location, instant: true});
 			}
-		} else if (nextProps.position[0] !== this.props.position[0] || nextProps.position[1] !== this.props.position[1]) {
+		} else if ((nextProps.position && this.props.position) && (nextProps.position[0] !== this.props.position[0] || nextProps.position[1] !== this.props.position[1])) {
 			// else
 			// and position changes
 			// update map with casual fly
@@ -258,6 +258,7 @@ class MapCoreBase extends React.Component {
 
 	render () {
 		const {className, ...rest} = this.props;
+		delete rest.follow;
 		return (
 			<div {...rest} className={classnames(className, css.map)}>
 				{this.message ? <div className={css.message}>{this.message}</div> : null}

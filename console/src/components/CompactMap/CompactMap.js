@@ -1,6 +1,7 @@
 import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
 import Button from '@enact/agate/Button';
+import ToggleButton from '@enact/agate/ToggleButton';
 import Skinnable from '@enact/agate/Skinnable';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -39,7 +40,7 @@ const CompactMapBase = kind({
 				<nav className={css.tools}>
 					<Button alt="Fullscreen" icon="fullscreen" data-tabindex={getPanelIndexOf('map')} onSelect={onSelect} onKeyUp={onTabChange} onClick={onTabChange} />
 					<Button alt="Recenter" icon="arrowhookleft" onClick={changePosition} />
-					<Button alt="Follow" active={follow} icon="forward" onClick={changeFollow} />
+					<ToggleButton alt="Follow" selected={follow} underline icon="forward" onClick={changeFollow} />
 				</nav>
 				<MapCore follow={follow} position={position} />
 			</div>
@@ -50,7 +51,8 @@ const CompactMapBase = kind({
 const CompactMapBrains = hoc((configHoc, Wrapped) => {
 	const positions = [
 		[-121.979125, 37.405189],
-		[-122.399391029, 37.7908574786]
+		[-122.399391029, 37.7908574786],
+		[-123.399391029, 38.7908574786]
 		// [-120.979125, 39.405189]
 	];
 
@@ -66,7 +68,8 @@ const CompactMapBrains = hoc((configHoc, Wrapped) => {
 
 		changePosition = () => {
 			this.setState(({positionIndex}) => ({
-				positionIndex: positionIndex > 0 ? 0 : 1
+				// go to the next position in the list
+				positionIndex: ((positionIndex + 1) % positions.length)
 			}));
 		}
 
