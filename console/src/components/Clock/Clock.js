@@ -6,10 +6,10 @@ import React from 'react';
 
 import css from './Clock.less';
 
-const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-const zeroPad = (val) => (val < 10 ? '0'+val : val);
+const zeroPad = (val) => (val < 10 ? '0' + val : val);
 
 const ClockBase = kind({
 	name: 'Clock',
@@ -66,7 +66,7 @@ const Tick = hoc((config, Wrapped) => {
 				<Wrapped {...this.props} date={this.state.date} />
 			);
 		}
-	}
+	};
 });
 
 const Clock = Tick(ClockBase);
