@@ -46,7 +46,19 @@ class AppContextProvider extends Component {
 				fontSize: 0,
 				skin: props.defaultSkin || 'carbon'
 			},
-			location: {},
+			location: {
+				lat: 0,
+				lon: 0
+			},
+			navigation: {
+				destination: {
+					lat: 0,
+					lon: 0
+				},
+				distance: 0,
+				eta: 0,
+				navigating: false
+			},
 			weather: {}
 		};
 	}
@@ -99,8 +111,8 @@ class AppContextProvider extends Component {
 		if (window.navigator.geolocation) {
 			this.watchPositionId = window.navigator.geolocation.watchPosition((position) => {
 				this.updateAppState((state) => {
-					state.location.latitude = position.coords.latitude;
-					state.location.longitude = position.coords.longitude;
+					state.location.lat = position.coords.latitude;
+					state.location.lon = position.coords.longitude;
 				});
 				this.setWeather(position.coords.latitude, position.coords.longitude);
 			}, (error) => {
