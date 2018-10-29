@@ -1,16 +1,17 @@
-import {forward, handle} from '@enact/core/handle';
+import {add} from '@enact/core/keymap';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
-import ToggleButton from '@enact/agate/ToggleButton';
 import {Cell, Column} from '@enact/ui/Layout';
 import compose from 'ramda/src/compose';
-import hoc from '@enact/core/hoc';
-import {add} from '@enact/core/keymap';
-import kind from '@enact/core/kind';
-import Popup from '@enact/agate/Popup';
 import DateTimePicker from '@enact/agate/DateTimePicker';
+import {forward, handle} from '@enact/core/handle';
+import hoc from '@enact/core/hoc';
+import kind from '@enact/core/kind';
+import openSocket from 'socket.io-client';
+import Popup from '@enact/agate/Popup';
 import React from 'react';
 import {TabbedPanels} from '@enact/agate/Panels';
+import ToggleButton from '@enact/agate/ToggleButton';
 
 import Clock from '../components/Clock';
 import CustomLayout from '../components/CustomLayout';
@@ -182,6 +183,20 @@ const AppState = hoc((configHoc, Wrapped) => {
 				showDateTimePopup: false,
 				showAppList: false
 			};
+		}
+
+		componentWillMount () {
+			this.socket = openSocket('http://localhost:3000');
+			this.socket.on('REQUEST_VIDEO', () => {
+				this.socket.emit('SEND_DATA', {
+					route: 'PLAY_VIDEO',
+					url: 'https://www.youtube.com/embed/LsBrT6vbQa8?autoplay=1'
+				});
+			});
+		}
+
+		componentWillUnmount () {
+			this.socket.close();
 		}
 
 		onSelect = handle(

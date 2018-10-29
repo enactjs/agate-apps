@@ -2,7 +2,7 @@
 	"name": "copilot",
 	"version": "1.0.0",
 	"description": "A way to send content into a render frame.",
-	"author": "",
+	"author": "Dave Freeman <dave.freeman@lge.com>",
 	"main": "src/index.js",
 	"scripts": {
 		"serve": "enact serve",
@@ -37,6 +37,7 @@
 		"prop-types": "^15.6.2",
 		"query-string": "^6.2.0",
 		"react": "^16.4.2",
-		"react-dom": "^16.4.2"
+		"react-dom": "^16.4.2",
+		"socket.io-client": "^2.1.1"
 	}
 }
