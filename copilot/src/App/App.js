@@ -54,14 +54,11 @@ class App extends React.Component {
 	}
 
 	render () {
-		console.log(this.state.navOpen, css)
 		return (
 			<div {...this.props} className={css.app}>
-				<Button
-					icon={this.state.navOpen ? 'closex' : 'list'}
-					onClick={this.onToggle} />
-				<nav role="navigation" className={this.state.navOpen ? css.open : css.close}>
+				<nav role="navigation">
 					<div id="menuToggle">
+						<Button icon={this.state.navOpen ? 'closex' : 'list'} onClick={this.onToggle} />
 						<ul id="menu" className={css.list}>
 							{
 								this.state.itemList.map((item, index) => {

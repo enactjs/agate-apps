@@ -1,0 +1,24 @@
+{
+  "name": "service-layer",
+  "version": "1.0.0",
+  "description": "Service layer for co-pilot app to talk to console app.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel --presets es2015 -d dist/ src",
+    "start": "npx babel src --out-dir dist/ --watch & nodemon dist/app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "sequelize": "^4.40.0",
+    "socket.io": "^2.1.1",
+    "sqlite3": "^4.0.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "nodemon": "^1.18.4"
+  }
+}
