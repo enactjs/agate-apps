@@ -1,11 +1,26 @@
-import {Cell, Row} from '@enact/ui/Layout';
+import {Cell, Row, Column} from '@enact/ui/Layout';
 import Item from '@enact/agate/Item';
 import {Panel} from '@enact/agate/Panels';
-import React from 'react';
+import {VirtualGridList} from '@enact/ui/VirtualList';
+import GridListImageItem from '@enact/ui/GridListImageItem';
+import ri from '@enact/ui/resolution';
 import openSocket from 'socket.io-client';
+import VideoThumbnail from '../components/VideoThumbnail';
 import youtubeVideos from './youtubeapi.json';
 import Popup from '@enact/agate/Popup';
 import Button from '@enact/agate/Button';
+
+import React from 'react';
+import css from './Multimedia.less';
+
+const renderVideoThumnail = ({onVideoClick}) => ({index, key, ...rest}) => (
+	<VideoThumbnail
+		{...rest}
+		key={'video' + key}
+		video={youtubeVideos.items[index]}
+		onSelect={onVideoClick}
+	/>
+);
 
 class Multimedia extends React.Component {
 	constructor (props) {
@@ -40,7 +55,9 @@ class Multimedia extends React.Component {
 
 	setScreen = (screenId) => () => {
 		const video = {
-			...this.selectedVideo,
+			type: 'youtube',
+			title: this.selectedVideo.snippet.title,
+			url: `https://www.youtube.com/embed/${this.selectedVideo.id}?autoplay=1`,
 			screenId: screenId,
 			route: `VIDEO_ADD_COPILOT/${screenId}`
 		};
@@ -49,40 +66,50 @@ class Multimedia extends React.Component {
 		this.togglePopup();
 	}
 
+	renderItem = ({index, ...rest}) => {
+		return (
+			<GridListImageItem
+				{...rest}
+				caption={this.videos[index].snippet.title}
+				className={css.gridListItem}
+				source={this.videos[index].snippet.thumbnails.medium.url}
+				onClick={this.selectVideo(this.videos[index])}
+			/>
+		);
+	}
+
+
 	render () {
 		return (
 			<Panel>
-				<Row className="enact-fit" align=" center">
+				<Column>
 					<Cell>
-						{
-							this.videos.map((video, index) => {
-								return <Item
-									key={index}
-									onClick={this.selectVideo({
-										type: 'youtube',
-										title: video.snippet.title,
-										url: `https://www.youtube.com/embed/${video.id}?autoplay=1`
-									})}
-
-								>
-									<img src={video.snippet.thumbnails.default.url} />
-									{video.snippet.title}
-								</Item>;
-							})
-						}
+						<Row><Cell >Recommended videos</Cell></Row>
+						<Row align=" center">
+							<Cell shrink>
+								<VirtualGridList
+									dataSize={this.videos.length}
+									itemRenderer={this.renderItem}
+									itemSize={{minWidth: ri.scale(320), minHeight: ri.scale(180)}}
+									className={css.thumbnails}
+									style={{width: '960px'}}
+									spacing={ri.scale(67)}
+								/>
+							</Cell>
+						</Row>
 					</Cell>
-					<Popup
-						open={this.state.open}
-					>
-						<title>
+				</Column>
+				<Popup
+					open={this.state.open}
+				>
+					<title>
 								Select Screen
-						</title>
-						<buttons>
-							<Button onClick={this.setScreen(1)}>Screen 1</Button>
-							<Button onClick={this.setScreen(2)}>Screen 2</Button>
-						</buttons>
-					</Popup>
-				</Row>
+					</title>
+					<buttons>
+						<Button onClick={this.setScreen(1)}>Screen 1</Button>
+						<Button onClick={this.setScreen(2)}>Screen 2</Button>
+					</buttons>
+				</Popup>
 			</Panel>
 		);
 	}
