@@ -55,6 +55,7 @@ class App extends React.Component {
 
 	componentWillUnmount () {
 		this.socket.close();
+		clearTimeout(this.adTimer);
 	}
 
 	hideAdSpace = () => {
@@ -67,7 +68,7 @@ class App extends React.Component {
 
 	showAdSpace = ({adContent, duration}) => {
 		this.setState({adContent, showAd: true});
-		setTimeout(this.hideAdSpace, duration);
+		this.adTimer = setTimeout(this.hideAdSpace, duration);
 	};
 
 	render () {
