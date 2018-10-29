@@ -4,7 +4,6 @@ import openSocket from 'socket.io-client';
 import qs from 'query-string';
 import React from 'react';
 import Button from '@enact/agate/Button';
-import SliderButton from '@enact/agate/SliderButton';
 import css from './App.less';
 import Popup from '@enact/agate/Popup';
 
@@ -14,7 +13,7 @@ class App extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			url: '',
+			urls: '',
 			popupOpen: true,
 			screenId: 1
 		};
@@ -74,6 +73,7 @@ class App extends React.Component {
 						<Button onClick={this.setScreen(2)}>Screen 2</Button>
 					</buttons>
 				</Popup>
+				<Button style={{position: 'absolute'}} icon="plug" onClick={this.onToggle} />
 				<iframe className={css.iframe} src={this.state.url} allow="autoplay" />
 			</div>
 		);

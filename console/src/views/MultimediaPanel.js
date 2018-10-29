@@ -82,28 +82,29 @@ class Multimedia extends React.Component {
 	render () {
 		return (
 			<Panel>
-				<Column>
-					<Cell>
-						<Row><Cell >Recommended videos</Cell></Row>
-						<Row align=" center">
-							<Cell shrink>
-								<VirtualGridList
-									dataSize={this.videos.length}
-									itemRenderer={this.renderItem}
-									itemSize={{minWidth: ri.scale(320), minHeight: ri.scale(180)}}
-									className={css.thumbnails}
-									style={{width: '960px'}}
-									spacing={ri.scale(67)}
-								/>
-							</Cell>
-						</Row>
+				<Column align="center">
+					<Cell shrink>
+						Recommended Videos
+					</Cell>
+					<Cell align="center">
+						<VirtualGridList
+							dataSize={this.videos.length}
+							itemRenderer={this.renderItem}
+							itemSize={{
+								minWidth: ri.scale(320),
+								minHeight: ri.scale(180)
+							}}
+							className={css.thumbnails}
+							style={{width: '960px'}}
+							spacing={ri.scale(67)}
+						/>
 					</Cell>
 				</Column>
 				<Popup
 					open={this.state.open}
 				>
 					<title>
-								Select Screen
+						Select Screen
 					</title>
 					<buttons>
 						<Button onClick={this.setScreen(1)}>Screen 1</Button>
