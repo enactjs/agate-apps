@@ -14,72 +14,78 @@ class Multimedia extends React.Component {
 			open: false
 		};
 		this.selectedVideo = {};
+		this.videos = youtubeVideos.items;
 	}
 
 	componentDidMount () {
 		this.socket = openSocket('http://localhost:3000');
-		this.videos = youtubeVideos.items;
 	}
 
-	videos = []
-
-	onVideoSelect = (video) => () => {
-		console.log('here');
-		this.socket.emit('SEND_DATA', {...video, route: `VIDEO_ADD_COPILOT/${1}`});
+	sendVideoData = (video) => {
+		this.socket.emit('SEND_DATA', video);
 	}
 
 	selectVideo = (video) => () => {
-		console.log('h')
 		this.selectedVideo = video;
-		this.onVideoSelect(video)();
+		this.togglePopup();
 	}
 
 	togglePopup = () => {
-		this.setState({
-			open: !this.state.open
+		this.setState((prevState) => {
+			return {
+				open: !prevState.open
+			};
 		});
 	}
 
 	setScreen = (screenId) => () => {
 		const video = {
-			type: 'youtube',
-			title: this.selectedVideo.title,
-			url: `https://www.youtube.com/embed/${this.selectedVideo.id}?autoplay=1`,
-			screenId: screenId
+			...this.selectedVideo,
+			screenId: screenId,
+			route: `VIDEO_ADD_COPILOT/${screenId}`
 		};
 
-		this.onVideoSelect(video);
-
-
-
-		// this.togglePopup();
+		this.sendVideoData(video);
+		this.togglePopup();
 	}
 
 	render () {
-		return <Panel>
-			<Row className="enact-fit" align=" center">
-				<Cell>
-					{
-						this.videos.map((video, index) => {
-							return <Item
-								key={index}
-								onClick={this.selectVideo({
-									type: 'youtube',
-									title: video.snippet.title,
-									url: `https://www.youtube.com/embed/${video.id}?autoplay=1`
-								})}
+		return (
+			<Panel>
+				<Row className="enact-fit" align=" center">
+					<Cell>
+						{
+							this.videos.map((video, index) => {
+								return <Item
+									key={index}
+									onClick={this.selectVideo({
+										type: 'youtube',
+										title: video.snippet.title,
+										url: `https://www.youtube.com/embed/${video.id}?autoplay=1`
+									})}
 
-							>
-								<img src={video.snippet.thumbnails.default.url} />
-								{video.snippet.title}
-							</Item>;
-						})
-					}
-				</Cell>
-			</Row>
-		</Panel>;
+								>
+									<img src={video.snippet.thumbnails.default.url} />
+									{video.snippet.title}
+								</Item>;
+							})
+						}
+					</Cell>
+					<Popup
+						open={this.state.open}
+					>
+						<title>
+								Select Screen
+						</title>
+						<buttons>
+							<Button onClick={this.setScreen(1)}>Screen 1</Button>
+							<Button onClick={this.setScreen(2)}>Screen 2</Button>
+						</buttons>
+					</Popup>
+				</Row>
+			</Panel>
+		);
 	}
 }
-
 
 export default Multimedia;

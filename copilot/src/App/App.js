@@ -6,6 +6,7 @@ import React from 'react';
 import Button from '@enact/agate/Button';
 import SliderButton from '@enact/agate/SliderButton';
 import css from './App.less';
+import Popup from '@enact/agate/Popup';
 
 const args = qs.parse(typeof window !== 'undefined' ? window.location.search : '');
 
@@ -14,9 +15,7 @@ class App extends React.Component {
 		super(props);
 		this.state = {
 			url: '',
-			navOpen: false,
-			itemList: [],
-			index: 0,
+			popupOpen: true,
 			screenId: 1
 		};
 	}
@@ -35,38 +34,46 @@ class App extends React.Component {
 
 	listenForVideoChange = (screenId) => {
 		this.socket.on(`VIDEO_ADD_COPILOT/${screenId}`, (item) => {
-			console.log('he')
 			this.setState(() => {
-				return {url: item.url};
+				return {
+					url: item.url
+				};
 			});
 		});
 	}
 
 	onToggle = () => {
-		this.setState(({navOpen}) => {
-			return {navOpen: !navOpen};
+		this.setState(({popupOpen}) => {
+			return {popupOpen: !popupOpen};
 		});
 	}
 
-	switchUser = ({value}) => {
-		this.setState(() => {
-			return {screenId: value + 1};
-		});
-	}
 
 	play = (url, index) => () => {
 		this.setState({index});
 	}
 
+	setScreen = (screenId) => () => {
+		this.setState(() => {
+			return {screenId: screenId};
+		});
+		this.onToggle();
+	}
+
 	render () {
 		return (
 			<div {...this.props} className={css.app}>
-				<nav role="navigation">
-					<div id="menuToggle">
-						<Button icon={this.state.navOpen ? 'closex' : 'list'} onClick={this.onToggle} />
-						<SliderButton value={this.state.screenId - 1} onChange={this.switchUser}>{['User 1', 'User 2']}</SliderButton>
-					</div>
-				</nav>
+				<Popup
+					open={this.state.popupOpen}
+				>
+					<title>
+						Select Your Screen Source
+					</title>
+					<buttons>
+						<Button onClick={this.setScreen(1)}>Screen 1</Button>
+						<Button onClick={this.setScreen(2)}>Screen 2</Button>
+					</buttons>
+				</Popup>
 				<iframe className={css.iframe} src={this.state.url} allow="autoplay" />
 			</div>
 		);
