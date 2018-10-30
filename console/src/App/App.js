@@ -14,6 +14,7 @@ import {TabbedPanels} from '@enact/agate/Panels';
 
 import Clock from '../components/Clock';
 import CustomLayout from '../components/CustomLayout';
+import UserSelectionPopup from '../components/UserSelectionPopup';
 import AppList from '../views/AppList';
 import Home from '../views/Home';
 import Hvac from '../views/HVAC';
@@ -67,9 +68,11 @@ const AppBase = kind({
 		onTogglePopup,
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
+		onToggleUserSelectionPopup,
 		showPopup,
 		showBasicPopup,
 		showDateTimePopup,
+		showUserSelectionPopup,
 		skinName,
 		...rest
 	}) => {
@@ -96,6 +99,7 @@ const AppBase = kind({
 								<Clock />
 							</Cell>
 							<Cell shrink>
+								<Button type="grid" icon="user" small onTap={onToggleUserSelectionPopup} />
 								<Button type="grid" icon="series" small onTap={updateSkin} />
 								<ToggleButton defaultSelected={layoutArrangeable} underline type="grid" toggleOnLabel="Finish" toggleOffLabel="Edit" small onToggle={layoutArrangeableToggle} />
 							</Cell>
@@ -136,6 +140,10 @@ const AppBase = kind({
 						onSelect={onSelect}
 					/>
 				</TabbedPanels>
+				<UserSelectionPopup
+					onClose={onToggleUserSelectionPopup}
+					open={showUserSelectionPopup}
+				/>
 				<Popup
 					onClose={onToggleBasicPopup}
 					open={showBasicPopup}
@@ -180,6 +188,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 				showPopup: false,
 				showBasicPopup: false,
 				showDateTimePopup: false,
+				showUserSelectionPopup: false,
 				showAppList: false
 			};
 		}
@@ -191,6 +200,10 @@ const AppState = hoc((configHoc, Wrapped) => {
 				this.setState(state => state.index === index ? null : {index});
 			}
 		).bind(this);
+
+		onToggleUserSelectionPopup = () => {
+			this.setState(({showUserSelectionPopup}) => ({showUserSelectionPopup: !showUserSelectionPopup}));
+		};
 
 		onTogglePopup = () => {
 			this.setState(({showPopup}) => ({showPopup: !showPopup}));
@@ -220,10 +233,12 @@ const AppState = hoc((configHoc, Wrapped) => {
 					onTogglePopup={this.onTogglePopup}
 					onToggleBasicPopup={this.onToggleBasicPopup}
 					onToggleDateTimePopup={this.onToggleDateTimePopup}
+					onToggleUserSelectionPopup={this.onToggleUserSelectionPopup}
 					orientation={(skin !== 'carbon') ? 'horizontal' : 'vertical'}
 					showPopup={this.state.showPopup}
 					showBasicPopup={this.state.showBasicPopup}
 					showDateTimePopup={this.state.showDateTimePopup}
+					showUserSelectionPopup={this.state.showUserSelectionPopup}
 					skin={skin}
 					skinName={skin}
 				/>
