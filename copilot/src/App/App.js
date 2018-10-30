@@ -96,6 +96,8 @@ class App extends React.Component {
 		});
 	}
 
+	// Note for this one we may need to include some logic to actually switch channels.
+	// for example if we're on screen 2, but we want to tune into screen 1 we can just switch.
 	setScreen = (screenId) => () => {
 		this.setState(() => {
 			return {screenId: screenId};
