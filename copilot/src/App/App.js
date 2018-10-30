@@ -23,6 +23,8 @@ const AppBase = kind({
 			<Row {...rest}>
 				<Popup
 					open={popupOpen}
+					closeButton
+					onClose={togglePopup}
 				>
 					<title>
 					Select Your Screen Source
@@ -32,7 +34,6 @@ const AppBase = kind({
 						<Button onClick={setScreen(2)}>Screen 2</Button>
 					</buttons>
 				</Popup>
-				<Button style={{position: 'absolute', zIndex: 99}} icon="plug" onClick={togglePopup} />
 				<Cell
 					className={css.iframe}
 					allow="autoplay"
@@ -42,6 +43,7 @@ const AppBase = kind({
 				{!showAd ? null : <Cell className={css.adSpace} shrink>
 					{adContent}
 				</Cell>}
+				<Button style={{position: 'absolute'}} icon="plug" onClick={togglePopup} />
 			</Row>
 		);
 	}
@@ -112,7 +114,9 @@ class App extends React.Component {
 	};
 
 	render () {
-		const {...props} = this.state;
+		const props = this.state;
+
+		delete props.screenId;
 
 		return (
 			<AppBase {...props} togglePopup={this.onToggle} setScreen={this.setScreen}/>

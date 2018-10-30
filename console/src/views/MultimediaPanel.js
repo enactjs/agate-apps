@@ -89,6 +89,8 @@ class Multimedia extends React.Component {
 				</Column>
 				<Popup
 					open={this.state.open}
+					closeButton
+					onClose={this.togglePopup}
 				>
 					<title>
 						Select Screen
