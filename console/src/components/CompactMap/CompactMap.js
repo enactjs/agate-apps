@@ -18,7 +18,7 @@ const CompactMapBase = kind({
 	propTypes: {
 		changePosition: PropTypes.func,
 		onSelect: PropTypes.func,
-		position: PropTypes.array
+		position: PropTypes.object
 	},
 
 	styles: {
@@ -27,6 +27,12 @@ const CompactMapBase = kind({
 	},
 
 	handlers: {
+		onSetDestination: (ev, {position, setDestination}) => {
+			console.log('setDestination:', position);
+			if (position) {
+				setDestination({destination: position});
+			}
+		},
 		onTabChange: (ev, {onSelect}) => {
 			if ((ev.keyCode === 13 || ev.type === 'click') && ev.currentTarget.dataset.tabindex) {
 				onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
@@ -34,12 +40,14 @@ const CompactMapBase = kind({
 		}
 	},
 
-	render: ({changePosition, changeFollow, follow, onSelect, onTabChange, position, ...rest}) => {
+	render: ({changePosition, changeFollow, follow, onSelect, onTabChange, position, onSetDestination, ...rest}) => {
+		delete rest.setDestination;
 		return (
 			<div {...rest}>
 				<nav className={css.tools}>
 					<Button alt="Fullscreen" icon="fullscreen" data-tabindex={getPanelIndexOf('map')} onSelect={onSelect} onKeyUp={onTabChange} onClick={onTabChange} />
 					<Button alt="Recenter" icon="arrowhookleft" onClick={changePosition} />
+					<Button alt="Navigate Here" icon="play" onClick={onSetDestination} />
 					<ToggleButton alt="Follow" selected={follow} underline icon="forward" onClick={changeFollow} />
 				</nav>
 				<MapCore follow={follow} position={position} />
@@ -50,9 +58,11 @@ const CompactMapBase = kind({
 
 const CompactMapBrains = hoc((configHoc, Wrapped) => {
 	const positions = [
-		[-121.979125, 37.405189],
-		[-122.399391029, 37.7908574786],
-		[-123.399391029, 38.7908574786]
+		// {lat: 37.405189, lon: -121.979125},
+		{lat: 37.788988, lon: -122.401076},
+		{lat: 37.7908574786, lon: -122.399391029},
+		{lat: 37.786116, lon: -122.402140}
+		// {lon: -123.399391029, lat: 38.7908574786}
 		// [-120.979125, 39.405189]
 	];
 

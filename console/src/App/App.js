@@ -75,6 +75,7 @@ const AppBase = kind({
 		onTogglePopup,
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
+		setDestination,
 		showPopup,
 		showBasicPopup,
 		showDateTimePopup,
@@ -83,7 +84,7 @@ const AppBase = kind({
 	}) => {
 		delete rest.accent;
 		delete rest.highlight;
-		delete rest.setDestination;
+		// delete rest.setDestination;
 		delete rest.endNavigation;
 		return (
 			<div>
@@ -113,6 +114,7 @@ const AppBase = kind({
 					</afterTabs>
 					<Home
 						onSelect={onSelect}
+						setDestination={setDestination}
 						arrangeable={layoutArrangeable}
 					/>
 					<Phone arrangeable={layoutArrangeable} />
@@ -123,7 +125,7 @@ const AppBase = kind({
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}
 					/>
-					<MapView />
+					<MapView setDestination={setDestination} />
 					<Settings
 						onSelect={onSelect}
 						onToggleDateTimePopup={onToggleDateTimePopup}

@@ -9,6 +9,7 @@ import compose from 'ramda/src/compose';
 
 // Data Services
 import connect from './connector';
+import {getLatLongFromSim} from './conversion';
 import appConfig from '../../config';
 
 import AppStateConnect from '../App/AppContextConnect';
@@ -20,11 +21,11 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+
+			this.destination = null;
+			this.done = false;
+
 			// this.state = {
-			// 	index: props.defaultIndex || 0,
-			// 	showPopup: false,
-			// 	showBasicPopup: false,
-			// 	showDateTimePopup: false,
 			// 	showAppList: false
 			// };
 
@@ -52,9 +53,10 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					onConnection: () => {
 						console.log('%cConnected to Service Layer', 'color: green');
 						if (this.reconnectLater) this.reconnectLater.stop();
-						this.setState({
-							connected: true
-						});
+						this.props.setConnected(true);
+						// this.setState({
+						// 	connected: true
+						// });
 					},
 					onClose: () => {
 						console.log('%cDisconnected from Service Layer', 'color: red');
@@ -62,9 +64,10 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 						this.initiateAutomaticReconnect();
 
 						// Activate a reconnect button
-						this.setState({
-							connected: false
-						});
+						this.props.setConnected(false);
+						// this.setState({
+						// 	connected: false
+						// });
 					},
 					onError: message => {
 						Error(':( Service Error', message);
@@ -72,16 +75,13 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 						this.initiateAutomaticReconnect();
 
 						// Activate a reconnect button
-						this.setState({
-							connected: false
-						});
+						this.props.setConnected(false);
+						// this.setState({
+						// 	connected: false
+						// });
 					},
+					onPosition: this.onPosition,
 					onRoutingRequest: this.onRoutingRequest
-					// onJoystick: this.onJoystick,
-					// onInfrared: this.onInfrared,
-					// onObstacle: this.onObstacle,
-					// onUltrasound: this.onUltrasound,
-					// onWheelsCmd: this.onWheelsCmd
 				});
 				// this.debugReadout = setInterval(this.updateDebugReadout, this.debugReadoutInterval);
 			}
@@ -95,33 +95,43 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 		reconnect = () => {
 			console.warn('%cAttempting to reconnect with the service layer at:', 'color: orange', appConfig.servicesLayerHost);
-			this.connection.ros.connect('ws://' + appConfig.servicesLayerHost);
+			this.connection.reconnect();
 		}
 
 		//
 		// Topic Handling Methods
 		//
 
+		onPosition = (message) => {
+			console.log('%conPosition', 'color: orange', message.pose);
+			const destination = this.destination;
+			const {x, y} = message.pose.position;
+			const location = getLatLongFromSim(x, y);
+
+			location.orientation = Number(message.pose.heading.toFixed(4));
+			// console.log('%conPosition', 'color: orange', location);
+
+			if (!this.done && destination) {
+				let vx = message.pose.linear_velocity.x;
+				let vy = message.pose.linear_velocity.y;
+				if (Math.sqrt((x - destination.x) * (x - destination.x) + (y - destination.y) * (y - destination.y)) < 5 &&
+					Math.sqrt(vx * vx + vy * vy) < 0.1) {
+
+					this.done = true;
+					console.log('Destination Reached:', location, 'Automatic driving mode now disabled.');
+				}
+			}
+			this.props.setLocation({location});
+		}
+
+		setDestination = ({destination}) => {
+			this.props.requestDestination({destination, navigating: true});
+			console.log('this.props.location:', this.props.location, 'destination', destination);
+			this.connection.send('routingRequest', [this.props.location, destination]);
+		}
+
 		onRoutingRequest = (message) => {
-			console.log('%cSaw "%s" with %d\% certanty.', 'color: orange', message.label, parseInt(message.score * 100));
-			// if (this.jobDetected) {
-			// 	this.jobDetected.stop();
-			// }
-
-			const [label] = message.label.split(','); // Just use the first tagged thing in the onscreen message, for simplicity
-
-			const state = {
-				active: true,
-				label,
-				activeImageSrc: this.state.imageSrc,
-				...this.visionIntepretation(message.label)
-			};
-			this.setState(state);
-
-			// this.jobDetected = new Job(() => {
-			// 	this.setState({active: false});
-			// }, this.props.activeTimeout);
-			// this.jobDetected.start();
+			console.log('%conRoutingRequest:', 'color: orange', message);
 		}
 
 
@@ -131,11 +141,18 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 		render () {
 			const {...rest} = this.props;
+			delete rest.setLocation;
+			delete rest.setConnected;
+			delete rest.requestDestination;
+			delete rest.location;
+			delete rest.destination;
 			// delete rest.setTickle;
 
 			return (
 				<Wrapped
 					{...rest}
+					setDestination={this.setDestination}
+					// location={this.state.location}
 					// destination={this.state.destination}
 					// navigating={false}
 				/>
@@ -145,7 +162,8 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 });
 
 const ServiceLayer = compose(
-	AppStateConnect(({destination: destinationProp, updateAppState}) => ({
+	AppStateConnect(({destination: destinationProp, location: locationProp, updateAppState}) => ({
+		location: locationProp,
 		destination: destinationProp,
 		// tickleCount: tickleCountProp,
 		// setTickle: ({tickleCount}) => {
@@ -153,7 +171,18 @@ const ServiceLayer = compose(
 		// 		state.tickleCount = tickleCount;
 		// 	});
 		// },
-		setDestination: ({destination, navigating}) => {
+		setConnected: (connected) => {
+			updateAppState((state) => {
+				state.connections.serviceLayer = connected;
+			});
+		},
+		setLocation: ({location}) => {
+			updateAppState((state) => {
+				// console.log('Setting location app state:', location);
+				state.location = location;
+			});
+		},
+		requestDestination: ({destination, navigating}) => {
 			updateAppState((state) => {
 				state.navigation.destination = destination;
 				if (navigating != null) {

@@ -1,14 +1,21 @@
 /* eslint no-console: off */
 import ROSLIB from 'roslib';
 import {cap} from '@enact/core/util';
+import {getSimFromLatLong} from './conversion';
 
 function noop () {}
 
 const subscribedTopics = {
-	localization: {
+	position: {
 		name: '/apollo/localization/pose',
+		throttle_rate: 5000, // eslint-disable-line camelcase
 		messageType: 'pb_msgs/LocalizationEstimate'
 	},
+
+	// location: {
+	// 	name: '/apollo/sensor/gnss/best_pose'
+	// 	// messageType: 'pb_msgs/LocalizationEstimate'
+	// },
 
 	routingRequest: {
 		name: '/apollo/routing_request',
@@ -16,43 +23,15 @@ const subscribedTopics = {
 		messageType: 'pb_msgs/RoutingRequest'
 	}
 
-
 	// detected: {
 	// 	name: '/object_classifier/output',
 	// 	messageType: 'duckietown_msgs/ClassifiedObject'
 	// },
-	// detectedAll: {
-	// 	name: '/object_classifier/output_all',
-	// 	messageType: 'duckietown_msgs/ClassifiedObject'
-	// },
-	// joystick: {
-	// 	name: '/joy',
-	// 	messageType: 'sensor_msgs/Joy'
-	// },
-	// wheelsCmd: {
-	// 	name: '/wheels_cmd',
-	// 	messageType: 'duckietown_msgs/WheelsCmdStamped'
-	// },
-	// carCmd: {
-	// 	name: '/sensor/car_cmd',
-	// 	messageType: 'duckietown_msgs/Twist2DStamped'
-	// },
-	// ultrasound: {
-	// 	name: '/sensor/ultrasound',
-	// 	messageType: 'sensor_msgs/Range'
-	// },
-	// infrared: {
-	// 	name: '/sensor/infrared',
-	// 	messageType: 'sensor_msgs/Range'
-	// },
-	// obstacle: {
-	// 	name: '/obstacle',
-	// 	messageType: 'duckietown_msgs/BoolStamped'
-	// }
 };
 
 function connect ({url, onConnection, onError, onClose, ...topics} = {}) {
 	if (!url) throw new Error('roslib url required for usage.');
+	const self = {};
 
 	const ros = new ROSLIB.Ros({url});
 
@@ -73,9 +52,61 @@ function connect ({url, onConnection, onError, onClose, ...topics} = {}) {
 		const handlerName = ('on' + cap(topicTitle));
 		// console.log('Setting up:', handlerName, 'for', topicTitle, 'with', subscribedTopics[topicTitle]);
 		topicHandle.subscribe(topics[handlerName] || noop);
+		self[topicTitle] = topicHandle;
 	}
 
-	return {ros};
+	//
+	// Methods
+	//
+
+	self.reconnect = () => {
+		ros.connect(url);
+	};
+
+	self.send = (topic, message) => {
+		let payload = null;
+
+		// Setup a space where we can augment or simplify convoluted ROS API message format by
+		// intercepting distributing properties into the right place, then sending that along for
+		// processing.
+		switch (topic) {
+			case 'routingRequest': {
+				if (message instanceof Array) {
+					// Example of the payload:
+					//
+					// payload = {
+					// 	waypoint : [
+					// 		{ // current position
+					// 			pose: {x: current.x, y: current.y}
+					// 		},
+					// 		{ // destination
+					// 			pose: {x: dest.x,  y: dest.y}
+					// 		}
+					// 	]
+					// };
+					const waypoint = [];
+					message.forEach(coords => {
+						waypoint.push({pose: getSimFromLatLong(coords)}); // this is the opposite of the information that needs to go into here...
+					});
+					payload = {waypoint};
+				} else {
+					payload = message;
+				}
+				break;
+			}
+			default:
+				payload = message;
+		}
+
+		console.log('sending', topic, payload);
+		if (payload) {
+			const msg = new ROSLIB.Message(payload);
+			self[topic].publish(msg);
+		}
+	};
+
+	self.ros = ros;
+	return self;
 }
 
 export default connect;

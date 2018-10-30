@@ -4,13 +4,20 @@ import mapboxgl from 'mapbox-gl';
 import classnames from 'classnames';
 import AppContextConnect from '../../App/AppContextConnect';
 import appConfig from '../../../config';
+import CarSvg from '../Dashboard/svg/car.svg';
 
 import css from './MapCore.less';
+
 
 if (!appConfig.mapApiKey) {
 	Error('Please set `mapApiKey` key in your `config.js` file to your own Mapbox API key.');
 }
 mapboxgl.accessToken = appConfig.mapApiKey;
+
+const propTypeLatLon = PropTypes.shape({
+	lat: PropTypes.number,
+	lon: PropTypes.number
+});
 
 const getRoute = async (start, end) => {
 	const response = await window.fetch('https://api.mapbox.com/directions/v5/mapbox/driving/' + start[0] + ',' + start[1] + ';' + end[0] + ',' + end[1] + '?geometries=geojson&access_token=' + mapboxgl.accessToken);
@@ -78,8 +85,8 @@ const skinStyles = {
 class MapCoreBase extends React.Component {
 	static propTypes = {
 		follow: PropTypes.bool, // Should the centering position follow the current location?
-		location: PropTypes.array, // Our actual current location on the world
-		position: PropTypes.array, // The map's centering position
+		location: propTypeLatLon, // Our actual current location on the world
+		position: propTypeLatLon, // The map's centering position
 		skin: PropTypes.string
 	}
 
@@ -146,13 +153,20 @@ class MapCoreBase extends React.Component {
 			// and the location != new location
 			// OR if the map center is different from the last true center
 			if (
-				nextProps.location[0] !== this.props.location[0] ||
-				nextProps.location[1] !== this.props.location[1] ||
+				nextProps.location.lat !== this.props.location.lat ||
+				nextProps.location.lon !== this.props.location.lon ||
+				nextProps.location.orientation !== this.props.location.orientation ||
 				this.localinfo.center !== this.map.getCenter()) {
 				// update the map, instantly
 				this.centerMap({center: nextProps.location, instant: true});
+				this.orientCarImage(nextProps.location.orientation);
 			}
-		} else if ((nextProps.position && this.props.position) && (nextProps.position[0] !== this.props.position[0] || nextProps.position[1] !== this.props.position[1])) {
+		} else if (
+			(nextProps.position && this.props.position) &&
+			(
+				nextProps.position.lat !== this.props.position.lat ||
+				nextProps.position.lon !== this.props.position.lon
+			)) {
 			// else
 			// and position changes
 			// update map with casual fly
@@ -165,8 +179,12 @@ class MapCoreBase extends React.Component {
 	}
 
 	centerMap ({center, instant = false}) {
-		this.map.flyTo({center, maxDuration: (instant ? 1 : this.props.centeringDuration)});
+		this.map.flyTo({center: [center.lon, center.lat], maxDuration: (instant ? 1000 : this.props.centeringDuration)});
 		this.localinfo.center = this.map.getCenter(); // save a copy in their format for comparison
+	}
+
+	orientCarImage (orientation) {
+		this.carNode.style.setProperty('--map-orientation', orientation);
 	}
 
 	showPopup (coordinates, description) {
@@ -254,14 +272,19 @@ class MapCoreBase extends React.Component {
 		}
 	}
 
+	setCarNode = (node) => (this.carNode = node)
 	setMapNode = (node) => (this.mapNode = node)
 
 	render () {
 		const {className, ...rest} = this.props;
 		delete rest.follow;
+		delete rest.location;
+		delete rest.position;
+		delete rest.skin;
 		return (
 			<div {...rest} className={classnames(className, css.map)}>
 				{this.message ? <div className={css.message}>{this.message}</div> : null}
+				<img className={css.carImage} ref={this.setCarNode} src={CarSvg} alt="" />
 				<div
 					ref={this.setMapNode}
 					className={css.mapNode}
@@ -274,7 +297,7 @@ class MapCoreBase extends React.Component {
 const SkinnableMap = AppContextConnect(({location, userSettings}) => ({
 	// We should import the app-level variable for our current location then feed that in as the "start"
 	skin: userSettings.skin,
-	location: [location.lon, location.lat]
+	location
 }));
 
 const MapCore = SkinnableMap(MapCoreBase);
