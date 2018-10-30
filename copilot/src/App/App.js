@@ -1,14 +1,13 @@
 import AgateDecorator from '@enact/agate/AgateDecorator';
-import openSocket from 'socket.io-client';
-import qs from 'query-string';
-import {Cell, Row} from '@enact/ui/Layout';
-import kind from '@enact/core/kind';
-import React from 'react';
 import Button from '@enact/agate/Button';
-import css from './App.less';
+import kind from '@enact/core/kind';
 import Popup from '@enact/agate/Popup';
+import {Cell, Row} from '@enact/ui/Layout';
 
-const args = qs.parse(typeof window !== 'undefined' ? window.location.search : '');
+import React from 'react';
+import openSocket from 'socket.io-client';
+
+import css from './App.less';
 
 const AppBase = kind({
 	name: 'App',
@@ -20,7 +19,7 @@ const AppBase = kind({
 
 	render: ({adContent, showAd, url, popupOpen, setScreen, togglePopup, ...rest}) => {
 		return (
-			<Row {...rest}>
+			<div {...rest}>
 				<Popup
 					open={popupOpen}
 					closeButton
@@ -34,17 +33,19 @@ const AppBase = kind({
 						<Button onClick={setScreen(2)}>Screen 2</Button>
 					</buttons>
 				</Popup>
-				<Cell
-					className={css.iframe}
-					allow="autoplay"
-					component="iframe"
-					src={url}
-				/>
-				{!showAd ? null : <Cell className={css.adSpace} shrink>
-					{adContent}
-				</Cell>}
+				<Row {...rest}>
+					<Cell
+						className={css.iframe}
+						allow="autoplay"
+						component="iframe"
+						src={url}
+					/>
+					{!showAd ? null : <Cell className={css.adSpace} shrink>
+						{adContent}
+					</Cell>}
+				</Row>
 				<Button style={{position: 'absolute'}} icon="plug" onClick={togglePopup} />
-			</Row>
+			</div>
 		);
 	}
 });
@@ -120,7 +121,7 @@ class App extends React.Component {
 		delete props.screenId;
 
 		return (
-			<AppBase {...props} togglePopup={this.onToggle} setScreen={this.setScreen}/>
+			<AppBase {...props} togglePopup={this.onToggle} setScreen={this.setScreen} />
 		);
 	}
 }

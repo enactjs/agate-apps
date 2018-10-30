@@ -1,14 +1,15 @@
-import {Cell, Row, Column} from '@enact/ui/Layout';
+import Button from '@enact/agate/Button';
 import {Panel} from '@enact/agate/Panels';
-import {VirtualGridList} from '@enact/ui/VirtualList';
+import Popup from '@enact/agate/Popup';
+import {Cell, Column} from '@enact/ui/Layout';
 import GridListImageItem from '@enact/ui/GridListImageItem';
 import ri from '@enact/ui/resolution';
-import openSocket from 'socket.io-client';
-import youtubeVideos from './youtubeapi.json';
-import Popup from '@enact/agate/Popup';
-import Button from '@enact/agate/Button';
+import {VirtualGridList} from '@enact/ui/VirtualList';
 
 import React from 'react';
+import openSocket from 'socket.io-client';
+
+import youtubeVideos from './youtubeapi.json';
 import css from './Multimedia.less';
 
 class Multimedia extends React.Component {
@@ -74,18 +75,17 @@ class Multimedia extends React.Component {
 					<Cell shrink>
 						Recommended Videos
 					</Cell>
-					<Cell>
-						<VirtualGridList
-							dataSize={this.videos.length}
-							itemRenderer={this.renderItem}
-							itemSize={{
-								minWidth: ri.scale(320),
-								minHeight: ri.scale(180)
-							}}
-							className={css.thumbnails}
-							spacing={ri.scale(67)}
-						/>
-					</Cell>
+					<Cell
+						component={VirtualGridList}
+						dataSize={this.videos.length}
+						itemRenderer={this.renderItem}
+						itemSize={{
+							minWidth: ri.scale(320),
+							minHeight: ri.scale(180)
+						}}
+						className={css.thumbnails}
+						spacing={ri.scale(67)}
+					/>
 				</Column>
 				<Popup
 					open={this.state.open}
