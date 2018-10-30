@@ -54,7 +54,7 @@ class App extends React.Component {
 		super(props);
 		this.state = {
 			adContent: this.props.adContent || 'Your Ad Here',
-			urls: '',
+			url: '',
 			popupOpen: true,
 			showAd: this.props.showAd || false,
 			screenId: 1
@@ -116,8 +116,7 @@ class App extends React.Component {
 	};
 
 	render () {
-		const props = this.state;
-
+		const props = {...this.state};
 		delete props.screenId;
 
 		return (
