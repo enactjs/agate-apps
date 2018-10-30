@@ -1,17 +1,16 @@
-import {add} from '@enact/core/keymap';
+import {forward, handle} from '@enact/core/handle';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
+import ToggleButton from '@enact/agate/ToggleButton';
 import {Cell, Column} from '@enact/ui/Layout';
 import compose from 'ramda/src/compose';
-import DateTimePicker from '@enact/agate/DateTimePicker';
-import {forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import {add} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
-import openSocket from 'socket.io-client';
 import Popup from '@enact/agate/Popup';
+import DateTimePicker from '@enact/agate/DateTimePicker';
 import React from 'react';
 import {TabbedPanels} from '@enact/agate/Panels';
-import ToggleButton from '@enact/agate/ToggleButton';
 
 import Clock from '../components/Clock';
 import CustomLayout from '../components/CustomLayout';
@@ -26,6 +25,8 @@ import DisplaySettings from '../views/DisplaySettings';
 import Weather from '../views/WeatherPanel';
 import Dashboard from '../views/Dashboard';
 import Multimedia from '../views/MultimediaPanel';
+
+import openSocket from 'socket.io-client';
 
 import AppStateConnect from './AppContextConnect';
 
