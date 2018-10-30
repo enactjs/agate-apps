@@ -188,20 +188,6 @@ const AppState = hoc((configHoc, Wrapped) => {
 			};
 		}
 
-		componentWillMount () {
-			this.socket = openSocket('http://localhost:3000');
-			this.socket.on('REQUEST_VIDEO', () => {
-				this.socket.emit('SEND_DATA', {
-					route: 'PLAY_VIDEO',
-					url: 'https://www.youtube.com/embed/LsBrT6vbQa8?autoplay=1'
-				});
-			});
-		}
-
-		componentWillUnmount () {
-			this.socket.close();
-		}
-
 		onSelect = handle(
 			forward('onSelect'),
 			(ev) => {

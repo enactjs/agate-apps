@@ -1,26 +1,15 @@
 import {Cell, Row, Column} from '@enact/ui/Layout';
-import Item from '@enact/agate/Item';
 import {Panel} from '@enact/agate/Panels';
 import {VirtualGridList} from '@enact/ui/VirtualList';
 import GridListImageItem from '@enact/ui/GridListImageItem';
 import ri from '@enact/ui/resolution';
 import openSocket from 'socket.io-client';
-import VideoThumbnail from '../components/VideoThumbnail';
 import youtubeVideos from './youtubeapi.json';
 import Popup from '@enact/agate/Popup';
 import Button from '@enact/agate/Button';
 
 import React from 'react';
 import css from './Multimedia.less';
-
-const renderVideoThumnail = ({onVideoClick}) => ({index, key, ...rest}) => (
-	<VideoThumbnail
-		{...rest}
-		key={'video' + key}
-		video={youtubeVideos.items[index]}
-		onSelect={onVideoClick}
-	/>
-);
 
 class Multimedia extends React.Component {
 	constructor (props) {
@@ -78,7 +67,6 @@ class Multimedia extends React.Component {
 		);
 	}
 
-
 	render () {
 		return (
 			<Panel>
@@ -86,7 +74,7 @@ class Multimedia extends React.Component {
 					<Cell shrink>
 						Recommended Videos
 					</Cell>
-					<Cell align="center">
+					<Cell>
 						<VirtualGridList
 							dataSize={this.videos.length}
 							itemRenderer={this.renderItem}
@@ -95,7 +83,6 @@ class Multimedia extends React.Component {
 								minHeight: ri.scale(180)
 							}}
 							className={css.thumbnails}
-							style={{width: '960px'}}
 							spacing={ri.scale(67)}
 						/>
 					</Cell>
