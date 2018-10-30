@@ -1,7 +1,8 @@
 import AgateDecorator from '@enact/agate/AgateDecorator';
-import Item from '@enact/agate/Item';
 import openSocket from 'socket.io-client';
 import qs from 'query-string';
+import {Cell, Row} from '@enact/ui/Layout';
+import kind from '@enact/core/kind';
 import React from 'react';
 import Button from '@enact/agate/Button';
 import css from './App.less';
@@ -9,12 +10,51 @@ import Popup from '@enact/agate/Popup';
 
 const args = qs.parse(typeof window !== 'undefined' ? window.location.search : '');
 
+const AppBase = kind({
+	name: 'App',
+
+	styles: {
+		css,
+		className: 'app enact-fit'
+	},
+
+	render: ({adContent, showAd, url, popupOpen, setScreen, togglePopup, ...rest}) => {
+		return (
+			<Row {...rest}>
+				<Popup
+					open={popupOpen}
+				>
+					<title>
+					Select Your Screen Source
+					</title>
+					<buttons>
+						<Button onClick={setScreen(1)}>Screen 1</Button>
+						<Button onClick={setScreen(2)}>Screen 2</Button>
+					</buttons>
+				</Popup>
+				<Button style={{position: 'absolute', zIndex: 99}} icon="plug" onClick={togglePopup} />
+				<Cell
+					className={css.iframe}
+					allow="autoplay"
+					component="iframe"
+					src={url}
+				/>
+				{!showAd ? null : <Cell className={css.adSpace} shrink>
+					{adContent}
+				</Cell>}
+			</Row>
+		);
+	}
+});
+
 class App extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
+			adContent: this.props.adContent || 'Your Ad Here',
 			urls: '',
 			popupOpen: true,
+			showAd: this.props.showAd || false,
 			screenId: 1
 		};
 	}
@@ -22,6 +62,8 @@ class App extends React.Component {
 	componentWillMount () {
 		this.socket = openSocket('http://localhost:3000');
 		this.listenForVideoChange(this.state.screenId);
+		this.socket.on('SHOW_AD', this.showAdSpace);
+		this.socket.emit('COPILOT_CONNECT', this.state.screenId);
 	}
 
 	componentDidUpdate (prevProps, prevState) {
@@ -29,6 +71,11 @@ class App extends React.Component {
 			this.socket.removeAllListeners(`VIDEO_ADD_COPILOT/${prevState.screenId}`);
 			this.listenForVideoChange(this.state.screenId);
 		}
+	}
+
+	componentWillUnmount () {
+		this.socket.close();
+		clearTimeout(this.adTimer);
 	}
 
 	listenForVideoChange = (screenId) => {
@@ -47,11 +94,6 @@ class App extends React.Component {
 		});
 	}
 
-
-	play = (url, index) => () => {
-		this.setState({index});
-	}
-
 	setScreen = (screenId) => () => {
 		this.setState(() => {
 			return {screenId: screenId};
@@ -59,23 +101,21 @@ class App extends React.Component {
 		this.onToggle();
 	}
 
+
+	hideAdSpace = () => {
+		this.setState({adContent: '', showAd: false});
+	};
+
+	showAdSpace = ({adContent, duration}) => {
+		this.setState({adContent, showAd: true});
+		this.adTimer = setTimeout(this.hideAdSpace, duration);
+	};
+
 	render () {
+		const {...props} = this.state;
+
 		return (
-			<div {...this.props} className={css.app}>
-				<Popup
-					open={this.state.popupOpen}
-				>
-					<title>
-						Select Your Screen Source
-					</title>
-					<buttons>
-						<Button onClick={this.setScreen(1)}>Screen 1</Button>
-						<Button onClick={this.setScreen(2)}>Screen 2</Button>
-					</buttons>
-				</Popup>
-				<Button style={{position: 'absolute'}} icon="plug" onClick={this.onToggle} />
-				<iframe className={css.iframe} src={this.state.url} allow="autoplay" />
-			</div>
+			<AppBase {...props} togglePopup={this.onToggle} setScreen={this.setScreen}/>
 		);
 	}
 }

@@ -2,7 +2,7 @@
 	"name": "copilot",
 	"version": "1.0.0",
 	"description": "A way to send content into a render frame.",
-	"author": "",
+	"author": "Dave Freeman <dave.freeman@lge.com>",
 	"main": "src/index.js",
 	"scripts": {
 		"serve": "enact serve",
