@@ -8,7 +8,7 @@ function noop () {}
 const subscribedTopics = {
 	position: {
 		name: '/apollo/localization/pose',
-		throttle_rate: 5000, // eslint-disable-line camelcase
+		throttle_rate: 500, // eslint-disable-line camelcase
 		messageType: 'pb_msgs/LocalizationEstimate'
 	},
 

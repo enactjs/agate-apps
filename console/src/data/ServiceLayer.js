@@ -103,12 +103,20 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		//
 
 		onPosition = (message) => {
-			console.log('%conPosition', 'color: orange', message.pose);
+			// console.log('%conPosition', 'color: orange', message.pose);
 			const destination = this.destination;
 			const {x, y} = message.pose.position;
 			const location = getLatLongFromSim(x, y);
 
 			location.orientation = Number(message.pose.heading.toFixed(4));
+			// Velocity is meters per second
+			location.linearVelocity = Math.round((
+				Math.sqrt(
+					Math.pow(message.pose.linear_velocity.x, 2) +
+					Math.pow(message.pose.linear_velocity.y, 2) +
+					Math.pow(message.pose.linear_velocity.z, 2)
+				)
+			) * 10000) / 10000;
 			// console.log('%conPosition', 'color: orange', location);
 
 			if (!this.done && destination) {

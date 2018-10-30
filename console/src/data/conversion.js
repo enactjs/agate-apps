@@ -73,7 +73,7 @@ function getSimFromLatLong ({lat, lon}) {
 		a4 / 24 * (5 - latTan2 + 9 * c + 4 * c ** 2) +
 		a6 / 720 * (61 - 58 * latTan2 + latTan4 + 600 * c - 330 * E_P2)));
 
-	return [easting, northing];
+	return {x: easting, y: northing};
 }
 
 const getLatLongFromSim = (easting, northing) => {
