@@ -1,11 +1,11 @@
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
-import kind from '@enact/core/kind';
-import Popup from '@enact/agate/Popup';
 import {Cell, Row} from '@enact/ui/Layout';
-
-import React from 'react';
+import Job from '@enact/core/util/Job';
+import kind from '@enact/core/kind';
 import openSocket from 'socket.io-client';
+import Popup from '@enact/agate/Popup';
+import React from 'react';
 
 import css from './App.less';
 
@@ -60,6 +60,8 @@ class App extends React.Component {
 			showAd: this.props.showAd || false,
 			screenId: 1
 		};
+		// Job to control hiding ads
+		this.adTimer = new Job(this.hideAdSpace);
 	}
 
 	componentWillMount () {
@@ -78,7 +80,7 @@ class App extends React.Component {
 
 	componentWillUnmount () {
 		this.socket.close();
-		clearTimeout(this.adTimer);
+		this.adTimer.stop();
 	}
 
 	listenForVideoChange = (screenId) => {
@@ -113,7 +115,7 @@ class App extends React.Component {
 
 	showAdSpace = ({adContent, duration}) => {
 		this.setState({adContent, showAd: true});
-		this.adTimer = setTimeout(this.hideAdSpace, duration);
+		this.adTimer.startAfter(duration);
 	};
 
 	render () {
