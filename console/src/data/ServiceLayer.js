@@ -59,7 +59,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 						// });
 					},
 					onClose: () => {
-						// console.log('%cDisconnected from Service Layer', 'color: red');
+						console.log('%cDisconnected from Service Layer', 'color: red');
 
 						this.initiateAutomaticReconnect();
 
@@ -94,7 +94,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		}
 
 		reconnect = () => {
-			// console.warn('%cAttempting to reconnect with the service layer at:', 'color: orange', appConfig.servicesLayerHost);
+			console.warn('%cAttempting to reconnect with the service layer at:', 'color: orange', appConfig.servicesLayerHost);
 			this.connection.reconnect();
 		}
 
