@@ -28,8 +28,9 @@ const CompactMapBase = kind({
 
 	handlers: {
 		onSetDestination: (ev, {position, setDestination}) => {
-			console.log('setDestination:', position);
+			// console.log('setDestination:', position);
 			if (position) {
+				// console.log('sending position:', position);
 				setDestination({destination: position});
 			}
 		},
@@ -59,6 +60,8 @@ const CompactMapBase = kind({
 const CompactMapBrains = hoc((configHoc, Wrapped) => {
 	const positions = [
 		// {lat: 37.405189, lon: -121.979125},
+		{lat: 37.788818, lon: -122.404568}, // LG office
+		{lat: 37.791356, lon: -122.400823}, // Blue Bottle Coffee
 		{lat: 37.788988, lon: -122.401076},
 		{lat: 37.7908574786, lon: -122.399391029},
 		{lat: 37.786116, lon: -122.402140}

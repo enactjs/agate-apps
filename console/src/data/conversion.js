@@ -130,8 +130,8 @@ const getLatLongFromSim = (easting, northing) => {
 
 	// Simplify these numbers a bit
 	return {
-		lon: Number(lon.toFixed(7)),
-		lat: Number(lat.toFixed(7))
+		lon: Math.round(lon * 1000000) / 1000000,
+		lat: Math.round(lat * 1000000) / 1000000
 	};
 };
 

@@ -52,6 +52,7 @@ class AppContextProvider extends Component {
 			location: {
 				lat: 0,
 				lon: 0,
+				linearVelocity: 0,
 				orientation: 0
 			},
 			navigation: {
@@ -60,7 +61,9 @@ class AppContextProvider extends Component {
 					lon: 0
 				},
 				distance: 0,
+				duration: 0,
 				eta: 0,
+				startTime: 0,
 				navigating: false
 			},
 			weather: {}

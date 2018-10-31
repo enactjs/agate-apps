@@ -60,7 +60,9 @@ function connect ({url, onConnection, onError, onClose, ...topics} = {}) {
 	//
 
 	self.reconnect = () => {
-		ros.connect(url);
+		if (!ros.isConnected) {
+			ros.connect(url);
+		}
 	};
 
 	self.send = (topic, message) => {

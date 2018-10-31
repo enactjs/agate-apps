@@ -21,6 +21,12 @@
 		will-change: transform;
 		z-index: 1;
 		pointer-events: none;
+		transition: 500ms transform linear, 500ms opacity ease-in;
+		opacity: 1;
+
+		&.hidden {
+			opacity: 0;
+		}
 	}
 
 	.message {

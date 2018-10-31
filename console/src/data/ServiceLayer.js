@@ -59,7 +59,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 						// });
 					},
 					onClose: () => {
-						console.log('%cDisconnected from Service Layer', 'color: red');
+						// console.log('%cDisconnected from Service Layer', 'color: red');
 
 						this.initiateAutomaticReconnect();
 
@@ -94,8 +94,26 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		}
 
 		reconnect = () => {
-			console.warn('%cAttempting to reconnect with the service layer at:', 'color: orange', appConfig.servicesLayerHost);
+			// console.warn('%cAttempting to reconnect with the service layer at:', 'color: orange', appConfig.servicesLayerHost);
 			this.connection.reconnect();
+		}
+
+		// `data` takes the shape of message.pose
+		normalizePositionData (data) {
+			const {x, y} = data.position;
+			const location = getLatLongFromSim(x, y);
+
+			location.orientation =  Math.round(data.heading * 10000) / 10000;
+
+			// Velocity is in meters per second - math optimized for speed
+			location.linearVelocity = Math.round((
+				Math.sqrt(
+					data.linear_velocity.x * data.linear_velocity.x +
+					data.linear_velocity.y * data.linear_velocity.y +
+					data.linear_velocity.z * data.linear_velocity.z
+				)
+			) * 10000) / 10000;
+			return location;
 		}
 
 		//
@@ -106,24 +124,18 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			// console.log('%conPosition', 'color: orange', message.pose);
 			const destination = this.destination;
 			const {x, y} = message.pose.position;
-			const location = getLatLongFromSim(x, y);
-
-			location.orientation = Number(message.pose.heading.toFixed(4));
-			// Velocity is meters per second
-			location.linearVelocity = Math.round((
-				Math.sqrt(
-					Math.pow(message.pose.linear_velocity.x, 2) +
-					Math.pow(message.pose.linear_velocity.y, 2) +
-					Math.pow(message.pose.linear_velocity.z, 2)
-				)
-			) * 10000) / 10000;
-			// console.log('%conPosition', 'color: orange', location);
+			const location = this.normalizePositionData(message.pose);
 
 			if (!this.done && destination) {
 				let vx = message.pose.linear_velocity.x;
 				let vy = message.pose.linear_velocity.y;
-				if (Math.sqrt((x - destination.x) * (x - destination.x) + (y - destination.y) * (y - destination.y)) < 5 &&
-					Math.sqrt(vx * vx + vy * vy) < 0.1) {
+				if (
+					Math.sqrt(
+						(x - destination.x) * (x - destination.x) +
+						(y - destination.y) * (y - destination.y)
+					) < 5 &&
+					Math.sqrt(vx * vx + vy * vy) < 0.1
+				) {
 
 					this.done = true;
 					console.log('Destination Reached:', location, 'Automatic driving mode now disabled.');
@@ -134,12 +146,16 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 		setDestination = ({destination}) => {
 			this.props.requestDestination({destination, navigating: true});
-			console.log('this.props.location:', this.props.location, 'destination', destination);
+			// console.log('location:', this.props.location, 'destination', destination);
 			this.connection.send('routingRequest', [this.props.location, destination]);
 		}
 
 		onRoutingRequest = (message) => {
-			console.log('%conRoutingRequest:', 'color: orange', message);
+			if (message.broadcast && message.header && message.header.status && message.header.status.error_code === 0) {
+				// Just a normal request received response. Don't bother to do anything.
+			} else {
+				console.log('%conRoutingRequest:', 'color: orange', message);
+			}
 		}
 
 
