@@ -57,6 +57,22 @@ const buildQueryString = (props) => {
 	return pairs.join('&');
 };
 
+const coordsUpdated = (propName, prevProps, nextProps) => {
+	// Check the following:
+	//   the object exists in the nextProps
+	//   any of the following:
+	//     the prop didn't exist in prevProps
+	//     the prop's lat isn't the same as the new prop's lat
+	//     the prop's lon isn't the same as the new prop's lon
+	if (nextProps[propName] && (!prevProps[propName] ||
+		prevProps[propName].lat !== nextProps[propName].lat ||
+		prevProps[propName].lon !== nextProps[propName].lon
+	)) {
+		return true;
+	}
+	return false;
+};
+
 //
 // Get Directions
 //
@@ -138,11 +154,14 @@ const skinStyles = {
 
 class MapCoreBase extends React.Component {
 	static propTypes = {
+		setDestination: PropTypes.func.isRequired,
 		updateNavigation: PropTypes.func.isRequired,
 		centeringDuration: PropTypes.number,
+		destination: propTypeLatLon,
 		follow: PropTypes.bool, // Should the centering position follow the current location?
 		location: propTypeLatLon, // Our actual current location on the world
 		position: propTypeLatLon, // The map's centering position
+		proposedDestination: propTypeLatLon,
 		skin: PropTypes.string,
 		viewLockoutDuration: PropTypes.number,
 		zoomToSpeedScaleFactor: PropTypes.number
@@ -211,47 +230,45 @@ class MapCoreBase extends React.Component {
 		});
 	}
 
-	componentDidUpdate (nextProps) {
-		if (this.props.skin !== nextProps.skin) {
-			const style = skinStyles[nextProps.skin] || skinStyles.titanium;
+	componentDidUpdate (prevProps) {
+		if (this.props.skin !== prevProps.skin) {
+			const style = skinStyles[prevProps.skin] || skinStyles.titanium;
 			this.map.setStyle(style);
 
 			// make sure the map is resized after the container updates
 			setTimeout(this.map.resize.bind(this.map), 0);
 		}
 
+		// Received a new proposedDestination
+		if (coordsUpdated('proposedDestination', prevProps, this.props)) {
+			// update the map, instantly
+			this.drawDirection(this.props.location, this.props.proposedDestination);
+		}
 		// if following
-		if (nextProps.follow) {
+		if (this.props.follow) {
+			// Received a new orientation
+			if (this.props.location && (!prevProps.location ||
+				prevProps.location.orientation !== this.props.location.orientation
+			)) {
+				this.orientCarImage(this.props.location.orientation);
+			}
 			// Received a new location
-			// and the location != new location
-			// OR if the map center is different from the last true center
-			if (
-				nextProps.location.lat !== this.props.location.lat ||
-				nextProps.location.lon !== this.props.location.lon ||
-				nextProps.location.orientation !== this.props.location.orientation ||
-				this.localinfo.center !== this.map.getCenter()) {
+			if (coordsUpdated('location', prevProps, this.props)) {
 				// update the map, instantly
-				this.centerMap({center: nextProps.location});
-				this.orientCarImage(nextProps.location.orientation);
+				this.centerMap({center: this.props.location});
 			}
 			// Received a new destination
-			if (
-				nextProps.destination.lat !== this.props.destination.lat ||
-				nextProps.destination.lon !== this.props.destination.lon
-			) {
+			if (coordsUpdated('destination', prevProps, this.props)) {
 				// update the map, instantly
-				this.drawDirection(nextProps.location, this.props.destination);
+				this.drawDirection(this.props.location, this.props.destination);
+				console.log('Initiating navigation to a new destination:', this.props.destination);
+				this.props.setDestination({destination: this.props.destination});
 			}
-		} else if (
-			(nextProps.position && this.props.position) &&
-			(
-				nextProps.position.lat !== this.props.position.lat ||
-				nextProps.position.lon !== this.props.position.lon
-			)) {
+		} else if (coordsUpdated('position', prevProps, this.props)) {
 			// else
 			// and position changes
 			// update map with casual fly
-			this.centerMap({center: nextProps.position});
+			this.centerMap({center: this.props.position});
 		}
 	}
 
@@ -421,9 +438,12 @@ class MapCoreBase extends React.Component {
 	render () {
 		const {className, ...rest} = this.props;
 		delete rest.centeringDuration;
+		delete rest.destination;
 		delete rest.follow;
 		delete rest.location;
 		delete rest.position;
+		delete rest.proposedDestination;
+		delete rest.setDestination;
 		delete rest.skin;
 		delete rest.updateNavigation;
 		delete rest.viewLockoutDuration;
@@ -445,7 +465,7 @@ const SkinnableMap = AppContextConnect(({navigation, location, userSettings, upd
 	// We should import the app-level variable for our current location then feed that in as the "start"
 	skin: userSettings.skin,
 	location,
-	destination: navigation.destination,
+	// destination: navigation.destination,
 	updateNavigation: ({duration}) => {
 		updateAppState((state) => {
 			const now = new Date().getTime();

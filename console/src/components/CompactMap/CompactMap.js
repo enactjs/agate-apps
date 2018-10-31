@@ -16,9 +16,16 @@ const CompactMapBase = kind({
 	name: 'CompactMap',
 
 	propTypes: {
+		changeFollow: PropTypes.func,
 		changePosition: PropTypes.func,
+		destination: PropTypes.object,
+		follow: PropTypes.bool,
 		onSelect: PropTypes.func,
-		position: PropTypes.object
+		// A local state method to assign the local destination to the destination prop listed above.
+		onSetDestination: PropTypes.func,
+		proposedDestination: PropTypes.object,
+		// The super method to assign the new destination
+		setDestination: PropTypes.func
 	},
 
 	styles: {
@@ -27,13 +34,6 @@ const CompactMapBase = kind({
 	},
 
 	handlers: {
-		onSetDestination: (ev, {position, setDestination}) => {
-			// console.log('setDestination:', position);
-			if (position) {
-				// console.log('sending position:', position);
-				setDestination({destination: position});
-			}
-		},
 		onTabChange: (ev, {onSelect}) => {
 			if ((ev.keyCode === 13 || ev.type === 'click') && ev.currentTarget.dataset.tabindex) {
 				onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
@@ -41,17 +41,16 @@ const CompactMapBase = kind({
 		}
 	},
 
-	render: ({changePosition, changeFollow, follow, onSelect, onTabChange, position, onSetDestination, ...rest}) => {
-		delete rest.setDestination;
+	render: ({changePosition, changeFollow, destination, follow, onSelect, onTabChange, onSetDestination, proposedDestination, setDestination, ...rest}) => {
 		return (
 			<div {...rest}>
 				<nav className={css.tools}>
 					<Button alt="Fullscreen" icon="fullscreen" data-tabindex={getPanelIndexOf('map')} onSelect={onSelect} onKeyUp={onTabChange} onClick={onTabChange} />
-					<Button alt="Recenter" icon="arrowhookleft" onClick={changePosition} />
+					<Button alt="Propose new destination" icon="arrowhookleft" onClick={changePosition} />
 					<Button alt="Navigate Here" icon="play" onClick={onSetDestination} />
 					<ToggleButton alt="Follow" selected={follow} underline icon="forward" onClick={changeFollow} />
 				</nav>
-				<MapCore follow={follow} position={position} />
+				<MapCore destination={destination} follow={follow} proposedDestination={proposedDestination} setDestination={setDestination} />
 			</div>
 		);
 	}
@@ -59,14 +58,11 @@ const CompactMapBase = kind({
 
 const CompactMapBrains = hoc((configHoc, Wrapped) => {
 	const positions = [
-		// {lat: 37.405189, lon: -121.979125},
 		{lat: 37.788818, lon: -122.404568}, // LG office
 		{lat: 37.791356, lon: -122.400823}, // Blue Bottle Coffee
 		{lat: 37.788988, lon: -122.401076},
 		{lat: 37.7908574786, lon: -122.399391029},
 		{lat: 37.786116, lon: -122.402140}
-		// {lon: -123.399391029, lat: 38.7908574786}
-		// [-120.979125, 39.405189]
 	];
 
 	return class extends React.Component {
@@ -75,8 +71,14 @@ const CompactMapBrains = hoc((configHoc, Wrapped) => {
 			super(props);
 			this.state = {
 				positionIndex: 0,
+				destination: null,
 				follow: false
 			};
+		}
+
+		handleSetDestination = () => {
+			// Take our current position and assign it as our internal (local to this HOC) destination
+			this.setState(({positionIndex}) => ({destination: positions[positionIndex]}));
 		}
 
 		changePosition = () => {
@@ -99,7 +101,9 @@ const CompactMapBrains = hoc((configHoc, Wrapped) => {
 					changePosition={this.changePosition}
 					changeFollow={this.changeFollow}
 					follow={this.state.follow}
-					position={positions[this.state.positionIndex]}
+					onSetDestination={this.handleSetDestination}
+					destination={this.state.destination}
+					proposedDestination={positions[this.state.positionIndex]}
 				/>
 			);
 		}
