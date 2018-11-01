@@ -1,0 +1,16 @@
+.drawer {
+    position: absolute;
+    width: 275px;
+    background-color: black;
+    transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    z-index: 999;
+    &.open__true {
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+    }
+    &.open__false {
+        -webkit-transform: translate3d(-100%, 0, 0);
+        transform: translate3d(-100%, 0, 0);
+    }
+}

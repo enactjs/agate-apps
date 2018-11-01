@@ -11,6 +11,7 @@ import CompactHvac from '../components/CompactHVAC';
 import CompactAppList from '../components/CompactAppList';
 import CompactWeather from '../components/CompactWeather';
 import CompactMap from '../components/CompactMap';
+import Drawer from '../components/Drawer';
 
 import css from './Home.less';
 
@@ -79,7 +80,8 @@ const Home = kind({
 
 	propTypes: {
 		arrangeable: PropTypes.bool,
-		onSelect: PropTypes.func
+		onSelect: PropTypes.func,
+		widgetList: PropTypes.array
 	},
 
 	styles: {
@@ -87,8 +89,9 @@ const Home = kind({
 		className: 'homePanel'
 	},
 
-	render: ({arrangeable, onSelect, ...rest}) => (
+	render: ({arrangeable, onSelect, widgetList, ...rest}) => (
 		<Panel {...rest}>
+			<Drawer items={widgetList} navOpen={arrangeable} />
 			<HomeLayout arrangeable={arrangeable}>
 				<topLeft><CompactRadio /></topLeft>
 				<topCenter><CompactWeather /></topCenter>

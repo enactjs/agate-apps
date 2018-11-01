@@ -108,6 +108,7 @@ const AppBase = kind({
 					<Home
 						onSelect={onSelect}
 						arrangeable={layoutArrangeable}
+						widgetList={panelIndexMap}
 					/>
 					<Phone arrangeable={layoutArrangeable} />
 					<Hvac arrangeable={layoutArrangeable} />
