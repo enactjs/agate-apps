@@ -170,7 +170,7 @@ class MapCoreBase extends React.Component {
 	static defaultProps = {
 		centeringDuration: 2000,
 		viewLockoutDuration: 4000,
-		zoomToSpeedScaleFactor: 5
+		zoomToSpeedScaleFactor: 0.02
 	}
 
 	constructor (props) {
@@ -239,49 +239,97 @@ class MapCoreBase extends React.Component {
 			setTimeout(this.map.resize.bind(this.map), 0);
 		}
 
+		// `actions` is populated by a set of instructions (represented by keys) and their
+		// associated arguments (represented by those keys' values). As new actions are discovered
+		// they are added to the stack. Actions are processed all in one clump in a separate method.
+		// This allows multiple scenarios to invoke the same action and have them not conflict with
+		// each other, and have the logic of what to do abstracted from when to do it.
+		const actions = {};
+
+		// Received a new orientation
+		if (this.props.location && (!prevProps.location ||
+			prevProps.location.orientation !== this.props.location.orientation
+		)) {
+			this.orientCarImage(this.props.location.orientation);
+		}
+
 		// Received a new proposedDestination
 		if (coordsUpdated('proposedDestination', prevProps, this.props)) {
-			// update the map, instantly
-			this.drawDirection(this.props.location, this.props.proposedDestination);
+			actions.plotRoute = [this.props.location, this.props.proposedDestination];
 		}
-		// if following
-		if (this.props.follow) {
-			// Received a new orientation
-			if (this.props.location && (!prevProps.location ||
-				prevProps.location.orientation !== this.props.location.orientation
-			)) {
-				this.orientCarImage(this.props.location.orientation);
-			}
-			// Received a new location
-			if (coordsUpdated('location', prevProps, this.props)) {
-				// update the map, instantly
-				this.centerMap({center: this.props.location});
-			}
-			// Received a new destination
-			if (coordsUpdated('destination', prevProps, this.props)) {
-				// update the map, instantly
-				this.drawDirection(this.props.location, this.props.destination);
-				console.log('Initiating navigation to a new destination:', this.props.destination);
-				this.props.setDestination({destination: this.props.destination});
-			}
-		} else if (coordsUpdated('position', prevProps, this.props)) {
-			// else
-			// and position changes
-			// update map with casual fly
-			this.centerMap({center: this.props.position});
+
+		// Received a new velocity
+		if (this.props.location && (!prevProps.location ||
+			prevProps.location.linearVelocity !== this.props.location.linearVelocity
+		)) {
+			actions.zoom = this.props.location.linearVelocity;
 		}
+
+		// Received a new location
+		if (coordsUpdated('location', prevProps, this.props)) {
+			actions.center = this.props.location;
+		}
+
+		// Received a new destination
+		if (coordsUpdated('destination', prevProps, this.props)) {
+			console.log('Initiating navigation to a new destination:', this.props.destination);
+			actions.plotRoute = [this.props.location, this.props.destination];
+			actions.startNavigating = this.props.destination;
+		}
+
+		if (!actions.center && coordsUpdated('position', prevProps, this.props)) {
+			actions.center = this.props.position;
+		}
+
+		this.actionManager(actions);
 	}
 
 	componentWillUnmount () {
 		this.map.remove();
 	}
 
-	calculateZoomLevel = () => {
+	actionManager = (actions) => {
+		for (const action in actions) {
+			if (action) {
+				switch (action) {
+					case 'plotRoute': {
+						this.drawDirection(actions[action][0], actions[action][1]);
+						break;
+					}
+					case 'startNavigating': {
+						this.props.setDestination({destination: actions[action]});
+						break;
+					}
+					case 'center': {
+						this.centerMap({center: actions[action]});
+						break;
+					}
+					case 'zoom': {
+						// if following
+						// if (this.props.follow) {
+
+						this.velocityZoom(actions[action]);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	calculateZoomLevel = (linearVelocity) => {
 		// Zoom out if we're moving fast, zoom in if we're moving slowly.
 		// Available zoom levels range from 0 to 20
-		const vel = Math.max(0, this.props.location.linearVelocity);
+		const vel = Math.max(0, linearVelocity);
 		// console.log('calc zoom:', this.props.location.linearVelocity, this.props.location);
-		return Math.abs(20 - ((vel * vel) * this.props.zoomToSpeedScaleFactor));
+		return Math.abs(19 - ((vel * vel) * this.props.zoomToSpeedScaleFactor));
+	}
+
+	velocityZoom = (linearVelocity) => {
+		if (!this.viewLockTimer) {
+			const zoom = this.props.follow ? this.calculateZoomLevel(linearVelocity) : 15;
+			console.log('zoomTo:', zoom);
+			this.map.zoomTo(zoom);
+		}
 	}
 
 	centerMap = ({center, instant = false}) => {
@@ -289,21 +337,24 @@ class MapCoreBase extends React.Component {
 		if (!this.viewLockTimer) {
 			center = (center instanceof Array) ? center : toMapbox(center);
 
-			const zoom = this.props.follow ? this.calculateZoomLevel() : 15;
 
 			if (instant) {
 				this.map.jumpTo({center});
 			} else {
-				// console.log('centerMap to:', center[0], center[1], center, 'zoom:', zoom);
-				this.map.flyTo(
-					{
-						center,
-						// maxDuration: this.props.centeringDuration,
-						zoom
-					},
-					// {duration: (instant ? 500 : 500)}
+				// console.log('centerMap to:', center[0], center[1], center);
+				this.map.panTo(
+					center,
 					{duration: 800, easing: linear, animation: true}
 				);
+				// this.map.flyTo(
+				// 	{
+				// 		center,
+				// 		// maxDuration: this.props.centeringDuration,
+				// 		zoom
+				// 	},
+				// 	// {duration: (instant ? 500 : 500)}
+				// 	{duration: 800, easing: linear, animation: true}
+				// );
 			}
 			// this.map.flyTo({center, maxDuration: (instant ? 500 : this.props.centeringDuration)});
 			this.localinfo.center = toLatLon(this.map.getCenter()); // save the current center, based on their truth rather than ours
@@ -323,18 +374,18 @@ class MapCoreBase extends React.Component {
 
 	showFullRouteOnMap = (start, end) => {
 		const bounds = newBounds(start, end);
-		this.map.fitBounds(bounds);
+		this.map.fitBounds(bounds, {padding: 50});
 
 		// Set a time to automatically pan back to the current position.
-		if (this.viewLockTimer) this.viewLockTimer.stop();
+		if (this.viewLockTimert) this.viewLockTimer.stop();
 		this.viewLockTimer = new Job(this.finishedShowingFullRouteOnMap, this.props.viewLockoutDuration);
 		// console.log('Starting view-lock');
 		this.viewLockTimer.start();
 	}
 
 	finishedShowingFullRouteOnMap = () => {
-		// console.log('View-lock released!');
-		if (this.viewLockTimer) this.viewLockTimer.stop();
+		console.log('View-lock released!');
+		if (this.viewLockTimer) this.viewLockTimer = null;
 	}
 
 	drawDirection = async (start, end) => {
@@ -396,7 +447,7 @@ class MapCoreBase extends React.Component {
 		}
 
 		const data = await getRoute(start, end);
-		if (data.routes) {
+		if (data.routes && data.routes[0]) {
 			const route = data.routes[0];
 			// console.log('Route:', start, end);
 			this.showFullRouteOnMap(start, end);
@@ -461,7 +512,7 @@ class MapCoreBase extends React.Component {
 	}
 }
 
-const SkinnableMap = AppContextConnect(({navigation, location, userSettings, updateAppState}) => ({
+const SkinnableMap = AppContextConnect(({location, userSettings, updateAppState}) => ({
 	// We should import the app-level variable for our current location then feed that in as the "start"
 	skin: userSettings.skin,
 	location,
