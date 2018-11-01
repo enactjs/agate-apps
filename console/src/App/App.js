@@ -26,8 +26,6 @@ import Weather from '../views/WeatherPanel';
 import Dashboard from '../views/Dashboard';
 import Multimedia from '../views/MultimediaPanel';
 
-import openSocket from 'socket.io-client';
-
 import AppStateConnect from './AppContextConnect';
 
 import css from './App.less';

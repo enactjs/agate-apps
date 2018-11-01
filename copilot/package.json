@@ -37,7 +37,6 @@
 		"prop-types": "^15.6.2",
 		"query-string": "^6.2.0",
 		"react": "^16.4.2",
-		"react-dom": "^16.4.2",
-		"socket.io-client": "^2.1.1"
+		"react-dom": "^16.4.2"
 	}
 }

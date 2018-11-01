@@ -1,0 +1,7 @@
+{
+  "name": "agate-apps-components",
+  "version": "0.0.1",
+  "dependencies": {
+    "socket.io-client": "^2.1.1"
+  }
+}

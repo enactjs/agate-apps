@@ -1,39 +1,42 @@
 import Button from '@enact/agate/Button';
-import {Panel} from '@enact/agate/Panels';
-import Popup from '@enact/agate/Popup';
 import {Cell, Column} from '@enact/ui/Layout';
 import GridListImageItem from '@enact/ui/GridListImageItem';
+import {Panel} from '@enact/agate/Panels';
+import Popup from '@enact/agate/Popup';
+import React from 'react';
 import ri from '@enact/ui/resolution';
 import {VirtualGridList} from '@enact/ui/VirtualList';
 
-import React from 'react';
-import openSocket from 'socket.io-client';
-
+import API from '../../../components/API';
 import youtubeVideos from './youtubeapi.json';
+
 import css from './Multimedia.less';
 
 class Multimedia extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			open: false
+			open: false,
+			screenId: 'console'
 		};
+		// reference for the API component
+		this.API = React.createRef();
 		this.selectedVideo = {};
 		this.videos = youtubeVideos.items;
 	}
 
 	componentDidMount () {
-		this.socket = openSocket('http://localhost:3000');
+		this.API.current.connect({});
 	}
 
-	sendVideoData = (video) => {
-		this.socket.emit('SEND_DATA', video);
+	componentWillUnmount () {
+		this.API.current.disconnect();
 	}
 
 	selectVideo = (video) => () => {
 		this.selectedVideo = video;
 		this.togglePopup();
-	}
+	};
 
 	togglePopup = () => {
 		this.setState((prevState) => {
@@ -41,20 +44,12 @@ class Multimedia extends React.Component {
 				open: !prevState.open
 			};
 		});
-	}
+	};
 
-	setScreen = (screenId) => () => {
-		const video = {
-			type: 'youtube',
-			title: this.selectedVideo.snippet.title,
-			url: `https://www.youtube.com/embed/${this.selectedVideo.id}?autoplay=1`,
-			screenId: screenId,
-			route: `VIDEO_ADD_COPILOT/${screenId}`
-		};
-
-		this.sendVideoData(video);
+	sendVideo = (screenId) => () => {
+		this.API.current.sendVideoData({screenId, video: this.selectedVideo});
 		this.togglePopup();
-	}
+	};
 
 	renderItem = ({index, ...rest}) => {
 		return (
@@ -66,27 +61,13 @@ class Multimedia extends React.Component {
 				onClick={this.selectVideo(this.videos[index])}
 			/>
 		);
-	}
+	};
 
 	render () {
 		return (
-			<Panel>
-				<Column align="center">
-					<Cell shrink>
-						Recommended Videos
-					</Cell>
-					<Cell
-						component={VirtualGridList}
-						dataSize={this.videos.length}
-						itemRenderer={this.renderItem}
-						itemSize={{
-							minWidth: ri.scale(320),
-							minHeight: ri.scale(180)
-						}}
-						className={css.thumbnails}
-						spacing={ri.scale(67)}
-					/>
-				</Column>
+			<React.Fragment>
+				{/* eslint-disable-next-line */}
+				<API screenId={this.state.screenId} ref={this.API} />
 				<Popup
 					open={this.state.open}
 					closeButton
@@ -96,11 +77,29 @@ class Multimedia extends React.Component {
 						Select Screen
 					</title>
 					<buttons>
-						<Button onClick={this.setScreen(1)}>Screen 1</Button>
-						<Button onClick={this.setScreen(2)}>Screen 2</Button>
+						<Button onClick={this.sendVideo(1)}>Screen 1</Button>
+						<Button onClick={this.sendVideo(2)}>Screen 2</Button>
 					</buttons>
 				</Popup>
-			</Panel>
+				<Panel>
+					<Column align="center">
+						<Cell shrink>
+							Recommended Videos
+						</Cell>
+						<Cell
+							component={VirtualGridList}
+							dataSize={this.videos.length}
+							itemRenderer={this.renderItem}
+							itemSize={{
+								minWidth: ri.scale(320),
+								minHeight: ri.scale(180)
+							}}
+							className={css.thumbnails}
+							spacing={ri.scale(67)}
+						/>
+					</Column>
+				</Panel>
+			</React.Fragment>
 		);
 	}
 }

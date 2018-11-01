@@ -3,9 +3,10 @@ import Button from '@enact/agate/Button';
 import {Cell, Row} from '@enact/ui/Layout';
 import Job from '@enact/core/util/Job';
 import kind from '@enact/core/kind';
-import openSocket from 'socket.io-client';
 import Popup from '@enact/agate/Popup';
 import React from 'react';
+
+import API from '../../../components/API';
 
 import css from './App.less';
 
@@ -22,7 +23,7 @@ const AppBase = kind({
 			<div {...rest}>
 				<Popup
 					open={popupOpen}
-					closeButton
+					noAutoDismiss
 					onClose={togglePopup}
 				>
 					<title>
@@ -55,62 +56,49 @@ class App extends React.Component {
 		super(props);
 		this.state = {
 			adContent: this.props.adContent || 'Your Ad Here',
-			url: '',
 			popupOpen: true,
+			screenId: 1,
 			showAd: this.props.showAd || false,
-			screenId: 1
+			url: ''
 		};
+		// reference for the API component
+		this.API = React.createRef();
 		// Job to control hiding ads
 		this.adTimer = new Job(this.hideAdSpace);
 	}
 
-	componentWillMount () {
-		this.socket = openSocket('http://localhost:3000');
-		this.listenForVideoChange(this.state.screenId);
-		this.socket.on('SHOW_AD', this.showAdSpace);
-		this.socket.emit('COPILOT_CONNECT', this.state.screenId);
-	}
-
-	componentDidUpdate (prevProps, prevState) {
-		if (prevState.screenId !== this.state.screenId) {
-			this.socket.removeAllListeners(`VIDEO_ADD_COPILOT/${prevState.screenId}`);
-			this.listenForVideoChange(this.state.screenId);
-		}
-	}
-
 	componentWillUnmount () {
-		this.socket.close();
+		this.API.current.disconnect();
 		this.adTimer.stop();
-	}
-
-	listenForVideoChange = (screenId) => {
-		this.socket.on(`VIDEO_ADD_COPILOT/${screenId}`, (item) => {
-			this.setState(() => {
-				return {
-					url: item.url
-				};
-			});
-		});
 	}
 
 	onToggle = () => {
 		this.setState(({popupOpen}) => {
 			return {popupOpen: !popupOpen};
 		});
-	}
+	};
 
 	// Note for this one we may need to include some logic to actually switch channels.
 	// for example if we're on screen 2, but we want to tune into screen 1 we can just switch.
 	setScreen = (screenId) => () => {
-		this.setState(() => {
-			return {screenId: screenId};
+		// disconnect any current connections
+		this.API.current.disconnect();
+		// set the new screen ID
+		this.setState({screenId}, () => {
+			// connect
+			this.API.current.connect({onPlayVideo: this.playVideo, onShowAdSpace: this.showAdSpace});
 		});
-		this.onToggle();
-	}
 
+		// close the popup
+		this.onToggle();
+	};
 
 	hideAdSpace = () => {
 		this.setState({adContent: '', showAd: false});
+	};
+
+	playVideo = ({url}) => {
+		this.setState({url});
 	};
 
 	showAdSpace = ({adContent, duration}) => {
@@ -119,11 +107,20 @@ class App extends React.Component {
 	};
 
 	render () {
-		const props = {...this.state};
-		delete props.screenId;
+		const {adContent, popupOpen, showAd, url} = this.state;
+		const props = {
+			adContent,
+			popupOpen,
+			showAd,
+			url
+		};
 
 		return (
-			<AppBase {...props} togglePopup={this.onToggle} setScreen={this.setScreen} />
+			<React.Fragment>
+				{/* eslint-disable-next-line */}
+				<API screenId={this.state.screenId} ref={this.API} />
+				<AppBase {...props} togglePopup={this.onToggle} setScreen={this.setScreen} />
+			</React.Fragment>
 		);
 	}
 }
