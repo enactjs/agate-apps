@@ -15,7 +15,7 @@ class API extends React.Component {
 		if (screenId !== 'console') {
 			this.listenForVideoChange({onPlayVideo});
 			this.socket.on('SHOW_AD', onShowAdSpace);
-			this.socket.emit('COPILOT_CONNECT', {id: this.props.screenId});
+			this.socket.emit('COPILOT_CONNECT', {id: screenId});
 		}
 	};
 
