@@ -2,18 +2,95 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
 import classnames from 'classnames';
+import {Job} from '@enact/core/util';
+
 import AppContextConnect from '../../App/AppContextConnect';
 import appConfig from '../../../config';
+import CarSvg from '../Dashboard/svg/car.svg';
 
 import css from './MapCore.less';
+
+const linear = (input) => input;
 
 if (!appConfig.mapApiKey) {
 	Error('Please set `mapApiKey` key in your `config.js` file to your own Mapbox API key.');
 }
 mapboxgl.accessToken = appConfig.mapApiKey;
 
+const propTypeLatLon = PropTypes.shape({
+	lat: PropTypes.number,
+	lon: PropTypes.number
+});
+
+
+//
+// Map Utilities
+//
+const toMapbox = (latLon) => [latLon.lon, latLon.lat];
+const toLatLon = (mb) => ({lat: mb[1], lon: mb[0]});
+const toDeg = (rad) => (rad * 180 / Math.PI);
+
+const newBounds = (point1, point2) => {
+	// Takes two arbitrary points and determines the southwest most and northeast most coordinates that contain them
+	const corner1 = [point1.lon, point1.lat];
+	const corner2 = [point2.lon, point2.lat];
+	if (point2.lon < point1.lon) {
+		corner1[0] = point2.lon;
+		corner2[0] = point1.lon;
+	}
+	if (point2.lat < point1.lat) {
+		corner1[1] = point2.lat;
+		corner2[1] = point1.lat;
+	}
+	return new mapboxgl.LngLatBounds(corner1, corner2);
+};
+
+const buildQueryString = (props) => {
+	const pairs = [];
+	for (const key in props) {
+		let value = props[key];
+		if (value instanceof Array) {
+			value = value.join(';');
+		}
+		pairs.push(key + '=' + encodeURIComponent(value));
+	}
+	return pairs.join('&');
+};
+
+const coordsUpdated = (propName, prevProps, nextProps) => {
+	// Check the following:
+	//   the object exists in the nextProps
+	//   any of the following:
+	//     the prop didn't exist in prevProps
+	//     the prop's lat isn't the same as the new prop's lat
+	//     the prop's lon isn't the same as the new prop's lon
+	if (nextProps[propName] && (!prevProps[propName] ||
+		prevProps[propName].lat !== nextProps[propName].lat ||
+		prevProps[propName].lon !== nextProps[propName].lon
+	)) {
+		return true;
+	}
+	return false;
+};
+
+//
+// Get Directions
+//
 const getRoute = async (start, end) => {
-	const response = await window.fetch('https://api.mapbox.com/directions/v5/mapbox/driving/' + start[0] + ',' + start[1] + ';' + end[0] + ',' + end[1] + '?geometries=geojson&access_token=' + mapboxgl.accessToken);
+	const startMb = toMapbox(start);
+	const endMb = toMapbox(end);
+	let bearing = toDeg(start.orientation);
+	if (bearing < 0) bearing += 360;
+
+	// geometries=geojson&bearings=${bearing},45;&radiuses=100;100&access_token=${mapboxgl.accessToken}
+	const qs = buildQueryString({
+		geometries: 'geojson',
+		bearings: [`${bearing},45`, null],
+		radiuses: [100, 100],
+		access_token: mapboxgl.accessToken // eslint-disable-line camelcase
+	});
+	// console.log('qs:', qs);
+	const response = await window.fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${startMb[0]},${startMb[1]};${endMb[0]},${endMb[1]}?${qs}`);
 	return await response.json();
 };
 
@@ -77,15 +154,32 @@ const skinStyles = {
 
 class MapCoreBase extends React.Component {
 	static propTypes = {
+		setDestination: PropTypes.func.isRequired,
+		updateNavigation: PropTypes.func.isRequired,
+		centeringDuration: PropTypes.number,
+		destination: propTypeLatLon,
 		follow: PropTypes.bool, // Should the centering position follow the current location?
-		location: PropTypes.array, // Our actual current location on the world
-		position: PropTypes.array, // The map's centering position
-		skin: PropTypes.string
+		location: propTypeLatLon, // Our actual current location on the world
+		position: propTypeLatLon, // The map's centering position
+		proposedDestination: propTypeLatLon,
+		skin: PropTypes.string,
+		viewLockoutDuration: PropTypes.number,
+		zoomToSpeedScaleFactor: PropTypes.number
+	}
+
+	static defaultProps = {
+		centeringDuration: 2000,
+		viewLockoutDuration: 4000,
+		zoomToSpeedScaleFactor: 0.02
 	}
 
 	constructor (props) {
 		super(props);
 		this.localinfo = {};  // A copy of queried data for quick comparisons
+
+		this.state = {
+			carShowing: true
+		};
 	}
 
 	componentWillMount () {
@@ -96,7 +190,7 @@ class MapCoreBase extends React.Component {
 
 	componentDidMount () {
 		const style = skinStyles[this.props.skin] || skinStyles.titanium;
-		const start = [-121.979125, 37.405189];
+		const start = {lon: -121.979125, lat: 37.405189};
 
 		// stop drawing map if accessToken is not set.
 		if (!mapboxgl.accessToken) return;
@@ -104,7 +198,7 @@ class MapCoreBase extends React.Component {
 		this.map = new mapboxgl.Map({
 			container: this.mapNode,
 			style,
-			center: start,
+			center: toMapbox(start),
 			zoom: 12
 		});
 
@@ -120,6 +214,9 @@ class MapCoreBase extends React.Component {
 		});
 
 		this.map.on('click', 'symbols', (e) => {
+			// This method is a bit messy because it now intermixes different coordinates systems
+			// `coordinates` comes in as Mapbox format and `start` is latlon format.
+			// This could be updated, but it's marginally faster to leave it this way.
 			let coordinates = e.features[0].geometry.coordinates.slice();
 			let description = e.features[0].properties.description;
 
@@ -128,88 +225,208 @@ class MapCoreBase extends React.Component {
 			}
 
 			this.showPopup(coordinates, description);
-			this.drawDirection(start, coordinates);
-			this.centerMap({center: [(coordinates[0] + start[0]) / 2, (coordinates[1] + start[1]) / 2]});
+			this.drawDirection(start, {lon: coordinates[0], lat: coordinates[1]});
+			this.centerMap({center: [(coordinates[0] + start.lon) / 2, (coordinates[1] + start.lat) / 2]});
 		});
 	}
 
-	componentWillUpdate (nextProps) {
-		if (this.props.skin !== nextProps.skin) {
-			const style = skinStyles[nextProps.skin] || skinStyles.titanium;
+	componentDidUpdate (prevProps) {
+		if (this.props.skin !== prevProps.skin) {
+			const style = skinStyles[prevProps.skin] || skinStyles.titanium;
 			this.map.setStyle(style);
 
 			// make sure the map is resized after the container updates
 			setTimeout(this.map.resize.bind(this.map), 0);
 		}
-		// if following
-		if (nextProps.follow) {
-			// and the location != new location
-			// OR if the map center is different from the last true center
-			if (
-				nextProps.location[0] !== this.props.location[0] ||
-				nextProps.location[1] !== this.props.location[1] ||
-				this.localinfo.center !== this.map.getCenter()) {
-				// update the map, instantly
-				this.centerMap({center: nextProps.location, instant: true});
-			}
-		} else if ((nextProps.position && this.props.position) && (nextProps.position[0] !== this.props.position[0] || nextProps.position[1] !== this.props.position[1])) {
-			// else
-			// and position changes
-			// update map with casual fly
-			this.centerMap({center: nextProps.position});
+
+		// `actions` is populated by a set of instructions (represented by keys) and their
+		// associated arguments (represented by those keys' values). As new actions are discovered
+		// they are added to the stack. Actions are processed all in one clump in a separate method.
+		// This allows multiple scenarios to invoke the same action and have them not conflict with
+		// each other, and have the logic of what to do abstracted from when to do it.
+		const actions = {};
+
+		// Received a new orientation
+		if (this.props.location && (!prevProps.location ||
+			prevProps.location.orientation !== this.props.location.orientation
+		)) {
+			this.orientCarImage(this.props.location.orientation);
 		}
+
+		// Received a new proposedDestination
+		if (coordsUpdated('proposedDestination', prevProps, this.props)) {
+			actions.plotRoute = [this.props.location, this.props.proposedDestination];
+		}
+
+		// Received a new velocity
+		if (this.props.location && (!prevProps.location ||
+			prevProps.location.linearVelocity !== this.props.location.linearVelocity
+		)) {
+			actions.zoom = this.props.location.linearVelocity;
+		}
+
+		// Received a new location
+		if (coordsUpdated('location', prevProps, this.props)) {
+			actions.center = this.props.location;
+		}
+
+		// Received a new destination
+		if (coordsUpdated('destination', prevProps, this.props)) {
+			console.log('Initiating navigation to a new destination:', this.props.destination);
+			actions.plotRoute = [this.props.location, this.props.destination];
+			actions.startNavigating = this.props.destination;
+		}
+
+		if (!actions.center && coordsUpdated('position', prevProps, this.props)) {
+			actions.center = this.props.position;
+		}
+
+		this.actionManager(actions);
 	}
 
 	componentWillUnmount () {
 		if (this.map) this.map.remove();
 	}
 
-	centerMap ({center, instant = false}) {
-		this.map.flyTo({center, maxDuration: (instant ? 1 : this.props.centeringDuration)});
-		this.localinfo.center = this.map.getCenter(); // save a copy in their format for comparison
+	actionManager = (actions) => {
+		for (const action in actions) {
+			if (action) {
+				switch (action) {
+					case 'plotRoute': {
+						this.drawDirection(actions[action][0], actions[action][1]);
+						break;
+					}
+					case 'startNavigating': {
+						this.props.setDestination({destination: actions[action]});
+						break;
+					}
+					case 'center': {
+						this.centerMap({center: actions[action]});
+						break;
+					}
+					case 'zoom': {
+						// if following
+						// if (this.props.follow) {
+
+						this.velocityZoom(actions[action]);
+						break;
+					}
+				}
+			}
+		}
 	}
 
-	showPopup (coordinates, description) {
+	calculateZoomLevel = (linearVelocity) => {
+		// Zoom out if we're moving fast, zoom in if we're moving slowly.
+		// Available zoom levels range from 0 to 20
+		const vel = Math.max(0, linearVelocity);
+		// console.log('calc zoom:', this.props.location.linearVelocity, this.props.location);
+		return Math.abs(19 - ((vel * vel) * this.props.zoomToSpeedScaleFactor));
+	}
+
+	velocityZoom = (linearVelocity) => {
+		if (!this.viewLockTimer) {
+			const zoom = this.props.follow ? this.calculateZoomLevel(linearVelocity) : 15;
+			console.log('zoomTo:', zoom);
+			this.map.zoomTo(zoom);
+		}
+	}
+
+	centerMap = ({center, instant = false}) => {
+		// Never center the map if we're currently in view-lock
+		if (!this.viewLockTimer) {
+			center = (center instanceof Array) ? center : toMapbox(center);
+
+
+			if (instant) {
+				this.map.jumpTo({center});
+			} else {
+				// console.log('centerMap to:', center[0], center[1], center);
+				this.map.panTo(
+					center,
+					{duration: 800, easing: linear, animation: true}
+				);
+				// this.map.flyTo(
+				// 	{
+				// 		center,
+				// 		// maxDuration: this.props.centeringDuration,
+				// 		zoom
+				// 	},
+				// 	// {duration: (instant ? 500 : 500)}
+				// 	{duration: 800, easing: linear, animation: true}
+				// );
+			}
+			// this.map.flyTo({center, maxDuration: (instant ? 500 : this.props.centeringDuration)});
+			this.localinfo.center = toLatLon(this.map.getCenter()); // save the current center, based on their truth rather than ours
+		}
+	}
+
+	orientCarImage = (orientation) => {
+		this.carNode.style.setProperty('--map-orientation', orientation);
+	}
+
+	showPopup = (coordinates, description) => {
 		new mapboxgl.Popup()
 			.setLngLat(coordinates)
 			.setHTML(description)
 			.addTo(this.map);
 	}
 
+	showFullRouteOnMap = (start, end) => {
+		const bounds = newBounds(start, end);
+		this.map.fitBounds(bounds, {padding: 50});
+
+		// Set a time to automatically pan back to the current position.
+		if (this.viewLockTimert) this.viewLockTimer.stop();
+		this.viewLockTimer = new Job(this.finishedShowingFullRouteOnMap, this.props.viewLockoutDuration);
+		// console.log('Starting view-lock');
+		this.viewLockTimer.start();
+	}
+
+	finishedShowingFullRouteOnMap = () => {
+		console.log('View-lock released!');
+		if (this.viewLockTimer) this.viewLockTimer = null;
+	}
+
 	drawDirection = async (start, end) => {
-		const startPoint = this.map.getSource('start');
+		// const startMb = toMapbox(start);
+		const endMb = toMapbox(end);
+
+		this.setState({carShowing: true});
+
+		// const startPoint = this.map.getSource('start');
 		const endPoint = this.map.getSource('end');
 		const direction = this.map.getSource('route');
-		if (startPoint) {
-			startPoint.setData({
-				type: 'Feature',
-				geometry: {
-					type: 'Point',
-					coordinates: start
-				}
-			});
-		} else {
-			this.map.addLayer({
-				id: 'start',
-				type: 'circle',
-				source: {
-					type: 'geojson',
-					data: {
-						type: 'Feature',
-						geometry: {
-							type: 'Point',
-							coordinates: start
-						}
-					}
-				}
-			});
-		}
+		// if (startPoint) {
+		// 	startPoint.setData({
+		// 		type: 'Feature',
+		// 		geometry: {
+		// 			type: 'Point',
+		// 			coordinates: start
+		// 		}
+		// 	});
+		// } else {
+		// 	this.map.addLayer({
+		// 		id: 'start',
+		// 		type: 'circle',
+		// 		source: {
+		// 			type: 'geojson',
+		// 			data: {
+		// 				type: 'Feature',
+		// 				geometry: {
+		// 					type: 'Point',
+		// 					coordinates: start
+		// 				}
+		// 			}
+		// 		}
+		// 	});
+		// }
 		if (endPoint) {
 			endPoint.setData({
 				type: 'Feature',
 				geometry: {
 					type: 'Point',
-					coordinates: end
+					coordinates: endMb
 				}
 			});
 		} else {
@@ -222,7 +439,7 @@ class MapCoreBase extends React.Component {
 						type: 'Feature',
 						geometry: {
 							type: 'Point',
-							coordinates: end
+							coordinates: endMb
 						}
 					}
 				}
@@ -230,38 +447,62 @@ class MapCoreBase extends React.Component {
 		}
 
 		const data = await getRoute(start, end);
-		const route = data.routes[0];
-		if (direction) {
-			direction.setData({
-				type: 'Feature',
-				geometry: route.geometry
+		if (data.routes && data.routes[0]) {
+			const route = data.routes[0];
+			// console.log('Route:', start, end);
+			this.showFullRouteOnMap(start, end);
+
+			this.props.updateNavigation({
+				duration: route.duration
 			});
-		} else {
-			this.map.addLayer({
-				id: 'route',
-				type: 'line',
-				source: {
-					type: 'geojson',
-					data: {
-						type: 'Feature',
-						geometry: route.geometry
+
+			if (direction) {
+				direction.setData({
+					type: 'Feature',
+					geometry: route.geometry
+				});
+			} else {
+				this.map.addLayer({
+					id: 'route',
+					type: 'line',
+					source: {
+						type: 'geojson',
+						data: {
+							type: 'Feature',
+							geometry: route.geometry
+						}
+					},
+					paint: {
+						'line-width': 3
 					}
-				},
-				paint: {
-					'line-width': 2
-				}
-			});
+				});
+			}
+		} else {
+			// wtf was in the data object anyway??
+			console.log('No routes in response:', data);
 		}
 	}
 
+	setCarNode = (node) => (this.carNode = node)
 	setMapNode = (node) => (this.mapNode = node)
 
 	render () {
 		const {className, ...rest} = this.props;
+		delete rest.centeringDuration;
+		delete rest.destination;
 		delete rest.follow;
+		delete rest.location;
+		delete rest.position;
+		delete rest.proposedDestination;
+		delete rest.setDestination;
+		delete rest.skin;
+		delete rest.updateNavigation;
+		delete rest.viewLockoutDuration;
+		delete rest.zoomToSpeedScaleFactor;
 		return (
 			<div {...rest} className={classnames(className, css.map)}>
 				{this.message ? <div className={css.message}>{this.message}</div> : null}
+				<img className={classnames(css.carImage, (this.state.carShowing ? null : css.hidden))} ref={this.setCarNode} src={CarSvg} alt="" />
 				<div
 					ref={this.setMapNode}
 					className={css.mapNode}
@@ -271,10 +512,20 @@ class MapCoreBase extends React.Component {
 	}
 }
 
-const SkinnableMap = AppContextConnect(({location, userSettings}) => ({
+const SkinnableMap = AppContextConnect(({location, userSettings, updateAppState}) => ({
 	// We should import the app-level variable for our current location then feed that in as the "start"
 	skin: userSettings.skin,
-	location: [location.longitude, location.latitude]
+	location,
+	// destination: navigation.destination,
+	updateNavigation: ({duration}) => {
+		updateAppState((state) => {
+			const now = new Date().getTime();
+			state.navigation.duration = duration;
+			state.navigation.startTime = now;
+			state.navigation.eta = new Date(now + (duration * 60000)).getTime();
+			// console.log('updateNavigation:', state.navigation);
+		});
+	}
 }));
 
 const MapCore = SkinnableMap(MapCoreBase);

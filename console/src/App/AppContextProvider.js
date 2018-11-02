@@ -46,7 +46,26 @@ class AppContextProvider extends Component {
 				fontSize: 0,
 				skin: props.defaultSkin || 'carbon'
 			},
-			location: {},
+			connections: {
+				serviceLayer: false
+			},
+			location: {
+				lat: 0,
+				lon: 0,
+				linearVelocity: 0,
+				orientation: 0
+			},
+			navigation: {
+				destination: {
+					lat: 0,
+					lon: 0
+				},
+				distance: 0,
+				duration: 0,
+				eta: 0,
+				startTime: 0,
+				navigating: false
+			},
 			weather: {}
 		};
 	}
@@ -98,11 +117,21 @@ class AppContextProvider extends Component {
 	setLocation = () => {
 		if (window.navigator.geolocation) {
 			this.watchPositionId = window.navigator.geolocation.watchPosition((position) => {
-				this.updateAppState((state) => {
-					state.location.latitude = position.coords.latitude;
-					state.location.longitude = position.coords.longitude;
-				});
-				this.setWeather(position.coords.latitude, position.coords.longitude);
+				// This code will only fire when the watchPosition changes, not necessarily when
+				// the app state's location changes. Dev Note: Find a way to trigger the weather to
+				// be set if the location changes and disable this watch in that case, but reconnect
+				// it if the connection to the service layer drops.
+				if (this.state.connections.serviceLayer) {
+					// We happened to get our data from elsewhere
+					this.setWeather(this.state.location.lat, this.state.location.lon);
+				} else {
+					// Just use location services.
+					this.updateAppState((state) => {
+						state.location.lat = position.coords.latitude;
+						state.location.lon = position.coords.longitude;
+					});
+					this.setWeather(position.coords.latitude, position.coords.longitude);
+				}
 			}, (error) => {
 				console.error('Location error:', error);
 			},

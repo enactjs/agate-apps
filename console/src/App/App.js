@@ -1,17 +1,22 @@
+// External
+import kind from '@enact/core/kind';
+import hoc from '@enact/core/hoc';
+import {add} from '@enact/core/keymap';
 import {forward, handle} from '@enact/core/handle';
+import {Cell, Column} from '@enact/ui/Layout';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
 import ToggleButton from '@enact/agate/ToggleButton';
-import {Cell, Column} from '@enact/ui/Layout';
-import compose from 'ramda/src/compose';
-import hoc from '@enact/core/hoc';
-import {add} from '@enact/core/keymap';
-import kind from '@enact/core/kind';
 import Popup from '@enact/agate/Popup';
 import DateTimePicker from '@enact/agate/DateTimePicker';
-import React from 'react';
 import {TabbedPanels} from '@enact/agate/Panels';
+import React from 'react';
+import compose from 'ramda/src/compose';
 
+// Data Services
+import ServiceLayer from '../data/ServiceLayer';
+
+// Components
 import Clock from '../components/Clock';
 import CustomLayout from '../components/CustomLayout';
 import UserSelectionPopup from '../components/UserSelectionPopup';
@@ -27,9 +32,12 @@ import Weather from '../views/WeatherPanel';
 import Dashboard from '../views/Dashboard';
 import Multimedia from '../views/MultimediaPanel';
 
+// Local Components
 import AppStateConnect from './AppContextConnect';
 
+// CSS/LESS Styling
 import css from './App.less';
+
 
 add('backspace', 8);
 
@@ -71,6 +79,7 @@ const AppBase = kind({
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
 		onToggleUserSelectionPopup,
+		setDestination,
 		showPopup,
 		showBasicPopup,
 		showDateTimePopup,
@@ -80,6 +89,8 @@ const AppBase = kind({
 	}) => {
 		delete rest.accent;
 		delete rest.highlight;
+		// delete rest.setDestination;
+		delete rest.endNavigation;
 		return (
 			<div>
 				<TabbedPanels
@@ -109,6 +120,7 @@ const AppBase = kind({
 					</afterTabs>
 					<Home
 						onSelect={onSelect}
+						setDestination={setDestination}
 						arrangeable={layoutArrangeable}
 					/>
 					<Phone arrangeable={layoutArrangeable} />
@@ -119,7 +131,7 @@ const AppBase = kind({
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}
 					/>
-					<MapView />
+					<MapView setDestination={setDestination} />
 					<Settings
 						onSelect={onSelect}
 						onToggleDateTimePopup={onToggleDateTimePopup}
@@ -256,12 +268,25 @@ const AppDecorator = compose(
 		colorAccent: userSettings.colorAccent,
 		colorHighlight: userSettings.colorHighlight,
 		layoutArrangeable: userSettings.arrangements.arrangeable,
-		layoutArrangeableToggle:({selected}) => {
+		layoutArrangeableToggle: ({selected}) => {
 			updateAppState((state) => {
 				state.userSettings.arrangements.arrangeable = selected;
 			});
 		},
-		updateSkin:() => {
+		// setDestination: ({destination, navigating}) => {
+		// 	updateAppState((state) => {
+		// 		state.navigation.destination = destination;
+		// 		if (navigating != null) {
+		// 			state.navigation.navigating = navigating;
+		// 		}
+		// 	});
+		// },
+		// endNavigation: ({navigating}) => {
+		// 	updateAppState((state) => {
+		// 		state.navigation.navigating = navigating;
+		// 	});
+		// },
+		updateSkin: () => {
 			updateAppState((state) => {
 				let newSkin;
 				switch (state.userSettings.skin) {
@@ -274,6 +299,7 @@ const AppDecorator = compose(
 		}
 	})),
 	AppState,
+	ServiceLayer,
 	AgateDecorator
 );
 
