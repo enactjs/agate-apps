@@ -26,26 +26,31 @@ const getWeather = async (latitude, longitude) => {
 	};
 };
 
+const userIds = [1, 2, 3];
+
+const defaultUserSettings = {
+	arrangements: {
+		arrangeable: false,
+		dashboard: {},
+		home: {},
+		hvac: {},
+		phone: {},
+		radio: {}
+	},
+	colorAccent: '#cccccc',
+	colorHighlight: '#66aabb',
+	fontSize: 0,
+	skin: 'carbon'
+};
+
 class AppContextProvider extends Component {
 	constructor (props) {
 		super(props);
 		this.watchPositionId = null;  // Store the reference to the position watcher.
+		defaultUserSettings.skin = props.defaultSkin || 'carbon';
 		this.state = {
 			userId: 1,
-			userSettings: {
-				arrangements: {
-					arrangeable: false,
-					dashboard: {},
-					home: {},
-					hvac: {},
-					phone: {},
-					radio: {}
-				},
-				colorAccent: '#cccccc',
-				colorHighlight: '#66aabb',
-				fontSize: 0,
-				skin: props.defaultSkin || 'carbon'
-			},
+			userSettings: defaultUserSettings,
 			connections: {
 				serviceLayer: false
 			},
@@ -168,10 +173,24 @@ class AppContextProvider extends Component {
 		);
 	}
 
+	resetUserSettings = () => {
+		defaultUserSettings.skin = this.props.defaultSkin || 'carbon';
+		this.setState({userSettings: defaultUserSettings})
+	}
+
+	resetAll = () => {
+		defaultUserSettings.skin = this.props.defaultSkin || 'carbon';
+		userIds.forEach(id => {
+			window.localStorage.setItem(`user${id}`, JSON.stringify(defaultUserSettings));
+		});
+	}
+
 	render () {
 		const context = {
 			...this.state,
-			updateAppState: this.updateAppState
+			updateAppState: this.updateAppState,
+			resetUserSettings: this.resetUserSettings,
+			resetAll: this.resetAll
 		};
 
 		return (

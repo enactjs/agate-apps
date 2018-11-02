@@ -31,10 +31,7 @@ const UserSelectionPopupBase = kind({
 		className: 'userSelectionPopup'
 	},
 
-	// computed: {
-	// },
-
-	render: ({userId, updateUser, ...rest}) => (
+	render: ({userId, updateUser, resetUser, resetAll, ...rest}) => (
 		<Popup
 			// onClose={onTogglePopup}
 			// open={showPopup}
@@ -57,19 +54,25 @@ const UserSelectionPopupBase = kind({
 			</Group>
 
 			<buttons>
-				<Button>Reset Current User</Button>
-				<Button>Start Demo</Button>
+				<Button onClick={resetUser}>Reset Current User</Button>
+				<Button onClick={resetAll}>Start Demo</Button>
 			</buttons>
 		</Popup>
 	)
 });
 
-const UserSelectionPopup = AppContextConnect(({userId, updateAppState}) => ({
+const UserSelectionPopup = AppContextConnect(({userId, resetUserSettings, resetAll, updateAppState}) => ({
 	userId: userId,
 	updateUser: ({selected}) => {
 		updateAppState((state) => {
 			state.userId = selected + 1;
 		});
+	},
+	resetUser: () => {
+		resetUserSettings();
+	},
+	resetAll: () => {
+		resetAll();
 	}
 }))(UserSelectionPopupBase);
 
