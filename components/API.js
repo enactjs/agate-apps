@@ -5,6 +5,7 @@ import openSocket from 'socket.io-client';
 
 
 const handleAddVideo = handle(
+	handle.log('huh?'),
 	adaptEvent(item => ({url: item.url}), forward('onPlayVideo'))
 );
 
@@ -17,6 +18,13 @@ class API extends React.Component {
 	static propTypes = {
 		noAutoConnect: PropTypes.boolean,
 		screenId: PropTypes.number
+	}
+
+	constructor () {
+		super();
+
+		handleAddVideo.bindAs(this, 'handleAddVideo');
+		handleShowAd.bindAs(this, 'handleShowAd');
 	}
 
 	componentDidMount () {
@@ -36,16 +44,12 @@ class API extends React.Component {
 		this.disconnect();
 	}
 
-	handleAddVideo = handleAddVideo.bind(this)
-
-	handleShowAd = handleShowAd.bind(this)
-
 	_connect (screenId) {
 		this.socket = openSocket('http://localhost:3000');
 
 		if (screenId != null) {
-			this.socket.on(`VIDEO_ADD_COPILOT/${screenId}`, );
-			this.socket.on('SHOW_AD', handleShowAd.bind(this));
+			this.socket.on(`VIDEO_ADD_COPILOT/${screenId}`, this.handleAddVideo);
+			this.socket.on('SHOW_AD', this.handleShowAd);
 			this.socket.emit('COPILOT_CONNECT', {id: screenId});
 		}
 	}
