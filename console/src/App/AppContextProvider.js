@@ -187,9 +187,9 @@ class AppContextProvider extends Component {
 class PureFragment extends React.PureComponent {
 	render () {
 		return (
-			<React.Fragment>
+			<>
 				{this.props.children}
-			</React.Fragment>
+			</>
 		);
 	}
 }

@@ -1,0 +1,9 @@
+{
+  "name": "agate-apps-components",
+  "version": "0.0.1",
+  "dependencies": {
+    "prop-types": "^15.6.2",
+    "react": "^16.4.2",
+    "socket.io-client": "^2.1.1"
+  }
+}
