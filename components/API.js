@@ -5,7 +5,6 @@ import openSocket from 'socket.io-client';
 
 
 const handleAddVideo = handle(
-	handle.log('huh?'),
 	adaptEvent(item => ({url: item.url}), forward('onPlayVideo'))
 );
 
