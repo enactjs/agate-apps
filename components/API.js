@@ -15,7 +15,7 @@ const handleShowAd = handle(
 class API extends React.Component {
 
 	static propTypes = {
-		noAutoConnect: PropTypes.boolean,
+		noAutoConnect: PropTypes.bool,
 		screenId: PropTypes.number
 	}
 
