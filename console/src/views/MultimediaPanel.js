@@ -16,21 +16,12 @@ class Multimedia extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			open: false,
-			screenId: 'console'
+			open: false
 		};
 		// reference for the API component
 		this.API = React.createRef();
 		this.selectedVideo = {};
 		this.videos = youtubeVideos.items;
-	}
-
-	componentDidMount () {
-		this.API.current.connect({});
-	}
-
-	componentWillUnmount () {
-		this.API.current.disconnect();
 	}
 
 	selectVideo = (video) => () => {
@@ -47,7 +38,7 @@ class Multimedia extends React.Component {
 	};
 
 	sendVideo = (screenId) => () => {
-		this.API.current.sendVideoData({screenId, video: this.selectedVideo});
+		this.API.current.sendVideo({screenId, video: this.selectedVideo});
 		this.togglePopup();
 	};
 
@@ -67,7 +58,7 @@ class Multimedia extends React.Component {
 		return (
 			<React.Fragment>
 				{/* eslint-disable-next-line */}
-				<API screenId={this.state.screenId} ref={this.API} />
+				<API ref={this.API} />
 				<Popup
 					open={this.state.open}
 					closeButton

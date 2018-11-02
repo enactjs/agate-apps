@@ -1,38 +1,70 @@
-import openSocket from 'socket.io-client';
+import {adaptEvent, forward, handle} from '@enact/core/handle';
+import PropTypes from 'prop-types';
 import React from 'react';
+import openSocket from 'socket.io-client';
+
+
+const handleAddVideo = handle(
+	adaptEvent(item => ({url: item.url}), forward('onPlayVideo'))
+);
+
+const handleShowAd = handle(
+	forward('onShowAd')
+);
 
 class API extends React.Component {
 
-	shouldComponentUpdate () {
-		return false;
+	static propTypes = {
+		noAutoConnect: PropTypes.boolean,
+		screenId: PropTypes.number
 	}
 
-	connect = ({onPlayVideo, onShowAdSpace}) => {
-		const {screenId} = this.props;
+	componentDidMount () {
+		if (!this.props.noAutoConnect) {
+			this.connect();
+		}
+	}
 
+	componentDidUpdate (prevProps) {
+		if (!this.props.noAutoConnect && prevProps.screenId !== this.props.screenId) {
+			this._disconnect(prevProps.screenId);
+			this.connect();
+		}
+	}
+
+	componentWillUnmount () {
+		this.disconnect();
+	}
+
+	handleAddVideo = handleAddVideo.bind(this)
+
+	handleShowAd = handleShowAd.bind(this)
+
+	_connect (screenId) {
 		this.socket = openSocket('http://localhost:3000');
 
-		if (screenId !== 'console') {
-			this.listenForVideoChange({onPlayVideo});
-			this.socket.on('SHOW_AD', onShowAdSpace);
+		if (screenId != null) {
+			this.socket.on(`VIDEO_ADD_COPILOT/${screenId}`, );
+			this.socket.on('SHOW_AD', handleShowAd.bind(this));
 			this.socket.emit('COPILOT_CONNECT', {id: screenId});
 		}
-	};
+	}
 
-	disconnect = () => {
+	_disconnect (screenId) {
 		if (this.socket) {
-			this.socket.removeAllListeners(`VIDEO_ADD_COPILOT/${this.props.screenId}`);
+			if (screenId != null) {
+				this.socket.removeAllListeners(`VIDEO_ADD_COPILOT/${screenId}`);
+			}
+
 			this.socket.close();
 		}
-	};
+	}
 
-	listenForVideoChange = ({onPlayVideo}) => {
-		this.socket.on(`VIDEO_ADD_COPILOT/${this.props.screenId}`, (item) => {
-			onPlayVideo({url: item.url});
-		});
-	};
+	connect = () => this._connect(this.props.screenId);
 
-	sendVideoData = ({screenId, video}) => {
+	disconnect = () => this._disconnect(this.props.screenId);
+
+	sendVideo = ({screenId, video}) => {
 		const data = {
 			type: 'youtube',
 			title: video.snippet.title,
@@ -49,4 +81,6 @@ class API extends React.Component {
 }
 
 export default API;
-export {API};
+export {
+	API
+};

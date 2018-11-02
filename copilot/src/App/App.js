@@ -20,7 +20,19 @@ const AppBase = kind({
 
 	render: ({adContent, showAd, url, popupOpen, setScreen, togglePopup, ...rest}) => {
 		return (
-			<div {...rest}>
+			<>
+				<Row {...rest}>
+					<Cell
+						className={css.iframe}
+						allow="autoplay"
+						component="iframe"
+						src={url}
+					/>
+					{!showAd ? null : <Cell className={css.adSpace} shrink>
+						{adContent}
+					</Cell>}
+				</Row>
+				<Button style={{position: 'absolute'}} icon="plug" onClick={togglePopup} />
 				<Popup
 					open={popupOpen}
 					noAutoDismiss
@@ -34,19 +46,7 @@ const AppBase = kind({
 						<Button onClick={setScreen(2)}>Screen 2</Button>
 					</buttons>
 				</Popup>
-				<Row {...rest}>
-					<Cell
-						className={css.iframe}
-						allow="autoplay"
-						component="iframe"
-						src={url}
-					/>
-					{!showAd ? null : <Cell className={css.adSpace} shrink>
-						{adContent}
-					</Cell>}
-				</Row>
-				<Button style={{position: 'absolute'}} icon="plug" onClick={togglePopup} />
-			</div>
+			</>
 		);
 	}
 });
@@ -61,14 +61,11 @@ class App extends React.Component {
 			showAd: this.props.showAd || false,
 			url: ''
 		};
-		// reference for the API component
-		this.API = React.createRef();
 		// Job to control hiding ads
 		this.adTimer = new Job(this.hideAdSpace);
 	}
 
 	componentWillUnmount () {
-		this.API.current.disconnect();
 		this.adTimer.stop();
 	}
 
@@ -81,13 +78,8 @@ class App extends React.Component {
 	// Note for this one we may need to include some logic to actually switch channels.
 	// for example if we're on screen 2, but we want to tune into screen 1 we can just switch.
 	setScreen = (screenId) => () => {
-		// disconnect any current connections
-		this.API.current.disconnect();
 		// set the new screen ID
-		this.setState({screenId}, () => {
-			// connect
-			this.API.current.connect({onPlayVideo: this.playVideo, onShowAdSpace: this.showAdSpace});
-		});
+		this.setState({screenId});
 
 		// close the popup
 		this.onToggle();
@@ -118,7 +110,7 @@ class App extends React.Component {
 		return (
 			<React.Fragment>
 				{/* eslint-disable-next-line */}
-				<API screenId={this.state.screenId} ref={this.API} />
+				<API screenId={this.state.screenId} onPlayVideo={this.playVideo} onShowAd={this.showAdSpace} />
 				<AppBase {...props} togglePopup={this.onToggle} setScreen={this.setScreen} />
 			</React.Fragment>
 		);
