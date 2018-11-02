@@ -12,7 +12,7 @@ const handleShowAd = handle(
 	forward('onShowAd')
 );
 
-class API extends React.Component {
+class Communicator extends React.Component {
 
 	static propTypes = {
 		noAutoConnect: PropTypes.bool,
@@ -83,7 +83,7 @@ class API extends React.Component {
 	}
 }
 
-export default API;
+export default Communicator;
 export {
-	API
+	Communicator
 };
