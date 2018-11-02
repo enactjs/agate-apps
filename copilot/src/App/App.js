@@ -108,11 +108,11 @@ class App extends React.Component {
 		};
 
 		return (
-			<React.Fragment>
+			<>
 				{/* eslint-disable-next-line */}
 				<API screenId={this.state.screenId} onPlayVideo={this.playVideo} onShowAd={this.showAdSpace} />
 				<AppBase {...props} togglePopup={this.onToggle} setScreen={this.setScreen} />
-			</React.Fragment>
+			</>
 		);
 	}
 }

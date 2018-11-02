@@ -56,7 +56,7 @@ class Multimedia extends React.Component {
 
 	render () {
 		return (
-			<React.Fragment>
+			<>
 				{/* eslint-disable-next-line */}
 				<API ref={this.API} />
 				<Popup
@@ -90,7 +90,7 @@ class Multimedia extends React.Component {
 						/>
 					</Column>
 				</Panel>
-			</React.Fragment>
+			</>
 		);
 	}
 }
