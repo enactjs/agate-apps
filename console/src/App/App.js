@@ -25,6 +25,7 @@ import Settings from '../views/Settings';
 import DisplaySettings from '../views/DisplaySettings';
 import Weather from '../views/WeatherPanel';
 import Dashboard from '../views/Dashboard';
+import Multimedia from '../views/MultimediaPanel';
 
 import AppStateConnect from './AppContextConnect';
 
@@ -46,7 +47,8 @@ const panelIndexMap = [
 	'settings/display',
 	'weather',
 	'layoutsample',
-	'dashboard'
+	'dashboard',
+	'multimedia'
 ];
 // Look up a panel index by name, using the above list as the directory listing.
 const getPanelIndexOf = (panelName) => panelIndexMap.indexOf(panelName);
@@ -139,6 +141,7 @@ const AppBase = kind({
 						arrangeable={layoutArrangeable}
 						onSelect={onSelect}
 					/>
+					<Multimedia />
 				</TabbedPanels>
 				<UserSelectionPopup
 					onClose={onToggleUserSelectionPopup}

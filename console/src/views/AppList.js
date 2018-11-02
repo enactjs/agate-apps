@@ -38,7 +38,7 @@ const AppList = kind({
 				<Cell shrink>
 					<Row align="start center">
 						<AppIconCell icon="audio" data-tabindex={getPanelIndexOf('radio')} onKeyUp={onTabChange} onClick={onTabChange}>Radio</AppIconCell>
-						<AppIconCell icon="resumeplay">Multimedia</AppIconCell>
+						<AppIconCell icon="resumeplay" data-tabindex={getPanelIndexOf('multimedia')} onKeyUp={onTabChange} onClick={onTabChange}>Multimedia</AppIconCell>
 						<AppIconCell icon="repeat" onKeyUp={onPopupOpen} onClick={onToggleBasicPopup}>Connect</AppIconCell>
 					</Row>
 				</Cell>
