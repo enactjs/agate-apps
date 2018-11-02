@@ -30,7 +30,7 @@ import Settings from '../views/Settings';
 import DisplaySettings from '../views/DisplaySettings';
 import Weather from '../views/WeatherPanel';
 import Dashboard from '../views/Dashboard';
-import Multimedia from '../views/MultimediaPanel';
+import Multimedia from '../views/Multimedia';
 
 // Local Components
 import AppStateConnect from './AppContextConnect';
