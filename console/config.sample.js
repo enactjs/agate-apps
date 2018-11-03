@@ -9,5 +9,12 @@ export default {
 
 	// Point this variable to the hostname (IP, domain, or localhost) of the services layer
 	// The ROS server that we'll subscribe to to get service topics.
-	servicesLayerHost: 'localhost'
+	// Ex: localhost:9090
+	servicesLayerHost: 'localhost:9090',
+
+	// The host for the communication server that allows console to talk to co-pilot
+	// A "host" is the combination of the hostname (like localhost) and a port number.
+	// Most likely, this will be running on the same machine as this console app, but not mandatory.
+	// Ex: localhost:3000
+	communacitonServerHost: 'localhost:3000'
 };

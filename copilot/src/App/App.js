@@ -4,9 +4,11 @@ import {Cell, Row} from '@enact/ui/Layout';
 import Job from '@enact/core/util/Job';
 import kind from '@enact/core/kind';
 import Popup from '@enact/agate/Popup';
+import PropTypes from 'prop-types';
 import React from 'react';
 
-import API from '../../../components/API';
+import appConfig from '../../config';
+import Communicator from '../../../components/Communicator';
 
 import css from './App.less';
 
@@ -20,7 +22,7 @@ const AppBase = kind({
 
 	render: ({adContent, showAd, url, popupOpen, setScreen, togglePopup, ...rest}) => {
 		return (
-			<>
+			<React.Fragment>
 				<Row {...rest}>
 					<Cell
 						className={css.iframe}
@@ -46,12 +48,18 @@ const AppBase = kind({
 						<Button onClick={setScreen(2)}>Screen 2</Button>
 					</buttons>
 				</Popup>
-			</>
+			</React.Fragment>
 		);
 	}
 });
 
 class App extends React.Component {
+
+	static propTypes = {
+		adContent: PropTypes.string,
+		showAd: PropTypes.bool
+	}
+
 	constructor (props) {
 		super(props);
 		this.state = {
@@ -108,11 +116,15 @@ class App extends React.Component {
 		};
 
 		return (
-			<>
-				{/* eslint-disable-next-line */}
-				<API screenId={this.state.screenId} onPlayVideo={this.playVideo} onShowAd={this.showAdSpace} />
+			<React.Fragment>
+				<Communicator
+					host={appConfig.communacitonServerHost}
+					screenId={this.state.screenId}
+					onPlayVideo={this.playVideo}
+					onShowAd={this.showAdSpace}
+				/>
 				<AppBase {...props} togglePopup={this.onToggle} setScreen={this.setScreen} />
-			</>
+			</React.Fragment>
 		);
 	}
 }

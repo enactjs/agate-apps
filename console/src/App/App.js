@@ -30,7 +30,7 @@ import Settings from '../views/Settings';
 import DisplaySettings from '../views/DisplaySettings';
 import Weather from '../views/WeatherPanel';
 import Dashboard from '../views/Dashboard';
-import Multimedia from '../views/MultimediaPanel';
+import Multimedia from '../views/Multimedia';
 
 // Local Components
 import AppStateConnect from './AppContextConnect';
@@ -79,6 +79,7 @@ const AppBase = kind({
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
 		onToggleUserSelectionPopup,
+		sendVideo,
 		setDestination,
 		showPopup,
 		showBasicPopup,
@@ -153,7 +154,7 @@ const AppBase = kind({
 						arrangeable={layoutArrangeable}
 						onSelect={onSelect}
 					/>
-					<Multimedia />
+					<Multimedia sendVideo={sendVideo} />
 				</TabbedPanels>
 				<UserSelectionPopup
 					onClose={onToggleUserSelectionPopup}

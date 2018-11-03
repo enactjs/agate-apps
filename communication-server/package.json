@@ -1,7 +1,7 @@
 {
-  "name": "service-layer",
+  "name": "communication-server",
   "version": "1.0.0",
-  "description": "Service layer for co-pilot app to talk to console app.",
+  "description": "Facilitates communication between the console app and co-pilot app.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

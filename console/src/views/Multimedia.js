@@ -1,25 +1,29 @@
-import Button from '@enact/agate/Button';
-import {Cell, Column} from '@enact/ui/Layout';
-import GridListImageItem from '@enact/ui/GridListImageItem';
-import {Panel} from '@enact/agate/Panels';
-import Popup from '@enact/agate/Popup';
 import React from 'react';
+import classnames from 'classnames';
+import GridListImageItem from '@enact/ui/GridListImageItem';
+import {Cell, Column} from '@enact/ui/Layout';
 import ri from '@enact/ui/resolution';
 import {VirtualGridList} from '@enact/ui/VirtualList';
+import Button from '@enact/agate/Button';
+import {Panel} from '@enact/agate/Panels';
+import Divider from '@enact/agate/Divider';
+import Popup from '@enact/agate/Popup';
+import PropTypes from 'prop-types';
 
-import API from '../../../components/API';
-import youtubeVideos from './youtubeapi.json';
+import youtubeVideos from '../data/youtubeapi.json';
 
 import css from './Multimedia.less';
 
 class Multimedia extends React.Component {
+	static propTypes = {
+		sendVideo: PropTypes.func
+	}
+
 	constructor (props) {
 		super(props);
 		this.state = {
 			open: false
 		};
-		// reference for the API component
-		this.API = React.createRef();
 		this.selectedVideo = {};
 		this.videos = youtubeVideos.items;
 	}
@@ -30,15 +34,11 @@ class Multimedia extends React.Component {
 	};
 
 	togglePopup = () => {
-		this.setState((prevState) => {
-			return {
-				open: !prevState.open
-			};
-		});
+		this.setState(({open}) => ({open: !open}));
 	};
 
 	sendVideo = (screenId) => () => {
-		this.API.current.sendVideo({screenId, video: this.selectedVideo});
+		this.props.sendVideo({screenId, video: this.selectedVideo});
 		this.togglePopup();
 	};
 
@@ -55,10 +55,10 @@ class Multimedia extends React.Component {
 	};
 
 	render () {
+		const {className, ...rest} = this.props;
+		delete rest.sendVideo;
 		return (
-			<>
-				{/* eslint-disable-next-line */}
-				<API ref={this.API} />
+			<React.Fragment>
 				<Popup
 					open={this.state.open}
 					closeButton
@@ -72,10 +72,10 @@ class Multimedia extends React.Component {
 						<Button onClick={this.sendVideo(2)}>Screen 2</Button>
 					</buttons>
 				</Popup>
-				<Panel>
+				<Panel {...rest} className={classnames(className, css.multimedia)}>
 					<Column align="center">
 						<Cell shrink>
-							Recommended Videos
+							<Divider>Recommended Videos</Divider>
 						</Cell>
 						<Cell
 							component={VirtualGridList}
@@ -86,11 +86,11 @@ class Multimedia extends React.Component {
 								minHeight: ri.scale(180)
 							}}
 							className={css.thumbnails}
-							spacing={ri.scale(67)}
+							spacing={ri.scale(66)}
 						/>
 					</Column>
 				</Panel>
-			</>
+			</React.Fragment>
 		);
 	}
 }
