@@ -7,6 +7,7 @@ import Popup from '@enact/agate/Popup';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import appConfig from '../../config';
 import Communicator from '../../../components/Communicator';
 
 import css from './App.less';
@@ -117,6 +118,7 @@ class App extends React.Component {
 		return (
 			<React.Fragment>
 				<Communicator
+					host={appConfig.communacitonServerHost}
 					screenId={this.state.screenId}
 					onPlayVideo={this.playVideo}
 					onShowAd={this.showAdSpace}

@@ -15,8 +15,13 @@ const handleShowAd = handle(
 class Communicator extends React.Component {
 
 	static propTypes = {
+		host: PropTypes.string,
 		noAutoConnect: PropTypes.bool,
 		screenId: PropTypes.number
+	}
+
+	static defaultProps = {
+		host: 'localhost:3000'
 	}
 
 	constructor () {
@@ -44,7 +49,7 @@ class Communicator extends React.Component {
 	}
 
 	_connect (screenId) {
-		this.socket = openSocket('http://localhost:3000');
+		this.socket = openSocket(`ws://${this.props.host}`);
 
 		if (screenId != null) {
 			this.socket.on(`VIDEO_ADD_COPILOT/${screenId}`, this.handleAddVideo);

@@ -5,7 +5,7 @@ import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import React from 'react';
 import compose from 'ramda/src/compose';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 // Data Services
 import connect from './connector';
@@ -20,10 +20,17 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'ServiceLayer';
 
+		static propTypes = {
+			requestDestination: PropTypes.func.isRequired,
+			setConnected: PropTypes.func.isRequired,
+			setLocation: PropTypes.func.isRequired,
+			destination: PropTypes.object,
+			location: PropTypes.object
+		}
+
 		constructor (props) {
 			super(props);
 
-			this.destination = null;
 			this.done = false;
 			this.comm = React.createRef();
 
@@ -56,9 +63,6 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 						console.log('%cConnected to Service Layer', 'color: green');
 						if (this.reconnectLater) this.reconnectLater.stop();
 						this.props.setConnected(true);
-						// this.setState({
-						// 	connected: true
-						// });
 					},
 					onClose: () => {
 						console.log('%cDisconnected from Service Layer', 'color: red');
@@ -67,9 +71,6 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 						// Activate a reconnect button
 						this.props.setConnected(false);
-						// this.setState({
-						// 	connected: false
-						// });
 					},
 					onError: message => {
 						Error(':( Service Error', message);
@@ -78,14 +79,10 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 						// Activate a reconnect button
 						this.props.setConnected(false);
-						// this.setState({
-						// 	connected: false
-						// });
 					},
 					onPosition: this.onPosition,
 					onRoutingRequest: this.onRoutingRequest
 				});
-				// this.debugReadout = setInterval(this.updateDebugReadout, this.debugReadoutInterval);
 			}
 		}
 
@@ -124,7 +121,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 		onPosition = (message) => {
 			// console.log('%conPosition', 'color: orange', message.pose);
-			const destination = this.destination;
+			const destination = this.props.destination;
 			const {x, y} = message.pose.position;
 			const location = this.normalizePositionData(message.pose);
 
@@ -180,7 +177,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 			return (
 				<React.Fragment>
-					<Communicator ref={this.comm} />
+					<Communicator ref={this.comm} host={appConfig.communacitonServerHost} />
 					<Wrapped
 						{...rest}
 						setDestination={this.setDestination}
