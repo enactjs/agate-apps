@@ -11,6 +11,7 @@ import compose from 'ramda/src/compose';
 import connect from './connector';
 import {getLatLongFromSim} from './conversion';
 import appConfig from '../../config';
+import Communicator from '../../../components/Communicator';
 
 import AppStateConnect from '../App/AppContextConnect';
 
@@ -24,6 +25,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 			this.destination = null;
 			this.done = false;
+			this.comm = React.createRef();
 
 			// this.state = {
 			// 	showAppList: false
@@ -144,12 +146,6 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			this.props.setLocation({location});
 		}
 
-		setDestination = ({destination}) => {
-			this.props.requestDestination({destination, navigating: true});
-			// console.log('location:', this.props.location, 'destination', destination);
-			this.connection.send('routingRequest', [this.props.location, destination]);
-		}
-
 		onRoutingRequest = (message) => {
 			if (message.broadcast && message.header && message.header.status && message.header.status.error_code === 0) {
 				// Just a normal request received response. Don't bother to do anything.
@@ -163,6 +159,16 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		// General Event Handling
 		//
 
+		setDestination = ({destination}) => {
+			this.props.requestDestination({destination, navigating: true});
+			// console.log('location:', this.props.location, 'destination', destination);
+			this.connection.send('routingRequest', [this.props.location, destination]);
+		}
+
+		sendVideo = (args) => {
+			this.comm.current.sendVideo(args);
+		}
+
 		render () {
 			const {...rest} = this.props;
 			delete rest.setLocation;
@@ -173,13 +179,17 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			// delete rest.setTickle;
 
 			return (
-				<Wrapped
-					{...rest}
-					setDestination={this.setDestination}
-					// location={this.state.location}
-					// destination={this.state.destination}
-					// navigating={false}
-				/>
+				<React.Fragment>
+					<Communicator ref={this.comm} />
+					<Wrapped
+						{...rest}
+						setDestination={this.setDestination}
+						sendVideo={this.sendVideo}
+						// location={this.state.location}
+						// destination={this.state.destination}
+						// navigating={false}
+					/>
+				</React.Fragment>
 			);
 		}
 	};

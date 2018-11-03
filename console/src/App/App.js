@@ -79,6 +79,7 @@ const AppBase = kind({
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
 		onToggleUserSelectionPopup,
+		sendVideo,
 		setDestination,
 		showPopup,
 		showBasicPopup,
@@ -153,7 +154,7 @@ const AppBase = kind({
 						arrangeable={layoutArrangeable}
 						onSelect={onSelect}
 					/>
-					<Multimedia />
+					<Multimedia sendVideo={sendVideo} />
 				</TabbedPanels>
 				<UserSelectionPopup
 					onClose={onToggleUserSelectionPopup}

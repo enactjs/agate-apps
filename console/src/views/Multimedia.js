@@ -8,20 +8,22 @@ import Button from '@enact/agate/Button';
 import {Panel} from '@enact/agate/Panels';
 import Divider from '@enact/agate/Divider';
 import Popup from '@enact/agate/Popup';
+import PropTypes from 'prop-types';
 
-import Communicator from '../../../components/Communicator';
 import youtubeVideos from '../data/youtubeapi.json';
 
 import css from './Multimedia.less';
 
 class Multimedia extends React.Component {
+	static propTypes = {
+		sendVideo: PropTypes.func
+	}
+
 	constructor (props) {
 		super(props);
 		this.state = {
 			open: false
 		};
-		// reference for the Communicator component
-		this.comm = React.createRef();
 		this.selectedVideo = {};
 		this.videos = youtubeVideos.items;
 	}
@@ -36,7 +38,7 @@ class Multimedia extends React.Component {
 	};
 
 	sendVideo = (screenId) => () => {
-		this.comm.current.sendVideo({screenId, video: this.selectedVideo});
+		this.props.sendVideo({screenId, video: this.selectedVideo});
 		this.togglePopup();
 	};
 
@@ -54,9 +56,9 @@ class Multimedia extends React.Component {
 
 	render () {
 		const {className, ...rest} = this.props;
+		delete rest.sendVideo;
 		return (
 			<React.Fragment>
-				<Communicator ref={this.comm} />
 				<Popup
 					open={this.state.open}
 					closeButton
