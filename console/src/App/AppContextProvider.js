@@ -26,8 +26,6 @@ const getWeather = async (latitude, longitude) => {
 	};
 };
 
-const userIds = [1, 2, 3];
-
 const defaultUserSettings = {
 	arrangements: {
 		arrangeable: false,
@@ -47,10 +45,9 @@ class AppContextProvider extends Component {
 	constructor (props) {
 		super(props);
 		this.watchPositionId = null;  // Store the reference to the position watcher.
-		defaultUserSettings.skin = props.defaultSkin || 'carbon';
 		this.state = {
 			userId: 1,
-			userSettings: defaultUserSettings,
+			userSettings: this.getDefaultUserSettings(props),
 			connections: {
 				serviceLayer: false
 			},
@@ -86,7 +83,9 @@ class AppContextProvider extends Component {
 		}
 
 		if (this.state.userId === nextState.userId && this.state.userSettings !== nextState.userSettings) {
-			this.saveUserSettings(nextState.userId, nextState.userSettings, this.state.userSettings);
+			if (nextState.userSettings !== this.state.userSettings) {
+				this.saveUserSettings(nextState.userId, nextState.userSettings);
+			}
 		}
 	}
 
@@ -94,29 +93,60 @@ class AppContextProvider extends Component {
 		this.unsetLocationMonitoring();
 	}
 
+	getDefaultUserSettings = (props) => {
+		props = props || this.props;  // Use the supplied props or the current props
+		const settings = Object.assign({}, defaultUserSettings);
+		if (props.defaultSkin) settings.skin = props.defaultSkin;
+		return settings;
+	}
+
 	loadSavedUserSettings = (userId) => {
-		if (!JSON.parse(window.localStorage.getItem(`user${userId}`))) {
-			window.localStorage.setItem(`user${userId}`, JSON.stringify({...this.state.userSettings}));
+		if (!this.loadUserSettings(userId)) {
+			// By providing no settings object here, we are able to clone the current user's settings into the nem user.
+			this.saveUserSettings(userId);
 		}
 
-		const userStorage = JSON.parse(window.localStorage.getItem(`user${userId}`));
+		const userSettings = this.loadUserSettings(userId);
 
 		// Apply a consistent (predictable) set of object keys for consumers, merging in new keys since their last visit
-		return mergeDeepRight(this.state.userSettings, userStorage);
+		return mergeDeepRight(this.state.userSettings, userSettings);
 	}
 
-	saveUserSettings = (userId, userSettings, prevUserSettings) => {
-		if (userSettings !== prevUserSettings) {
-			window.localStorage.setItem(`user${userId}`, JSON.stringify(userSettings));
-		}
+	loadUserSettings = (userId = this.state.userId) => {
+		return JSON.parse(window.localStorage.getItem(`user${userId}`)) || this.getDefaultUserSettings();
 	}
 
-	setUserSettings = (userId) => {
-		const settings = this.loadSavedUserSettings(userId);
+	saveUserSettings = (userId = this.state.userId, userSettings = this.state.userSettings) => {
+		window.localStorage.setItem(`user${userId}`, JSON.stringify(userSettings));
+	}
+
+	deleteUserSettings = (userId = this.state.userId) => {
+		window.localStorage.removeItem(`user${userId}`);
+	}
+
+	setUserSettings = (userId = this.state.userId, userSettings) => {
+		const settings = userSettings || this.loadSavedUserSettings(userId);
 
 		this.updateAppState((state) => {
 			state.userSettings = settings;
 		});
+	}
+
+	getAllSavedUSerIds = () => {
+		// Read the user database and return just a list of the registered id numbers
+		return Object.keys(window.localStorage)
+			.filter(key => (key.indexOf('user') === 0))
+			.map(key => parseInt(key.replace('user', '')));
+	}
+
+	resetUserSettings = () => {
+		this.deleteUserSettings(this.state.userId);
+		this.setUserSettings(this.state.userId);
+	}
+
+	resetAll = () => {
+		const userIds = this.getAllSavedUSerIds();
+		userIds.forEach(this.deleteUserSettings);
 	}
 
 	setLocation = () => {
@@ -173,18 +203,6 @@ class AppContextProvider extends Component {
 		);
 	}
 
-	resetUserSettings = () => {
-		defaultUserSettings.skin = this.props.defaultSkin || 'carbon';
-		this.setState({userSettings: defaultUserSettings})
-	}
-
-	resetAll = () => {
-		defaultUserSettings.skin = this.props.defaultSkin || 'carbon';
-		userIds.forEach(id => {
-			window.localStorage.setItem(`user${id}`, JSON.stringify(defaultUserSettings));
-		});
-	}
-
 	render () {
 		const context = {
 			...this.state,
@@ -206,9 +224,9 @@ class AppContextProvider extends Component {
 class PureFragment extends React.PureComponent {
 	render () {
 		return (
-			<>
+			<React.Fragment>
 				{this.props.children}
-			</>
+			</React.Fragment>
 		);
 	}
 }
