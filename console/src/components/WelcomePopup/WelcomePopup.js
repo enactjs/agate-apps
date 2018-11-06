@@ -1,12 +1,12 @@
 import Button from '@enact/agate/Button';
 import Divider from '@enact/agate/Divider';
-import kind from '@enact/core/kind';
 import FullscreenPopup from '@enact/agate/FullscreenPopup';
-import Group from '@enact/ui/Group';
 import {Panel, Panels} from '@enact/agate/Panels';
+import SwitchItem from '@enact/agate/SwitchItem';
+import kind from '@enact/core/kind';
+import Group from '@enact/ui/Group';
 import PropTypes from 'prop-types';
 import React from 'react';
-import SwitchItem from '@enact/agate/SwitchItem';
 
 import AppContextConnect from '../../App/AppContextConnect';
 
@@ -26,10 +26,10 @@ const WelcomePopupBase = kind({
 					<Divider startSection>User Selection</Divider>
 					<Group
 						childComponent={SwitchItem}
-						select="radio"
-						selectedProp="selected"
 						defaultSelected={userId - 1}
 						onSelect={updateUser}
+						select="radio"
+						selectedProp="selected"
 
 					>
 						{['User 1', 'User 2', 'User 3']}
