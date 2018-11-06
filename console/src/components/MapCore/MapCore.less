@@ -11,6 +11,24 @@
 		.position(0);
 	}
 
+	.carImage {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		height: 87px;
+		width: 81px;
+		transform: translate(-50%, -50%) ~"rotate(calc(var(--map-orientation, 0) * -1rad))";
+		will-change: transform;
+		z-index: 1;
+		pointer-events: none;
+		transition: 500ms transform linear, 500ms opacity ease-in;
+		opacity: 1;
+
+		&.hidden {
+			opacity: 0;
+		}
+	}
+
 	.message {
 		position: absolute;
 		z-index: 100;
