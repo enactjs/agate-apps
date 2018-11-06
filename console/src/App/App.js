@@ -20,6 +20,7 @@ import ServiceLayer from '../data/ServiceLayer';
 import Clock from '../components/Clock';
 import CustomLayout from '../components/CustomLayout';
 import UserSelectionPopup from '../components/UserSelectionPopup';
+import WelcomePopup from '../components/WelcomePopup';
 import AppList from '../views/AppList';
 import Home from '../views/Home';
 import Hvac from '../views/HVAC';
@@ -79,12 +80,14 @@ const AppBase = kind({
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
 		onToggleUserSelectionPopup,
+		onToggleWelcomePopup,
 		sendVideo,
 		setDestination,
 		showPopup,
 		showBasicPopup,
 		showDateTimePopup,
 		showUserSelectionPopup,
+		showWelcomePopup,
 		skinName,
 		...rest
 	}) => {
@@ -131,6 +134,7 @@ const AppBase = kind({
 						onSelect={onSelect}
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}
+						onToggleWelcomePopup={onToggleWelcomePopup}
 					/>
 					<MapView setDestination={setDestination} />
 					<Settings
@@ -189,6 +193,10 @@ const AppBase = kind({
 					</title>
 					<DateTimePicker onClose={onToggleDateTimePopup} />
 				</Popup>
+				<WelcomePopup
+					onClose={onToggleWelcomePopup}
+					open={showWelcomePopup}
+				/>
 			</div>
 		);
 	}
@@ -205,7 +213,8 @@ const AppState = hoc((configHoc, Wrapped) => {
 				showBasicPopup: false,
 				showDateTimePopup: false,
 				showUserSelectionPopup: false,
-				showAppList: false
+				showAppList: false,
+				showWelcomePopup: true
 			};
 		}
 
@@ -233,6 +242,10 @@ const AppState = hoc((configHoc, Wrapped) => {
 			this.setState(({showDateTimePopup}) => ({showDateTimePopup: !showDateTimePopup}));
 		};
 
+		onToggleWelcomePopup = () => {
+			this.setState(({showWelcomePopup}) => ({showWelcomePopup: !showWelcomePopup}));
+		};
+
 		render () {
 			const {colorAccent, colorHighlight, skin, ...rest} = this.props;
 
@@ -250,11 +263,13 @@ const AppState = hoc((configHoc, Wrapped) => {
 					onToggleBasicPopup={this.onToggleBasicPopup}
 					onToggleDateTimePopup={this.onToggleDateTimePopup}
 					onToggleUserSelectionPopup={this.onToggleUserSelectionPopup}
+					onToggleWelcomePopup={this.onToggleWelcomePopup}
 					orientation={(skin !== 'carbon') ? 'horizontal' : 'vertical'}
 					showPopup={this.state.showPopup}
 					showBasicPopup={this.state.showBasicPopup}
 					showDateTimePopup={this.state.showDateTimePopup}
 					showUserSelectionPopup={this.state.showUserSelectionPopup}
+					showWelcomePopup={this.state.showWelcomePopup}
 					skin={skin}
 					skinName={skin}
 				/>
