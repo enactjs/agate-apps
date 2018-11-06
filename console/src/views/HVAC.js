@@ -1,5 +1,4 @@
 import Divider from '@enact/agate/Divider';
-import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import Layout, {Cell, Row} from '@enact/ui/Layout';
 import {Panel} from '@enact/agate/Panels';
@@ -9,9 +8,13 @@ import {ResponsiveBox} from '@enact/agate/DropManager';
 import SliderButton from '@enact/agate/SliderButton';
 import ToggleButton from '@enact/agate/ToggleButton';
 
+import AppContextConnect from '../App/AppContextConnect';
 import CustomLayout, {SaveLayoutArrangement} from '../components/CustomLayout';
 
 import css from './HVAC.less';
+
+const speeds = ['Off', 'Low', 'Medium', 'High'];
+const temps = ['HI', '74°', '73°', '72°', '71°', '70°', '69°', '68°', '67°', '66°', 'LO'];
 
 const ResponsiveLayout = ResponsiveBox(({containerShape, ...rest}) => {
 	const orientation = (containerShape.orientation === 'portrait') ? 'vertical' : 'horizontal';
@@ -32,14 +35,39 @@ const HvacBase = kind({
 		className: 'hvac'
 	},
 
-	render: ({acSelected, arrangeable, arrangement, autoSelected, onArrange, onToggleAc, onToggleAuto, speeds, temps, ...rest}) => (
+	render: ({
+		acSelected,
+		arrangeable,
+		arrangement,
+		autoSelected,
+		fanSpeed,
+		leftHeat,
+		leftTemp,
+		onArrange,
+		onToggleAc,
+		onToggleAuto,
+		onToggleLeftHeater,
+		onToggleRecirculation,
+		onToggleRightHeater,
+		onUpdateFanSpeed,
+		onUpdateLeftTemperature,
+		onUpdateRightTemperature,
+		recirculate,
+		rightHeat,
+		rightTemp,
+		...rest
+	}) => (
 		<Panel {...rest}>
 			<CustomLayout arrangeable={arrangeable} arrangement={arrangement} onArrange={onArrange}>
 				<top>
 					<Divider>
 						Fan Speed
 					</Divider>
-					<SliderButton disabled={autoSelected}>
+					<SliderButton
+						disabled={autoSelected}
+						onChange={onUpdateFanSpeed}
+						value={fanSpeed}
+					>
 						{speeds}
 					</SliderButton>
 				</top>
@@ -48,6 +76,8 @@ const HvacBase = kind({
 						className={css.button}
 						component={ToggleButton}
 						icon="heatseatleft"
+						onClick={onToggleLeftHeater}
+						selected={leftHeat}
 						shrink
 						type="grid"
 						underline
@@ -67,6 +97,8 @@ const HvacBase = kind({
 						className={css.button}
 						component={ToggleButton}
 						icon="heatseatright"
+						onClick={onToggleRightHeater}
+						selected={rightHeat}
 						shrink
 						type="grid"
 						underline
@@ -76,8 +108,10 @@ const HvacBase = kind({
 					<Cell
 						className={css.picker}
 						component={Picker}
+						onChange={onUpdateLeftTemperature}
 						orientation="vertical"
 						shrink
+						value={leftTemp}
 					>
 						{temps}
 					</Cell>
@@ -97,14 +131,19 @@ const HvacBase = kind({
 						<ToggleButton
 							className={css.button}
 							icon="aircirculation"
+							onClick={onToggleRecirculation}
+							selected={recirculate}
 							type="grid"
+							underline
 						/>
 					</Cell>
 					<Cell
 						className={css.picker}
 						component={Picker}
+						onChange={onUpdateRightTemperature}
 						orientation="vertical"
 						shrink
+						value={rightTemp}
 					>
 						{temps}
 					</Cell>
@@ -123,59 +162,66 @@ const HvacBase = kind({
 	)
 });
 
-const defaultConfig = {
-	acSelected: false,
-	autoSelected: false,
-	speeds: ['Off', 'Low', 'Medium', 'High'],
-	temps: ['HI', '74°', '73°', '72°', '71°', '70°', '69°', '68°', '67°', '66°', 'LO']
-};
-
-const HvacDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
-	return class extends React.Component {
-		static displayName = HvacDecorator;
-
-		constructor (props) {
-			super(props);
-
-			this.state = {
-				acSelected: configHoc.acSelected,
-				autoSelected: configHoc.autoSelected,
-				speeds: configHoc.speeds,
-				temps: configHoc.temps
-			};
-		}
-
-		toggleAc = () => {
-			this.setState(({acSelected}) => {
-				return {acSelected: !acSelected};
-			});
-		};
-
-		toggleAuto = () => {
-			this.setState(({acSelected, autoSelected}) => {
-				return {
-					acSelected: !autoSelected ? true : acSelected,
-					autoSelected: !autoSelected
-				};
-			});
-		};
-
-		render () {
-			const props = {
-				...this.state,
-				onToggleAc: this.toggleAc,
-				onToggleAuto: this.toggleAuto
-			};
-			return (
-				<Wrapped
-					{...props}
-				/>
-			);
-		}
+const Hvac = AppContextConnect(({userSettings: {climate}, updateAppState}) => ({
+	// props
+	acSelected: climate.acSelected,
+	autoSelected: climate.autoSelected,
+	fanSpeed: climate.fanSpeed,
+	leftHeat: climate.leftHeat,
+	leftTemp: climate.leftTemp,
+	recirculate: climate.recirculate,
+	rightHeat: climate.rightHeat,
+	rightTemp: climate.rightTemp,
+	// handlers
+	onToggleAc: () => {
+		updateAppState((state) => {
+			const {userSettings: {climate: {acSelected}}} = state;
+			state.userSettings.climate.acSelected = !acSelected;
+		});
+	},
+	onToggleAuto: () => {
+		updateAppState((state) => {
+			const {userSettings: {climate: {acSelected, autoSelected}}} = state;
+			// turn on the A/C when enabling AUTO
+			state.userSettings.climate.acSelected = !autoSelected ? true : acSelected;
+			state.userSettings.climate.autoSelected = !autoSelected;
+		});
+	},
+	onToggleRecirculation: () => {
+		updateAppState((state) => {
+			const {userSettings: {climate: {recirculate}}} = state;
+			state.userSettings.climate.recirculate = !recirculate;
+		});
+	},
+	onToggleLeftHeater: () => {
+		updateAppState((state) => {
+			const heat = state.userSettings.climate.leftHeat;
+			state.userSettings.climate.leftHeat = !heat;
+		});
+	},
+	onToggleRightHeater: () => {
+		updateAppState((state) => {
+			const heat = state.userSettings.climate.rightHeat;
+			state.userSettings.climate.rightHeat = !heat;
+		});
+	},
+	onUpdateFanSpeed: ({value}) => {
+		updateAppState((state) => {
+			state.userSettings.climate.fanSpeed = value;
+		});
+		return true;
+	},
+	onUpdateLeftTemperature: ({value}) => {
+		updateAppState((state) => {
+			state.userSettings.climate.leftTemp = value;
+		});
+	},
+	onUpdateRightTemperature: ({value}) => {
+		updateAppState((state) => {
+			state.userSettings.climate.rightTemp = value;
+		});
 	}
-});
-
-const Hvac = SaveLayoutArrangement('hvac')(HvacDecorator(HvacBase));
+}))(SaveLayoutArrangement('hvac')(HvacBase));
 
 export default Hvac;
 export {
