@@ -146,6 +146,7 @@ const markerLayer = {
 	}
 };
 
+const carLayerId = 'carPoint';
 const addCarLayer = ({coordinates, iconURL, map, orientation}) => {
 	if (map) {
 		// upload png (svg does not work)
@@ -153,8 +154,7 @@ const addCarLayer = ({coordinates, iconURL, map, orientation}) => {
 			if (error) throw error;
 
 			const carLayer = {
-				// id for future updating reference
-				'id': 'carPoint',
+				'id': carLayerId,
 				'type': 'symbol',
 				'source': {
 					'type': 'geojson',
@@ -422,9 +422,9 @@ class MapCoreBase extends React.Component {
 		};
 
 		// update coordinates of the car
-		this.map.getSource('carPoint').setData(newCarData);
+		this.map.getSource(carLayerId).setData(newCarData);
 		// update the car orientation
-		this.map.setLayoutProperty('carPoint', 'icon-rotate', location.orientation);
+		this.map.setLayoutProperty(carLayerId, 'icon-rotate', location.orientation);
 	}
 
 	showPopup = (coordinates, description) => {
