@@ -14,14 +14,20 @@ const WelcomePopupBase = kind({
 	name: 'WelcomePopup',
 
 	propTypes: {
+		index: PropTypes.number,
 		onClose: PropTypes.func,
+		onNextView: PropTypes.func,
 		updateUser: PropTypes.func,
 		userId: PropTypes.number
 	},
 
-	render: ({onClose, updateUser, userId, ...rest}) => (
+	defaultProps: {
+		index: 0
+	},
+
+	render: ({index, onClose, onNextView, updateUser, userId, ...rest}) => (
 		<FullscreenPopup {...rest} onClose={onClose}>
-			<Panels>
+			<Panels index={index}>
 				<Panel>
 					<Divider startSection>User Selection</Divider>
 					<Group
@@ -34,7 +40,11 @@ const WelcomePopupBase = kind({
 					>
 						{['User 1', 'User 2', 'User 3']}
 					</Group>
-					<Button onClick={onClose}>Select</Button>
+					<Button onClick={onNextView}>Select</Button>
+				</Panel>
+				<Panel>
+					<Divider startSection>Welcome Screen</Divider>
+					<Button onClick={onClose}>Close</Button>
 				</Panel>
 			</Panels>
 		</FullscreenPopup>
