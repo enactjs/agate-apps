@@ -21,7 +21,7 @@ const skinCollection = {
 const skinList = Object.keys(skinCollection);
 const skinNames = skinList.map((skin) => skinCollection[skin]);  // Build the names list based on the skin list array, so the indexes always match up, in case the object keys don't return in the same order.
 
-const swatchPalette = ['#9cd920', '#559616', '#cecacb', '#566af0', '#0359f0', '#f08c21', '#F25C54', '#F42C04', '#8D0801', '#2E1C2B'];
+const swatchPalette = ['#9cd920', '#559616', '#cecacb', '#566af0', '#0359f0', '#f08c21', '#f25c54', '#f42c04', '#8d0801', '#2e1C2b'];
 
 const FormRow = kind({
 	name: 'FormRow',
