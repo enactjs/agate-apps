@@ -12,6 +12,15 @@ import Communicator from '../../../components/Communicator';
 
 import css from './App.less';
 
+const zeroPad = (val) => (val < 10 ? '0' + val : val);
+const formatTime = (time) => {
+	const formattedEta = new Date(time);
+	let hour = formattedEta.getHours() % 12 || 12,
+		min = zeroPad(formattedEta.getMinutes()),
+		// sec = zeroPad(formattedEta.getSeconds()),
+		ampm = (formattedEta.getHours() >= 13 ? 'pm' : 'am');
+	return `${hour}:${min} ${ampm}`;
+};
 const AppBase = kind({
 	name: 'App',
 
@@ -20,9 +29,13 @@ const AppBase = kind({
 		className: 'app enact-fit'
 	},
 
-	render: ({adContent, showAd, url, popupOpen, setScreen, togglePopup, ...rest}) => {
+	render: ({adContent, showAd, url, popupOpen, setScreen, togglePopup, eta, duration, ...rest}) => {
 		return (
 			<React.Fragment>
+				{eta && <Row>
+					<Cell>{parseInt(duration / 60)} min</Cell>
+					<Cell>{formatTime(eta)}</Cell>
+				</Row>}
 				<Row {...rest}>
 					<Cell
 						className={css.iframe}
@@ -106,13 +119,20 @@ class App extends React.Component {
 		this.adTimer.startAfter(duration);
 	};
 
+	showETA = ({eta, duration}) => {
+		this.setState({eta, duration});
+		this.adTimer.startAfter(duration);
+	}
+
 	render () {
-		const {adContent, popupOpen, showAd, url} = this.state;
+		const {adContent, popupOpen, showAd, url, eta, duration} = this.state;
 		const props = {
 			adContent,
 			popupOpen,
 			showAd,
-			url
+			url,
+			eta,
+			duration
 		};
 
 		return (
@@ -122,6 +142,7 @@ class App extends React.Component {
 					screenId={this.state.screenId}
 					onPlayVideo={this.playVideo}
 					onShowAd={this.showAdSpace}
+					onShowETA={this.showETA}
 				/>
 				<AppBase {...props} togglePopup={this.onToggle} setScreen={this.setScreen} />
 			</React.Fragment>

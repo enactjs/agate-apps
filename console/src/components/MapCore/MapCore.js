@@ -450,16 +450,12 @@ class MapCoreBase extends React.Component {
 		const data = await getRoute(start, end);
 		if (data.routes && data.routes[0]) {
 			const route = data.routes[0];
-			// console.log('Route:', start, end);
 			this.showFullRouteOnMap(start, end);
 
 			this.props.updateNavigation({
-				duration: route.duration
+				duration: route.duration,
+				sendETA: this.props.sendETA
 			});
-
-			const now = new Date().getTime();
-			const eta = new Date(now + (route.duration * 1000)).getTime();
-			this.props.sendETA({eta, duration: route.duration, distance: route.distance});
 
 			if (direction) {
 				direction.setData({
@@ -523,9 +519,10 @@ const SkinnableMap = AppContextConnect(({location, userSettings, updateAppState}
 	skin: userSettings.skin,
 	location,
 	// destination: navigation.destination,
-	updateNavigation: ({duration}) => {
+	updateNavigation: ({duration, sendETA}) => {
 		const now = new Date().getTime();
-		const eta = new Date(now + (duration * 60000)).getTime();
+		const eta = new Date(now + (duration * 1000)).getTime();
+		sendETA({eta, duration});
 		updateAppState((state) => {
 			state.navigation.duration = duration;
 			state.navigation.startTime = now;
