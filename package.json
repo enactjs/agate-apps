@@ -8,8 +8,5 @@
   "repository": "https://github.com/enactjs/agate-apps",
   "eslintConfig": {
     "extends": "enact/strict"
-  },
-  "dependencies": {
-    "roslib": "^0.20.0"
   }
 }

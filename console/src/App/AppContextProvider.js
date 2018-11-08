@@ -103,7 +103,7 @@ class AppContextProvider extends Component {
 	loadSavedUserSettings = (userId) => {
 		if (!this.loadUserSettings(userId)) {
 			// By providing no settings object here, we are able to clone the current user's settings into the nem user.
-			this.saveUserSettings(userId);
+			this.saveUserSettings(userId, this.state.userSettings);
 		}
 
 		const userSettings = this.loadUserSettings(userId);
@@ -112,15 +112,15 @@ class AppContextProvider extends Component {
 		return mergeDeepRight(this.state.userSettings, userSettings);
 	}
 
-	loadUserSettings = (userId = this.state.userId) => {
+	loadUserSettings = (userId) => {
 		return JSON.parse(window.localStorage.getItem(`user${userId}`)) || this.getDefaultUserSettings();
 	}
 
-	saveUserSettings = (userId = this.state.userId, userSettings = this.state.userSettings) => {
+	saveUserSettings = (userId, userSettings) => {
 		window.localStorage.setItem(`user${userId}`, JSON.stringify(userSettings));
 	}
 
-	deleteUserSettings = (userId = this.state.userId) => {
+	deleteUserSettings = (userId) => {
 		window.localStorage.removeItem(`user${userId}`);
 	}
 
