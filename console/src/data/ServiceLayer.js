@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 
 // Data Services
 import connect from './connector';
-import {getLatLongFromSim} from './conversion';
+import {getLatLongFromSim, radiansToDegrees} from './conversion';
 import appConfig from '../../config';
 import Communicator from '../../../components/Communicator';
 
@@ -102,7 +102,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			const {x, y} = data.position;
 			const location = getLatLongFromSim(x, y);
 
-			location.orientation =  Math.round(data.heading * 10000) / 10000;
+			location.orientation =  radiansToDegrees(Math.round(data.heading * 10000) / 10000);
 
 			// Velocity is in meters per second - math optimized for speed
 			location.linearVelocity = Math.round((

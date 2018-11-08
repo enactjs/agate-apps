@@ -311,7 +311,7 @@ class MapCoreBase extends React.Component {
 		// Received a new location
 		if (coordsUpdated('location', prevProps, this.props)) {
 			actions.center = this.props.location;
-			this.updateCarLayer(this.props.location);
+			this.updateCarLayer({location: this.props.location, map: this.map});
 		}
 
 		// Received a new destination
@@ -409,22 +409,24 @@ class MapCoreBase extends React.Component {
 		this.carNode.style.setProperty('--map-orientation', orientation);
 	}
 
-	updateCarLayer = (location) => {
-		const newCarData = {
-			'type': 'FeatureCollection',
-			'features': [{
-				'type': 'Feature',
-				'geometry': {
-					'type': 'Point',
-					'coordinates': location.coordinates
-				}
-			}]
-		};
+	updateCarLayer = ({location, map}) => {
+		if (map) {
+			const newCarData = {
+				'type': 'FeatureCollection',
+				'features': [{
+					'type': 'Feature',
+					'geometry': {
+						'type': 'Point',
+						'coordinates': location.coordinates
+					}
+				}]
+			};
 
-		// update coordinates of the car
-		this.map.getSource(carLayerId).setData(newCarData);
-		// update the car orientation
-		this.map.setLayoutProperty(carLayerId, 'icon-rotate', location.orientation);
+			// update coordinates of the car
+			if (map.getSource(carLayerId)) map.getSource(carLayerId).setData(newCarData);
+			// update the car orientation
+			map.setLayoutProperty(carLayerId, 'icon-rotate', location.orientation);
+		}
 	}
 
 	showPopup = (coordinates, description) => {
