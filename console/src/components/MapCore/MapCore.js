@@ -420,21 +420,24 @@ class MapCoreBase extends React.Component {
 
 	updateCarLayer = ({location, map}) => {
 		if (map) {
-			const newCarData = {
-				'type': 'FeatureCollection',
-				'features': [{
-					'type': 'Feature',
-					'geometry': {
-						'type': 'Point',
-						'coordinates': location.coordinates
-					}
-				}]
-			};
+			const carLayer = map.getSource(carLayerId);
+			if (carLayer) {
+				const newCarData = {
+					'type': 'FeatureCollection',
+					'features': [{
+						'type': 'Feature',
+						'geometry': {
+							'type': 'Point',
+							'coordinates': location.coordinates
+						}
+					}]
+				};
 
-			// update coordinates of the car
-			if (map.getSource(carLayerId)) map.getSource(carLayerId).setData(newCarData);
-			// update the car orientation
-			map.setLayoutProperty(carLayerId, 'icon-rotate', location.orientation);
+				// update coordinates of the car
+				carLayer.setData(newCarData);
+				// update the car orientation
+				map.setLayoutProperty(carLayerId, 'icon-rotate', location.orientation);
+			}
 		}
 	}
 
