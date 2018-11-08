@@ -162,6 +162,7 @@ class MapCoreBase extends React.Component {
 		location: propTypeLatLon, // Our actual current location on the world
 		position: propTypeLatLon, // The map's centering position
 		proposedDestination: propTypeLatLon,
+		sendETA: PropTypes.func,
 		skin: PropTypes.string,
 		viewLockoutDuration: PropTypes.number,
 		zoomToSpeedScaleFactor: PropTypes.number
@@ -456,6 +457,10 @@ class MapCoreBase extends React.Component {
 				duration: route.duration
 			});
 
+			const now = new Date().getTime();
+			const eta = new Date(now + (route.duration * 1000)).getTime();
+			this.props.sendETA({eta, duration: route.duration, distance: route.distance});
+
 			if (direction) {
 				direction.setData({
 					type: 'Feature',
@@ -496,6 +501,7 @@ class MapCoreBase extends React.Component {
 		delete rest.proposedDestination;
 		delete rest.setDestination;
 		delete rest.skin;
+		delete rest.sendETA;
 		delete rest.updateNavigation;
 		delete rest.viewLockoutDuration;
 		delete rest.zoomToSpeedScaleFactor;
@@ -518,11 +524,12 @@ const SkinnableMap = AppContextConnect(({location, userSettings, updateAppState}
 	location,
 	// destination: navigation.destination,
 	updateNavigation: ({duration}) => {
+		const now = new Date().getTime();
+		const eta = new Date(now + (duration * 60000)).getTime();
 		updateAppState((state) => {
-			const now = new Date().getTime();
 			state.navigation.duration = duration;
 			state.navigation.startTime = now;
-			state.navigation.eta = new Date(now + (duration * 60000)).getTime();
+			state.navigation.eta = eta;
 			// console.log('updateNavigation:', state.navigation);
 		});
 	}

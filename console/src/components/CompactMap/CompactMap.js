@@ -41,7 +41,7 @@ const CompactMapBase = kind({
 		}
 	},
 
-	render: ({changePosition, changeFollow, destination, follow, onSelect, onTabChange, onSetDestination, proposedDestination, setDestination, ...rest}) => {
+	render: ({changePosition, changeFollow, destination, follow, onSelect, onTabChange, onSetDestination, proposedDestination, setDestination, sendETA, ...rest}) => {
 		return (
 			<div {...rest}>
 				<nav className={css.tools}>
@@ -50,7 +50,7 @@ const CompactMapBase = kind({
 					<Button alt="Navigate Here" icon="play" onClick={onSetDestination} />
 					<ToggleButton alt="Follow" selected={follow} underline icon="forward" onClick={changeFollow} />
 				</nav>
-				<MapCore destination={destination} follow={follow} proposedDestination={proposedDestination} setDestination={setDestination} />
+				<MapCore sendETA={sendETA} destination={destination} follow={follow} proposedDestination={proposedDestination} setDestination={setDestination} />
 			</div>
 		);
 	}

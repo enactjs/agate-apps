@@ -166,6 +166,10 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			this.comm.current.sendVideo(args);
 		}
 
+		sendETA = (args) => {
+			this.comm.current.sendETA(args);
+		}
+
 		render () {
 			const {...rest} = this.props;
 			delete rest.setLocation;
@@ -182,6 +186,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 						{...rest}
 						setDestination={this.setDestination}
 						sendVideo={this.sendVideo}
+						sendETA={this.sendETA}
 						// location={this.state.location}
 						// destination={this.state.destination}
 						// navigating={false}
@@ -193,9 +198,10 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 });
 
 const ServiceLayer = compose(
-	AppStateConnect(({destination: destinationProp, location: locationProp, updateAppState}) => ({
+	AppStateConnect(({destination: destinationProp, location: locationProp, navigation, updateAppState}) => ({
 		location: locationProp,
 		destination: destinationProp,
+		eta: navigation.eta,
 		// tickleCount: tickleCountProp,
 		// setTickle: ({tickleCount}) => {
 		// 	updateAppState((state) => {
