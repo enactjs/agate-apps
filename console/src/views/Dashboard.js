@@ -85,9 +85,6 @@ const DashboardBase = kind({
 
 				<bottom>
 					<ResponsiveLayout wrap>
-						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="airdown" />
-						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="airup" />
-						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="airright" />
 						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="defrosterback" />
 						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="defrosterfront" />
 					</ResponsiveLayout>

@@ -2,8 +2,10 @@ import Button from '@enact/agate/Button';
 import Divider from '@enact/agate/Divider';
 import FullscreenPopup from '@enact/agate/FullscreenPopup';
 import {Panel, Panels} from '@enact/agate/Panels';
-import SwitchItem from '@enact/agate/SwitchItem';
+import LabeledIconButton from '@enact/agate/LabeledIconButton';
+import {handle, forward} from '@enact/core/handle';
 import kind from '@enact/core/kind';
+import {Column, Row, Cell} from '@enact/ui/Layout';
 import Group from '@enact/ui/Group';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -25,34 +27,54 @@ const WelcomePopupBase = kind({
 		index: 0
 	},
 
-	render: ({index, onClose, onNextView, updateUser, userId, ...rest}) => (
-		<FullscreenPopup {...rest} onClose={onClose}>
-			<Panels index={index}>
-				<Panel>
-					<Divider startSection>User Selection</Divider>
-					<Group
-						childComponent={SwitchItem}
-						defaultSelected={userId - 1}
-						onSelect={updateUser}
-						select="radio"
-						selectedProp="selected"
+	handlers: {
+		selectUserAndContinue: handle(
+			forward('updateUser'),
+			forward('onNextView')
+		)
+	},
 
-					>
-						{['User 1', 'User 2', 'User 3']}
-					</Group>
-					<Button onClick={onNextView}>Select</Button>
-				</Panel>
-				<Panel>
-					<Divider startSection>Welcome Screen</Divider>
-					<Button onClick={onClose}>Close</Button>
-				</Panel>
-			</Panels>
-		</FullscreenPopup>
-	)
+	render: ({index, onClose, selectUserAndContinue, ...rest}) => {
+		delete rest.onNextView;
+		delete rest.updateUser;
+		// delete rest.userId;
+		return (
+			<FullscreenPopup {...rest}>
+				<Panels index={index}>
+					<Panel>
+						<Column align="stretch center">
+							<Cell component={Divider} startSection shrink>User Selection</Cell>
+							<Cell shrink>
+								<Row
+									component={Group}
+									childComponent={Cell}
+									itemProps={{component: LabeledIconButton, shrink: true, icon: 'user'}}
+									onSelect={selectUserAndContinue}
+									select="radio"
+									selectedProp="selected"
+									wrap
+									align="start space-evenly"
+								>
+									{['User 1', 'User 2', 'User 3']}
+								</Row>
+							</Cell>
+						</Column>
+					</Panel>
+					<Panel>
+						<Column align="stretch center">
+							<Cell component={Divider} startSection shrink>Welcome Screen</Cell>
+							<Cell shrink>
+								<Button onClick={onClose}>Close</Button>
+							</Cell>
+						</Column>
+					</Panel>
+				</Panels>
+			</FullscreenPopup>
+		);
+	}
 });
 
-const WelcomePopup = AppContextConnect(({userId, updateAppState}) => ({
-	userId: userId,
+const WelcomePopup = AppContextConnect(({updateAppState}) => ({
 	updateUser: ({selected}) => {
 		updateAppState((state) => {
 			state.userId = selected + 1;
