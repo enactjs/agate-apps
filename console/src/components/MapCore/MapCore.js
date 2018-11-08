@@ -148,7 +148,7 @@ const markerLayer = {
 };
 
 const carLayerId = 'carPoint';
-const addCarLayer = ({coordinates, iconURL, map, orientation}) => {
+const addCarLayer = ({coordinates, iconURL, map, orientation = 0}) => {
 	if (map) {
 		// upload png (svg does not work)
 		map.loadImage(iconURL, (error, icon) => {
@@ -175,7 +175,7 @@ const addCarLayer = ({coordinates, iconURL, map, orientation}) => {
 					'icon-image': 'car',
 					'icon-size': 0.10,
 					// rotation of the car
-					'icon-rotate': orientation || 0
+					'icon-rotate': orientation
 				}
 			};
 
