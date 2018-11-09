@@ -6,7 +6,7 @@ import {Job} from '@enact/core/util';
 
 import AppContextConnect from '../../App/AppContextConnect';
 import appConfig from '../../../config';
-import CarSvg from '../Dashboard/svg/car.svg';
+import CarPng from '../Dashboard/svg/car.png';
 
 import css from './MapCore.less';
 
@@ -22,6 +22,7 @@ const propTypeLatLon = PropTypes.shape({
 	lon: PropTypes.number
 });
 
+const startCoordinates = {lon: -121.979125, lat: 37.405189};
 
 //
 // Map Utilities
@@ -146,6 +147,44 @@ const markerLayer = {
 	}
 };
 
+const carLayerId = 'carPoint';
+const addCarLayer = ({coordinates, iconURL, map, orientation = 0}) => {
+	if (map) {
+		// upload png (svg does not work)
+		map.loadImage(iconURL, (error, icon) => {
+			if (error) throw error;
+
+			const carLayer = {
+				'id': carLayerId,
+				'type': 'symbol',
+				'source': {
+					'type': 'geojson',
+					'data': {
+						'type': 'FeatureCollection',
+						'features': [{
+							'type': 'Feature',
+							'geometry': {
+								'type': 'Point',
+								// location of the car
+								'coordinates': coordinates
+							}
+						}]
+					}
+				},
+				'layout': {
+					'icon-image': 'car',
+					'icon-size': 0.10,
+					// rotation of the car
+					'icon-rotate': orientation
+				}
+			};
+
+			map.addImage('car', icon);
+			map.addLayer(carLayer);
+		});
+	}
+};
+
 const skinStyles = {
 	carbon: 'mapbox://styles/mapbox/dark-v9',
 	electro: '',
@@ -190,7 +229,6 @@ class MapCoreBase extends React.Component {
 
 	componentDidMount () {
 		const style = skinStyles[this.props.skin] || skinStyles.titanium;
-		const start = {lon: -121.979125, lat: 37.405189};
 
 		// stop drawing map if accessToken is not set.
 		if (!mapboxgl.accessToken) return;
@@ -198,7 +236,7 @@ class MapCoreBase extends React.Component {
 		this.map = new mapboxgl.Map({
 			container: this.mapNode,
 			style,
-			center: toMapbox(start),
+			center: toMapbox(startCoordinates),
 			zoom: 12
 		});
 
@@ -211,11 +249,17 @@ class MapCoreBase extends React.Component {
 
 		this.map.on('load', () => {
 			this.map.addLayer(markerLayer);
+			addCarLayer({
+				coordinates: toMapbox(startCoordinates),
+				iconURL: CarPng,
+				map: this.map,
+				orientation: this.props.location.orientation
+			});
 		});
 
 		this.map.on('click', 'symbols', (e) => {
 			// This method is a bit messy because it now intermixes different coordinates systems
-			// `coordinates` comes in as Mapbox format and `start` is latlon format.
+			// `coordinates` comes in as Mapbox format and `startCoordinates` is latlon format.
 			// This could be updated, but it's marginally faster to leave it this way.
 			let coordinates = e.features[0].geometry.coordinates.slice();
 			let description = e.features[0].properties.description;
@@ -225,8 +269,8 @@ class MapCoreBase extends React.Component {
 			}
 
 			this.showPopup(coordinates, description);
-			this.drawDirection(start, {lon: coordinates[0], lat: coordinates[1]});
-			this.centerMap({center: [(coordinates[0] + start.lon) / 2, (coordinates[1] + start.lat) / 2]});
+			this.drawDirection(startCoordinates, {lon: coordinates[0], lat: coordinates[1]});
+			this.centerMap({center: [(coordinates[0] + startCoordinates.lon) / 2, (coordinates[1] + startCoordinates.lat) / 2]});
 		});
 	}
 
@@ -234,6 +278,14 @@ class MapCoreBase extends React.Component {
 		if (this.props.skin !== prevProps.skin) {
 			const style = skinStyles[prevProps.skin] || skinStyles.titanium;
 			this.map.setStyle(style);
+
+			// car layer needs to be added everytime the map reloaded when skin changes
+			addCarLayer({
+				coordinates: toMapbox(startCoordinates),
+				iconURL: CarPng,
+				map: this.map,
+				orientation: this.props.location.orientation
+			});
 
 			// make sure the map is resized after the container updates
 			setTimeout(this.map.resize.bind(this.map), 0);
@@ -268,6 +320,7 @@ class MapCoreBase extends React.Component {
 		// Received a new location
 		if (coordsUpdated('location', prevProps, this.props)) {
 			actions.center = this.props.location;
+			this.updateCarLayer({location: this.props.location, map: this.map});
 		}
 
 		// Received a new destination
@@ -363,6 +416,29 @@ class MapCoreBase extends React.Component {
 
 	orientCarImage = (orientation) => {
 		this.carNode.style.setProperty('--map-orientation', orientation);
+	}
+
+	updateCarLayer = ({location, map}) => {
+		if (map) {
+			const carLayer = map.getSource(carLayerId);
+			if (carLayer) {
+				const newCarData = {
+					'type': 'FeatureCollection',
+					'features': [{
+						'type': 'Feature',
+						'geometry': {
+							'type': 'Point',
+							'coordinates': location.coordinates
+						}
+					}]
+				};
+
+				// update coordinates of the car
+				carLayer.setData(newCarData);
+				// update the car orientation
+				map.setLayoutProperty(carLayerId, 'icon-rotate', location.orientation);
+			}
+		}
 	}
 
 	showPopup = (coordinates, description) => {
@@ -502,7 +578,6 @@ class MapCoreBase extends React.Component {
 		return (
 			<div {...rest} className={classnames(className, css.map)}>
 				{this.message ? <div className={css.message}>{this.message}</div> : null}
-				<img className={classnames(css.carImage, (this.state.carShowing ? null : css.hidden))} ref={this.setCarNode} src={CarSvg} alt="" />
 				<div
 					ref={this.setMapNode}
 					className={css.mapNode}
