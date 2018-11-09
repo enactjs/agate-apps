@@ -81,7 +81,8 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 						this.props.setConnected(false);
 					},
 					onPosition: this.onPosition,
-					onRoutingRequest: this.onRoutingRequest
+					onRoutingRequest: this.onRoutingRequest,
+					onRoutingResponse: this.onRoutingResponse
 				});
 			}
 		}
@@ -151,6 +152,11 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			}
 		}
 
+		onRoutingResponse = (message) => {
+			const lastWaypoint = message.routing_request.waypoint.slice(-1).pop().pose;
+			const destination = getLatLongFromSim(lastWaypoint.x, lastWaypoint.y);
+			this.setDestination({destination});
+		}
 
 		//
 		// General Event Handling
