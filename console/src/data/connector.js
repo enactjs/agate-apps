@@ -21,6 +21,11 @@ const subscribedTopics = {
 		name: '/apollo/routing_request',
 		queue_length: 1, // eslint-disable-line camelcase
 		messageType: 'pb_msgs/RoutingRequest'
+	},
+
+	routingResponse: {
+		name: '/apollo/routing_response',
+		messageType: 'pb_msgs/RoutingResponse'
 	}
 
 	// detected: {

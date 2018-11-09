@@ -153,8 +153,8 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		}
 
 		onRoutingResponse = (message) => {
-			const lastWaypoint = message.routing_request.waypoint.slice(-1).pop().pose;
-			const destination = getLatLongFromSim(lastWaypoint.x, lastWaypoint.y);
+			const {x, y} = message.routing_request.waypoint.slice(-1).pop().pose;
+			const destination = getLatLongFromSim(x, y);
 			this.setDestination({destination});
 		}
 
