@@ -35,6 +35,16 @@ const defaultUserSettings = {
 		phone: {},
 		radio: {}
 	},
+	climate: {
+		acSelected: false,
+		autoSelected: false,
+		fanSpeed: 0,
+		leftHeat: false,
+		leftTemp: 0,
+		recirculate: false,
+		rightHeat: false,
+		rightTemp: 0
+	},
 	colorAccent: '#cccccc',
 	colorHighlight: '#66aabb',
 	fontSize: 0,
