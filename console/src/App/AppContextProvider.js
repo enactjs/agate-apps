@@ -156,17 +156,17 @@ class AppContextProvider extends Component {
 				// the app state's location changes. Dev Note: Find a way to trigger the weather to
 				// be set if the location changes and disable this watch in that case, but reconnect
 				// it if the connection to the service layer drops.
-				// if (this.state.connections.serviceLayer) {
-				// We happened to get our data from elsewhere
-				// this.setWeather(this.state.location.lat, this.state.location.lon);
-				// } else {
-				// Just use location services.
-				this.updateAppState((state) => {
-					state.location.lat = position.coords.latitude;
-					state.location.lon = position.coords.longitude;
-				});
-				this.setWeather(position.coords.latitude, position.coords.longitude);
-				// }
+				if (this.state.connections.serviceLayer) {
+					// We happened to get our data from elsewhere
+					this.setWeather(this.state.location.lat, this.state.location.lon);
+				} else {
+					// Just use location services.
+					this.updateAppState((state) => {
+						state.location.lat = position.coords.latitude;
+						state.location.lon = position.coords.longitude;
+					});
+					this.setWeather(position.coords.latitude, position.coords.longitude);
+				}
 			}, (error) => {
 				console.error('Location error:', error);
 			},
