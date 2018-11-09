@@ -1,3 +1,4 @@
+import Button from '@enact/agate/Button';
 import Divider from '@enact/agate/Divider';
 import FullscreenPopup from '@enact/agate/FullscreenPopup';
 import {Panel, Panels} from '@enact/agate/Panels';
@@ -15,28 +16,31 @@ const WelcomePopupBase = kind({
 	name: 'WelcomePopup',
 
 	propTypes: {
+		index: PropTypes.number,
 		onClose: PropTypes.func,
+		onNextView: PropTypes.func,
 		updateUser: PropTypes.func,
 		userId: PropTypes.number
+	},
+
+	defaultProps: {
+		index: 0
 	},
 
 	handlers: {
 		selectUserAndContinue: handle(
 			forward('updateUser'),
-			// After the personalized welcome screen is added, that transition will be added here
-			// and `onClose` will be applied to the "GO" button (to be added later) and will be
-			// removed from here.
-			forward('onClose')
+			forward('onNextView')
 		)
 	},
 
-	render: ({selectUserAndContinue, ...rest}) => {
-		delete rest.onClose;
+	render: ({index, onClose, selectUserAndContinue, ...rest}) => {
+		delete rest.onNextView;
 		delete rest.updateUser;
 		// delete rest.userId;
 		return (
 			<FullscreenPopup {...rest}>
-				<Panels>
+				<Panels index={index}>
 					<Panel>
 						<Column align="stretch center">
 							<Cell component={Divider} startSection shrink>User Selection</Cell>
@@ -53,6 +57,14 @@ const WelcomePopupBase = kind({
 								>
 									{['User 1', 'User 2', 'User 3']}
 								</Row>
+							</Cell>
+						</Column>
+					</Panel>
+					<Panel>
+						<Column align="stretch center">
+							<Cell component={Divider} startSection shrink>Welcome Screen</Cell>
+							<Cell shrink>
+								<Button onClick={onClose}>Close</Button>
 							</Cell>
 						</Column>
 					</Panel>
