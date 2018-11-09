@@ -76,6 +76,7 @@ const AppBase = kind({
 		updateSkin,
 		layoutArrangeableToggle,
 		layoutArrangeable,
+		onNextWelcomeView,
 		onTogglePopup,
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
@@ -90,6 +91,7 @@ const AppBase = kind({
 		showUserSelectionPopup,
 		showWelcomePopup,
 		skinName,
+		welcomeIndex,
 		...rest
 	}) => {
 		delete rest.accent;
@@ -136,7 +138,6 @@ const AppBase = kind({
 						onSelect={onSelect}
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}
-						onToggleWelcomePopup={onToggleWelcomePopup}
 					/>
 					<MapView setDestination={setDestination} sendETA={sendETA} />
 					<Settings
@@ -196,7 +197,9 @@ const AppBase = kind({
 					<DateTimePicker onClose={onToggleDateTimePopup} />
 				</Popup>
 				<WelcomePopup
+					index={welcomeIndex}
 					onClose={onToggleWelcomePopup}
+					onNextView={onNextWelcomeView}
 					open={showWelcomePopup}
 				/>
 			</div>
@@ -216,8 +219,13 @@ const AppState = hoc((configHoc, Wrapped) => {
 				showDateTimePopup: false,
 				showUserSelectionPopup: false,
 				showAppList: false,
-				showWelcomePopup: true
+				showWelcomePopup: true,
+				welcomeIndex: 0
 			};
+		}
+
+		onNextWelcomeView = () => {
+			this.setState((state) => ({welcomeIndex: state.welcomeIndex + 1}));
 		}
 
 		onSelect = handle(
@@ -266,6 +274,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 					onToggleDateTimePopup={this.onToggleDateTimePopup}
 					onToggleUserSelectionPopup={this.onToggleUserSelectionPopup}
 					onToggleWelcomePopup={this.onToggleWelcomePopup}
+					onNextWelcomeView={this.onNextWelcomeView}
 					orientation={(skin !== 'carbon') ? 'horizontal' : 'vertical'}
 					showPopup={this.state.showPopup}
 					showBasicPopup={this.state.showBasicPopup}
@@ -274,6 +283,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 					showWelcomePopup={this.state.showWelcomePopup}
 					skin={skin}
 					skinName={skin}
+					welcomeIndex={this.state.welcomeIndex}
 				/>
 			);
 		}

@@ -135,7 +135,13 @@ const getLatLongFromSim = (easting, northing) => {
 	};
 };
 
+const degreesToRadians = (degrees) => (degrees * (Math.PI / 180))
+
+const radiansToDegrees = (radians) => (radians * (180 / Math.PI))
+
 export {
 	getSimFromLatLong,
-	getLatLongFromSim
+	getLatLongFromSim,
+	degreesToRadians,
+	radiansToDegrees
 };
