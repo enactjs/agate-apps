@@ -525,7 +525,6 @@ class MapCoreBase extends React.Component {
 		const data = await getRoute(start, end);
 		if (data.routes && data.routes[0]) {
 			const route = data.routes[0];
-			// console.log('Route:', start, end);
 			this.showFullRouteOnMap(start, end);
 
 			this.props.updateNavigation({
@@ -593,11 +592,12 @@ const SkinnableMap = AppContextConnect(({location, userSettings, updateAppState}
 	location,
 	// destination: navigation.destination,
 	updateNavigation: ({duration}) => {
+		const now = new Date().getTime();
+		const eta = new Date(now + (duration * 1000)).getTime();
 		updateAppState((state) => {
-			const now = new Date().getTime();
 			state.navigation.duration = duration;
 			state.navigation.startTime = now;
-			state.navigation.eta = new Date(now + (duration * 60000)).getTime();
+			state.navigation.eta = eta;
 			// console.log('updateNavigation:', state.navigation);
 		});
 	}

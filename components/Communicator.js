@@ -12,6 +12,10 @@ const handleShowAd = handle(
 	forward('onShowAd')
 );
 
+const handleShowETA = handle(
+	forward('onShowETA'),
+);
+
 class Communicator extends React.Component {
 
 	static propTypes = {
@@ -29,6 +33,7 @@ class Communicator extends React.Component {
 
 		handleAddVideo.bindAs(this, 'handleAddVideo');
 		handleShowAd.bindAs(this, 'handleShowAd');
+		handleShowETA.bindAs(this, 'handleShowETA');
 	}
 
 	componentDidMount () {
@@ -54,6 +59,7 @@ class Communicator extends React.Component {
 		if (screenId != null) {
 			this.socket.on(`VIDEO_ADD_COPILOT/${screenId}`, this.handleAddVideo);
 			this.socket.on('SHOW_AD', this.handleShowAd);
+			this.socket.on('SHOW_ETA', this.handleShowETA);
 			this.socket.emit('COPILOT_CONNECT', {id: screenId});
 		}
 	}
@@ -80,6 +86,15 @@ class Communicator extends React.Component {
 			route: `VIDEO_ADD_COPILOT/${screenId}`
 		};
 
+		this.socket.emit('SEND_DATA', data);
+	};
+
+	sendETA = ({eta, duration}) => {
+		const data = {
+			route: 'SHOW_ETA',
+			eta,
+			duration
+		};
 		this.socket.emit('SEND_DATA', data);
 	};
 
