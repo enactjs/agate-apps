@@ -21,6 +21,7 @@ const skinCollection = {
 const skinList = Object.keys(skinCollection);
 const skinNames = skinList.map((skin) => skinCollection[skin]);  // Build the names list based on the skin list array, so the indexes always match up, in case the object keys don't return in the same order.
 
+const swatchPalette = ['#9cd920', '#559616', '#cecacb', '#566af0', '#0359f0', '#f08c21', '#f25c54', '#f42c04', '#8d0801', '#2e1C2b', '#d636d9', '#aab3cb'];
 
 const FormRow = kind({
 	name: 'FormRow',
@@ -98,8 +99,8 @@ const DisplaySettings = kind({
 						</Cell>
 						<Cell shrink className={css.spacedItem}>
 							<FormRow align="start space-evenly" alignLabel="center">
-								<AccentColorSetting label="Accent Color" />
-								<HighlightColorSetting label="Highlight Color" />
+								<AccentColorSetting label="Accent Color">{swatchPalette}</AccentColorSetting>
+								<HighlightColorSetting label="Highlight Color">{swatchPalette}</HighlightColorSetting>
 							</FormRow>
 						</Cell>
 						<Cell shrink className={css.spacedItem}>

@@ -1,20 +1,26 @@
+// External
+import kind from '@enact/core/kind';
+import hoc from '@enact/core/hoc';
+import {add} from '@enact/core/keymap';
 import {forward, handle} from '@enact/core/handle';
+import {Cell, Column} from '@enact/ui/Layout';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
 import ToggleButton from '@enact/agate/ToggleButton';
-import {Cell, Column} from '@enact/ui/Layout';
-import compose from 'ramda/src/compose';
-import hoc from '@enact/core/hoc';
-import {add} from '@enact/core/keymap';
-import kind from '@enact/core/kind';
 import Popup from '@enact/agate/Popup';
 import DateTimePicker from '@enact/agate/DateTimePicker';
-import React from 'react';
 import {TabbedPanels} from '@enact/agate/Panels';
+import React from 'react';
+import compose from 'ramda/src/compose';
 
+// Data Services
+import ServiceLayer from '../data/ServiceLayer';
+
+// Components
 import Clock from '../components/Clock';
 import CustomLayout from '../components/CustomLayout';
 import UserSelectionPopup from '../components/UserSelectionPopup';
+import WelcomePopup from '../components/WelcomePopup';
 import AppList from '../views/AppList';
 import Home from '../views/Home';
 import Hvac from '../views/HVAC';
@@ -25,10 +31,14 @@ import Settings from '../views/Settings';
 import DisplaySettings from '../views/DisplaySettings';
 import Weather from '../views/WeatherPanel';
 import Dashboard from '../views/Dashboard';
+import Multimedia from '../views/Multimedia';
 
+// Local Components
 import AppStateConnect from './AppContextConnect';
 
+// CSS/LESS Styling
 import css from './App.less';
+
 
 add('backspace', 8);
 
@@ -46,7 +56,8 @@ const panelIndexMap = [
 	'settings/display',
 	'weather',
 	'layoutsample',
-	'dashboard'
+	'dashboard',
+	'multimedia'
 ];
 // Look up a panel index by name, using the above list as the directory listing.
 const getPanelIndexOf = (panelName) => panelIndexMap.indexOf(panelName);
@@ -65,19 +76,27 @@ const AppBase = kind({
 		updateSkin,
 		layoutArrangeableToggle,
 		layoutArrangeable,
+		onNextWelcomeView,
 		onTogglePopup,
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
 		onToggleUserSelectionPopup,
+		onToggleWelcomePopup,
+		sendVideo,
+		setDestination,
 		showPopup,
 		showBasicPopup,
 		showDateTimePopup,
 		showUserSelectionPopup,
+		showWelcomePopup,
 		skinName,
+		welcomeIndex,
 		...rest
 	}) => {
 		delete rest.accent;
 		delete rest.highlight;
+		// delete rest.setDestination;
+		delete rest.endNavigation;
 		return (
 			<div>
 				<TabbedPanels
@@ -107,6 +126,7 @@ const AppBase = kind({
 					</afterTabs>
 					<Home
 						onSelect={onSelect}
+						setDestination={setDestination}
 						arrangeable={layoutArrangeable}
 					/>
 					<Phone arrangeable={layoutArrangeable} />
@@ -117,7 +137,7 @@ const AppBase = kind({
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}
 					/>
-					<MapView />
+					<MapView setDestination={setDestination} />
 					<Settings
 						onSelect={onSelect}
 						onToggleDateTimePopup={onToggleDateTimePopup}
@@ -139,6 +159,7 @@ const AppBase = kind({
 						arrangeable={layoutArrangeable}
 						onSelect={onSelect}
 					/>
+					<Multimedia sendVideo={sendVideo} />
 				</TabbedPanels>
 				<UserSelectionPopup
 					onClose={onToggleUserSelectionPopup}
@@ -173,6 +194,12 @@ const AppBase = kind({
 					</title>
 					<DateTimePicker onClose={onToggleDateTimePopup} />
 				</Popup>
+				<WelcomePopup
+					index={welcomeIndex}
+					onClose={onToggleWelcomePopup}
+					onNextView={onNextWelcomeView}
+					open={showWelcomePopup}
+				/>
 			</div>
 		);
 	}
@@ -189,8 +216,14 @@ const AppState = hoc((configHoc, Wrapped) => {
 				showBasicPopup: false,
 				showDateTimePopup: false,
 				showUserSelectionPopup: false,
-				showAppList: false
+				showAppList: false,
+				showWelcomePopup: true,
+				welcomeIndex: 0
 			};
+		}
+
+		onNextWelcomeView = () => {
+			this.setState((state) => ({welcomeIndex: state.welcomeIndex + 1}));
 		}
 
 		onSelect = handle(
@@ -217,6 +250,10 @@ const AppState = hoc((configHoc, Wrapped) => {
 			this.setState(({showDateTimePopup}) => ({showDateTimePopup: !showDateTimePopup}));
 		};
 
+		onToggleWelcomePopup = () => {
+			this.setState(({showWelcomePopup}) => ({showWelcomePopup: !showWelcomePopup}));
+		};
+
 		render () {
 			const {colorAccent, colorHighlight, skin, ...rest} = this.props;
 
@@ -234,13 +271,17 @@ const AppState = hoc((configHoc, Wrapped) => {
 					onToggleBasicPopup={this.onToggleBasicPopup}
 					onToggleDateTimePopup={this.onToggleDateTimePopup}
 					onToggleUserSelectionPopup={this.onToggleUserSelectionPopup}
+					onToggleWelcomePopup={this.onToggleWelcomePopup}
+					onNextWelcomeView={this.onNextWelcomeView}
 					orientation={(skin !== 'carbon') ? 'horizontal' : 'vertical'}
 					showPopup={this.state.showPopup}
 					showBasicPopup={this.state.showBasicPopup}
 					showDateTimePopup={this.state.showDateTimePopup}
 					showUserSelectionPopup={this.state.showUserSelectionPopup}
+					showWelcomePopup={this.state.showWelcomePopup}
 					skin={skin}
 					skinName={skin}
+					welcomeIndex={this.state.welcomeIndex}
 				/>
 			);
 		}
@@ -253,12 +294,25 @@ const AppDecorator = compose(
 		colorAccent: userSettings.colorAccent,
 		colorHighlight: userSettings.colorHighlight,
 		layoutArrangeable: userSettings.arrangements.arrangeable,
-		layoutArrangeableToggle:({selected}) => {
+		layoutArrangeableToggle: ({selected}) => {
 			updateAppState((state) => {
 				state.userSettings.arrangements.arrangeable = selected;
 			});
 		},
-		updateSkin:() => {
+		// setDestination: ({destination, navigating}) => {
+		// 	updateAppState((state) => {
+		// 		state.navigation.destination = destination;
+		// 		if (navigating != null) {
+		// 			state.navigation.navigating = navigating;
+		// 		}
+		// 	});
+		// },
+		// endNavigation: ({navigating}) => {
+		// 	updateAppState((state) => {
+		// 		state.navigation.navigating = navigating;
+		// 	});
+		// },
+		updateSkin: () => {
 			updateAppState((state) => {
 				let newSkin;
 				switch (state.userSettings.skin) {
@@ -271,6 +325,7 @@ const AppDecorator = compose(
 		}
 	})),
 	AppState,
+	ServiceLayer,
 	AgateDecorator
 );
 

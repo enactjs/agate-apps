@@ -26,37 +26,58 @@ const getWeather = async (latitude, longitude) => {
 	};
 };
 
+const defaultUserSettings = {
+	arrangements: {
+		arrangeable: false,
+		dashboard: {},
+		home: {},
+		hvac: {},
+		phone: {},
+		radio: {}
+	},
+	climate: {
+		acSelected: false,
+		autoSelected: false,
+		fanSpeed: 0,
+		leftHeat: false,
+		leftTemp: 0,
+		recirculate: false,
+		rightHeat: false,
+		rightTemp: 0
+	},
+	colorAccent: '#cccccc',
+	colorHighlight: '#66aabb',
+	fontSize: 0,
+	skin: 'carbon'
+};
+
 class AppContextProvider extends Component {
 	constructor (props) {
 		super(props);
 		this.watchPositionId = null;  // Store the reference to the position watcher.
 		this.state = {
 			userId: 1,
-			userSettings: {
-				arrangements: {
-					arrangeable: false,
-					dashboard: {},
-					home: {},
-					hvac: {},
-					phone: {},
-					radio: {}
-				},
-				climate: {
-					acSelected: false,
-					autoSelected: false,
-					fanSpeed: 0,
-					leftHeat: false,
-					leftTemp: 0,
-					recirculate: false,
-					rightHeat: false,
-					rightTemp: 0
-				},
-				colorAccent: '#cccccc',
-				colorHighlight: '#66aabb',
-				fontSize: 0,
-				skin: props.defaultSkin || 'carbon'
+			userSettings: this.getDefaultUserSettings(props),
+			connections: {
+				serviceLayer: false
 			},
-			location: {},
+			location: {
+				lat: 0,
+				lon: 0,
+				linearVelocity: 0,
+				orientation: 0
+			},
+			navigation: {
+				destination: {
+					lat: 0,
+					lon: 0
+				},
+				distance: 0,
+				duration: 0,
+				eta: 0,
+				startTime: 0,
+				navigating: false
+			},
 			weather: {}
 		};
 	}
@@ -72,7 +93,9 @@ class AppContextProvider extends Component {
 		}
 
 		if (this.state.userId === nextState.userId && this.state.userSettings !== nextState.userSettings) {
-			this.saveUserSettings(nextState.userId, nextState.userSettings, this.state.userSettings);
+			if (nextState.userSettings !== this.state.userSettings) {
+				this.saveUserSettings(nextState.userId, nextState.userSettings);
+			}
 		}
 	}
 
@@ -80,39 +103,80 @@ class AppContextProvider extends Component {
 		this.unsetLocationMonitoring();
 	}
 
+	getDefaultUserSettings = (props) => {
+		props = props || this.props;  // Use the supplied props or the current props
+		const settings = Object.assign({}, defaultUserSettings);
+		if (props.defaultSkin) settings.skin = props.defaultSkin;
+		return settings;
+	}
+
 	loadSavedUserSettings = (userId) => {
-		if (!JSON.parse(window.localStorage.getItem(`user${userId}`))) {
-			window.localStorage.setItem(`user${userId}`, JSON.stringify({...this.state.userSettings}));
+		if (!this.loadUserSettings(userId)) {
+			// By providing no settings object here, we are able to clone the current user's settings into the nem user.
+			this.saveUserSettings(userId, this.state.userSettings);
 		}
 
-		const userStorage = JSON.parse(window.localStorage.getItem(`user${userId}`));
+		const userSettings = this.loadUserSettings(userId);
 
 		// Apply a consistent (predictable) set of object keys for consumers, merging in new keys since their last visit
-		return mergeDeepRight(this.state.userSettings, userStorage);
+		return mergeDeepRight(this.state.userSettings, userSettings);
 	}
 
-	saveUserSettings = (userId, userSettings, prevUserSettings) => {
-		if (userSettings !== prevUserSettings) {
-			window.localStorage.setItem(`user${userId}`, JSON.stringify(userSettings));
-		}
+	loadUserSettings = (userId) => {
+		return JSON.parse(window.localStorage.getItem(`user${userId}`)) || this.getDefaultUserSettings();
 	}
 
-	setUserSettings = (userId) => {
-		const settings = this.loadSavedUserSettings(userId);
+	saveUserSettings = (userId, userSettings) => {
+		window.localStorage.setItem(`user${userId}`, JSON.stringify(userSettings));
+	}
+
+	deleteUserSettings = (userId) => {
+		window.localStorage.removeItem(`user${userId}`);
+	}
+
+	setUserSettings = (userId = this.state.userId, userSettings) => {
+		const settings = userSettings || this.loadSavedUserSettings(userId);
 
 		this.updateAppState((state) => {
 			state.userSettings = settings;
 		});
 	}
 
+	getAllSavedUSerIds = () => {
+		// Read the user database and return just a list of the registered id numbers
+		return Object.keys(window.localStorage)
+			.filter(key => (key.indexOf('user') === 0))
+			.map(key => parseInt(key.replace('user', '')));
+	}
+
+	resetUserSettings = () => {
+		this.deleteUserSettings(this.state.userId);
+		this.setUserSettings(this.state.userId);
+	}
+
+	resetAll = () => {
+		const userIds = this.getAllSavedUSerIds();
+		userIds.forEach(this.deleteUserSettings);
+	}
+
 	setLocation = () => {
 		if (window.navigator.geolocation) {
 			this.watchPositionId = window.navigator.geolocation.watchPosition((position) => {
-				this.updateAppState((state) => {
-					state.location.latitude = position.coords.latitude;
-					state.location.longitude = position.coords.longitude;
-				});
-				this.setWeather(position.coords.latitude, position.coords.longitude);
+				// This code will only fire when the watchPosition changes, not necessarily when
+				// the app state's location changes. Dev Note: Find a way to trigger the weather to
+				// be set if the location changes and disable this watch in that case, but reconnect
+				// it if the connection to the service layer drops.
+				if (this.state.connections.serviceLayer) {
+					// We happened to get our data from elsewhere
+					this.setWeather(this.state.location.lat, this.state.location.lon);
+				} else {
+					// Just use location services.
+					this.updateAppState((state) => {
+						state.location.lat = position.coords.latitude;
+						state.location.lon = position.coords.longitude;
+					});
+					this.setWeather(position.coords.latitude, position.coords.longitude);
+				}
 			}, (error) => {
 				console.error('Location error:', error);
 			},
@@ -152,7 +216,9 @@ class AppContextProvider extends Component {
 	render () {
 		const context = {
 			...this.state,
-			updateAppState: this.updateAppState
+			updateAppState: this.updateAppState,
+			resetUserSettings: this.resetUserSettings,
+			resetAll: this.resetAll
 		};
 
 		return (

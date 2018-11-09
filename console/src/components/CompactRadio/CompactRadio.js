@@ -60,7 +60,7 @@ const CompactRadioBase = kind({
 		return (
 			<div {...rest}>
 				<LabeledItemBase className={css.title} label="Artist - Song">{currentStation} MHz</LabeledItemBase>
-				<Row align="center space-evenly" className={css.row}>
+				<Row align="center space-between" className={css.row}>
 					<Cell shrink>
 						<Button onClick={onTune} action="tune-down" icon="arrowsmallleft" />
 					</Cell>
