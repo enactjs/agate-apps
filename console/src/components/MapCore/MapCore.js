@@ -591,6 +591,11 @@ const SkinnableMap = AppContextConnect(({location, userSettings, updateAppState}
 	skin: userSettings.skin,
 	location,
 	// destination: navigation.destination,
+	setDestination: ({destination}) => {
+		updateAppState((state) => {
+			state.navigation.destination = destination;
+		});
+	},
 	updateNavigation: ({duration}) => {
 		const now = new Date().getTime();
 		const eta = new Date(now + (duration * 1000)).getTime();

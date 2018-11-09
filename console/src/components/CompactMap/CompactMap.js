@@ -23,9 +23,7 @@ const CompactMapBase = kind({
 		onSelect: PropTypes.func,
 		// A local state method to assign the local destination to the destination prop listed above.
 		onSetDestination: PropTypes.func,
-		proposedDestination: PropTypes.object,
-		// The super method to assign the new destination
-		setDestination: PropTypes.func
+		proposedDestination: PropTypes.object
 	},
 
 	styles: {
@@ -41,7 +39,7 @@ const CompactMapBase = kind({
 		}
 	},
 
-	render: ({changePosition, changeFollow, destination, follow, onSelect, onTabChange, onSetDestination, proposedDestination, setDestination, ...rest}) => {
+	render: ({changePosition, changeFollow, destination, follow, onSelect, onTabChange, onSetDestination, proposedDestination, ...rest}) => {
 		return (
 			<div {...rest}>
 				<nav className={css.tools}>
@@ -50,7 +48,7 @@ const CompactMapBase = kind({
 					<Button alt="Navigate Here" icon="play" onClick={onSetDestination} />
 					<ToggleButton alt="Follow" selected={follow} underline icon="forward" onClick={changeFollow} />
 				</nav>
-				<MapCore destination={destination} follow={follow} proposedDestination={proposedDestination} setDestination={setDestination} />
+				<MapCore destination={destination} follow={follow} proposedDestination={proposedDestination} />
 			</div>
 		);
 	}

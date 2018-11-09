@@ -21,7 +21,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		static displayName = 'ServiceLayer';
 
 		static propTypes = {
-			requestDestination: PropTypes.func.isRequired,
+			updateDestination: PropTypes.func.isRequired,
 			setConnected: PropTypes.func.isRequired,
 			setLocation: PropTypes.func.isRequired,
 			destination: PropTypes.object,
@@ -56,6 +56,15 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
+			if (prevProps.navigation && this.props.navigation &&
+				prevProps.navigation.destination && this.props.navigation.destination && (
+					prevProps.navigation.destination.lat !== this.props.navigation.destination.lat ||
+					prevProps.navigation.destination.lon !== this.props.navigation.destination.lon
+				)
+			) {
+				this.setDestination();
+			}
+
 			if (prevProps.navigation.duration !== this.props.navigation.duration) {
 				this.sendNavigation();
 			}
@@ -163,10 +172,11 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		// General Event Handling
 		//
 
-		setDestination = ({destination}) => {
-			this.props.requestDestination({destination, navigating: true});
-			// console.log('location:', this.props.location, 'destination', destination);
-			this.connection.send('routingRequest', [this.props.location, destination]);
+		setDestination = () => {
+			const {navigation, location} = this.props;
+			this.props.updateDestination({destination: navigation.destination, navigating: true});
+			// console.log('location:', location, 'destination:', navigation.destination);
+			this.connection.send('routingRequest', [location, navigation.destination]);
 		}
 
 		sendVideo = (args) => {
@@ -182,7 +192,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			const {...rest} = this.props;
 			delete rest.setLocation;
 			delete rest.setConnected;
-			delete rest.requestDestination;
+			delete rest.updateDestination;
 			delete rest.location;
 			delete rest.navigation;
 			// delete rest.setTickle;
@@ -192,7 +202,6 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					<Communicator ref={this.comm} host={appConfig.communacitonServerHost} />
 					<Wrapped
 						{...rest}
-						setDestination={this.setDestination}
 						sendVideo={this.sendVideo}
 					/>
 				</React.Fragment>
@@ -222,7 +231,7 @@ const ServiceLayer = compose(
 				state.location = location;
 			});
 		},
-		requestDestination: ({destination, navigating}) => {
+		updateDestination: ({destination, navigating}) => {
 			updateAppState((state) => {
 				state.navigation.destination = destination;
 				if (navigating != null) {
