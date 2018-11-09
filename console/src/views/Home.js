@@ -87,14 +87,14 @@ const Home = kind({
 		className: 'homePanel'
 	},
 
-	render: ({arrangeable, onSelect, setDestination, sendETA, ...rest}) => (
+	render: ({arrangeable, onSelect, setDestination, ...rest}) => (
 		<Panel {...rest}>
 			<HomeLayout arrangeable={arrangeable}>
 				<topLeft><CompactRadio /></topLeft>
 				<topCenter><CompactWeather /></topCenter>
 				<topRight><CompactHvac /></topRight>
 				<bottomLeft><CompactAppList align="center space-evenly" onSelect={onSelect} /></bottomLeft>
-				<bottomRight><CompactMap onSelect={onSelect} setDestination={setDestination} sendETA={sendETA} /></bottomRight>
+				<bottomRight><CompactMap onSelect={onSelect} setDestination={setDestination} /></bottomRight>
 			</HomeLayout>
 		</Panel>
 	)

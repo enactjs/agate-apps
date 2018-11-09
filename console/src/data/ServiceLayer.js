@@ -25,7 +25,8 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			setConnected: PropTypes.func.isRequired,
 			setLocation: PropTypes.func.isRequired,
 			destination: PropTypes.object,
-			location: PropTypes.object
+			location: PropTypes.object,
+			navigation: PropTypes.object
 		}
 
 		constructor (props) {
@@ -52,6 +53,12 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 		componentDidMount () {
 			this.initializeConnection();
+		}
+
+		componentDidUpdate (prevProps) {
+			if (prevProps.navigation.duration !== this.props.navigation.duration) {
+				this.sendNavigation();
+			}
 		}
 
 		initializeConnection () {
@@ -166,8 +173,9 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			this.comm.current.sendVideo(args);
 		}
 
-		sendETA = (args) => {
-			this.comm.current.sendETA(args);
+		sendNavigation = () => {
+			// console.log('sendNavigation:', this.props.navigation);
+			this.comm.current.sendETA(this.props.navigation);
 		}
 
 		render () {
@@ -176,7 +184,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			delete rest.setConnected;
 			delete rest.requestDestination;
 			delete rest.location;
-			delete rest.destination;
+			delete rest.navigation;
 			// delete rest.setTickle;
 
 			return (
@@ -186,10 +194,6 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 						{...rest}
 						setDestination={this.setDestination}
 						sendVideo={this.sendVideo}
-						sendETA={this.sendETA}
-						// location={this.state.location}
-						// destination={this.state.destination}
-						// navigating={false}
 					/>
 				</React.Fragment>
 			);
@@ -198,10 +202,9 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 });
 
 const ServiceLayer = compose(
-	AppStateConnect(({destination: destinationProp, location: locationProp, navigation, updateAppState}) => ({
+	AppStateConnect(({location: locationProp, navigation, updateAppState}) => ({
 		location: locationProp,
-		destination: destinationProp,
-		eta: navigation.eta,
+		navigation,
 		// tickleCount: tickleCountProp,
 		// setTickle: ({tickleCount}) => {
 		// 	updateAppState((state) => {

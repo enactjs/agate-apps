@@ -82,7 +82,6 @@ const AppBase = kind({
 		onToggleDateTimePopup,
 		onToggleUserSelectionPopup,
 		onToggleWelcomePopup,
-		sendETA,
 		sendVideo,
 		setDestination,
 		showPopup,
@@ -129,7 +128,6 @@ const AppBase = kind({
 						onSelect={onSelect}
 						setDestination={setDestination}
 						arrangeable={layoutArrangeable}
-						sendETA={sendETA}
 					/>
 					<Phone arrangeable={layoutArrangeable} />
 					<Hvac arrangeable={layoutArrangeable} />
@@ -139,7 +137,7 @@ const AppBase = kind({
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}
 					/>
-					<MapView setDestination={setDestination} sendETA={sendETA} />
+					<MapView setDestination={setDestination} />
 					<Settings
 						onSelect={onSelect}
 						onToggleDateTimePopup={onToggleDateTimePopup}
