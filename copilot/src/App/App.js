@@ -1,8 +1,9 @@
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
-import {Cell, Row} from '@enact/ui/Layout';
+import {Cell, Column, Row} from '@enact/ui/Layout';
 import Job from '@enact/core/util/Job';
 import kind from '@enact/core/kind';
+import LabeledItem from '@enact/agate/LabeledItem';
 import Popup from '@enact/agate/Popup';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -25,11 +26,12 @@ const formatTime = (time) => {
 // This array maps 1:1 to the durValues array below
 const durationIncrements = ['day', 'hour', 'min', 'second'];
 const formatDuration = (duration) => {
+	duration = Math.ceil(duration);
 	const durValues = [
 		Math.floor(duration / (60 * 60 * 24)),  // lol we can stop at days
 		Math.floor(duration / (60 * 60)) % 24,
 		Math.floor(duration / 60) % 60,
-		Math.ceil(duration % 60)
+		duration % 60
 	];
 
 	// It's only useful to show the two largest increments
@@ -44,7 +46,8 @@ const formatDuration = (duration) => {
 			durParts[i] = durValues[i] + ' ' + durationIncrements[i] + (durValues[i] === 1 ? '' : 's');
 		}
 	}
-	return durParts.join(' ');
+	// Prune the empty ones and join the rest.
+	return durParts.filter(part => !!part).join(' ');
 };
 
 const AppBase = kind({
@@ -62,23 +65,27 @@ const AppBase = kind({
 
 	render: ({adContent, showAd, url, popupOpen, setScreen, togglePopup, eta, duration, ...rest}) => {
 		return (
-			<React.Fragment>
-				{eta ? <Row>
-					<Cell>{formatDuration(duration)}</Cell>
-					<Cell>{formatTime(eta)}</Cell>
-				</Row> : null}
-				<Row {...rest}>
-					<Cell
-						className={css.iframe}
-						allow="autoplay"
-						component="iframe"
-						src={url}
-					/>
-					{!showAd ? null : <Cell className={css.adSpace} shrink>
-						{adContent}
-					</Cell>}
-				</Row>
-				<Button style={{position: 'absolute'}} icon="plug" onClick={togglePopup} />
+			<Column {...rest}>
+				{eta ? <Cell shrink>
+					<Row>
+						<Cell component={LabeledItem} label="Remaining" spotlightDisabled>{formatDuration(duration)}</Cell>
+						<Cell component={LabeledItem} label="ETA" spotlightDisabled>{formatTime(eta)}</Cell>
+					</Row>
+				</Cell> : null}
+				<Cell>
+					<Button style={{position: 'absolute', zIndex: 1}} icon="plug" onClick={togglePopup} />
+					<Row className={css.bodyRow}>
+						<Cell
+							className={css.iframe}
+							allow="autoplay"
+							component="iframe"
+							src={url}
+						/>
+						{!showAd ? null : <Cell className={css.adSpace} shrink>
+							{adContent}
+						</Cell>}
+					</Row>
+				</Cell>
 				<Popup
 					open={popupOpen}
 					noAutoDismiss
@@ -92,7 +99,7 @@ const AppBase = kind({
 						<Button onClick={setScreen(2)}>Screen 2</Button>
 					</buttons>
 				</Popup>
-			</React.Fragment>
+			</Column>
 		);
 	}
 });
