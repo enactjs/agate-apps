@@ -2,10 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
 import classnames from 'classnames';
+import {equals} from 'ramda';
 import {Job} from '@enact/core/util';
 
 import AppContextConnect from '../../App/AppContextConnect';
 import appConfig from '../../../config';
+import {propTypeLatLon, propTypeLatLonList} from '../../data/proptypes';
 import CarPng from '../Dashboard/svg/car.png';
 
 import css from './MapCore.less';
@@ -16,11 +18,6 @@ if (!appConfig.mapApiKey) {
 	Error('Please set `mapApiKey` key in your `config.js` file to your own Mapbox API key.');
 }
 mapboxgl.accessToken = appConfig.mapApiKey;
-
-const propTypeLatLon = PropTypes.shape({
-	lat: PropTypes.number,
-	lon: PropTypes.number
-});
 
 const startCoordinates = {lon: -121.979125, lat: 37.405189};
 
@@ -58,40 +55,26 @@ const buildQueryString = (props) => {
 	return pairs.join('&');
 };
 
-const coordsUpdated = (propName, prevProps, nextProps) => {
-	// Check the following:
-	//   the object exists in the nextProps
-	//   any of the following:
-	//     the prop didn't exist in prevProps
-	//     the prop's lat isn't the same as the new prop's lat
-	//     the prop's lon isn't the same as the new prop's lon
-	if (nextProps[propName] && (!prevProps[propName] ||
-		prevProps[propName].lat !== nextProps[propName].lat ||
-		prevProps[propName].lon !== nextProps[propName].lon
-	)) {
-		return true;
-	}
-	return false;
-};
-
 //
 // Get Directions
 //
-const getRoute = async (start, end) => {
-	const startMb = toMapbox(start);
-	const endMb = toMapbox(end);
-	let bearing = toDeg(start.orientation);
+const getRoute = async (waypoints) => {
+	let bearing = toDeg(waypoints[0].orientation);
 	if (bearing < 0) bearing += 360;
+
+	// Take the list of LatLon objects and convert each to a string of "x,y", then join those with a ";"
+	const waypointParts = waypoints.map(point => toMapbox(point).join(','));
+	const waypointString = waypointParts.join(';');
 
 	// geometries=geojson&bearings=${bearing},45;&radiuses=100;100&access_token=${mapboxgl.accessToken}
 	const qs = buildQueryString({
 		geometries: 'geojson',
-		bearings: [`${bearing},45`, null],
-		radiuses: [100, 100],
+		bearings: [`${bearing},45`, ...Array(waypointParts.length - 1).fill(null)],
+		radiuses: [100, ...Array(waypointParts.length - 1).fill(100)],
 		access_token: mapboxgl.accessToken // eslint-disable-line camelcase
 	});
 	// console.log('qs:', qs);
-	const response = await window.fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${startMb[0]},${startMb[1]};${endMb[0]},${endMb[1]}?${qs}`);
+	const response = await window.fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${waypointString}?${qs}`);
 	return await response.json();
 };
 
@@ -196,11 +179,11 @@ class MapCoreBase extends React.Component {
 		setDestination: PropTypes.func.isRequired,
 		updateNavigation: PropTypes.func.isRequired,
 		centeringDuration: PropTypes.number,
-		destination: propTypeLatLon,
+		destination:propTypeLatLonList,
 		follow: PropTypes.bool, // Should the centering position follow the current location?
 		location: propTypeLatLon, // Our actual current location on the world
 		position: propTypeLatLon, // The map's centering position
-		proposedDestination: propTypeLatLon,
+		proposedDestination: propTypeLatLonList,
 		skin: PropTypes.string,
 		viewLockoutDuration: PropTypes.number,
 		zoomToSpeedScaleFactor: PropTypes.number
@@ -306,8 +289,8 @@ class MapCoreBase extends React.Component {
 		}
 
 		// Received a new proposedDestination
-		if (coordsUpdated('proposedDestination', prevProps, this.props)) {
-			actions.plotRoute = [this.props.location, this.props.proposedDestination];
+		if (!equals(prevProps.proposedDestination, this.props.proposedDestination)) {
+			actions.plotRoute = [this.props.location, ...this.props.proposedDestination];
 		}
 
 		// Received a new velocity
@@ -318,19 +301,19 @@ class MapCoreBase extends React.Component {
 		}
 
 		// Received a new location
-		if (coordsUpdated('location', prevProps, this.props)) {
+		if (!equals(prevProps.location, this.props.location)) {
 			actions.center = this.props.location;
 			this.updateCarLayer({location: this.props.location, map: this.map});
 		}
 
 		// Received a new destination
-		if (coordsUpdated('destination', prevProps, this.props)) {
+		if (!equals(prevProps.destination, this.props.destination)) {
 			console.log('Initiating navigation to a new destination:', this.props.destination);
-			actions.plotRoute = [this.props.location, this.props.destination];
+			actions.plotRoute = [this.props.location, ...this.props.destination];
 			actions.startNavigating = this.props.destination;
 		}
 
-		if (!actions.center && coordsUpdated('position', prevProps, this.props)) {
+		if (!actions.center && !equals(prevProps.position, this.props.position)) {
 			actions.center = this.props.position;
 		}
 
@@ -346,7 +329,7 @@ class MapCoreBase extends React.Component {
 			if (action) {
 				switch (action) {
 					case 'plotRoute': {
-						this.drawDirection(actions[action][0], actions[action][1]);
+						this.drawDirection(actions[action]);
 						break;
 					}
 					case 'startNavigating': {
@@ -448,8 +431,10 @@ class MapCoreBase extends React.Component {
 			.addTo(this.map);
 	}
 
-	showFullRouteOnMap = (start, end) => {
-		const bounds = newBounds(start, end);
+	showFullRouteOnMap = (waypoints) => {
+		// Currently we're just looking at the first and last waypoint, but this could be expanded
+		// to calculate the farthest boundry and plot that.
+		const bounds = newBounds(waypoints[0], waypoints[waypoints.length - 1]);
 		this.map.fitBounds(bounds, {padding: 50});
 
 		// Set a time to automatically pan back to the current position.
@@ -464,9 +449,8 @@ class MapCoreBase extends React.Component {
 		if (this.viewLockTimer) this.viewLockTimer = null;
 	}
 
-	drawDirection = async (start, end) => {
-		// const startMb = toMapbox(start);
-		const endMb = toMapbox(end);
+	drawDirection = async (waypoints) => {
+		const endMb = toMapbox(waypoints[waypoints.length - 1]);  // Get the last point
 
 		this.setState({carShowing: true});
 
@@ -522,10 +506,10 @@ class MapCoreBase extends React.Component {
 			});
 		}
 
-		const data = await getRoute(start, end);
+		const data = await getRoute(waypoints);
 		if (data.routes && data.routes[0]) {
 			const route = data.routes[0];
-			this.showFullRouteOnMap(start, end);
+			this.showFullRouteOnMap(waypoints);
 
 			this.props.updateNavigation({
 				duration: route.duration

@@ -8,6 +8,7 @@ import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
 
 // Data Services
+import {propTypeLatLon, propTypeLatLonList} from './proptypes';
 import connect from './connector';
 import {getLatLongFromSim, radiansToDegrees} from './conversion';
 import appConfig from '../../config';
@@ -21,11 +22,11 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		static displayName = 'ServiceLayer';
 
 		static propTypes = {
-			updateDestination: PropTypes.func.isRequired,
 			setConnected: PropTypes.func.isRequired,
 			setLocation: PropTypes.func.isRequired,
-			destination: PropTypes.object,
-			location: PropTypes.object,
+			updateDestination: PropTypes.func.isRequired,
+			destination: propTypeLatLonList,
+			location: propTypeLatLon,
 			navigation: PropTypes.object
 		}
 
@@ -169,8 +170,9 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		}
 
 		onRoutingResponse = (message) => {
+			// We may be able to load multiple previous waypoints here, if more than one was sent
 			const {x, y} = message.routing_request.waypoint.slice(-1).pop().pose;
-			const destination = getLatLongFromSim(x, y);
+			const destination = [getLatLongFromSim(x, y)];
 			this.setDestination({destination});
 		}
 
@@ -178,11 +180,12 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		// General Event Handling
 		//
 
-		setDestination = () => {
+		setDestination = ({destination}) => {
 			const {navigation, location} = this.props;
-			this.props.updateDestination({destination: navigation.destination, navigating: true});
-			// console.log('location:', location, 'destination:', navigation.destination);
-			this.connection.send('routingRequest', [location, navigation.destination]);
+			destination = destination || navigation.destination; // Accept external args, in case the request came from within this component, but fallback to the navigation prop (the preferred usage).
+			this.props.updateDestination({destination, navigating: true});
+			// console.log('location, dest(s):', [location, ...destination]);
+			this.connection.send('routingRequest', [location, ...destination]);
 		}
 
 		sendVideo = (args) => {

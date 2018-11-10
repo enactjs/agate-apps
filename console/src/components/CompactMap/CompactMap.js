@@ -7,6 +7,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {getPanelIndexOf} from '../../App';
+import {propTypeLatLonList} from '../../data/proptypes';
 
 import MapCore from '../MapCore';
 
@@ -18,12 +19,12 @@ const CompactMapBase = kind({
 	propTypes: {
 		changeFollow: PropTypes.func,
 		changePosition: PropTypes.func,
-		destination: PropTypes.object,
+		destination: propTypeLatLonList,
 		follow: PropTypes.bool,
 		onSelect: PropTypes.func,
 		// A local state method to assign the local destination to the destination prop listed above.
 		onSetDestination: PropTypes.func,
-		proposedDestination: PropTypes.object
+		proposedDestination: propTypeLatLonList
 	},
 
 	styles: {
@@ -76,7 +77,7 @@ const CompactMapBrains = hoc((configHoc, Wrapped) => {
 
 		handleSetDestination = () => {
 			// Take our current position and assign it as our internal (local to this HOC) destination
-			this.setState(({positionIndex}) => ({destination: positions[positionIndex]}));
+			this.setState(({positionIndex}) => ({destination: [positions[positionIndex]]}));
 		}
 
 		changePosition = () => {
@@ -101,7 +102,7 @@ const CompactMapBrains = hoc((configHoc, Wrapped) => {
 					follow={this.state.follow}
 					onSetDestination={this.handleSetDestination}
 					destination={this.state.destination}
-					proposedDestination={positions[this.state.positionIndex]}
+					proposedDestination={[positions[this.state.positionIndex]]}
 				/>
 			);
 		}
