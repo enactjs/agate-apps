@@ -1,10 +1,13 @@
 import Button from '@enact/agate/Button';
-import GridListImageItem from '@enact/ui/GridListImageItem';
+import {Cell, Column, Row} from '@enact/ui/Layout';
 import kind from '@enact/core/kind';
 import Popup from '@enact/agate/Popup';
 import React from 'react';
 import ri from '@enact/ui/resolution';
-import {VirtualGridList} from '@enact/ui/VirtualList';
+import {SlotItem} from '@enact/ui/SlotItem';
+import VirtualList from '@enact/ui/VirtualList';
+
+import css from './CompactMultimedia.less';
 
 import youtubeVideos from '../../data/youtubeapi.json';
 
@@ -20,12 +23,25 @@ const CompactMultimediaBase = kind({
 		},
 		renderItem: ({onSelectVideo, videos}) => ({index, ...rest}) => {
 			return (
-				<GridListImageItem
+				<SlotItem
 					{...rest}
-					caption={videos[index].snippet.title}
-					source={videos[index].snippet.thumbnails.medium.url}
+					component="div"
 					onClick={onSelectVideo(videos[index])}
-				/>
+				>
+					<slotBefore>
+						<img
+							className={css.thumbnail}
+							src={videos[index].snippet.thumbnails.medium.url}
+						/>
+					</slotBefore>
+					<Column className={css.content}>
+						<Cell />
+						<Cell className={css.title} shrink>
+							{videos[index].snippet.title}
+						</Cell>
+						<Cell />
+					</Column>
+				</SlotItem>
 			);
 		}
 	},
@@ -44,14 +60,11 @@ const CompactMultimediaBase = kind({
 						{buttons}
 					</buttons>
 				</Popup>
-				<VirtualGridList
+				<VirtualList
 					dataSize={videos.length}
 					itemRenderer={renderItem}
-					itemSize={{
-						minWidth: ri.scale(320),
-						minHeight: ri.scale(180)
-					}}
-					spacing={ri.scale(66)}
+					itemSize={ri.scale(90)}
+					spacing={ri.scale(15)}
 				/>
 			</React.Fragment>
 		);
