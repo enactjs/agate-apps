@@ -34,12 +34,10 @@ const CompactMultimediaBase = kind({
 							src={videos[index].snippet.thumbnails.medium.url}
 						/>
 					</slotBefore>
-					<Column className={css.content}>
-						<Cell />
+					<Column align="center center" className={css.content}>
 						<Cell className={css.title} shrink>
 							{videos[index].snippet.title}
 						</Cell>
-						<Cell />
 					</Column>
 				</SlotItem>
 			);
