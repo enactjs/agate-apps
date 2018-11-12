@@ -10,6 +10,7 @@ import React from 'react';
 
 import appConfig from '../../config';
 import Communicator from '../../../components/Communicator';
+import NetworkInfo from '../../../components/NetworkInfo';
 
 import css from './App.less';
 
@@ -60,10 +61,10 @@ const AppBase = kind({
 
 	styles: {
 		css,
-		className: 'app enact-fit'
+		className: 'app'
 	},
 
-	render: ({adContent, showAd, url, popupOpen, setScreen, togglePopup, eta, duration, ...rest}) => {
+	render: ({adContent, duration, eta, ipAddress, popupOpen, setScreen, showAd, togglePopup, url, ...rest}) => {
 		return (
 			<Column {...rest}>
 				{eta ? <Cell shrink>
@@ -92,8 +93,9 @@ const AppBase = kind({
 					onClose={togglePopup}
 				>
 					<title>
-					Select Your Screen Source
+						Select Your Screen Source
 					</title>
+					<p>IP Address: {ipAddress}</p>
 					<buttons>
 						<Button onClick={setScreen(1)}>Screen 1</Button>
 						<Button onClick={setScreen(2)}>Screen 2</Button>
@@ -165,6 +167,7 @@ class App extends React.Component {
 	render () {
 		const {adContent, popupOpen, showAd, url, eta, duration} = this.state;
 		const props = {
+			...this.props,
 			adContent,
 			popupOpen,
 			showAd,
@@ -172,6 +175,8 @@ class App extends React.Component {
 			eta,
 			duration
 		};
+		delete props.accent;
+		delete props.highlight;
 
 		return (
 			<React.Fragment>
@@ -188,4 +193,4 @@ class App extends React.Component {
 	}
 }
 
-export default AgateDecorator(App);
+export default AgateDecorator(NetworkInfo(App));

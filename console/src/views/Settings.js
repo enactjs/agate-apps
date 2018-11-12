@@ -3,8 +3,10 @@ import Divider from '@enact/agate/Divider';
 import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
 import React from 'react';
+import LabeledItem from '@enact/agate/LabeledItem';
 import SwitchItem from '@enact/agate/SwitchItem';
 
+import NetworkInfo from '../../../components/NetworkInfo';
 import viewCss from './Settings.less';
 import {getPanelIndexOf} from '../App';
 
@@ -40,7 +42,7 @@ const Settings = kind({
 		}
 	},
 
-	render: ({css, onSelect, onToggleDateTimePopup, ...rest}) => (
+	render: ({css, ipAddress, onSelect, onToggleDateTimePopup, ...rest}) => (
 		<Panel {...rest}>
 			<Row className="enact-fit" align=" center">
 				<Cell size="40%">
@@ -90,6 +92,7 @@ const Settings = kind({
 						>
 							Ejection Seat
 						</SwitchItemCell>
+						<LabeledItem label={ipAddress}>IP Address</LabeledItem>
 					</Column>
 				</Cell>
 			</Row>
@@ -97,4 +100,4 @@ const Settings = kind({
 	)
 });
 
-export default Settings;
+export default NetworkInfo(Settings);
