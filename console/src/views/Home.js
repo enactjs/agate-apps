@@ -6,11 +6,12 @@ import PropTypes from 'prop-types';
 import Droppable, {Draggable} from '@enact/agate/DropManager';
 
 import AppContextConnect from '../App/AppContextConnect';
-import CompactRadio from '../components/CompactRadio';
-import CompactHvac from '../components/CompactHVAC';
 import CompactAppList from '../components/CompactAppList';
-import CompactWeather from '../components/CompactWeather';
+import CompactHvac from '../components/CompactHVAC';
 import CompactMap from '../components/CompactMap';
+import CompactMultimedia from '../components/CompactMultimedia';
+import CompactRadio from '../components/CompactRadio';
+import CompactWeather from '../components/CompactWeather';
 
 import css from './Home.less';
 
@@ -87,14 +88,15 @@ const Home = kind({
 		className: 'homePanel'
 	},
 
-	render: ({arrangeable, onSelect, ...rest}) => (
+	render: ({arrangeable, onSelect, onSendVideo, setDestination, ...rest}) => (
 		<Panel {...rest}>
 			<HomeLayout arrangeable={arrangeable}>
 				<topLeft><CompactRadio /></topLeft>
 				<topCenter><CompactWeather /></topCenter>
 				<topRight><CompactHvac /></topRight>
-				<bottomLeft><CompactAppList align="center space-evenly" onSelect={onSelect} /></bottomLeft>
-				<bottomRight><CompactMap onSelect={onSelect} /></bottomRight>
+				{/*<bottomLeft><CompactAppList align="center space-evenly" onSelect={onSelect} /></bottomLeft>*/}
+				<bottomLeft><CompactMultimedia onSendVideo={onSendVideo} /></bottomLeft>
+				<bottomRight><CompactMap onSelect={onSelect} setDestination={setDestination} /></bottomRight>
 			</HomeLayout>
 		</Panel>
 	)
