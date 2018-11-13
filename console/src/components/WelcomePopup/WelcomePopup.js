@@ -12,7 +12,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import AppContextConnect from '../../App/AppContextConnect';
-import MapCore from '../MapCore';
+import CompactMap from '../CompactMap';
+import CompactMultimedia from '../CompactMultimedia';
+import CompactWeather from '../CompactWeather';
 
 import css from './WelcomePopup.less';
 
@@ -83,27 +85,19 @@ const WelcomePopupBase = kind({
 							</Cell>
 							<Cell>
 								<Row className={css.bottomRow}>
-									<Cell shrink>
+									<Cell size="25%">
+										Destinations
+									</Cell>
+									<Cell component={CompactMap} size="40%" />
+									<Cell size="35%">
 										<Column>
-											<Cell component={Divider} startSection shrink>Top Locations</Cell>
+											<Cell shrink>
+												<CompactWeather />
+											</Cell>
 											<Cell>
-												<Column
-													component={Group}
-													childComponent={Cell}
-													itemProps={{component: Button, shrink: true}}
-													select="radio"
-													selectedProp="selected"
-													wrap
-													align="start space-evenly"
-												>
-													{['Destination 1', 'Destination 2', 'Destination 3', 'Destination 4', 'Destination 5']}
-												</Column>
+												<CompactMultimedia />
 											</Cell>
 										</Column>
-									</Cell>
-									<Cell component={MapCore} />
-									<Cell shrink>
-										media
 									</Cell>
 								</Row>
 							</Cell>
