@@ -1,10 +1,9 @@
 import Button from '@enact/agate/Button';
-import {Cell, Column, Row} from '@enact/ui/Layout';
 import kind from '@enact/core/kind';
 import Popup from '@enact/agate/Popup';
 import React from 'react';
 import ri from '@enact/ui/resolution';
-import {SlotItem} from '@enact/ui/SlotItem';
+import ThumbnailItem from '@enact/agate/ThumbnailItem';
 import VirtualList from '@enact/ui/VirtualList';
 
 import css from './CompactMultimedia.less';
@@ -23,23 +22,15 @@ const CompactMultimediaBase = kind({
 		},
 		renderItem: ({onSelectVideo, videos}) => ({index, ...rest}) => {
 			return (
-				<SlotItem
-					{...rest}
+				<ThumbnailItem
 					component="div"
+					css={css}
 					onClick={onSelectVideo(videos[index])}
+					src={videos[index].snippet.thumbnails.medium.url}
+					{...rest}
 				>
-					<slotBefore>
-						<img
-							className={css.thumbnail}
-							src={videos[index].snippet.thumbnails.medium.url}
-						/>
-					</slotBefore>
-					<Column align="center center" className={css.content}>
-						<Cell className={css.title} shrink>
-							{videos[index].snippet.title}
-						</Cell>
-					</Column>
-				</SlotItem>
+					{videos[index].snippet.title}
+				</ThumbnailItem>
 			);
 		}
 	},
