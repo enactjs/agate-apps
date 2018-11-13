@@ -6,8 +6,8 @@ import PropTypes from 'prop-types';
 import Droppable, {Draggable} from '@enact/agate/DropManager';
 
 import AppContextConnect from '../App/AppContextConnect';
-import CompactAppList from '../components/CompactAppList';
-import CompactHvac from '../components/CompactHVAC';
+// import CompactAppList from '../components/CompactAppList';
+// import CompactHvac from '../components/CompactHVAC';
 import CompactMap from '../components/CompactMap';
 import CompactMultimedia from '../components/CompactMultimedia';
 import CompactRadio from '../components/CompactRadio';
@@ -15,19 +15,26 @@ import CompactWeather from '../components/CompactWeather';
 
 import css from './Home.less';
 
-const allSlotNames = ['bottomLeft', 'bottomRight', 'topLeft', 'topRight', 'topCenter'];
+const allSlotNames = ['small1', 'small2', 'medium', 'large'];
 
 const DraggableCell = Draggable(Cell);
 
-const HomeDefaultLayout = kind({
-	name: 'HomeDefaultLayout',
+// Store multiple layouts all in one component
+// Here, we've made 4 slots with agnostic names and reused those names in the various positions of
+// multiple layouts. This will keep the slots working properly even if a user switches layouts.
+// The containerShape is defined in each cell to allow the widgets in them to respond appropriately
+// even though the slot shape may have changed from layout to layout.
+const HomeLayouts = kind({
+	name: 'HomeLayouts',
 
 	propTypes: {
-		bottomLeft: PropTypes.node,
-		bottomRight: PropTypes.node,
-		topCenter: PropTypes.node,
-		topLeft: PropTypes.node,
-		topRight: PropTypes.node
+		arrangeable: PropTypes.bool,
+		arrangement: PropTypes.object,
+		large: PropTypes.node,
+		medium: PropTypes.node,
+		skin: PropTypes.string,
+		small1: PropTypes.node,
+		small2: PropTypes.node
 	},
 
 	styles: {
@@ -35,29 +42,69 @@ const HomeDefaultLayout = kind({
 		className: 'home'
 	},
 
-	render: ({bottomLeft, bottomRight, topLeft, topRight, topCenter, ...rest}) => {
-		return (
-			<Column {...rest}>
-				<Cell size="40%">
-					<Row className={css.row}>
-						<DraggableCell size="30%" className={css.topLeft} containerShape={{edges: {top: true, left: true}, size: {relative: 'small'}}} name="topLeft">{topLeft}</DraggableCell>
-						<DraggableCell className={css.topCenter} name="topCenter">{topCenter}</DraggableCell>
-						<DraggableCell className={css.topRight} containerShape={{edges: {top: true, right: true}, size: {relative: 'medium'}, orientation: 'landscape'}} name="topRight">{topRight}</DraggableCell>
-					</Row>
-				</Cell>
-				<Cell>
-					<Row className={css.row}>
-						<DraggableCell size="30%" className={css.bottomLeft} containerShape={{edges: {bottom: true, left: true}, size: {relative: 'medium'}, orientation: 'portrait'}} name="bottomLeft">{bottomLeft}</DraggableCell>
-						<DraggableCell className={css.bottomRight} containerShape={{edges: {bottom: true, right: true}, size: {relative: 'large'}, orientation: 'landscape'}} name="bottomRight">{bottomRight}</DraggableCell>
-					</Row>
-				</Cell>
-			</Column>
-		);
+	render: ({skin, small1, small2, medium, large, ...rest}) => {
+		delete rest.arrangement;
+
+		// Layouts below are modeled after the UX layout recommendation document, numbered for this
+		// case as 1-4 in the left column and 5-8 on the right column.
+		switch (skin) {
+			// Layout #3
+			case 'titanium': return (
+				<Row {...rest}>
+					<Cell size="50%">
+						<Row className={css.row}>
+							<DraggableCell className={css.large} containerShape={{edges: {top: true, left: true, bottom: true}, size: {relative: 'large'}, orientation: 'landscape'}} name="large">{large}</DraggableCell>
+						</Row>
+					</Cell>
+					<Cell size="50%">
+						<Column>
+							<Cell size="50%">
+								<Row className={css.row}>
+									<DraggableCell className={css.medium} containerShape={{edges: {top: true, right: true}, size: {relative: 'medium'}, orientation: 'landscape'}} name="medium">{medium}</DraggableCell>
+								</Row>
+							</Cell>
+							<Cell size="50%">
+								<Row className={css.row}>
+									<DraggableCell className={css.small1} containerShape={{edges: {bottom: true}, size: {relative: 'small'}}} name="small1">{small1}</DraggableCell>
+									<DraggableCell className={css.small2} containerShape={{edges: {bottom: true, right: true}, size: {relative: 'small'}}} name="small2">{small2}</DraggableCell>
+								</Row>
+							</Cell>
+						</Column>
+					</Cell>
+				</Row>
+			);
+			// Layout #2
+			default: return (
+				<Row {...rest}>
+					<Cell size="50%">
+						<Column>
+							<Cell size="50%">
+								<Row className={css.row}>
+									<DraggableCell className={css.small1} containerShape={{edges: {top: true, left: true}, size: {relative: 'small'}}} name="small1">{small1}</DraggableCell>
+									<DraggableCell className={css.small2} containerShape={{edges: {top: true}, size: {relative: 'small'}}} name="small2">{small2}</DraggableCell>
+								</Row>
+							</Cell>
+							<Cell size="50%">
+								<Row className={css.row}>
+									<DraggableCell className={css.medium} containerShape={{edges: {bottom: true, left: true}, size: {relative: 'medium'}, orientation: 'landscape'}} name="medium">{medium}</DraggableCell>
+								</Row>
+							</Cell>
+						</Column>
+					</Cell>
+					<Cell size="50%">
+						<Row className={css.row}>
+							<DraggableCell className={css.large} containerShape={{edges: {top: true, right: true, bottom: true}, size: {relative: 'large'}, orientation: 'landscape'}} name="large">{large}</DraggableCell>
+						</Row>
+					</Cell>
+				</Row>
+			);
+		}
 	}
 });
 
 const LayoutSetting = AppContextConnect(({userSettings, updateAppState}) => ({
 	arrangement: (userSettings.arrangements ? {...userSettings.arrangements.home} : {}),
+	skin: userSettings.skin,
 	onArrange: ({arrangement}) => {
 		updateAppState((state) => {
 			if (!state.userSettings.arrangements) state.userSettings.arrangements = {};
@@ -66,12 +113,10 @@ const LayoutSetting = AppContextConnect(({userSettings, updateAppState}) => ({
 	}
 }));
 
-
 const HomeLayout =
 	LayoutSetting(
-		// Droppable({arrangementProp: 'myLayout', slots: allSlotNames},
 		Droppable({slots: allSlotNames},
-			HomeDefaultLayout
+			HomeLayouts
 		)
 	);
 
@@ -88,15 +133,13 @@ const Home = kind({
 		className: 'homePanel'
 	},
 
-	render: ({arrangeable, onSelect, onSendVideo, setDestination, ...rest}) => (
+	render: ({arrangeable, onSelect, onSendVideo, ...rest}) => (
 		<Panel {...rest}>
 			<HomeLayout arrangeable={arrangeable}>
-				<topLeft><CompactRadio /></topLeft>
-				<topCenter><CompactWeather /></topCenter>
-				<topRight><CompactHvac /></topRight>
-				{/*<bottomLeft><CompactAppList align="center space-evenly" onSelect={onSelect} /></bottomLeft>*/}
-				<bottomLeft><CompactMultimedia onSendVideo={onSendVideo} /></bottomLeft>
-				<bottomRight><CompactMap onSelect={onSelect} setDestination={setDestination} /></bottomRight>
+				<small1><CompactWeather /></small1>
+				<small2><CompactRadio /></small2>
+				<medium><CompactMultimedia onSendVideo={onSendVideo} /></medium>
+				<large><CompactMap onSelect={onSelect} /></large>
 			</HomeLayout>
 		</Panel>
 	)

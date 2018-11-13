@@ -218,6 +218,7 @@ class MapCoreBase extends React.Component {
 
 		this.map = new mapboxgl.Map({
 			container: this.mapNode,
+			attributionControlboolean: false,
 			style,
 			center: toMapbox(startCoordinates),
 			zoom: 12
