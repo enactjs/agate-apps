@@ -181,7 +181,7 @@ class App extends React.Component {
 		return (
 			<React.Fragment>
 				<Communicator
-					host={appConfig.communacitonServerHost}
+					host={appConfig.communicationServerHost}
 					screenId={this.state.screenId}
 					onPlayVideo={this.playVideo}
 					onShowAd={this.showAdSpace}
