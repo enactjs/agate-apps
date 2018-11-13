@@ -1,6 +1,7 @@
 import Button from '@enact/agate/Button';
 import Divider from '@enact/agate/Divider';
 import FullscreenPopup from '@enact/agate/FullscreenPopup';
+import {Item} from '@enact/agate/Item';
 import {Panel, Panels} from '@enact/agate/Panels';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
 import {handle, forward} from '@enact/core/handle';
@@ -11,6 +12,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import AppContextConnect from '../../App/AppContextConnect';
+import MapCore from '../MapCore';
+
+import css from './WelcomePopup.less';
 
 const WelcomePopupBase = kind({
 	name: 'WelcomePopup',
@@ -19,12 +23,18 @@ const WelcomePopupBase = kind({
 		index: PropTypes.number,
 		onClose: PropTypes.func,
 		onNextView: PropTypes.func,
+		onPreviousView: PropTypes.func,
 		updateUser: PropTypes.func,
 		userId: PropTypes.number
 	},
 
 	defaultProps: {
 		index: 0
+	},
+
+	styles: {
+		css,
+		className: 'welcomePopup'
 	},
 
 	handlers: {
@@ -34,10 +44,10 @@ const WelcomePopupBase = kind({
 		)
 	},
 
-	render: ({index, onClose, selectUserAndContinue, ...rest}) => {
+	render: ({index, onClose, onPreviousView, selectUserAndContinue, userId, ...rest}) => {
 		delete rest.onNextView;
 		delete rest.updateUser;
-		// delete rest.userId;
+
 		return (
 			<FullscreenPopup {...rest}>
 				<Panels index={index}>
@@ -61,10 +71,41 @@ const WelcomePopupBase = kind({
 						</Column>
 					</Panel>
 					<Panel>
-						<Column align="stretch center">
-							<Cell component={Divider} startSection shrink>Welcome Screen</Cell>
+						<Column>
 							<Cell shrink>
-								<Button onClick={onClose}>Close</Button>
+								<Row align="center">
+									<Cell component={Button} icon="user" onClick={onPreviousView} shrink />
+									<Cell component={Item} spotlightDisabled>
+										Hi User {userId}!
+									</Cell>
+									<Cell component={Button} icon="arrowsmallright" onClick={onClose} shrink />
+								</Row>
+							</Cell>
+							<Cell>
+								<Row className={css.bottomRow}>
+									<Cell shrink>
+										<Column>
+											<Cell component={Divider} startSection shrink>Top Locations</Cell>
+											<Cell>
+												<Column
+													component={Group}
+													childComponent={Cell}
+													itemProps={{component: Button, shrink: true}}
+													select="radio"
+													selectedProp="selected"
+													wrap
+													align="start space-evenly"
+												>
+													{['Destination 1', 'Destination 2', 'Destination 3', 'Destination 4', 'Destination 5']}
+												</Column>
+											</Cell>
+										</Column>
+									</Cell>
+									<Cell component={MapCore} />
+									<Cell shrink>
+										media
+									</Cell>
+								</Row>
 							</Cell>
 						</Column>
 					</Panel>
@@ -74,12 +115,13 @@ const WelcomePopupBase = kind({
 	}
 });
 
-const WelcomePopup = AppContextConnect(({updateAppState}) => ({
+const WelcomePopup = AppContextConnect(({updateAppState, userId}) => ({
 	updateUser: ({selected}) => {
 		updateAppState((state) => {
 			state.userId = selected + 1;
 		});
-	}
+	},
+	userId
 }))(WelcomePopupBase);
 
 export default WelcomePopup;
