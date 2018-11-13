@@ -83,7 +83,6 @@ const AppBase = kind({
 		onToggleUserSelectionPopup,
 		onToggleWelcomePopup,
 		sendVideo,
-		setDestination,
 		showPopup,
 		showBasicPopup,
 		showDateTimePopup,
@@ -127,7 +126,6 @@ const AppBase = kind({
 						arrangeable={layoutArrangeable}
 						onSelect={onSelect}
 						onSendVideo={sendVideo}
-						setDestination={setDestination}
 					/>
 					<Phone arrangeable={layoutArrangeable} />
 					<Hvac arrangeable={layoutArrangeable} />

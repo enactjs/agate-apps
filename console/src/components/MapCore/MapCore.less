@@ -16,3 +16,9 @@
 		z-index: 100;
 	}
 }
+
+// Sorry MapBox, we respect you and want to give credit, but we can't risk opening a new window that
+// we don't have control over and can't get back to our app from.
+:global(.mapboxgl-control-container) * {
+	pointer-events: none;
+}
