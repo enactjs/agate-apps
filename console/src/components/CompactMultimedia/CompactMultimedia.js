@@ -23,7 +23,6 @@ const CompactMultimediaBase = kind({
 		renderItem: ({onSelectVideo, videos}) => ({index, ...rest}) => {
 			return (
 				<ThumbnailItem
-					component="div"
 					css={css}
 					onClick={onSelectVideo(videos[index])}
 					src={videos[index].snippet.thumbnails.medium.url}
