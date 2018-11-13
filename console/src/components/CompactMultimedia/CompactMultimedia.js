@@ -35,7 +35,10 @@ const CompactMultimediaBase = kind({
 		}
 	},
 
-	render: ({buttons, renderItem, showPopup, onTogglePopup, videos}) => {
+	render: ({buttons, renderItem, showPopup, onTogglePopup, videos, ...rest}) => {
+		delete rest.onSelectVideo;
+		delete rest.onSendVideo;
+		delete rest.selectedVideo;
 		return (
 			<React.Fragment>
 				<Popup
@@ -51,6 +54,7 @@ const CompactMultimediaBase = kind({
 					</buttons>
 				</Popup>
 				<VirtualList
+					{...rest}
 					dataSize={videos.length}
 					itemRenderer={renderItem}
 					itemSize={ri.scale(90)}
