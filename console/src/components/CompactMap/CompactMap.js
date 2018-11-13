@@ -1,7 +1,6 @@
 import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
 import Button from '@enact/agate/Button';
-import ToggleButton from '@enact/agate/ToggleButton';
 import Skinnable from '@enact/agate/Skinnable';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -40,17 +39,15 @@ const CompactMapBase = kind({
 		}
 	},
 
-	render: ({changePosition, changeFollow, destination, follow, onSelect, onTabChange, onSetDestination, proposedDestination, ...rest}) => {
+	render: ({changePosition, onSelect, onTabChange, onSetDestination, ...rest}) => {
 		return (
-			<div {...rest}>
-				<nav className={css.tools}>
+			<MapCore {...rest}>
+				<tools>
 					<Button alt="Fullscreen" icon="fullscreen" data-tabindex={getPanelIndexOf('map')} onSelect={onSelect} onKeyUp={onTabChange} onClick={onTabChange} />
 					<Button alt="Propose new destination" icon="arrowhookleft" onClick={changePosition} />
 					<Button alt="Navigate Here" icon="play" onClick={onSetDestination} />
-					<ToggleButton alt="Follow" selected={follow} underline icon="forward" onClick={changeFollow} />
-				</nav>
-				<MapCore destination={destination} follow={follow} proposedDestination={proposedDestination} />
-			</div>
+				</tools>
+			</MapCore>
 		);
 	}
 });
@@ -70,8 +67,7 @@ const CompactMapBrains = hoc((configHoc, Wrapped) => {
 			super(props);
 			this.state = {
 				positionIndex: 0,
-				destination: null,
-				follow: false
+				destination: null
 			};
 		}
 
@@ -87,18 +83,11 @@ const CompactMapBrains = hoc((configHoc, Wrapped) => {
 			}));
 		}
 
-		changeFollow = () => {
-			this.setState(({follow}) => ({
-				follow: !follow
-			}));
-		}
-
 		render () {
 			return (
 				<Wrapped
 					{...this.props}
 					changePosition={this.changePosition}
-					changeFollow={this.changeFollow}
 					follow={this.state.follow}
 					onSetDestination={this.handleSetDestination}
 					destination={this.state.destination}

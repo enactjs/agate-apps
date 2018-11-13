@@ -4,6 +4,8 @@ import mapboxgl from 'mapbox-gl';
 import classnames from 'classnames';
 import {equals} from 'ramda';
 import {Job} from '@enact/core/util';
+import Slottable from '@enact/ui/Slottable';
+import ToggleButton from '@enact/agate/ToggleButton';
 
 import AppContextConnect from '../../App/AppContextConnect';
 import appConfig from '../../../config';
@@ -179,12 +181,13 @@ class MapCoreBase extends React.Component {
 		setDestination: PropTypes.func.isRequired,
 		updateNavigation: PropTypes.func.isRequired,
 		centeringDuration: PropTypes.number,
+		defaultFollow: PropTypes.bool, // Should the centering position follow the current location?
 		destination:propTypeLatLonList,
-		follow: PropTypes.bool, // Should the centering position follow the current location?
 		location: propTypeLatLon, // Our actual current location on the world
 		position: propTypeLatLon, // The map's centering position
 		proposedDestination: propTypeLatLonList,
 		skin: PropTypes.string,
+		tools: PropTypes.node, // Buttons and tools for interacting with the map. (Slottable)
 		viewLockoutDuration: PropTypes.number,
 		zoomToSpeedScaleFactor: PropTypes.number
 	}
@@ -200,7 +203,8 @@ class MapCoreBase extends React.Component {
 		this.localinfo = {};  // A copy of queried data for quick comparisons
 
 		this.state = {
-			carShowing: true
+			carShowing: true,
+			follow: props.defaultFollow || false
 		};
 	}
 
@@ -363,7 +367,7 @@ class MapCoreBase extends React.Component {
 
 	velocityZoom = (linearVelocity) => {
 		if (!this.viewLockTimer) {
-			const zoom = this.props.follow ? this.calculateZoomLevel(linearVelocity) : 15;
+			const zoom = this.state.follow ? this.calculateZoomLevel(linearVelocity) : 15;
 			console.log('zoomTo:', zoom);
 			this.map.zoomTo(zoom);
 		}
@@ -543,14 +547,19 @@ class MapCoreBase extends React.Component {
 		}
 	}
 
+	changeFollow = () => {
+		this.setState(({follow}) => ({
+			follow: !follow
+		}));
+	}
+
 	setCarNode = (node) => (this.carNode = node)
 	setMapNode = (node) => (this.mapNode = node)
 
 	render () {
-		const {className, ...rest} = this.props;
+		const {className, follow, tools, ...rest} = this.props;
 		delete rest.centeringDuration;
 		delete rest.destination;
-		delete rest.follow;
 		delete rest.location;
 		delete rest.position;
 		delete rest.proposedDestination;
@@ -562,6 +571,10 @@ class MapCoreBase extends React.Component {
 		return (
 			<div {...rest} className={classnames(className, css.map)}>
 				{this.message ? <div className={css.message}>{this.message}</div> : null}
+				<nav className={css.tools}>
+					{tools}
+					<ToggleButton alt="Follow" selected={this.state.follow} underline icon="forward" onClick={this.changeFollow} />
+				</nav>
 				<div
 					ref={this.setMapNode}
 					className={css.mapNode}
@@ -571,7 +584,7 @@ class MapCoreBase extends React.Component {
 	}
 }
 
-const SkinnableMap = AppContextConnect(({location, userSettings, updateAppState}) => ({
+const ConnectedMap = AppContextConnect(({location, userSettings, updateAppState}) => ({
 	// We should import the app-level variable for our current location then feed that in as the "start"
 	skin: userSettings.skin,
 	location,
@@ -593,6 +606,6 @@ const SkinnableMap = AppContextConnect(({location, userSettings, updateAppState}
 	}
 }));
 
-const MapCore = SkinnableMap(MapCoreBase);
+const MapCore = ConnectedMap(Slottable({slots: ['tools']}, MapCoreBase));
 
 export default MapCore;
