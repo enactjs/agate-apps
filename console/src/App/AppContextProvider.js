@@ -50,6 +50,7 @@ const defaultUserSettings = {
 	colorAccent: '#cccccc',
 	colorHighlight: '#66aabb',
 	fontSize: 0,
+	name: '',
 	skin: 'carbon'
 };
 
@@ -112,6 +113,15 @@ class AppContextProvider extends Component {
 		const settings = Object.assign({}, defaultUserSettings);
 		if (props.defaultSkin) settings.skin = props.defaultSkin;
 		return settings;
+	}
+
+	getUserNames = () => {
+		const users = {};
+		this.getAllSavedUserIds().forEach(userKey => {
+			const userSettings = this.loadUserSettings(userKey);
+			users[userKey] = userSettings.name;
+		});
+		return users;
 	}
 
 	loadSavedUserSettings = (userId) => {
@@ -229,6 +239,7 @@ class AppContextProvider extends Component {
 	render () {
 		const context = {
 			...this.state,
+			getUserNames: this.getUserNames,
 			updateAppState: this.updateAppState,
 			resetUserSettings: this.resetUserSettings,
 			resetAll: this.resetAll

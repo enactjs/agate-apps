@@ -21,6 +21,7 @@
 		"colorAccent": "#47C2EB",
 		"colorHighlight": "#0359f0",
 		"fontSize": 0,
+		"name": "Laura & Steve",
 		"skin": "carbon"
 	},
 	"user2": {
@@ -68,6 +69,7 @@
 		"colorAccent": "#cccccc",
 		"colorHighlight": "#566af0",
 		"fontSize": 0,
+		"name": "Thomas",
 		"skin": "titanium"
 	},
 	"user3": {
@@ -92,6 +94,7 @@
 		"colorAccent": "#0359f0",
 		"colorHighlight": "#f08c21",
 		"fontSize": 0,
+		"name": "Gary",
 		"skin": "electro"
 	}
 }
