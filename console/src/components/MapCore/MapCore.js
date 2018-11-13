@@ -557,9 +557,10 @@ class MapCoreBase extends React.Component {
 	setMapNode = (node) => (this.mapNode = node)
 
 	render () {
-		const {className, follow, tools, ...rest} = this.props;
+		const {className, tools, ...rest} = this.props;
 		delete rest.centeringDuration;
 		delete rest.destination;
+		delete rest.defaultFollow;
 		delete rest.location;
 		delete rest.position;
 		delete rest.proposedDestination;
