@@ -1,12 +1,12 @@
 import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
 import Button from '@enact/agate/Button';
-import ToggleButton from '@enact/agate/ToggleButton';
 import Skinnable from '@enact/agate/Skinnable';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import {getPanelIndexOf} from '../../App';
+import {propTypeLatLonList} from '../../data/proptypes';
 
 import MapCore from '../MapCore';
 
@@ -18,14 +18,12 @@ const CompactMapBase = kind({
 	propTypes: {
 		changeFollow: PropTypes.func,
 		changePosition: PropTypes.func,
-		destination: PropTypes.object,
+		destination: propTypeLatLonList,
 		follow: PropTypes.bool,
 		onSelect: PropTypes.func,
 		// A local state method to assign the local destination to the destination prop listed above.
 		onSetDestination: PropTypes.func,
-		proposedDestination: PropTypes.object,
-		// The super method to assign the new destination
-		setDestination: PropTypes.func
+		proposedDestination: propTypeLatLonList
 	},
 
 	styles: {
@@ -41,17 +39,15 @@ const CompactMapBase = kind({
 		}
 	},
 
-	render: ({changePosition, changeFollow, destination, follow, onSelect, onTabChange, onSetDestination, proposedDestination, setDestination, ...rest}) => {
+	render: ({changePosition, onSelect, onTabChange, onSetDestination, ...rest}) => {
 		return (
-			<div {...rest}>
-				<nav className={css.tools}>
+			<MapCore {...rest}>
+				<tools>
 					<Button alt="Fullscreen" icon="fullscreen" data-tabindex={getPanelIndexOf('map')} onSelect={onSelect} onKeyUp={onTabChange} onClick={onTabChange} />
 					<Button alt="Propose new destination" icon="arrowhookleft" onClick={changePosition} />
 					<Button alt="Navigate Here" icon="play" onClick={onSetDestination} />
-					<ToggleButton alt="Follow" selected={follow} underline icon="forward" onClick={changeFollow} />
-				</nav>
-				<MapCore destination={destination} follow={follow} proposedDestination={proposedDestination} setDestination={setDestination} />
-			</div>
+				</tools>
+			</MapCore>
 		);
 	}
 });
@@ -71,14 +67,13 @@ const CompactMapBrains = hoc((configHoc, Wrapped) => {
 			super(props);
 			this.state = {
 				positionIndex: 0,
-				destination: null,
-				follow: false
+				destination: null
 			};
 		}
 
 		handleSetDestination = () => {
 			// Take our current position and assign it as our internal (local to this HOC) destination
-			this.setState(({positionIndex}) => ({destination: positions[positionIndex]}));
+			this.setState(({positionIndex}) => ({destination: [positions[positionIndex]]}));
 		}
 
 		changePosition = () => {
@@ -88,22 +83,15 @@ const CompactMapBrains = hoc((configHoc, Wrapped) => {
 			}));
 		}
 
-		changeFollow = () => {
-			this.setState(({follow}) => ({
-				follow: !follow
-			}));
-		}
-
 		render () {
 			return (
 				<Wrapped
 					{...this.props}
 					changePosition={this.changePosition}
-					changeFollow={this.changeFollow}
 					follow={this.state.follow}
 					onSetDestination={this.handleSetDestination}
 					destination={this.state.destination}
-					proposedDestination={positions[this.state.positionIndex]}
+					proposedDestination={[positions[this.state.positionIndex]]}
 				/>
 			);
 		}

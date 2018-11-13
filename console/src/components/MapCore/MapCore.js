@@ -2,11 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
 import classnames from 'classnames';
+import {equals} from 'ramda';
 import {Job} from '@enact/core/util';
+import Slottable from '@enact/ui/Slottable';
+import ToggleButton from '@enact/agate/ToggleButton';
 
 import AppContextConnect from '../../App/AppContextConnect';
 import appConfig from '../../../config';
-import CarSvg from '../Dashboard/svg/car.svg';
+import {propTypeLatLon, propTypeLatLonList} from '../../data/proptypes';
+import CarPng from '../Dashboard/svg/car.png';
 
 import css from './MapCore.less';
 
@@ -17,11 +21,7 @@ if (!appConfig.mapApiKey) {
 }
 mapboxgl.accessToken = appConfig.mapApiKey;
 
-const propTypeLatLon = PropTypes.shape({
-	lat: PropTypes.number,
-	lon: PropTypes.number
-});
-
+const startCoordinates = {lon: -121.979125, lat: 37.405189};
 
 //
 // Map Utilities
@@ -57,40 +57,26 @@ const buildQueryString = (props) => {
 	return pairs.join('&');
 };
 
-const coordsUpdated = (propName, prevProps, nextProps) => {
-	// Check the following:
-	//   the object exists in the nextProps
-	//   any of the following:
-	//     the prop didn't exist in prevProps
-	//     the prop's lat isn't the same as the new prop's lat
-	//     the prop's lon isn't the same as the new prop's lon
-	if (nextProps[propName] && (!prevProps[propName] ||
-		prevProps[propName].lat !== nextProps[propName].lat ||
-		prevProps[propName].lon !== nextProps[propName].lon
-	)) {
-		return true;
-	}
-	return false;
-};
-
 //
 // Get Directions
 //
-const getRoute = async (start, end) => {
-	const startMb = toMapbox(start);
-	const endMb = toMapbox(end);
-	let bearing = toDeg(start.orientation);
+const getRoute = async (waypoints) => {
+	let bearing = toDeg(waypoints[0].orientation);
 	if (bearing < 0) bearing += 360;
+
+	// Take the list of LatLon objects and convert each to a string of "x,y", then join those with a ";"
+	const waypointParts = waypoints.map(point => toMapbox(point).join(','));
+	const waypointString = waypointParts.join(';');
 
 	// geometries=geojson&bearings=${bearing},45;&radiuses=100;100&access_token=${mapboxgl.accessToken}
 	const qs = buildQueryString({
 		geometries: 'geojson',
-		bearings: [`${bearing},45`, null],
-		radiuses: [100, 100],
+		bearings: [`${bearing},45`, ...Array(waypointParts.length - 1).fill(null)],
+		radiuses: [100, ...Array(waypointParts.length - 1).fill(100)],
 		access_token: mapboxgl.accessToken // eslint-disable-line camelcase
 	});
 	// console.log('qs:', qs);
-	const response = await window.fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${startMb[0]},${startMb[1]};${endMb[0]},${endMb[1]}?${qs}`);
+	const response = await window.fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${waypointString}?${qs}`);
 	return await response.json();
 };
 
@@ -146,6 +132,44 @@ const markerLayer = {
 	}
 };
 
+const carLayerId = 'carPoint';
+const addCarLayer = ({coordinates, iconURL, map, orientation = 0}) => {
+	if (map) {
+		// upload png (svg does not work)
+		map.loadImage(iconURL, (error, icon) => {
+			if (error) throw error;
+
+			const carLayer = {
+				'id': carLayerId,
+				'type': 'symbol',
+				'source': {
+					'type': 'geojson',
+					'data': {
+						'type': 'FeatureCollection',
+						'features': [{
+							'type': 'Feature',
+							'geometry': {
+								'type': 'Point',
+								// location of the car
+								'coordinates': coordinates
+							}
+						}]
+					}
+				},
+				'layout': {
+					'icon-image': 'car',
+					'icon-size': 0.10,
+					// rotation of the car
+					'icon-rotate': orientation
+				}
+			};
+
+			map.addImage('car', icon);
+			map.addLayer(carLayer);
+		});
+	}
+};
+
 const skinStyles = {
 	carbon: 'mapbox://styles/mapbox/dark-v9',
 	electro: '',
@@ -157,12 +181,13 @@ class MapCoreBase extends React.Component {
 		setDestination: PropTypes.func.isRequired,
 		updateNavigation: PropTypes.func.isRequired,
 		centeringDuration: PropTypes.number,
-		destination: propTypeLatLon,
-		follow: PropTypes.bool, // Should the centering position follow the current location?
+		defaultFollow: PropTypes.bool, // Should the centering position follow the current location?
+		destination:propTypeLatLonList,
 		location: propTypeLatLon, // Our actual current location on the world
 		position: propTypeLatLon, // The map's centering position
-		proposedDestination: propTypeLatLon,
+		proposedDestination: propTypeLatLonList,
 		skin: PropTypes.string,
+		tools: PropTypes.node, // Buttons and tools for interacting with the map. (Slottable)
 		viewLockoutDuration: PropTypes.number,
 		zoomToSpeedScaleFactor: PropTypes.number
 	}
@@ -178,7 +203,8 @@ class MapCoreBase extends React.Component {
 		this.localinfo = {};  // A copy of queried data for quick comparisons
 
 		this.state = {
-			carShowing: true
+			carShowing: true,
+			follow: props.defaultFollow || false
 		};
 	}
 
@@ -190,15 +216,15 @@ class MapCoreBase extends React.Component {
 
 	componentDidMount () {
 		const style = skinStyles[this.props.skin] || skinStyles.titanium;
-		const start = {lon: -121.979125, lat: 37.405189};
 
 		// stop drawing map if accessToken is not set.
 		if (!mapboxgl.accessToken) return;
 
 		this.map = new mapboxgl.Map({
 			container: this.mapNode,
+			attributionControlboolean: false,
 			style,
-			center: toMapbox(start),
+			center: toMapbox(startCoordinates),
 			zoom: 12
 		});
 
@@ -211,11 +237,17 @@ class MapCoreBase extends React.Component {
 
 		this.map.on('load', () => {
 			this.map.addLayer(markerLayer);
+			addCarLayer({
+				coordinates: toMapbox(startCoordinates),
+				iconURL: CarPng,
+				map: this.map,
+				orientation: this.props.location.orientation
+			});
 		});
 
 		this.map.on('click', 'symbols', (e) => {
 			// This method is a bit messy because it now intermixes different coordinates systems
-			// `coordinates` comes in as Mapbox format and `start` is latlon format.
+			// `coordinates` comes in as Mapbox format and `startCoordinates` is latlon format.
 			// This could be updated, but it's marginally faster to leave it this way.
 			let coordinates = e.features[0].geometry.coordinates.slice();
 			let description = e.features[0].properties.description;
@@ -225,8 +257,8 @@ class MapCoreBase extends React.Component {
 			}
 
 			this.showPopup(coordinates, description);
-			this.drawDirection(start, {lon: coordinates[0], lat: coordinates[1]});
-			this.centerMap({center: [(coordinates[0] + start.lon) / 2, (coordinates[1] + start.lat) / 2]});
+			this.drawDirection(startCoordinates, {lon: coordinates[0], lat: coordinates[1]});
+			this.centerMap({center: [(coordinates[0] + startCoordinates.lon) / 2, (coordinates[1] + startCoordinates.lat) / 2]});
 		});
 	}
 
@@ -234,6 +266,14 @@ class MapCoreBase extends React.Component {
 		if (this.props.skin !== prevProps.skin) {
 			const style = skinStyles[prevProps.skin] || skinStyles.titanium;
 			this.map.setStyle(style);
+
+			// car layer needs to be added everytime the map reloaded when skin changes
+			addCarLayer({
+				coordinates: toMapbox(startCoordinates),
+				iconURL: CarPng,
+				map: this.map,
+				orientation: this.props.location.orientation
+			});
 
 			// make sure the map is resized after the container updates
 			setTimeout(this.map.resize.bind(this.map), 0);
@@ -254,8 +294,8 @@ class MapCoreBase extends React.Component {
 		}
 
 		// Received a new proposedDestination
-		if (coordsUpdated('proposedDestination', prevProps, this.props)) {
-			actions.plotRoute = [this.props.location, this.props.proposedDestination];
+		if (!equals(prevProps.proposedDestination, this.props.proposedDestination)) {
+			actions.plotRoute = [this.props.location, ...this.props.proposedDestination];
 		}
 
 		// Received a new velocity
@@ -266,18 +306,19 @@ class MapCoreBase extends React.Component {
 		}
 
 		// Received a new location
-		if (coordsUpdated('location', prevProps, this.props)) {
+		if (!equals(prevProps.location, this.props.location)) {
 			actions.center = this.props.location;
+			this.updateCarLayer({location: this.props.location, map: this.map});
 		}
 
 		// Received a new destination
-		if (coordsUpdated('destination', prevProps, this.props)) {
+		if (!equals(prevProps.destination, this.props.destination)) {
 			console.log('Initiating navigation to a new destination:', this.props.destination);
-			actions.plotRoute = [this.props.location, this.props.destination];
+			actions.plotRoute = [this.props.location, ...this.props.destination];
 			actions.startNavigating = this.props.destination;
 		}
 
-		if (!actions.center && coordsUpdated('position', prevProps, this.props)) {
+		if (!actions.center && !equals(prevProps.position, this.props.position)) {
 			actions.center = this.props.position;
 		}
 
@@ -293,7 +334,7 @@ class MapCoreBase extends React.Component {
 			if (action) {
 				switch (action) {
 					case 'plotRoute': {
-						this.drawDirection(actions[action][0], actions[action][1]);
+						this.drawDirection(actions[action]);
 						break;
 					}
 					case 'startNavigating': {
@@ -326,7 +367,7 @@ class MapCoreBase extends React.Component {
 
 	velocityZoom = (linearVelocity) => {
 		if (!this.viewLockTimer) {
-			const zoom = this.props.follow ? this.calculateZoomLevel(linearVelocity) : 15;
+			const zoom = this.state.follow ? this.calculateZoomLevel(linearVelocity) : 15;
 			console.log('zoomTo:', zoom);
 			this.map.zoomTo(zoom);
 		}
@@ -365,6 +406,29 @@ class MapCoreBase extends React.Component {
 		this.carNode.style.setProperty('--map-orientation', orientation);
 	}
 
+	updateCarLayer = ({location, map}) => {
+		if (map) {
+			const carLayer = map.getSource(carLayerId);
+			if (carLayer) {
+				const newCarData = {
+					'type': 'FeatureCollection',
+					'features': [{
+						'type': 'Feature',
+						'geometry': {
+							'type': 'Point',
+							'coordinates': location.coordinates
+						}
+					}]
+				};
+
+				// update coordinates of the car
+				carLayer.setData(newCarData);
+				// update the car orientation
+				map.setLayoutProperty(carLayerId, 'icon-rotate', location.orientation);
+			}
+		}
+	}
+
 	showPopup = (coordinates, description) => {
 		new mapboxgl.Popup()
 			.setLngLat(coordinates)
@@ -372,8 +436,10 @@ class MapCoreBase extends React.Component {
 			.addTo(this.map);
 	}
 
-	showFullRouteOnMap = (start, end) => {
-		const bounds = newBounds(start, end);
+	showFullRouteOnMap = (waypoints) => {
+		// Currently we're just looking at the first and last waypoint, but this could be expanded
+		// to calculate the farthest boundry and plot that.
+		const bounds = newBounds(waypoints[0], waypoints[waypoints.length - 1]);
 		this.map.fitBounds(bounds, {padding: 50});
 
 		// Set a time to automatically pan back to the current position.
@@ -388,9 +454,8 @@ class MapCoreBase extends React.Component {
 		if (this.viewLockTimer) this.viewLockTimer = null;
 	}
 
-	drawDirection = async (start, end) => {
-		// const startMb = toMapbox(start);
-		const endMb = toMapbox(end);
+	drawDirection = async (waypoints) => {
+		const endMb = toMapbox(waypoints[waypoints.length - 1]);  // Get the last point
 
 		this.setState({carShowing: true});
 
@@ -446,11 +511,10 @@ class MapCoreBase extends React.Component {
 			});
 		}
 
-		const data = await getRoute(start, end);
+		const data = await getRoute(waypoints);
 		if (data.routes && data.routes[0]) {
 			const route = data.routes[0];
-			// console.log('Route:', start, end);
-			this.showFullRouteOnMap(start, end);
+			this.showFullRouteOnMap(waypoints);
 
 			this.props.updateNavigation({
 				duration: route.duration
@@ -483,14 +547,19 @@ class MapCoreBase extends React.Component {
 		}
 	}
 
+	changeFollow = () => {
+		this.setState(({follow}) => ({
+			follow: !follow
+		}));
+	}
+
 	setCarNode = (node) => (this.carNode = node)
 	setMapNode = (node) => (this.mapNode = node)
 
 	render () {
-		const {className, ...rest} = this.props;
+		const {className, follow, tools, ...rest} = this.props;
 		delete rest.centeringDuration;
 		delete rest.destination;
-		delete rest.follow;
 		delete rest.location;
 		delete rest.position;
 		delete rest.proposedDestination;
@@ -502,7 +571,10 @@ class MapCoreBase extends React.Component {
 		return (
 			<div {...rest} className={classnames(className, css.map)}>
 				{this.message ? <div className={css.message}>{this.message}</div> : null}
-				<img className={classnames(css.carImage, (this.state.carShowing ? null : css.hidden))} ref={this.setCarNode} src={CarSvg} alt="" />
+				<nav className={css.tools}>
+					{tools}
+					<ToggleButton alt="Follow" selected={this.state.follow} underline icon="forward" onClick={this.changeFollow} />
+				</nav>
 				<div
 					ref={this.setMapNode}
 					className={css.mapNode}
@@ -512,22 +584,28 @@ class MapCoreBase extends React.Component {
 	}
 }
 
-const SkinnableMap = AppContextConnect(({location, userSettings, updateAppState}) => ({
+const ConnectedMap = AppContextConnect(({location, userSettings, updateAppState}) => ({
 	// We should import the app-level variable for our current location then feed that in as the "start"
 	skin: userSettings.skin,
 	location,
 	// destination: navigation.destination,
-	updateNavigation: ({duration}) => {
+	setDestination: ({destination}) => {
 		updateAppState((state) => {
-			const now = new Date().getTime();
+			state.navigation.destination = destination;
+		});
+	},
+	updateNavigation: ({duration}) => {
+		const now = new Date().getTime();
+		const eta = new Date(now + (duration * 1000)).getTime();
+		updateAppState((state) => {
 			state.navigation.duration = duration;
 			state.navigation.startTime = now;
-			state.navigation.eta = new Date(now + (duration * 60000)).getTime();
+			state.navigation.eta = eta;
 			// console.log('updateNavigation:', state.navigation);
 		});
 	}
 }));
 
-const MapCore = SkinnableMap(MapCoreBase);
+const MapCore = ConnectedMap(Slottable({slots: ['tools']}, MapCoreBase));
 
 export default MapCore;

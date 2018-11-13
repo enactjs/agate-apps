@@ -1,17 +1,19 @@
 import Divider from '@enact/agate/Divider';
+import kind from '@enact/core/kind';
+import Layout, {Cell, Row} from '@enact/ui/Layout';
 import {Panel} from '@enact/agate/Panels';
 import Picker from '@enact/agate/Picker';
+import React from 'react';
 import {ResponsiveBox} from '@enact/agate/DropManager';
 import SliderButton from '@enact/agate/SliderButton';
 import ToggleButton from '@enact/agate/ToggleButton';
-import kind from '@enact/core/kind';
-import Layout, {Cell, Row} from '@enact/ui/Layout';
-import React from 'react';
 
+import AppContextConnect from '../App/AppContextConnect';
 import CustomLayout, {SaveLayoutArrangement} from '../components/CustomLayout';
 
 import css from './HVAC.less';
 
+const speeds = ['Off', 'Low', 'Medium', 'High'];
 const temps = ['HI', '74°', '73°', '72°', '71°', '70°', '69°', '68°', '67°', '66°', 'LO'];
 
 const ResponsiveLayout = ResponsiveBox(({containerShape, ...rest}) => {
@@ -33,33 +35,118 @@ const HvacBase = kind({
 		className: 'hvac'
 	},
 
-	render: ({arrangeable, arrangement, onArrange, ...rest}) => (
+	render: ({
+		acSelected,
+		arrangeable,
+		arrangement,
+		autoSelected,
+		fanSpeed,
+		leftHeat,
+		leftTemp,
+		onArrange,
+		onToggleAc,
+		onToggleAuto,
+		onToggleLeftHeater,
+		onToggleRecirculation,
+		onToggleRightHeater,
+		onUpdateFanSpeed,
+		onUpdateLeftTemperature,
+		onUpdateRightTemperature,
+		recirculate,
+		rightHeat,
+		rightTemp,
+		...rest
+	}) => (
 		<Panel {...rest}>
 			<CustomLayout arrangeable={arrangeable} arrangement={arrangement} onArrange={onArrange}>
 				<top>
 					<Divider>
 						Fan Speed
 					</Divider>
-					<SliderButton>
-						{['Off', 'Low', 'Medium', 'High']}
+					<SliderButton
+						disabled={autoSelected}
+						onChange={onUpdateFanSpeed}
+						value={fanSpeed}
+					>
+						{speeds}
 					</SliderButton>
 				</top>
 				<Row className={css.above} align="center space-around">
-					<Cell component={ToggleButton} shrink icon="heatseatleft" type="grid" className={css.button} underline />
-					<Cell component={ToggleButton} shrink type="grid" className={css.button}>A/C</Cell>
-					<Cell component={ToggleButton} shrink icon="heatseatright" type="grid" className={css.button} underline />
+					<Cell
+						className={css.button}
+						component={ToggleButton}
+						icon="heatseatleft"
+						onClick={onToggleLeftHeater}
+						selected={leftHeat}
+						shrink
+						type="grid"
+						underline
+					/>
+					<Cell
+						className={css.button}
+						component={ToggleButton}
+						onClick={onToggleAc}
+						selected={acSelected}
+						shrink
+						type="grid"
+						underline
+					>
+						A/C
+					</Cell>
+					<Cell
+						className={css.button}
+						component={ToggleButton}
+						icon="heatseatright"
+						onClick={onToggleRightHeater}
+						selected={rightHeat}
+						shrink
+						type="grid"
+						underline
+					/>
 				</Row>
 				<Row className={css.below} align="center space-around">
-					<Picker orientation="vertical" className={css.picker}>
+					<Cell
+						className={css.picker}
+						component={Picker}
+						onChange={onUpdateLeftTemperature}
+						orientation="vertical"
+						shrink
+						value={leftTemp}
+					>
 						{temps}
-					</Picker>
-					<div className={css.stackedButtons}>
-						<ToggleButton type="grid" className={css.button}>AUTO</ToggleButton>
-						<ToggleButton type="grid" icon="aircirculation" className={css.button} />
-					</div>
-					<Picker orientation="vertical" className={css.picker}>
+					</Cell>
+					<Cell
+						className={css.stackedButtons}
+						shrink
+					>
+						<ToggleButton
+							type="grid"
+							className={css.button}
+							onClick={onToggleAuto}
+							selected={autoSelected}
+							underline
+						>
+							AUTO
+						</ToggleButton>
+						<ToggleButton
+							className={css.button}
+							icon="aircirculation"
+							onClick={onToggleRecirculation}
+							selected={recirculate}
+							type="grid"
+							underline
+						/>
+					</Cell>
+					<Cell
+						className={css.picker}
+						component={Picker}
+						onChange={onUpdateRightTemperature}
+						orientation="vertical"
+						shrink
+						value={rightTemp}
+					>
 						{temps}
-					</Picker>
+					</Cell>
 				</Row>
 				<bottom>
 					<ResponsiveLayout wrap>
@@ -75,7 +162,66 @@ const HvacBase = kind({
 	)
 });
 
-const Hvac = SaveLayoutArrangement('hvac')(HvacBase);
+const Hvac = AppContextConnect(({userSettings: {climate}, updateAppState}) => ({
+	// props
+	acSelected: climate.acSelected,
+	autoSelected: climate.autoSelected,
+	fanSpeed: climate.fanSpeed,
+	leftHeat: climate.leftHeat,
+	leftTemp: climate.leftTemp,
+	recirculate: climate.recirculate,
+	rightHeat: climate.rightHeat,
+	rightTemp: climate.rightTemp,
+	// handlers
+	onToggleAc: () => {
+		updateAppState((state) => {
+			const {userSettings: {climate: {acSelected}}} = state;
+			state.userSettings.climate.acSelected = !acSelected;
+		});
+	},
+	onToggleAuto: () => {
+		updateAppState((state) => {
+			const {userSettings: {climate: {acSelected, autoSelected}}} = state;
+			// turn on the A/C when enabling AUTO
+			state.userSettings.climate.acSelected = !autoSelected ? true : acSelected;
+			state.userSettings.climate.autoSelected = !autoSelected;
+		});
+	},
+	onToggleRecirculation: () => {
+		updateAppState((state) => {
+			const {userSettings: {climate: {recirculate}}} = state;
+			state.userSettings.climate.recirculate = !recirculate;
+		});
+	},
+	onToggleLeftHeater: () => {
+		updateAppState((state) => {
+			const heat = state.userSettings.climate.leftHeat;
+			state.userSettings.climate.leftHeat = !heat;
+		});
+	},
+	onToggleRightHeater: () => {
+		updateAppState((state) => {
+			const heat = state.userSettings.climate.rightHeat;
+			state.userSettings.climate.rightHeat = !heat;
+		});
+	},
+	onUpdateFanSpeed: ({value}) => {
+		updateAppState((state) => {
+			state.userSettings.climate.fanSpeed = value;
+		});
+		return true;
+	},
+	onUpdateLeftTemperature: ({value}) => {
+		updateAppState((state) => {
+			state.userSettings.climate.leftTemp = value;
+		});
+	},
+	onUpdateRightTemperature: ({value}) => {
+		updateAppState((state) => {
+			state.userSettings.climate.rightTemp = value;
+		});
+	}
+}))(SaveLayoutArrangement('hvac')(HvacBase));
 
 export default Hvac;
 export {

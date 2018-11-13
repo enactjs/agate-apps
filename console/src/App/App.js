@@ -84,7 +84,6 @@ const AppBase = kind({
 		onToggleUserSelectionPopup,
 		onToggleWelcomePopup,
 		sendVideo,
-		setDestination,
 		showPopup,
 		showBasicPopup,
 		showDateTimePopup,
@@ -96,7 +95,6 @@ const AppBase = kind({
 	}) => {
 		delete rest.accent;
 		delete rest.highlight;
-		// delete rest.setDestination;
 		delete rest.endNavigation;
 		return (
 			<div>
@@ -126,9 +124,9 @@ const AppBase = kind({
 						</Column>
 					</afterTabs>
 					<Home
-						onSelect={onSelect}
-						setDestination={setDestination}
 						arrangeable={layoutArrangeable}
+						onSelect={onSelect}
+						onSendVideo={sendVideo}
 					/>
 					<Phone arrangeable={layoutArrangeable} />
 					<Hvac arrangeable={layoutArrangeable} />
@@ -138,7 +136,7 @@ const AppBase = kind({
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}
 					/>
-					<MapView setDestination={setDestination} />
+					<MapView />
 					<Settings
 						onSelect={onSelect}
 						onToggleDateTimePopup={onToggleDateTimePopup}
@@ -306,14 +304,6 @@ const AppDecorator = compose(
 				state.userSettings.arrangements.arrangeable = selected;
 			});
 		},
-		// setDestination: ({destination, navigating}) => {
-		// 	updateAppState((state) => {
-		// 		state.navigation.destination = destination;
-		// 		if (navigating != null) {
-		// 			state.navigation.navigating = navigating;
-		// 		}
-		// 	});
-		// },
 		// endNavigation: ({navigating}) => {
 		// 	updateAppState((state) => {
 		// 		state.navigation.navigating = navigating;

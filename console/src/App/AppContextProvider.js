@@ -35,6 +35,16 @@ const defaultUserSettings = {
 		phone: {},
 		radio: {}
 	},
+	climate: {
+		acSelected: false,
+		autoSelected: false,
+		fanSpeed: 0,
+		leftHeat: false,
+		leftTemp: 0,
+		recirculate: false,
+		rightHeat: false,
+		rightTemp: 0
+	},
 	colorAccent: '#cccccc',
 	colorHighlight: '#66aabb',
 	fontSize: 0,
@@ -58,10 +68,12 @@ class AppContextProvider extends Component {
 				orientation: 0
 			},
 			navigation: {
-				destination: {
-					lat: 0,
-					lon: 0
-				},
+				destination: [
+					{
+						lat: 0,
+						lon: 0
+					}
+				],
 				distance: 0,
 				duration: 0,
 				eta: 0,

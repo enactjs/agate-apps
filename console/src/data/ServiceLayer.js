@@ -8,8 +8,9 @@ import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
 
 // Data Services
+import {propTypeLatLon, propTypeLatLonList} from './proptypes';
 import connect from './connector';
-import {getLatLongFromSim} from './conversion';
+import {getLatLongFromSim, radiansToDegrees} from './conversion';
 import appConfig from '../../config';
 import Communicator from '../../../components/Communicator';
 
@@ -21,11 +22,12 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		static displayName = 'ServiceLayer';
 
 		static propTypes = {
-			requestDestination: PropTypes.func.isRequired,
 			setConnected: PropTypes.func.isRequired,
 			setLocation: PropTypes.func.isRequired,
-			destination: PropTypes.object,
-			location: PropTypes.object
+			updateDestination: PropTypes.func.isRequired,
+			destination: propTypeLatLonList,
+			location: propTypeLatLon,
+			navigation: PropTypes.object
 		}
 
 		constructor (props) {
@@ -52,6 +54,21 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 		componentDidMount () {
 			this.initializeConnection();
+		}
+
+		componentDidUpdate (prevProps) {
+			if (prevProps.navigation && this.props.navigation &&
+				prevProps.navigation.destination && this.props.navigation.destination && (
+					prevProps.navigation.destination.lat !== this.props.navigation.destination.lat ||
+					prevProps.navigation.destination.lon !== this.props.navigation.destination.lon
+				)
+			) {
+				this.setDestination();
+			}
+
+			if (prevProps.navigation.duration !== this.props.navigation.duration) {
+				this.sendNavigation();
+			}
 		}
 
 		initializeConnection () {
@@ -81,7 +98,8 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 						this.props.setConnected(false);
 					},
 					onPosition: this.onPosition,
-					onRoutingRequest: this.onRoutingRequest
+					onRoutingRequest: this.onRoutingRequest,
+					onRoutingResponse: this.onRoutingResponse
 				});
 			}
 		}
@@ -102,7 +120,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			const {x, y} = data.position;
 			const location = getLatLongFromSim(x, y);
 
-			location.orientation =  Math.round(data.heading * 10000) / 10000;
+			location.orientation =  radiansToDegrees(Math.round(data.heading * 10000) / 10000);
 
 			// Velocity is in meters per second - math optimized for speed
 			location.linearVelocity = Math.round((
@@ -151,28 +169,41 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			}
 		}
 
+		onRoutingResponse = (message) => {
+			// We may be able to load multiple previous waypoints here, if more than one was sent
+			const {x, y} = message.routing_request.waypoint.slice(-1).pop().pose;
+			const destination = [getLatLongFromSim(x, y)];
+			this.setDestination({destination});
+		}
 
 		//
 		// General Event Handling
 		//
 
 		setDestination = ({destination}) => {
-			this.props.requestDestination({destination, navigating: true});
-			// console.log('location:', this.props.location, 'destination', destination);
-			this.connection.send('routingRequest', [this.props.location, destination]);
+			const {navigation, location} = this.props;
+			destination = destination || navigation.destination; // Accept external args, in case the request came from within this component, but fallback to the navigation prop (the preferred usage).
+			this.props.updateDestination({destination, navigating: true});
+			// console.log('location, dest(s):', [location, ...destination]);
+			this.connection.send('routingRequest', [location, ...destination]);
 		}
 
 		sendVideo = (args) => {
 			this.comm.current.sendVideo(args);
 		}
 
+		sendNavigation = () => {
+			// console.log('sendNavigation:', this.props.navigation);
+			this.comm.current.sendETA(this.props.navigation);
+		}
+
 		render () {
 			const {...rest} = this.props;
 			delete rest.setLocation;
 			delete rest.setConnected;
-			delete rest.requestDestination;
+			delete rest.updateDestination;
 			delete rest.location;
-			delete rest.destination;
+			delete rest.navigation;
 			// delete rest.setTickle;
 
 			return (
@@ -180,11 +211,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					<Communicator ref={this.comm} host={appConfig.communacitonServerHost} />
 					<Wrapped
 						{...rest}
-						setDestination={this.setDestination}
 						sendVideo={this.sendVideo}
-						// location={this.state.location}
-						// destination={this.state.destination}
-						// navigating={false}
 					/>
 				</React.Fragment>
 			);
@@ -193,9 +220,9 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 });
 
 const ServiceLayer = compose(
-	AppStateConnect(({destination: destinationProp, location: locationProp, updateAppState}) => ({
+	AppStateConnect(({location: locationProp, navigation, updateAppState}) => ({
 		location: locationProp,
-		destination: destinationProp,
+		navigation,
 		// tickleCount: tickleCountProp,
 		// setTickle: ({tickleCount}) => {
 		// 	updateAppState((state) => {
@@ -213,7 +240,7 @@ const ServiceLayer = compose(
 				state.location = location;
 			});
 		},
-		requestDestination: ({destination, navigating}) => {
+		updateDestination: ({destination, navigating}) => {
 			updateAppState((state) => {
 				state.navigation.destination = destination;
 				if (navigating != null) {
