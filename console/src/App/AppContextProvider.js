@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import produce from 'immer';
 import {mergeDeepRight} from 'ramda';
+
 import appConfig from '../../config';
+import userPresetsForDemo from './userPresetsForDemo';
 
 const Context = React.createContext();
 
@@ -144,7 +146,7 @@ class AppContextProvider extends Component {
 		});
 	}
 
-	getAllSavedUSerIds = () => {
+	getAllSavedUserIds = () => {
 		// Read the user database and return just a list of the registered id numbers
 		return Object.keys(window.localStorage)
 			.filter(key => (key.indexOf('user') === 0))
@@ -157,8 +159,17 @@ class AppContextProvider extends Component {
 	}
 
 	resetAll = () => {
-		const userIds = this.getAllSavedUSerIds();
+		const userIds = this.getAllSavedUserIds();
 		userIds.forEach(this.deleteUserSettings);
+
+		this.repopulateUsersForDemo();
+		this.setUserSettings();
+	}
+
+	repopulateUsersForDemo = () => {
+		for (const userId in userPresetsForDemo) {
+			this.saveUserSettings(userId.replace('user', ''), userPresetsForDemo[userId]);
+		}
 	}
 
 	setLocation = () => {
