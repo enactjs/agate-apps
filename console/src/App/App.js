@@ -77,6 +77,7 @@ const AppBase = kind({
 		layoutArrangeableToggle,
 		layoutArrangeable,
 		onNextWelcomeView,
+		onPreviousWelcomeView,
 		onTogglePopup,
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
@@ -196,6 +197,8 @@ const AppBase = kind({
 					index={welcomeIndex}
 					onClose={onToggleWelcomePopup}
 					onNextView={onNextWelcomeView}
+					onPreviousView={onPreviousWelcomeView}
+					onSendVideo={sendVideo}
 					open={showWelcomePopup}
 				/>
 			</div>
@@ -222,6 +225,10 @@ const AppState = hoc((configHoc, Wrapped) => {
 
 		onNextWelcomeView = () => {
 			this.setState((state) => ({welcomeIndex: state.welcomeIndex + 1}));
+		}
+
+		onPreviousWelcomeView = () => {
+			this.setState((state) => ({welcomeIndex: state.welcomeIndex - 1}));
 		}
 
 		onSelect = handle(
@@ -264,13 +271,14 @@ const AppState = hoc((configHoc, Wrapped) => {
 					accent={colorAccent}
 					highlight={colorHighlight}
 					index={this.state.index}
+					onNextWelcomeView={this.onNextWelcomeView}
+					onPreviousWelcomeView={this.onPreviousWelcomeView}
 					onSelect={this.onSelect}
 					onTogglePopup={this.onTogglePopup}
 					onToggleBasicPopup={this.onToggleBasicPopup}
 					onToggleDateTimePopup={this.onToggleDateTimePopup}
 					onToggleUserSelectionPopup={this.onToggleUserSelectionPopup}
 					onToggleWelcomePopup={this.onToggleWelcomePopup}
-					onNextWelcomeView={this.onNextWelcomeView}
 					orientation={(skin !== 'carbon') ? 'horizontal' : 'vertical'}
 					showPopup={this.state.showPopup}
 					showBasicPopup={this.state.showBasicPopup}
