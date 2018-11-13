@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import produce from 'immer';
 import {mergeDeepRight} from 'ramda';
+
 import appConfig from '../../config';
+import userPresetsForDemo from './userPresetsForDemo';
 
 const Context = React.createContext();
 
@@ -48,6 +50,7 @@ const defaultUserSettings = {
 	colorAccent: '#cccccc',
 	colorHighlight: '#66aabb',
 	fontSize: 0,
+	name: '',
 	skin: 'carbon'
 };
 
@@ -112,6 +115,15 @@ class AppContextProvider extends Component {
 		return settings;
 	}
 
+	getUserNames = () => {
+		const users = {};
+		this.getAllSavedUserIds().forEach(userKey => {
+			const userSettings = this.loadUserSettings(userKey);
+			users[userKey] = userSettings.name;
+		});
+		return users;
+	}
+
 	loadSavedUserSettings = (userId) => {
 		if (!this.loadUserSettings(userId)) {
 			// By providing no settings object here, we are able to clone the current user's settings into the nem user.
@@ -144,7 +156,7 @@ class AppContextProvider extends Component {
 		});
 	}
 
-	getAllSavedUSerIds = () => {
+	getAllSavedUserIds = () => {
 		// Read the user database and return just a list of the registered id numbers
 		return Object.keys(window.localStorage)
 			.filter(key => (key.indexOf('user') === 0))
@@ -157,8 +169,17 @@ class AppContextProvider extends Component {
 	}
 
 	resetAll = () => {
-		const userIds = this.getAllSavedUSerIds();
+		const userIds = this.getAllSavedUserIds();
 		userIds.forEach(this.deleteUserSettings);
+
+		this.repopulateUsersForDemo();
+		this.setUserSettings();
+	}
+
+	repopulateUsersForDemo = () => {
+		for (const userId in userPresetsForDemo) {
+			this.saveUserSettings(userId.replace('user', ''), userPresetsForDemo[userId]);
+		}
 	}
 
 	setLocation = () => {
@@ -218,6 +239,7 @@ class AppContextProvider extends Component {
 	render () {
 		const context = {
 			...this.state,
+			getUserNames: this.getUserNames,
 			updateAppState: this.updateAppState,
 			resetUserSettings: this.resetUserSettings,
 			resetAll: this.resetAll
