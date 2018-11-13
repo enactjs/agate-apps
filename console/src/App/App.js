@@ -198,6 +198,7 @@ const AppBase = kind({
 					onClose={onToggleWelcomePopup}
 					onNextView={onNextWelcomeView}
 					onPreviousView={onPreviousWelcomeView}
+					onSendVideo={sendVideo}
 					open={showWelcomePopup}
 				/>
 			</div>

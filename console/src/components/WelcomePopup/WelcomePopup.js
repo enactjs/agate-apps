@@ -26,6 +26,7 @@ const WelcomePopupBase = kind({
 		onClose: PropTypes.func,
 		onNextView: PropTypes.func,
 		onPreviousView: PropTypes.func,
+		onSendVideo: PropTypes.func,
 		updateUser: PropTypes.func,
 		userId: PropTypes.number
 	},
@@ -46,7 +47,7 @@ const WelcomePopupBase = kind({
 		)
 	},
 
-	render: ({index, onClose, onPreviousView, selectUserAndContinue, userId, ...rest}) => {
+	render: ({index, onClose, onPreviousView, onSendVideo, selectUserAndContinue, userId, ...rest}) => {
 		delete rest.onNextView;
 		delete rest.updateUser;
 
@@ -95,7 +96,7 @@ const WelcomePopupBase = kind({
 												<CompactWeather />
 											</Cell>
 											<Cell>
-												<CompactMultimedia />
+												<CompactMultimedia onSendVideo={onSendVideo} />
 											</Cell>
 										</Column>
 									</Cell>
