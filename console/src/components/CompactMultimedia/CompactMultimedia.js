@@ -14,10 +14,11 @@ const screenIds = [1, 2];
 
 const CompactMultimediaBase = kind({
 	name: 'CompactMultimedia',
+
 	computed: {
 		buttons: ({onSendVideo}) => {
 			return screenIds.map((s, index) => {
-				return (<Button key={index} onClick={onSendVideo(s)}>{`Screen ${s}`}</Button>);
+				return (<Button key={index} onClick={onSendVideo(s)}>Screen {s}</Button>);
 			});
 		},
 		renderItem: ({onSelectVideo, videos}) => ({index, ...rest}) => {
@@ -33,6 +34,7 @@ const CompactMultimediaBase = kind({
 			);
 		}
 	},
+
 	render: ({buttons, renderItem, showPopup, onTogglePopup, videos}) => {
 		return (
 			<React.Fragment>
@@ -60,7 +62,7 @@ const CompactMultimediaBase = kind({
 });
 
 class CompactMultimedia extends React.Component {
-	constructor(props) {
+	constructor (props) {
 		super(props);
 		this.state = {
 			showPopup: this.props.showPopup,
@@ -85,7 +87,7 @@ class CompactMultimedia extends React.Component {
 		this.setState(({showPopup}) => ({showPopup: !showPopup}));
 	};
 
-	render() {
+	render () {
 		const props = {
 			...this.props,
 			onSelectVideo: this.onSelectVideo,
