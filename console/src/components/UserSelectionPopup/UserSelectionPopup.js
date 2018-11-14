@@ -32,7 +32,17 @@ const UserSelectionPopupBase = kind({
 		className: 'userSelectionPopup'
 	},
 
-	render: ({userId, updateUser, resetUserSettings, resetAll, ...rest}) => (
+	computed: {
+		usersList: ({usersList}) => {
+			const users = [];
+			for (const user in usersList) {
+				users.push(usersList[user]);
+			}
+			return users;
+		}
+	},
+
+	render: ({userId, usersList, updateUser, resetUserSettings, resetAll, ...rest}) => (
 		<Popup
 			// onClose={onTogglePopup}
 			// open={showPopup}
@@ -51,7 +61,7 @@ const UserSelectionPopupBase = kind({
 				defaultSelected={userId - 1}
 				onSelect={updateUser}
 			>
-				{['User 1', 'User 2', 'User 3']}
+				{usersList}
 			</Group>
 
 			<buttons>
@@ -62,7 +72,8 @@ const UserSelectionPopupBase = kind({
 	)
 });
 
-const UserSelectionPopup = AppContextConnect(({userId, resetUserSettings, resetAll, updateAppState}) => ({
+const UserSelectionPopup = AppContextConnect(({userId, resetUserSettings, resetAll, getUserNames, updateAppState}) => ({
+	usersList: getUserNames(),
 	userId,
 	resetUserSettings,
 	resetAll,

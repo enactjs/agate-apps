@@ -27,6 +27,7 @@ const WelcomePopupBase = kind({
 		onNextView: PropTypes.func,
 		onPreviousView: PropTypes.func,
 		onSendVideo: PropTypes.func,
+		profileName: PropTypes.string,
 		updateUser: PropTypes.func,
 		userId: PropTypes.number
 	},
@@ -47,9 +48,20 @@ const WelcomePopupBase = kind({
 		)
 	},
 
-	render: ({index, onClose, onPreviousView, onSendVideo, selectUserAndContinue, userId, ...rest}) => {
+	computed: {
+		usersList: ({usersList}) => {
+			const users = [];
+			for (const user in usersList) {
+				users.push(usersList[user]);
+			}
+			return users;
+		}
+	},
+
+	render: ({index, onClose, onPreviousView, onSendVideo, selectUserAndContinue, profileName, usersList, ...rest}) => {
 		delete rest.onNextView;
 		delete rest.updateUser;
+		delete rest.userId;
 
 		return (
 			<FullscreenPopup {...rest}>
@@ -68,18 +80,18 @@ const WelcomePopupBase = kind({
 									wrap
 									align="start space-evenly"
 								>
-									{['User 1', 'User 2', 'User 3']}
+									{usersList}
 								</Row>
 							</Cell>
 						</Column>
 					</Panel>
 					<Panel>
 						<Column>
-							<Cell shrink>
+							<Cell size="20%">
 								<Row align="center">
 									<Cell component={Button} icon="user" onClick={onPreviousView} shrink />
 									<Cell component={Item} spotlightDisabled>
-										Hi User {userId}!
+										Hi {profileName}!
 									</Cell>
 									<Cell component={Button} icon="arrowsmallright" onClick={onClose} shrink />
 								</Row>
@@ -110,7 +122,9 @@ const WelcomePopupBase = kind({
 	}
 });
 
-const WelcomePopup = AppContextConnect(({updateAppState, userId}) => ({
+const WelcomePopup = AppContextConnect(({getUserNames, updateAppState, userId, userSettings}) => ({
+	usersList: getUserNames(),
+	profileName: userSettings.name,
 	updateUser: ({selected}) => {
 		updateAppState((state) => {
 			state.userId = selected + 1;
@@ -124,4 +138,3 @@ export {
 	WelcomePopup,
 	WelcomePopupBase
 };
-

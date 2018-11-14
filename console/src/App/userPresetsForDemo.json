@@ -1,0 +1,100 @@
+{
+	"user1": {
+		"arrangements": {
+			"arrangeable": false,
+			"dashboard": {},
+			"home": {},
+			"hvac": {},
+			"phone": {},
+			"radio": {}
+		},
+		"climate": {
+			"acSelected": false,
+			"autoSelected": false,
+			"fanSpeed": 0,
+			"leftHeat": false,
+			"leftTemp": 0,
+			"recirculate": false,
+			"rightHeat": false,
+			"rightTemp": 0
+		},
+		"colorAccent": "#75d1f0",
+		"colorHighlight": "#259aa7",
+		"fontSize": 0,
+		"name": "Laura & Steve",
+		"skin": "carbon"
+	},
+	"user2": {
+		"arrangements": {
+			"arrangeable": false,
+			"dashboard": {
+				"topLeft": "bottom",
+				"bottom": "top",
+				"top": "topLeft"
+			},
+			"home": {
+				"small1": "small2",
+				"small2": "small1",
+				"medium": "large",
+				"large": "medium"
+			},
+			"hvac": {
+				"left": "bottom",
+				"bottom": "top",
+				"top": "left"
+			},
+			"phone": {
+				"left": "bottom",
+				"bottom": "left"
+			},
+			"radio": {
+				"left": "topLeft",
+				"topLeft": "left",
+				"right": "topRight",
+				"topRight": "right",
+				"bottom": "top",
+				"top": "bottom"
+			}
+		},
+		"climate": {
+			"acSelected": false,
+			"autoSelected": false,
+			"fanSpeed": 0,
+			"leftHeat": false,
+			"leftTemp": 0,
+			"recirculate": false,
+			"rightHeat": false,
+			"rightTemp": 0
+		},
+		"colorAccent": "#cccccc",
+		"colorHighlight": "#566af0",
+		"fontSize": 0,
+		"name": "Thomas",
+		"skin": "titanium"
+	},
+	"user3": {
+		"arrangements": {
+			"arrangeable": false,
+			"dashboard": {},
+			"home": {},
+			"hvac": {},
+			"phone": {},
+			"radio": {}
+		},
+		"climate": {
+			"acSelected": false,
+			"autoSelected": false,
+			"fanSpeed": 0,
+			"leftHeat": false,
+			"leftTemp": 0,
+			"recirculate": false,
+			"rightHeat": false,
+			"rightTemp": 0
+		},
+		"colorAccent": "#0359f0",
+		"colorHighlight": "#f08c21",
+		"fontSize": 0,
+		"name": "Gary",
+		"skin": "electro"
+	}
+}

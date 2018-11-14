@@ -28,7 +28,6 @@ const startCoordinates = {lon: -121.979125, lat: 37.405189};
 //
 const toMapbox = (latLon) => [latLon.lon, latLon.lat];
 const toLatLon = (mb) => ({lat: mb[1], lon: mb[0]});
-const toDeg = (rad) => (rad * 180 / Math.PI);
 
 const newBounds = (point1, point2) => {
 	// Takes two arbitrary points and determines the southwest most and northeast most coordinates that contain them
@@ -61,7 +60,7 @@ const buildQueryString = (props) => {
 // Get Directions
 //
 const getRoute = async (waypoints) => {
-	let bearing = toDeg(waypoints[0].orientation);
+	let bearing = waypoints[0].orientation;
 	if (bearing < 0) bearing += 360;
 
 	// Take the list of LatLon objects and convert each to a string of "x,y", then join those with a ";"
@@ -287,11 +286,6 @@ class MapCoreBase extends React.Component {
 		const actions = {};
 
 		// Received a new orientation
-		if (this.props.location && (!prevProps.location ||
-			prevProps.location.orientation !== this.props.location.orientation
-		)) {
-			this.orientCarImage(this.props.location.orientation);
-		}
 
 		// Received a new proposedDestination
 		if (!equals(prevProps.proposedDestination, this.props.proposedDestination)) {
@@ -308,7 +302,7 @@ class MapCoreBase extends React.Component {
 		// Received a new location
 		if (!equals(prevProps.location, this.props.location)) {
 			actions.center = this.props.location;
-			this.updateCarLayer({location: this.props.location, map: this.map});
+			actions.positionCar = this.props.location;
 		}
 
 		// Received a new destination
@@ -339,6 +333,10 @@ class MapCoreBase extends React.Component {
 					}
 					case 'startNavigating': {
 						this.props.setDestination({destination: actions[action]});
+						break;
+					}
+					case 'positionCar': {
+						this.updateCarLayer({location: actions[action]});
 						break;
 					}
 					case 'center': {
@@ -402,21 +400,18 @@ class MapCoreBase extends React.Component {
 		}
 	}
 
-	orientCarImage = (orientation) => {
-		this.carNode.style.setProperty('--map-orientation', orientation);
-	}
-
-	updateCarLayer = ({location, map}) => {
-		if (map) {
-			const carLayer = map.getSource(carLayerId);
+	updateCarLayer = ({location}) => {
+		if (this.map) {
+			const carLayer = this.map.getSource(carLayerId);
 			if (carLayer) {
+				const coords = toMapbox(location);
 				const newCarData = {
 					'type': 'FeatureCollection',
 					'features': [{
 						'type': 'Feature',
 						'geometry': {
 							'type': 'Point',
-							'coordinates': location.coordinates
+							'coordinates': coords
 						}
 					}]
 				};
@@ -424,7 +419,7 @@ class MapCoreBase extends React.Component {
 				// update coordinates of the car
 				carLayer.setData(newCarData);
 				// update the car orientation
-				map.setLayoutProperty(carLayerId, 'icon-rotate', location.orientation);
+				this.map.setLayoutProperty(carLayerId, 'icon-rotate', location.orientation);
 			}
 		}
 	}
@@ -543,7 +538,7 @@ class MapCoreBase extends React.Component {
 			}
 		} else {
 			// wtf was in the data object anyway??
-			console.log('No routes in response:', data);
+			console.log('No routes in response:', data, waypoints);
 		}
 	}
 
@@ -553,7 +548,6 @@ class MapCoreBase extends React.Component {
 		}));
 	}
 
-	setCarNode = (node) => (this.carNode = node)
 	setMapNode = (node) => (this.mapNode = node)
 
 	render () {
