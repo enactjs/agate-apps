@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import openSocket from 'socket.io-client';
 
-
 const handleAddVideo = handle(
 	adaptEvent(item => ({url: item.url}), forward('onPlayVideo'))
 );
@@ -22,11 +21,11 @@ class Communicator extends React.Component {
 		host: PropTypes.string,
 		noAutoConnect: PropTypes.bool,
 		screenId: PropTypes.number
-	}
+	};
 
 	static defaultProps = {
 		host: 'localhost:3000'
-	}
+	};
 
 	constructor () {
 		super();
@@ -57,17 +56,16 @@ class Communicator extends React.Component {
 		this.socket = openSocket(`ws://${this.props.host}`);
 
 		if (screenId != null) {
-			this.socket.on(`VIDEO_ADD_COPILOT/${screenId}`, this.handleAddVideo);
+			this.socket.on(`VIDEO_ADD_SCREEN/${screenId}`, this.handleAddVideo);
 			this.socket.on('SHOW_AD', this.handleShowAd);
 			this.socket.on('SHOW_ETA', this.handleShowETA);
-			this.socket.emit('COPILOT_CONNECT', {id: screenId});
 		}
 	}
 
 	_disconnect (screenId) {
 		if (this.socket) {
 			if (screenId != null) {
-				this.socket.removeAllListeners(`VIDEO_ADD_COPILOT/${screenId}`);
+				this.socket.removeAllListeners(`VIDEO_ADD_SCREEN/${screenId}`);
 			}
 
 			this.socket.close();
@@ -83,10 +81,11 @@ class Communicator extends React.Component {
 			type: 'youtube',
 			title: video.snippet.title,
 			url: `https://www.youtube.com/embed/${video.id}?autoplay=1`,
-			route: `VIDEO_ADD_COPILOT/${screenId}`
+			route: `VIDEO_ADD_SCREEN/${screenId}`
 		};
 
 		this.socket.emit('SEND_DATA', data);
+		this.socket.emit('VIDEO_SENT', {id: this.props.screenId});
 	};
 
 	sendETA = ({eta, duration}) => {

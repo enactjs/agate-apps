@@ -1,95 +1,187 @@
-import React from 'react';
-import classnames from 'classnames';
-import GridListImageItem from '@enact/ui/GridListImageItem';
-import {Cell, Column} from '@enact/ui/Layout';
-import ri from '@enact/ui/resolution';
-import {VirtualGridList} from '@enact/ui/VirtualList';
 import Button from '@enact/agate/Button';
-import {Panel} from '@enact/agate/Panels';
+import {Cell, Row} from '@enact/ui/Layout';
 import Divider from '@enact/agate/Divider';
+import GridListImageItem from '@enact/ui/GridListImageItem';
+import Job from '@enact/core/util/Job';
+import kind from '@enact/core/kind';
+import {Panel} from '@enact/agate/Panels';
 import Popup from '@enact/agate/Popup';
 import PropTypes from 'prop-types';
+import React from 'react';
+import ri from '@enact/ui/resolution';
+import {VirtualGridList} from '@enact/ui/VirtualList';
+
+import appConfig from '../../config';
+import Communicator from '../../../components/Communicator';
 
 import youtubeVideos from '../data/youtubeapi.json';
 
 import css from './Multimedia.less';
 
-class Multimedia extends React.Component {
-	static propTypes = {
-		sendVideo: PropTypes.func
-	}
+const screenIds = [0, 1, 2];
 
-	constructor (props) {
-		super(props);
-		this.state = {
-			open: false
-		};
-		this.selectedVideo = {};
-		this.videos = youtubeVideos.items;
-	}
+const MultimediaBase = kind({
+	name: 'Multimedia',
 
-	selectVideo = (video) => () => {
-		this.selectedVideo = video;
-		this.togglePopup();
-	};
+	styles: {
+		css,
+		className: 'multimedia'
+	},
 
-	togglePopup = () => {
-		this.setState(({open}) => ({open: !open}));
-	};
+	computed: {
+		buttons: ({onBroadcastVideo, onSendVideo}) => {
+			const screens = screenIds.map((s, index) => {
+				return (<Button key={index} onClick={onSendVideo(s)}>Screen {s}</Button>);
+			});
+			screens.push(<Button key={screens.length} onClick={onBroadcastVideo}>All Screens</Button>);
+			return screens;
+		},
+		renderItem: ({onSelectVideo, videos}) => ({index, ...rest}) => {
+			return (
+				<GridListImageItem
+					{...rest}
+					caption={videos[index].snippet.title}
+					className={css.gridListItem}
+					source={videos[index].snippet.thumbnails.medium.url}
+					onClick={onSelectVideo(videos[index])}
+				/>
+			);
+		}
+	},
 
-	sendVideo = (screenId) => () => {
-		this.props.sendVideo({screenId, video: this.selectedVideo});
-		this.togglePopup();
-	};
-
-	renderItem = ({index, ...rest}) => {
-		return (
-			<GridListImageItem
-				{...rest}
-				caption={this.videos[index].snippet.title}
-				className={css.gridListItem}
-				source={this.videos[index].snippet.thumbnails.medium.url}
-				onClick={this.selectVideo(this.videos[index])}
-			/>
-		);
-	};
-
-	render () {
-		const {className, ...rest} = this.props;
-		delete rest.sendVideo;
+	render: ({adContent, autoplay, buttons, renderItem, selectedVideo, showAd, showPopup, onTogglePopup, url, videos, ...rest}) => {
+		delete rest.onBroadcastVideo;
+		delete rest.onSelectVideo;
+		delete rest.onSendVideo;
+		delete rest.selectedVideo;
 		return (
 			<React.Fragment>
 				<Popup
-					open={this.state.open}
+					open={showPopup}
 					closeButton
-					onClose={this.togglePopup}
+					onClose={onTogglePopup}
 				>
 					<title>
 						Select Screen
 					</title>
 					<buttons>
-						<Button onClick={this.sendVideo(1)}>Screen 1</Button>
-						<Button onClick={this.sendVideo(2)}>Screen 2</Button>
+						{buttons}
 					</buttons>
 				</Popup>
-				<Panel {...rest} className={classnames(className, css.multimedia)}>
-					<Column align="center">
-						<Cell shrink>
-							<Divider>Recommended Videos</Divider>
+				<Panel {...rest}>
+					<Row className={css.bodyRow}>
+						<Cell size="20%">
+							<Divider className={css.divider}>Recommended Videos</Divider>
+							<VirtualGridList
+								dataSize={videos.length}
+								itemRenderer={renderItem}
+								itemSize={{
+									minWidth: ri.scale(320),
+									minHeight: ri.scale(180)
+								}}
+								className={css.thumbnails}
+								spacing={ri.scale(66)}
+							/>
 						</Cell>
 						<Cell
-							component={VirtualGridList}
-							dataSize={this.videos.length}
-							itemRenderer={this.renderItem}
-							itemSize={{
-								minWidth: ri.scale(320),
-								minHeight: ri.scale(180)
-							}}
-							className={css.thumbnails}
-							spacing={ri.scale(66)}
+							allow={autoplay ? "autoplay" : ""}
+							className={css.iframe}
+							component="iframe"
+							src={url}
 						/>
-					</Column>
+						{!showAd ? null : <Cell className={css.adSpace} shrink>
+							{adContent}
+						</Cell>}
+					</Row>
 				</Panel>
+			</React.Fragment>
+		);
+	}
+});
+
+class Multimedia extends React.Component {
+	static propTypes = {
+		onSendVideo: PropTypes.func
+	}
+
+	constructor (props) {
+		super(props);
+		this.state = {
+			adContent: this.props.adContent || 'Your Ad Here',
+			autoplay: false,
+			screenId: 0,
+			showAd: this.props.showAd || false,
+			url: '',
+			videos: youtubeVideos.items
+		};
+		this.selectedVideo = {};
+
+		// Job to control hiding ads
+		this.adTimer = new Job(this.onHideAdSpace);
+	}
+
+	onBroadcastVideo = () => {
+		const video = this.selectedVideo; // onSendVideo will reset this.selectedVideo
+		screenIds.forEach((s) => {
+			this.selectedVideo = video;
+			this.onSendVideo(s)();
+		});
+	};
+
+	onHideAdSpace = () => {
+		this.setState({adContent: '', showAd: false});
+	};
+
+	onPlayVideo = ({url}) => {
+		this.setState({autoplay: true, url});
+	};
+
+	onSelectVideo = (video) => () => {
+		this.selectedVideo = video;
+		this.onTogglePopup();
+	};
+
+	onSendVideo = (screenId) => () => {
+		this.props.onSendVideo({screenId, video: this.selectedVideo});
+		this.selectedVideo = {};
+		this.onTogglePopup();
+	};
+
+	onShowAdSpace = ({adContent, duration}) => {
+		this.setState({adContent, showAd: true});
+		this.adTimer.startAfter(duration);
+	};
+
+	onTogglePopup = () => {
+		this.setState(({showPopup}) => ({showPopup: !showPopup}));
+	};
+
+	render () {
+		const {adContent, autoplay, showAd, showPopup, url, videos} = this.state;
+
+		const props = {
+			...this.props,
+			adContent,
+			autoplay,
+			onBroadcastVideo: this.onBroadcastVideo,
+			onSelectVideo: this.onSelectVideo,
+			onSendVideo: this.onSendVideo,
+			onTogglePopup: this.onTogglePopup,
+			selectedVideo: this.selectedVideo,
+			showAd,
+			showPopup,
+			url,
+			videos
+		};
+		return (
+			<React.Fragment>
+				<Communicator
+					host={appConfig.communicationServerHost}
+					onPlayVideo={this.onPlayVideo}
+					onShowAd={this.onShowAdSpace}
+					screenId={this.state.screenId}
+				/>
+				<MultimediaBase {...props} />
 			</React.Fragment>
 		);
 	}

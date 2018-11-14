@@ -19,10 +19,8 @@ io.on('connection', socket => {
 		}
 	});
 
-	socket.on('COPILOT_CONNECT', ({id}) => {
-		io.emit('REQUEST_VIDEO');
+	socket.on('VIDEO_SENT', ({id}) => {
 		// TODO: make a proper ad management/delivery mechanism
-
 		if (adTimers[id]) {
 			clearInterval(adTimers[id]);
 		}
