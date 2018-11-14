@@ -28,7 +28,6 @@ const WelcomePopupBase = kind({
 		onPreviousView: PropTypes.func,
 		onSendVideo: PropTypes.func,
 		profileName: PropTypes.string,
-		resetAll: PropTypes.func,
 		updateUser: PropTypes.func,
 		userId: PropTypes.number
 	},
@@ -50,10 +49,7 @@ const WelcomePopupBase = kind({
 	},
 
 	computed: {
-		usersList: ({resetAll, usersList}) => {
-			// If there are no users in the list, stamp some out and prepare the system.
-			if (Object.keys(usersList).length <= 0) resetAll();
-
+		usersList: ({usersList}) => {
 			const users = [];
 			for (const user in usersList) {
 				users.push(usersList[user]);
@@ -64,7 +60,6 @@ const WelcomePopupBase = kind({
 
 	render: ({index, onClose, onPreviousView, onSendVideo, selectUserAndContinue, profileName, usersList, ...rest}) => {
 		delete rest.onNextView;
-		delete rest.resetAll;
 		delete rest.updateUser;
 		delete rest.userId;
 
@@ -127,8 +122,7 @@ const WelcomePopupBase = kind({
 	}
 });
 
-const WelcomePopup = AppContextConnect(({getUserNames, resetAll, updateAppState, userId, userSettings}) => ({
-	resetAll,
+const WelcomePopup = AppContextConnect(({getUserNames, updateAppState, userId, userSettings}) => ({
 	usersList: getUserNames(),
 	profileName: userSettings.name,
 	updateUser: ({selected}) => {
@@ -144,4 +138,3 @@ export {
 	WelcomePopup,
 	WelcomePopupBase
 };
-

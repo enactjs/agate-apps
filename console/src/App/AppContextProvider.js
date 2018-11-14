@@ -88,6 +88,12 @@ class AppContextProvider extends Component {
 	}
 
 	componentWillMount () {
+		const usersList = this.getUserNames();
+		// If there are no users in the list when we load for the first time, stamp some out and prepare the system.
+		if (Object.keys(usersList).length <= 0) {
+			this.resetAll();
+		}
+
 		this.setUserSettings(this.state.userId);
 		this.setLocation();
 	}
@@ -108,10 +114,16 @@ class AppContextProvider extends Component {
 		this.unsetLocationMonitoring();
 	}
 
-	getDefaultUserSettings = (props) => {
+	getDefaultUserSettings = (userId, props) => {
 		props = props || this.props;  // Use the supplied props or the current props
 		const settings = Object.assign({}, defaultUserSettings);
+
+		// Respect the app's defaultSkin prop
 		if (props.defaultSkin) settings.skin = props.defaultSkin;
+
+		// The default user has no `name`, so we'll look it up in the presets, and if it's not there, we'll just use the user-key.
+		const userKey = `user${userId}`;
+		settings.name = userPresetsForDemo[userKey] ? userPresetsForDemo[userKey].name : userKey;
 		return settings;
 	}
 
@@ -137,7 +149,7 @@ class AppContextProvider extends Component {
 	}
 
 	loadUserSettings = (userId) => {
-		return JSON.parse(window.localStorage.getItem(`user${userId}`)) || this.getDefaultUserSettings();
+		return JSON.parse(window.localStorage.getItem(`user${userId}`)) || this.getDefaultUserSettings(userId);
 	}
 
 	saveUserSettings = (userId, userSettings) => {
@@ -173,7 +185,6 @@ class AppContextProvider extends Component {
 		userIds.forEach(this.deleteUserSettings);
 
 		this.repopulateUsersForDemo();
-		this.setUserSettings();
 	}
 
 	repopulateUsersForDemo = () => {
