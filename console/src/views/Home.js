@@ -9,7 +9,7 @@ import AppContextConnect from '../App/AppContextConnect';
 // import CompactAppList from '../components/CompactAppList';
 // import CompactHvac from '../components/CompactHVAC';
 import CompactMap from '../components/CompactMap';
-import CompactMultimedia from '../components/CompactMultimedia';
+import Multimedia from '../views/Multimedia';
 import CompactRadio from '../components/CompactRadio';
 import CompactWeather from '../components/CompactWeather';
 
@@ -138,7 +138,7 @@ const Home = kind({
 			<HomeLayout arrangeable={arrangeable}>
 				<small1><CompactWeather /></small1>
 				<small2><CompactRadio /></small2>
-				<medium><CompactMultimedia onSendVideo={onSendVideo} /></medium>
+				<medium><Multimedia compact onSendVideo={onSendVideo} /></medium>
 				<large><CompactMap onSelect={onSelect} /></large>
 			</HomeLayout>
 		</Panel>

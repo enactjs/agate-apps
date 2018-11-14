@@ -13,8 +13,8 @@ import React from 'react';
 
 import AppContextConnect from '../../App/AppContextConnect';
 import CompactMap from '../CompactMap';
-import CompactMultimedia from '../CompactMultimedia';
 import CompactWeather from '../CompactWeather';
+import Multimedia from '../../views/Multimedia';
 
 import css from './WelcomePopup.less';
 
@@ -96,7 +96,7 @@ const WelcomePopupBase = kind({
 												<CompactWeather />
 											</Cell>
 											<Cell>
-												<CompactMultimedia onSendVideo={onSendVideo} />
+												<Multimedia compact onSendVideo={onSendVideo} />
 											</Cell>
 										</Column>
 									</Cell>

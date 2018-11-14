@@ -9,7 +9,8 @@ import Popup from '@enact/agate/Popup';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ri from '@enact/ui/resolution';
-import {VirtualGridList} from '@enact/ui/VirtualList';
+import ThumbnailItem from '@enact/agate/ThumbnailItem';
+import {VirtualGridList, VirtualList} from '@enact/ui/VirtualList';
 
 import appConfig from '../../config';
 import Communicator from '../../../components/Communicator';
@@ -29,14 +30,46 @@ const MultimediaBase = kind({
 	},
 
 	computed: {
-		buttons: ({onBroadcastVideo, onSendVideo}) => {
-			const screens = screenIds.map((s, index) => {
+		buttons: ({compact, onBroadcastVideo, onSendVideo}) => {
+			const ids = [...screenIds];
+			if (compact) {
+				ids.shift();
+			}
+			const screens = ids.map((s, index) => {
 				return (<Button key={index} onClick={onSendVideo(s)}>Screen {s}</Button>);
 			});
 			screens.push(<Button key={screens.length} onClick={onBroadcastVideo}>All Screens</Button>);
 			return screens;
 		},
-		renderItem: ({onSelectVideo, videos}) => ({index, ...rest}) => {
+		itemSize: ({compact}) => {
+			if (compact) {
+				return ri.scale(90);
+			}
+			return {
+				minWidth: ri.scale(320),
+				minHeight: ri.scale(180)
+			};
+		},
+		itemSpacing: ({compact}) => {
+			if (compact) {
+				return ri.scale(15);
+			}
+			return ri.scale(66);
+		},
+		listComponent: ({compact}) => (compact ? VirtualList : VirtualGridList),
+		renderItem: ({compact, onSelectVideo, videos}) => ({index, ...rest}) => {
+			if (compact) {
+				return (
+					<ThumbnailItem
+						{...rest}
+						css={css}
+						onClick={onSelectVideo(videos[index])}
+						src={videos[index].snippet.thumbnails.medium.url}
+					>
+						{videos[index].snippet.title}
+					</ThumbnailItem>
+				);
+			}
 			return (
 				<GridListImageItem
 					{...rest}
@@ -49,7 +82,22 @@ const MultimediaBase = kind({
 		}
 	},
 
-	render: ({adContent, autoplay, buttons, renderItem, selectedVideo, showAd, showPopup, onTogglePopup, url, videos, ...rest}) => {
+	render: ({
+		adContent,
+		buttons,
+		compact,
+		itemSize,
+		itemSpacing,
+		listComponent: List,
+		renderItem,
+		selectedVideo,
+		showAd,
+		showPopup,
+		onTogglePopup,
+		url,
+		videos,
+		...rest
+	}) => {
 		delete rest.onBroadcastVideo;
 		delete rest.onSelectVideo;
 		delete rest.onSendVideo;
@@ -70,25 +118,25 @@ const MultimediaBase = kind({
 				</Popup>
 				<Panel {...rest}>
 					<Row className={css.bodyRow}>
-						<Cell size="20%">
-							<Divider className={css.divider}>Recommended Videos</Divider>
-							<VirtualGridList
+						<Cell size={compact ? "100%" : "20%"}>
+							{compact ? null : <Divider
+								className={css.divider}
+							>
+								Recommended Videos
+							</Divider>}
+							<List
 								dataSize={videos.length}
 								itemRenderer={renderItem}
-								itemSize={{
-									minWidth: ri.scale(320),
-									minHeight: ri.scale(180)
-								}}
-								className={css.thumbnails}
-								spacing={ri.scale(66)}
+								itemSize={itemSize}
+								spacing={itemSpacing}
 							/>
 						</Cell>
-						<Cell
-							allow={autoplay ? "autoplay" : ""}
+						{compact ? null : <Cell
+							allow="autoplay"
 							className={css.iframe}
 							component="iframe"
 							src={url}
-						/>
+						/>}
 						{!showAd ? null : <Cell className={css.adSpace} shrink>
 							{adContent}
 						</Cell>}
@@ -108,7 +156,6 @@ class Multimedia extends React.Component {
 		super(props);
 		this.state = {
 			adContent: this.props.adContent || 'Your Ad Here',
-			autoplay: false,
 			screenId: 0,
 			showAd: this.props.showAd || false,
 			url: '',
@@ -122,7 +169,11 @@ class Multimedia extends React.Component {
 
 	onBroadcastVideo = () => {
 		const video = this.selectedVideo; // onSendVideo will reset this.selectedVideo
-		screenIds.forEach((s) => {
+		const ids = [...screenIds];
+		if (this.props.compact) {
+			ids.shift();
+		}
+		ids.forEach((s) => {
 			this.selectedVideo = video;
 			this.onSendVideo(s)();
 		});
@@ -133,7 +184,7 @@ class Multimedia extends React.Component {
 	};
 
 	onPlayVideo = ({url}) => {
-		this.setState({autoplay: true, url});
+		this.setState({url});
 	};
 
 	onSelectVideo = (video) => () => {
@@ -157,12 +208,11 @@ class Multimedia extends React.Component {
 	};
 
 	render () {
-		const {adContent, autoplay, showAd, showPopup, url, videos} = this.state;
+		const {adContent, showAd, showPopup, url, videos} = this.state;
 
 		const props = {
 			...this.props,
 			adContent,
-			autoplay,
 			onBroadcastVideo: this.onBroadcastVideo,
 			onSelectVideo: this.onSelectVideo,
 			onSendVideo: this.onSendVideo,
