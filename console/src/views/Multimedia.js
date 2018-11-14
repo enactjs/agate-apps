@@ -49,11 +49,10 @@ const MultimediaBase = kind({
 		}
 	},
 
-	render: ({adContent, autoplay, buttons, renderItem, selectedVideo, showAd, showPopup, onTogglePopup, url, videos, ...rest}) => {
+	render: ({adContent, autoplay, buttons, renderItem, showAd, showPopup, onTogglePopup, url, videos, ...rest}) => {
 		delete rest.onBroadcastVideo;
 		delete rest.onSelectVideo;
 		delete rest.onSendVideo;
-		delete rest.selectedVideo;
 		return (
 			<React.Fragment>
 				<Popup
@@ -167,7 +166,6 @@ class Multimedia extends React.Component {
 			onSelectVideo: this.onSelectVideo,
 			onSendVideo: this.onSendVideo,
 			onTogglePopup: this.onTogglePopup,
-			selectedVideo: this.selectedVideo,
 			showAd,
 			showPopup,
 			url,
