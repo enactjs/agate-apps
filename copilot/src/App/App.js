@@ -51,6 +51,18 @@ const formatDuration = (duration) => {
 	return durParts.filter(part => !!part).join(' ');
 };
 
+const IFrame = kind({
+	name: 'IFrame',
+	render: (props) => {
+		return (
+			<Cell
+				{...props}
+				component="iframe"
+			/>
+		);
+	}
+});
+
 const AppBase = kind({
 	name: 'App',
 
@@ -76,12 +88,7 @@ const AppBase = kind({
 				<Cell>
 					<Button style={{position: 'absolute', zIndex: 1}} icon="plug" onClick={onTogglePopup} />
 					<Row className={css.bodyRow}>
-						<Cell
-							className={css.iframe}
-							allow="autoplay"
-							component="iframe"
-							src={url}
-						/>
+						<IFrame allow="autoplay" className={css.iframe} src={url} />
 						{!showAd ? null : <Cell className={css.adSpace} shrink>
 							{adContent}
 						</Cell>}

@@ -14,12 +14,25 @@ import {VirtualGridList, VirtualList} from '@enact/ui/VirtualList';
 
 import appConfig from '../../config';
 import Communicator from '../../../components/Communicator';
+import CustomLayout from '../components/CustomLayout';
 
 import youtubeVideos from '../data/youtubeapi.json';
 
 import css from './Multimedia.less';
 
 const screenIds = [0, 1, 2];
+
+const IFrame = kind({
+	name: 'IFrame',
+	render: (props) => {
+		return (
+			<Cell
+				{...props}
+				component="iframe"
+			/>
+		);
+	}
+});
 
 const MultimediaBase = kind({
 	name: 'Multimedia',
@@ -57,6 +70,17 @@ const MultimediaBase = kind({
 			return ri.scale(66);
 		},
 		listComponent: ({compact}) => (compact ? VirtualList : VirtualGridList),
+		/**
+		 *
+		 * @param listSlot
+		 * @return {string}
+		 *
+		 * Used to determine which slot of the `CustomLayout` should hold the list information.
+		 * If `compact` is `true`, the empty string will cause the the list to be rendered
+		 * in the `children` slot and ignore the declared JSX children.  This is how we handle
+		 * changing what is displayed between compact and full modes.
+		 */
+		listSlot: ({compact}) => (compact ? '' : 'left'),
 		renderItem: ({compact, onSelectVideo, videos}) => ({index, ...rest}) => {
 			if (compact) {
 				return (
@@ -84,11 +108,15 @@ const MultimediaBase = kind({
 
 	render: ({
 		adContent,
+		arrangeable,
+		arrangement,
 		buttons,
 		compact,
 		itemSize,
 		itemSpacing,
 		listComponent: List,
+		listSlot,
+		onArrange,
 		renderItem,
 		selectedVideo,
 		showAd,
@@ -117,11 +145,16 @@ const MultimediaBase = kind({
 					</buttons>
 				</Popup>
 				<Panel {...rest}>
-					<Row className={css.bodyRow}>
-						<Cell size={compact ? "100%" : "20%"}>
-							{compact ? null : <Divider
-								className={css.divider}
-							>
+					<CustomLayout
+						arrangeable={arrangeable}
+						arrangement={arrangement}
+						onArrange={onArrange}
+					>
+						<div
+							className={css.bodyRow}
+							slot={listSlot}
+						>
+							{compact ? null : <Divider className={css.divider}>
 								Recommended Videos
 							</Divider>}
 							<List
@@ -130,17 +163,14 @@ const MultimediaBase = kind({
 								itemSize={itemSize}
 								spacing={itemSpacing}
 							/>
-						</Cell>
-						{compact ? null : <Cell
-							allow="autoplay"
-							className={css.iframe}
-							component="iframe"
-							src={url}
-						/>}
-						{!showAd ? null : <Cell className={css.adSpace} shrink>
-							{adContent}
-						</Cell>}
-					</Row>
+						</div>
+						<Row className={css.bodyRow}>
+							<IFrame allow="autoplay" className={css.iframe} src={url} />
+							{!showAd ? null : <Cell className={css.adSpace} shrink>
+								{adContent}
+							</Cell>}
+						</Row>
+					</CustomLayout>
 				</Panel>
 			</React.Fragment>
 		);
@@ -150,7 +180,7 @@ const MultimediaBase = kind({
 class Multimedia extends React.Component {
 	static propTypes = {
 		onSendVideo: PropTypes.func
-	}
+	};
 
 	constructor (props) {
 		super(props);
