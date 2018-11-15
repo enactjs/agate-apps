@@ -13,12 +13,25 @@ import {VirtualGridList} from '@enact/ui/VirtualList';
 
 import appConfig from '../../config';
 import Communicator from '../../../components/Communicator';
+import CustomLayout from '../components/CustomLayout';
 
 import youtubeVideos from '../data/youtubeapi.json';
 
 import css from './Multimedia.less';
 
 const screenIds = [0, 1, 2];
+
+const IFrame = kind({
+	name: 'IFrame',
+	render: (props) => {
+		return (
+			<Cell
+				{...props}
+				component="iframe"
+			/>
+		);
+	}
+});
 
 const MultimediaBase = kind({
 	name: 'Multimedia',
@@ -49,7 +62,20 @@ const MultimediaBase = kind({
 		}
 	},
 
-	render: ({adContent, autoplay, buttons, renderItem, showAd, showPopup, onTogglePopup, url, videos, ...rest}) => {
+	render: ({
+		adContent,
+		arrangeable,
+		arrangement,
+		buttons,
+		renderItem,
+		showAd,
+		showPopup,
+		onArrange,
+		onTogglePopup,
+		url,
+		videos,
+		...rest
+	}) => {
 		delete rest.onBroadcastVideo;
 		delete rest.onSelectVideo;
 		delete rest.onSendVideo;
@@ -68,8 +94,12 @@ const MultimediaBase = kind({
 					</buttons>
 				</Popup>
 				<Panel {...rest}>
-					<Row className={css.bodyRow}>
-						<Cell size="20%">
+					<CustomLayout
+						arrangeable={arrangeable}
+						arrangement={arrangement}
+						onArrange={onArrange}
+					>
+						<left>
 							<Divider className={css.divider}>Recommended Videos</Divider>
 							<VirtualGridList
 								dataSize={videos.length}
@@ -81,17 +111,14 @@ const MultimediaBase = kind({
 								className={css.thumbnails}
 								spacing={ri.scale(66)}
 							/>
-						</Cell>
-						<Cell
-							allow={autoplay ? "autoplay" : ""}
-							className={css.iframe}
-							component="iframe"
-							src={url}
-						/>
-						{!showAd ? null : <Cell className={css.adSpace} shrink>
-							{adContent}
-						</Cell>}
-					</Row>
+						</left>
+						<Row className={css.bodyRow}>
+							<IFrame allow="autoplay" className={css.iframe} src={url} />
+							{!showAd ? null : <Cell className={css.adSpace} shrink>
+								{adContent}
+							</Cell>}
+						</Row>
+					</CustomLayout>
 				</Panel>
 			</React.Fragment>
 		);
@@ -101,13 +128,12 @@ const MultimediaBase = kind({
 class Multimedia extends React.Component {
 	static propTypes = {
 		onSendVideo: PropTypes.func
-	}
+	};
 
 	constructor (props) {
 		super(props);
 		this.state = {
 			adContent: this.props.adContent || 'Your Ad Here',
-			autoplay: false,
 			screenId: 0,
 			showAd: this.props.showAd || false,
 			url: '',
@@ -132,7 +158,7 @@ class Multimedia extends React.Component {
 	};
 
 	onPlayVideo = ({url}) => {
-		this.setState({autoplay: true, url});
+		this.setState({url});
 	};
 
 	onSelectVideo = (video) => () => {
@@ -156,12 +182,11 @@ class Multimedia extends React.Component {
 	};
 
 	render () {
-		const {adContent, autoplay, showAd, showPopup, url, videos} = this.state;
+		const {adContent, showAd, showPopup, url, videos} = this.state;
 
 		const props = {
 			...this.props,
 			adContent,
-			autoplay,
 			onBroadcastVideo: this.onBroadcastVideo,
 			onSelectVideo: this.onSelectVideo,
 			onSendVideo: this.onSendVideo,
