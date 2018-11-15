@@ -11,6 +11,7 @@ import React from 'react';
 import ri from '@enact/ui/resolution';
 import ThumbnailItem from '@enact/agate/ThumbnailItem';
 import {VirtualGridList, VirtualList} from '@enact/ui/VirtualList';
+import {ResponsiveBox} from '@enact/agate/DropManager';
 
 import appConfig from '../../config';
 import Communicator from '../../../components/Communicator';
@@ -34,6 +35,74 @@ const IFrame = kind({
 	}
 });
 
+
+const ResponsiveVirtualList = ResponsiveBox(kind({
+	name: 'ResponsiveVirtualList',
+	computed: {
+		itemRenderer: ({containerShape, onSelectVideo, videos}) => ({index, ...rest}) => {
+			switch (containerShape.size) {
+				case 'large': {
+					return (
+						<GridListImageItem
+							{...rest}
+							caption={videos[index].snippet.title}
+							className={css.gridListItem}
+							source={videos[index].snippet.thumbnails.medium.url}
+							onClick={onSelectVideo(videos[index])}
+						/>
+					);
+				}
+				default: {
+					return (
+						<ThumbnailItem
+							{...rest}
+							css={css}
+							onClick={onSelectVideo(videos[index])}
+							src={videos[index].snippet.thumbnails.medium.url}
+						>
+							{videos[index].snippet.title}
+						</ThumbnailItem>
+					);
+				}
+			}
+		}
+	},
+	render: ({containerShape, style = {}, ...rest}) => {
+		// const portrait = (containerShape && containerShape.orientation === 'portrait');
+		// const orientation = (portrait ? 'vertical' : 'horizontal');
+		// console.log('ResponsiveVirtualList containerShape:', containerShape);
+
+		let List, spacing, itemSize;
+		switch (containerShape.size) {
+			case 'large': {
+				List = VirtualGridList;
+				spacing = ri.scale(66);
+				itemSize = {
+					minWidth: ri.scale(320),
+					minHeight: ri.scale(180)
+				};
+				break;
+			}
+			default: {
+				List = VirtualList;
+				spacing = ri.scale(15);
+				itemSize = ri.scale(90);
+			}
+		}
+
+		delete rest.onSelectVideo;
+		return (
+			<List
+				{...rest}
+				direction={'vertical'}
+				style={style}
+				spacing={spacing}
+				itemSize={itemSize}
+			/>
+		);
+	}
+}));
+
 const MultimediaBase = kind({
 	name: 'Multimedia',
 
@@ -53,23 +122,7 @@ const MultimediaBase = kind({
 			});
 			screens.push(<Button key={screens.length} onClick={onBroadcastVideo}>All Screens</Button>);
 			return screens;
-		},
-		itemSize: ({compact}) => {
-			if (compact) {
-				return ri.scale(90);
-			}
-			return {
-				minWidth: ri.scale(320),
-				minHeight: ri.scale(180)
-			};
-		},
-		itemSpacing: ({compact}) => {
-			if (compact) {
-				return ri.scale(15);
-			}
-			return ri.scale(66);
-		},
-		listComponent: ({compact}) => (compact ? VirtualList : VirtualGridList),
+		}
 		/**
 		 *
 		 * @param listSlot
@@ -80,30 +133,6 @@ const MultimediaBase = kind({
 		 * in the `children` slot and ignore the declared JSX children.  This is how we handle
 		 * changing what is displayed between compact and full modes.
 		 */
-		listSlot: ({compact}) => (compact ? '' : 'left'),
-		renderItem: ({compact, onSelectVideo, videos}) => ({index, ...rest}) => {
-			if (compact) {
-				return (
-					<ThumbnailItem
-						{...rest}
-						css={css}
-						onClick={onSelectVideo(videos[index])}
-						src={videos[index].snippet.thumbnails.medium.url}
-					>
-						{videos[index].snippet.title}
-					</ThumbnailItem>
-				);
-			}
-			return (
-				<GridListImageItem
-					{...rest}
-					caption={videos[index].snippet.title}
-					className={css.gridListItem}
-					source={videos[index].snippet.thumbnails.medium.url}
-					onClick={onSelectVideo(videos[index])}
-				/>
-			);
-		}
 	},
 
 	render: ({
@@ -111,22 +140,17 @@ const MultimediaBase = kind({
 		arrangeable,
 		arrangement,
 		buttons,
-		compact,
-		itemSize,
-		itemSpacing,
-		listComponent: List,
-		listSlot,
 		onArrange,
-		renderItem,
 		showAd,
 		showPopup,
+		onSelectVideo,
 		onTogglePopup,
 		url,
 		videos,
 		...rest
 	}) => {
+		delete rest.compact;
 		delete rest.onBroadcastVideo;
-		delete rest.onSelectVideo;
 		delete rest.onSendVideo;
 		return (
 			<React.Fragment>
@@ -148,20 +172,19 @@ const MultimediaBase = kind({
 						arrangement={arrangement}
 						onArrange={onArrange}
 					>
-						<div
-							className={css.bodyRow}
-							slot={listSlot}
-						>
-							{compact ? null : <Divider className={css.divider}>
+						<left>
+							<Divider className={css.divider}>
 								Recommended Videos
-							</Divider>}
-							<List
+							</Divider>
+							<ResponsiveVirtualList
 								dataSize={videos.length}
-								itemRenderer={renderItem}
-								itemSize={itemSize}
-								spacing={itemSpacing}
+								// itemRenderer={renderItem}
+								onSelectVideo={onSelectVideo}
+								videos={videos}
+								// itemSize={itemSize}
+								// spacing={itemSpacing}
 							/>
-						</div>
+						</left>
 						<Row className={css.bodyRow}>
 							<IFrame allow="autoplay" className={css.iframe} src={url} />
 							{!showAd ? null : <Cell className={css.adSpace} shrink>
