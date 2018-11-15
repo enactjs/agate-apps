@@ -34,6 +34,7 @@ const WelcomePopupBase = kind({
 		positions: PropTypes.array,
 		profileName: PropTypes.string,
 		proposedDestination: propTypeLatLonList,
+		setDestination: PropTypes.func,  // Incoming function from AppStateConnect
 		updateUser: PropTypes.func,
 		userId: PropTypes.number
 	},
@@ -48,6 +49,13 @@ const WelcomePopupBase = kind({
 	},
 
 	handlers: {
+		handleClose: handle(
+			(ev, {proposedDestination, setDestination}) => {
+				setDestination({destination: proposedDestination});
+				return true;
+			},
+			forward('onClose')
+		),
 		selectUserAndContinue: handle(
 			forward('updateUser'),
 			forward('onNextView')
@@ -65,8 +73,8 @@ const WelcomePopupBase = kind({
 	},
 
 	render: ({
+		handleClose,
 		index,
-		onClose,
 		onPreviousView,
 		onSendVideo,
 		onSetDestination,
@@ -77,8 +85,10 @@ const WelcomePopupBase = kind({
 		usersList,
 		...rest
 	}) => {
+		delete rest.onClose;
 		delete rest.onNextView;
 		delete rest.updateUser;
+		delete rest.setDestination;
 		delete rest.userId;
 
 		return (
@@ -111,7 +121,7 @@ const WelcomePopupBase = kind({
 									<Cell component={Item} spotlightDisabled>
 										Hi {profileName}!
 									</Cell>
-									<Cell component={Button} icon="arrowsmallright" onClick={onClose} shrink />
+									<Cell component={Button} icon="arrowsmallright" onClick={handleClose} shrink />
 								</Row>
 							</Cell>
 							<Cell>
@@ -180,6 +190,11 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 const WelcomePopup = AppContextConnect(({getUserNames, updateAppState, userId, userSettings}) => ({
 	usersList: getUserNames(),
 	profileName: userSettings.name,
+	setDestination: ({destination}) => {
+		updateAppState((state) => {
+			state.navigation.destination = destination;
+		});
+	},
 	updateUser: ({selected}) => {
 		updateAppState((state) => {
 			state.userId = selected + 1;
