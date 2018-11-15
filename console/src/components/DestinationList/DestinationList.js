@@ -25,6 +25,7 @@ const DestinationList = kind({
 	render: ({destinations, title, ...rest}) => {
 		delete rest.component;
 		delete rest.onSetDestination;
+		delete rest.positions;
 
 		return (
 			<Column {...rest}>

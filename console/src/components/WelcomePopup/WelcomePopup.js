@@ -51,7 +51,9 @@ const WelcomePopupBase = kind({
 	handlers: {
 		handleClose: handle(
 			(ev, {proposedDestination, setDestination}) => {
-				setDestination({destination: proposedDestination});
+				if (proposedDestination) {
+					setDestination({destination: proposedDestination});
+				}
 				return true;
 			},
 			forward('onClose')
