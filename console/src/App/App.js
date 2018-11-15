@@ -263,7 +263,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 		};
 
 		onReset = () => {
-			this.setState({welcomeIndex: 0, showWelcomePopup: true, showUserSelectionPopup: false});
+			this.setState({index: 0, welcomeIndex: 0, showWelcomePopup: true, showUserSelectionPopup: false});
 		};
 
 		render () {
