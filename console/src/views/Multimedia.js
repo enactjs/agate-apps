@@ -118,7 +118,6 @@ const MultimediaBase = kind({
 		listSlot,
 		onArrange,
 		renderItem,
-		selectedVideo,
 		showAd,
 		showPopup,
 		onTogglePopup,
@@ -129,7 +128,6 @@ const MultimediaBase = kind({
 		delete rest.onBroadcastVideo;
 		delete rest.onSelectVideo;
 		delete rest.onSendVideo;
-		delete rest.selectedVideo;
 		return (
 			<React.Fragment>
 				<Popup
@@ -247,7 +245,6 @@ class Multimedia extends React.Component {
 			onSelectVideo: this.onSelectVideo,
 			onSendVideo: this.onSendVideo,
 			onTogglePopup: this.onTogglePopup,
-			selectedVideo: this.selectedVideo,
 			showAd,
 			showPopup,
 			url,
