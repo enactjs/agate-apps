@@ -95,7 +95,7 @@ const WelcomePopupBase = kind({
 
 		return (
 			<FullscreenPopup {...rest}>
-				<Panels index={index}>
+				<Panels index={index} enteringDelay={100} enteringProp="hideChildren">
 					<Panel>
 						<Column align="stretch center">
 							<Cell component={Divider} startSection shrink>User Selection</Cell>
