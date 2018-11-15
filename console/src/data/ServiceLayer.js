@@ -5,6 +5,7 @@ import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import React from 'react';
 import compose from 'ramda/src/compose';
+import {equals} from 'ramda';
 import PropTypes from 'prop-types';
 
 // Data Services
@@ -57,12 +58,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
-			if (prevProps.navigation && this.props.navigation &&
-				prevProps.navigation.destination && this.props.navigation.destination && (
-					prevProps.navigation.destination.lat !== this.props.navigation.destination.lat ||
-					prevProps.navigation.destination.lon !== this.props.navigation.destination.lon
-				)
-			) {
+			if (!equals(prevProps.navigation.destination, this.props.navigation.destination)) {
 				this.setDestination();
 			}
 
@@ -120,7 +116,9 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			const {x, y} = data.position;
 			const location = getLatLongFromSim(x, y);
 
-			location.orientation =  radiansToDegrees(Math.round(data.heading * 10000) / 10000);
+			// convert heading to degrees, invert it, add 90deg (to make 0 "north"),
+			// and keep the orientation between 0 and 360)
+			location.orientation = (360 + radiansToDegrees(Math.round(data.heading * -10000) / 10000) + 90) % 360;
 
 			// Velocity is in meters per second - math optimized for speed
 			location.linearVelocity = Math.round((
@@ -180,12 +178,17 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		// General Event Handling
 		//
 
-		setDestination = ({destination}) => {
+		setDestination = ({destination} = {}) => {
 			const {navigation, location} = this.props;
+
+			const destDiffersFromState = (!equals(destination, navigation.destination));
 			destination = destination || navigation.destination; // Accept external args, in case the request came from within this component, but fallback to the navigation prop (the preferred usage).
-			this.props.updateDestination({destination, navigating: true});
 			// console.log('location, dest(s):', [location, ...destination]);
-			this.connection.send('routingRequest', [location, ...destination]);
+			this.props.updateDestination({destination, navigating: true});
+
+			if (destDiffersFromState && destination.slice(-1).lat !== 0) {
+				this.connection.send('routingRequest', [location, ...destination]);
+			}
 		}
 
 		sendVideo = (args) => {

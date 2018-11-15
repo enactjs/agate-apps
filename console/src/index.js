@@ -6,7 +6,7 @@ import {render} from 'react-dom';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 import App from './App';
-import AppContextProvider from './App/AppContextProvider'
+import AppContextProvider from './App/AppContextProvider';
 
 let appElement = <App />;
 
@@ -16,7 +16,7 @@ if (typeof window !== 'undefined') {
 	const index = parseInt(args.index || 0);
 	const skin = args.skin;
 
-	const onSelect = (ev) => window.history.pushState(ev, '', `?index=${ev.index}`)
+	const onSelect = (ev) => window.history.pushState(ev, '', `?index=${ev.index}`);
 
 	appElement = (
 		<AppContextProvider defaultSkin={skin}>

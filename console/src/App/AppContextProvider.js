@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import produce from 'immer';
 import {mergeDeepRight} from 'ramda';
+
 import appConfig from '../../config';
+import userPresetsForDemo from './userPresetsForDemo';
 
 const Context = React.createContext();
 
@@ -48,6 +50,7 @@ const defaultUserSettings = {
 	colorAccent: '#cccccc',
 	colorHighlight: '#66aabb',
 	fontSize: 0,
+	name: '',
 	skin: 'carbon'
 };
 
@@ -85,6 +88,12 @@ class AppContextProvider extends Component {
 	}
 
 	componentWillMount () {
+		const usersList = this.getUserNames();
+		// If there are no users in the list when we load for the first time, stamp some out and prepare the system.
+		if (Object.keys(usersList).length <= 0) {
+			this.resetAll();
+		}
+
 		this.setUserSettings(this.state.userId);
 		this.setLocation();
 	}
@@ -105,11 +114,26 @@ class AppContextProvider extends Component {
 		this.unsetLocationMonitoring();
 	}
 
-	getDefaultUserSettings = (props) => {
+	getDefaultUserSettings = (userId, props) => {
 		props = props || this.props;  // Use the supplied props or the current props
 		const settings = Object.assign({}, defaultUserSettings);
+
+		// Respect the app's defaultSkin prop
 		if (props.defaultSkin) settings.skin = props.defaultSkin;
+
+		// The default user has no `name`, so we'll look it up in the presets, and if it's not there, we'll just use the user-key.
+		const userKey = `user${userId}`;
+		settings.name = userPresetsForDemo[userKey] ? userPresetsForDemo[userKey].name : userKey;
 		return settings;
+	}
+
+	getUserNames = () => {
+		const users = {};
+		this.getAllSavedUserIds().forEach(userKey => {
+			const userSettings = this.loadUserSettings(userKey);
+			users[userKey] = userSettings.name;
+		});
+		return users;
 	}
 
 	loadSavedUserSettings = (userId) => {
@@ -125,7 +149,7 @@ class AppContextProvider extends Component {
 	}
 
 	loadUserSettings = (userId) => {
-		return JSON.parse(window.localStorage.getItem(`user${userId}`)) || this.getDefaultUserSettings();
+		return JSON.parse(window.localStorage.getItem(`user${userId}`)) || this.getDefaultUserSettings(userId);
 	}
 
 	saveUserSettings = (userId, userSettings) => {
@@ -144,7 +168,7 @@ class AppContextProvider extends Component {
 		});
 	}
 
-	getAllSavedUSerIds = () => {
+	getAllSavedUserIds = () => {
 		// Read the user database and return just a list of the registered id numbers
 		return Object.keys(window.localStorage)
 			.filter(key => (key.indexOf('user') === 0))
@@ -157,8 +181,16 @@ class AppContextProvider extends Component {
 	}
 
 	resetAll = () => {
-		const userIds = this.getAllSavedUSerIds();
+		const userIds = this.getAllSavedUserIds();
 		userIds.forEach(this.deleteUserSettings);
+
+		this.repopulateUsersForDemo();
+	}
+
+	repopulateUsersForDemo = () => {
+		for (const userId in userPresetsForDemo) {
+			this.saveUserSettings(userId.replace('user', ''), userPresetsForDemo[userId]);
+		}
 	}
 
 	setLocation = () => {
@@ -218,6 +250,7 @@ class AppContextProvider extends Component {
 	render () {
 		const context = {
 			...this.state,
+			getUserNames: this.getUserNames,
 			updateAppState: this.updateAppState,
 			resetUserSettings: this.resetUserSettings,
 			resetAll: this.resetAll

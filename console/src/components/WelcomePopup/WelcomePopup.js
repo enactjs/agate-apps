@@ -5,6 +5,7 @@ import {Item} from '@enact/agate/Item';
 import {Panel, Panels} from '@enact/agate/Panels';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
 import {handle, forward} from '@enact/core/handle';
+import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import {Column, Row, Cell} from '@enact/ui/Layout';
 import Group from '@enact/ui/Group';
@@ -12,9 +13,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import AppContextConnect from '../../App/AppContextConnect';
-import CompactMap from '../CompactMap';
 import CompactMultimedia from '../CompactMultimedia';
 import CompactWeather from '../CompactWeather';
+import DestinationList from '../DestinationList';
+import MapCore from '../MapCore';
+import {propTypeLatLonList} from '../../data/proptypes';
 
 import css from './WelcomePopup.less';
 
@@ -27,6 +30,11 @@ const WelcomePopupBase = kind({
 		onNextView: PropTypes.func,
 		onPreviousView: PropTypes.func,
 		onSendVideo: PropTypes.func,
+		onSetDestination: PropTypes.func,
+		positions: PropTypes.array,
+		profileName: PropTypes.string,
+		proposedDestination: propTypeLatLonList,
+		setDestination: PropTypes.func,  // Incoming function from AppStateConnect
 		updateUser: PropTypes.func,
 		userId: PropTypes.number
 	},
@@ -41,15 +49,49 @@ const WelcomePopupBase = kind({
 	},
 
 	handlers: {
+		handleClose: handle(
+			(ev, {proposedDestination, setDestination}) => {
+				if (proposedDestination) {
+					setDestination({destination: proposedDestination});
+				}
+				return true;
+			},
+			forward('onClose')
+		),
 		selectUserAndContinue: handle(
 			forward('updateUser'),
 			forward('onNextView')
 		)
 	},
 
-	render: ({index, onClose, onPreviousView, onSendVideo, selectUserAndContinue, userId, ...rest}) => {
+	computed: {
+		usersList: ({usersList}) => {
+			const users = [];
+			for (const user in usersList) {
+				users.push(usersList[user]);
+			}
+			return users;
+		}
+	},
+
+	render: ({
+		handleClose,
+		index,
+		onPreviousView,
+		onSendVideo,
+		onSetDestination,
+		selectUserAndContinue,
+		positions,
+		profileName,
+		proposedDestination,
+		usersList,
+		...rest
+	}) => {
+		delete rest.onClose;
 		delete rest.onNextView;
 		delete rest.updateUser;
+		delete rest.setDestination;
+		delete rest.userId;
 
 		return (
 			<FullscreenPopup {...rest}>
@@ -68,28 +110,28 @@ const WelcomePopupBase = kind({
 									wrap
 									align="start space-evenly"
 								>
-									{['User 1', 'User 2', 'User 3']}
+									{usersList}
 								</Row>
 							</Cell>
 						</Column>
 					</Panel>
 					<Panel>
 						<Column>
-							<Cell shrink>
+							<Cell size="20%">
 								<Row align="center">
 									<Cell component={Button} icon="user" onClick={onPreviousView} shrink />
 									<Cell component={Item} spotlightDisabled>
-										Hi User {userId}!
+										Hi {profileName}!
 									</Cell>
-									<Cell component={Button} icon="arrowsmallright" onClick={onClose} shrink />
+									<Cell component={Button} icon="arrowsmallright" onClick={handleClose} shrink />
 								</Row>
 							</Cell>
 							<Cell>
 								<Row className={css.bottomRow}>
 									<Cell size="25%">
-										Destinations
+										<DestinationList component={Button} onSetDestination={onSetDestination} positions={positions} title="Top Locations" />
 									</Cell>
-									<Cell component={CompactMap} size="40%" />
+									<Cell component={MapCore} proposedDestination={proposedDestination} size="40%" />
 									<Cell size="35%">
 										<Column>
 											<Cell shrink>
@@ -110,18 +152,61 @@ const WelcomePopupBase = kind({
 	}
 });
 
-const WelcomePopup = AppContextConnect(({updateAppState, userId}) => ({
+const WelcomePopupState = hoc((configHoc, Wrapped) => {
+	return class extends React.Component {
+		static displayName = 'WelcomePopupState';
+
+		constructor (props) {
+			super(props);
+			this.state = {
+				positions: [
+					{lat: 37.788818, lon: -122.404568}, // LG office
+					{lat: 37.791356, lon: -122.400823}, // Blue Bottle Coffee
+					{lat: 37.788988, lon: -122.401076},
+					{lat: 37.7908574786, lon: -122.399391029},
+					{lat: 37.786116, lon: -122.402140}
+				],
+				destination: null
+			};
+		}
+
+		handleSetDestination = (ev) => {
+			const index = ev.currentTarget.dataset.index;
+			this.setState(({positions}) => ({destination: [positions[index]]}));
+		}
+
+		render () {
+			const {destination, positions} = this.state;
+			return (
+				<Wrapped
+					{...this.props}
+					onSetDestination={this.handleSetDestination}
+					positions={positions}
+					proposedDestination={destination}
+				/>
+			);
+		}
+	};
+});
+
+const WelcomePopup = AppContextConnect(({getUserNames, updateAppState, userId, userSettings}) => ({
+	usersList: getUserNames(),
+	profileName: userSettings.name,
+	setDestination: ({destination}) => {
+		updateAppState((state) => {
+			state.navigation.destination = destination;
+		});
+	},
 	updateUser: ({selected}) => {
 		updateAppState((state) => {
 			state.userId = selected + 1;
 		});
 	},
 	userId
-}))(WelcomePopupBase);
+}))(WelcomePopupState(WelcomePopupBase));
 
 export default WelcomePopup;
 export {
 	WelcomePopup,
 	WelcomePopupBase
 };
-

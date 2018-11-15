@@ -83,6 +83,7 @@ const AppBase = kind({
 		onToggleDateTimePopup,
 		onToggleUserSelectionPopup,
 		onToggleWelcomePopup,
+		orientation,
 		sendVideo,
 		showPopup,
 		showBasicPopup,
@@ -97,9 +98,9 @@ const AppBase = kind({
 		delete rest.highlight;
 		delete rest.endNavigation;
 		return (
-			<div>
+			<div {...rest}>
 				<TabbedPanels
-					{...rest}
+					orientation={orientation}
 					tabs={[
 						{title: 'Home', icon: 'denselist'},
 						{title: 'Phone', icon: 'phone'},
