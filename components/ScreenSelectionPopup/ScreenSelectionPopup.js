@@ -41,31 +41,45 @@ const ScreenSelectionPopupBase = kind({
 		onClose: PropTypes.func,
 		onSelect: PropTypes.func,
 		open: PropTypes.bool,
-		screenIds: PropTypes.arrayOf(PropTypes.number)
+		screenIds: PropTypes.arrayOf(PropTypes.number),
+		showAllScreens: PropTypes.bool,
+		title: PropTypes.string
 	},
 
 	computed: {
-		buttons: ({screenIds, onSelect}) => {
+		buttons: ({showAllScreens, screenIds, onSelect}) => {
 			const screens = screenIds.map(s => {
 				return (
 					<ScreenButton key={s} screenId={s} onSelect={onSelect} />
 				);
 			});
-			screens.push(<ScreenButton key={screens.length} screenId={screenIds} onSelect={onSelect}>All Screens</ScreenButton>);
+
+			if (showAllScreens) {
+				screens.push(
+					<ScreenButton
+						key={screens.length}
+						screenId={screenIds}
+						onSelect={onSelect}
+					>
+							All Screens
+					</ScreenButton>
+				);
+			}
+
 			return screens;
 		}
 	},
 
-	render: ({buttons, open, onClose}) => {
+	render: ({buttons, children, open, onClose, title = 'Select Screen', ...rest}) => {
 		return (
 			<Popup
+				{...rest}
 				open={open}
 				closeButton
 				onClose={onClose}
+				title={title}
 			>
-				<title>
-					Select Screen
-				</title>
+				{children}
 				<buttons>
 					{buttons}
 				</buttons>

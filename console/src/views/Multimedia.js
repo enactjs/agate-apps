@@ -14,8 +14,9 @@ import {VirtualGridList, VirtualList} from '@enact/ui/VirtualList';
 
 import appConfig from '../../config';
 import Communicator from '../../../components/Communicator';
+import ScreenSelectionPopup from '../../../components/ScreenSelectionPopup';
+
 import CustomLayout from '../components/CustomLayout';
-import ScreenSelectionPopup from '../components/ScreenSelectionPopup';
 
 import youtubeVideos from '../data/youtubeapi.json';
 
@@ -136,9 +137,11 @@ const MultimediaBase = kind({
 		return (
 			<React.Fragment>
 				<ScreenSelectionPopup
-					screenIds={screenIds}
-					open={showPopup}
+					showAllScreens
+					onClose={onClosePopup}
 					onSelect={onSendVideo}
+					open={showPopup}
+					screenIds={screenIds}
 				/>
 				<Panel {...rest}>
 					<CustomLayout

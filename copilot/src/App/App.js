@@ -4,15 +4,17 @@ import {Cell, Column, Row} from '@enact/ui/Layout';
 import Job from '@enact/core/util/Job';
 import kind from '@enact/core/kind';
 import LabeledItem from '@enact/agate/LabeledItem';
-import Popup from '@enact/agate/Popup';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import appConfig from '../../config';
 import Communicator from '../../../components/Communicator';
+import ScreenSelectionPopup from '../../../components/ScreenSelectionPopup';
 import NetworkInfo from '../../../components/NetworkInfo';
 
 import css from './App.less';
+
+const screenIds = [1, 2];
 
 const zeroPad = (val) => (val < 10 ? '0' + val : val);
 const formatTime = (time) => {
@@ -76,7 +78,7 @@ const AppBase = kind({
 		className: 'app'
 	},
 
-	render: ({adContent, duration, eta, ipAddress, popupOpen, onSetScreen, showAd, onTogglePopup, url, ...rest}) => {
+	render: ({adContent, duration, eta, ipAddress, popupOpen, showAd, onSetScreen, onTogglePopup, url, ...rest}) => {
 		return (
 			<Column {...rest}>
 				{eta ? <Cell shrink>
@@ -94,20 +96,16 @@ const AppBase = kind({
 						</Cell>}
 					</Row>
 				</Cell>
-				<Popup
+				<ScreenSelectionPopup
 					open={popupOpen}
 					noAutoDismiss
 					onClose={onTogglePopup}
+					onSelect={onSetScreen}
+					screenIds={screenIds}
+					title="Select Your Screen Source"
 				>
-					<title>
-						Select Your Screen Source
-					</title>
 					<p>IP Address: {ipAddress}</p>
-					<buttons>
-						<Button onClick={onSetScreen(1)}>Screen 1</Button>
-						<Button onClick={onSetScreen(2)}>Screen 2</Button>
-					</buttons>
-				</Popup>
+				</ScreenSelectionPopup>
 			</Column>
 		);
 	}
@@ -149,7 +147,7 @@ class App extends React.Component {
 
 	// Note for this one we may need to include some logic to actually switch channels.
 	// for example if we're on screen 2, but we want to tune into screen 1 we can just switch.
-	onSetScreen = (screenId) => () => {
+	onSetScreen = ({screenId}) => {
 		// set the new screen ID
 		this.setState({screenId});
 

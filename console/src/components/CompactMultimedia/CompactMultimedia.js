@@ -1,9 +1,10 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 
+import {ScreenSelectionPopup} from '../../../../components/ScreenSelectionPopup';
+
 import CustomLayout from '../CustomLayout';
 import {MultimediaDecorator, ResponsiveVirtualList} from '../../views/Multimedia';
-import {ScreenSelectionPopup} from '../ScreenSelectionPopup/ScreenSelectionPopup';
 
 const screenIds = [1, 2];
 
@@ -14,9 +15,11 @@ const CompactMultimediaBase = kind({
 		return (
 			<React.Fragment>
 				<ScreenSelectionPopup
-					screenIds={screenIds}
-					open={showPopup}
+					showAllScreens
+					onClose={onClosePopup}
 					onSelect={onSendVideo}
+					open={showPopup}
+					screenIds={screenIds}
 				/>
 				<CustomLayout>
 					<ResponsiveVirtualList
