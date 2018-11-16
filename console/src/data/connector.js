@@ -26,12 +26,17 @@ const subscribedTopics = {
 	routingResponse: {
 		name: '/apollo/routing_response',
 		messageType: 'pb_msgs/RoutingResponse'
-	}
+	},
 
 	// detected: {
 	// 	name: '/object_classifier/output',
 	// 	messageType: 'duckietown_msgs/ClassifiedObject'
 	// },
+
+	positionReset: {
+		name: '/simulator/reset',
+		messageType: 'geometry_msgs/Vector3'
+	}
 };
 
 function connect ({url, onConnection, onError, onClose, ...topics} = {}) {

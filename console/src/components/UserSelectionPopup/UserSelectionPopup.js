@@ -43,9 +43,10 @@ const UserSelectionPopupBase = kind({
 	},
 
 	handlers: {
-		onResetAll: (ev, {onResetAll, resetAll}) => {
+		onResetAll: (ev, {onResetAll, resetAll, resetPosition}) => {
 			onResetAll();
 			resetAll();
+			resetPosition({x:52880.8698406219, y: 4182781.1160838, z: -2.3562});
 		}
 	},
 

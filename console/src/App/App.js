@@ -85,6 +85,7 @@ const AppBase = kind({
 		onToggleUserSelectionPopup,
 		onToggleWelcomePopup,
 		orientation,
+		resetPosition,
 		sendVideo,
 		showPopup,
 		showBasicPopup,
@@ -166,6 +167,7 @@ const AppBase = kind({
 					onClose={onToggleUserSelectionPopup}
 					onResetAll={onResetAll}
 					open={showUserSelectionPopup}
+					resetPosition={resetPosition}
 				/>
 				<Popup
 					onClose={onToggleBasicPopup}
