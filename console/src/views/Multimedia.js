@@ -1,4 +1,3 @@
-import Button from '@enact/agate/Button';
 import {Cell, Row} from '@enact/ui/Layout';
 import Divider from '@enact/agate/Divider';
 import {Draggable, ResponsiveBox} from '@enact/agate/DropManager';
@@ -7,7 +6,6 @@ import hoc from '@enact/core/hoc';
 import Job from '@enact/core/util/Job';
 import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
-import Popup from '@enact/agate/Popup';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ri from '@enact/ui/resolution';
@@ -17,6 +15,7 @@ import {VirtualGridList, VirtualList} from '@enact/ui/VirtualList';
 import appConfig from '../../config';
 import Communicator from '../../../components/Communicator';
 import CustomLayout from '../components/CustomLayout';
+import ScreenSelectionPopup from '../components/ScreenSelectionPopup';
 
 import youtubeVideos from '../data/youtubeapi.json';
 
@@ -119,16 +118,6 @@ const MultimediaBase = kind({
 		className: 'multimedia'
 	},
 
-	computed: {
-		buttons: ({onBroadcastVideo, onSendVideo}) => {
-			const screens = screenIds.map((s, index) => {
-				return (<Button key={index} onClick={onSendVideo(s)}>Screen {s}</Button>);
-			});
-			screens.push(<Button key={screens.length} onClick={onBroadcastVideo}>All Screens</Button>);
-			return screens;
-		}
-	},
-
 	render: ({
 		adContent,
 		arrangeable,
@@ -139,26 +128,18 @@ const MultimediaBase = kind({
 		onArrange,
 		onClosePopup,
 		onSelectVideo,
+		onSendVideo,
 		url,
 		videos,
 		...rest
 	}) => {
-		delete rest.onBroadcastVideo;
-		delete rest.onSendVideo;
 		return (
 			<React.Fragment>
-				<Popup
+				<ScreenSelectionPopup
+					screenIds={screenIds}
 					open={showPopup}
-					closeButton
-					onClose={onClosePopup}
-				>
-					<title>
-						Select Screen
-					</title>
-					<buttons>
-						{buttons}
-					</buttons>
-				</Popup>
+					onSelect={onSendVideo}
+				/>
 				<Panel {...rest}>
 					<CustomLayout
 						arrangeable={arrangeable}
@@ -212,14 +193,6 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 			this.adTimer = new Job(this.onHideAdSpace);
 		}
 
-		onBroadcastVideo = () => {
-			const video = this.selectedVideo; // onSendVideo will reset this.selectedVideo
-			screenIds.forEach((s) => {
-				this.selectedVideo = video;
-				this.onSendVideo(s)();
-			});
-		};
-
 		onClosePopup = () => {
 			this.setState({showPopup: false});
 		};
@@ -241,8 +214,13 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 			this.onOpenPopup();
 		};
 
-		onSendVideo = (screenId) => () => {
-			this.props.onSendVideo({screenId, video: this.selectedVideo});
+		onSendVideo = ({screenId}) => {
+			screenId = Array.isArray(screenId) ? screenId : [screenId];
+
+			screenId.forEach(id => {
+				this.props.onSendVideo({screenId: id, video: this.selectedVideo});
+			});
+
 			this.selectedVideo = {};
 			this.onClosePopup();
 		};
@@ -258,7 +236,6 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 			const props = {
 				...this.props,
 				adContent,
-				onBroadcastVideo: this.onBroadcastVideo,
 				onClosePopup: this.onClosePopup,
 				onSelectVideo: this.onSelectVideo,
 				onSendVideo: this.onSendVideo,
