@@ -195,6 +195,10 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			this.comm.current.sendVideo(args);
 		}
 
+		resetPosition = (coordinates) => {
+			this.connection.send('positionReset', coordinates);
+		}
+
 		sendNavigation = () => {
 			// console.log('sendNavigation:', this.props.navigation);
 			this.comm.current.sendETA(this.props.navigation);
@@ -215,6 +219,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					<Wrapped
 						{...rest}
 						sendVideo={this.sendVideo}
+						resetPosition={this.resetPosition}
 					/>
 				</React.Fragment>
 			);
