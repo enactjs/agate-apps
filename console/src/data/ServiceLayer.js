@@ -234,6 +234,7 @@ const ServiceLayer = compose(
 		// },
 		setConnected: (connected) => {
 			updateAppState((state) => {
+				if (state.connections.serviceLayer === connected) return null;
 				state.connections.serviceLayer = connected;
 			});
 		},
