@@ -4,9 +4,7 @@ import Popup from '@enact/agate/Popup';
 import React from 'react';
 
 import CustomLayout from '../CustomLayout';
-import {ResponsiveVirtualList} from '../../views/Multimedia';
-
-import youtubeVideos from '../../data/youtubeapi.json';
+import {MultimediaDecorator, ResponsiveVirtualList} from '../../views/Multimedia';
 
 const screenIds = [1, 2];
 
@@ -52,60 +50,7 @@ const CompactMultimediaBase = kind({
 	}
 });
 
-class CompactMultimedia extends React.Component {
-	constructor (props) {
-		super(props);
-		this.state = {
-			showPopup: this.props.showPopup,
-			videos: youtubeVideos.items
-		};
-
-		this.selectedVideo = {};
-	}
-
-	onBroadcastVideo = () => {
-		const video = this.selectedVideo; // onSendVideo will reset this.selectedVideo
-		screenIds.forEach((s) => {
-			this.selectedVideo = video;
-			this.onSendVideo(s)();
-		});
-	};
-
-	onClosePopup = () => {
-		this.setState({showPopup: false});
-	};
-
-	onOpenPopup = () => {
-		this.setState({showPopup: true});
-	};
-
-	onSelectVideo = (video) => () => {
-		this.selectedVideo = video;
-		this.onOpenPopup();
-	};
-
-	onSendVideo = (screenId) => () => {
-		this.props.onSendVideo({screenId, video: this.selectedVideo});
-		this.selectedVideo = {};
-		this.onClosePopup();
-	};
-
-	render () {
-		const props = {
-			...this.props,
-			onBroadcastVideo: this.onBroadcastVideo,
-			onClosePopup: this.onClosePopup,
-			onSelectVideo: this.onSelectVideo,
-			onSendVideo: this.onSendVideo,
-			showPopup: this.state.showPopup,
-			videos: this.state.videos
-		};
-
-		return (
-			<CompactMultimediaBase {...props} />
-		);
-	}
-}
+const CompactMultimedia = MultimediaDecorator(CompactMultimediaBase);
 
 export default CompactMultimedia;
 export {CompactMultimedia};

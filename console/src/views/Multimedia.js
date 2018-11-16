@@ -3,6 +3,7 @@ import {Cell, Row} from '@enact/ui/Layout';
 import Divider from '@enact/agate/Divider';
 import {Draggable, ResponsiveBox} from '@enact/agate/DropManager';
 import GridListImageItem from '@enact/ui/GridListImageItem';
+import hoc from '@enact/core/hoc';
 import Job from '@enact/core/util/Job';
 import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
@@ -187,94 +188,101 @@ const MultimediaBase = kind({
 	}
 });
 
-class Multimedia extends React.Component {
-	static propTypes = {
-		onSendVideo: PropTypes.func
-	};
+const defaultConfig = {
+	videos: youtubeVideos.items
+};
 
-	constructor (props) {
-		super(props);
-		this.state = {
-			adContent: this.props.adContent || 'Your Ad Here',
-			screenId: 0,
-			showAd: this.props.showAd || false,
-			url: '',
-			videos: youtubeVideos.items
+const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
+	return class extends React.Component {
+		static displayName = 'MultimediaDecorator';
+
+		constructor (props) {
+			super(props);
+
+			this.state = {
+				adContent: this.props.adContent || 'Your Ad Here',
+				screenId: 0,
+				showAd: this.props.showAd || false,
+				url: '',
+				videos: configHoc.videos
+			};
+			this.selectedVideo = {};
+
+			// Job to control hiding ads
+			this.adTimer = new Job(this.onHideAdSpace);
+		}
+
+		onBroadcastVideo = () => {
+			const video = this.selectedVideo; // onSendVideo will reset this.selectedVideo
+			screenIds.forEach((s) => {
+				this.selectedVideo = video;
+				this.onSendVideo(s)();
+			});
 		};
-		this.selectedVideo = {};
 
-		// Job to control hiding ads
-		this.adTimer = new Job(this.onHideAdSpace);
-	}
+		onClosePopup = () => {
+			this.setState({showPopup: false});
+		};
 
-	onBroadcastVideo = () => {
-		const video = this.selectedVideo; // onSendVideo will reset this.selectedVideo
-		screenIds.forEach((s) => {
+		onHideAdSpace = () => {
+			this.setState({adContent: '', showAd: false});
+		};
+
+		onOpenPopup = () => {
+			this.setState({showPopup: true});
+		};
+
+		onPlayVideo = ({url}) => {
+			this.setState({url});
+		};
+
+		onSelectVideo = (video) => () => {
 			this.selectedVideo = video;
-			this.onSendVideo(s)();
-		});
-	};
-
-	onClosePopup = () => {
-		this.setState({showPopup: false});
-	};
-
-	onHideAdSpace = () => {
-		this.setState({adContent: '', showAd: false});
-	};
-
-	onOpenPopup = () => {
-		this.setState({showPopup: true});
-	};
-
-	onPlayVideo = ({url}) => {
-		this.setState({url});
-	};
-
-	onSelectVideo = (video) => () => {
-		this.selectedVideo = video;
-		this.onOpenPopup();
-	};
-
-	onSendVideo = (screenId) => () => {
-		this.props.onSendVideo({screenId, video: this.selectedVideo});
-		this.selectedVideo = {};
-		this.onClosePopup();
-	};
-
-	onShowAdSpace = ({adContent, duration}) => {
-		this.setState({adContent, showAd: true});
-		this.adTimer.startAfter(duration);
-	};
-
-	render () {
-		const {adContent, showAd, showPopup, url, videos} = this.state;
-
-		const props = {
-			...this.props,
-			adContent,
-			onBroadcastVideo: this.onBroadcastVideo,
-			onClosePopup: this.onClosePopup,
-			onSelectVideo: this.onSelectVideo,
-			onSendVideo: this.onSendVideo,
-			showAd,
-			showPopup,
-			url,
-			videos
+			this.onOpenPopup();
 		};
-		return (
-			<React.Fragment>
-				<Communicator
-					host={appConfig.communicationServerHost}
-					onPlayVideo={this.onPlayVideo}
-					onShowAd={this.onShowAdSpace}
-					screenId={this.state.screenId}
-				/>
-				<MultimediaBase {...props} />
-			</React.Fragment>
-		);
+
+		onSendVideo = (screenId) => () => {
+			this.props.onSendVideo({screenId, video: this.selectedVideo});
+			this.selectedVideo = {};
+			this.onClosePopup();
+		};
+
+		onShowAdSpace = ({adContent, duration}) => {
+			this.setState({adContent, showAd: true});
+			this.adTimer.startAfter(duration);
+		};
+
+		render () {
+			const {adContent, showAd, showPopup, url, videos} = this.state;
+
+			const props = {
+				...this.props,
+				adContent,
+				onBroadcastVideo: this.onBroadcastVideo,
+				onClosePopup: this.onClosePopup,
+				onSelectVideo: this.onSelectVideo,
+				onSendVideo: this.onSendVideo,
+				showAd,
+				showPopup,
+				url,
+				videos
+			};
+			return (
+				<React.Fragment>
+					<Communicator
+						host={appConfig.communicationServerHost}
+						onPlayVideo={this.onPlayVideo}
+						onShowAd={this.onShowAdSpace}
+						screenId={this.state.screenId}
+					/>
+					<Wrapped {...props} />
+				</React.Fragment>
+			);
+		}
 	}
-}
+});
+
+const Multimedia = MultimediaDecorator(MultimediaBase);
 
 export default Multimedia;
-export {Multimedia, ResponsiveVirtualList};
+export {Multimedia, MultimediaDecorator, ResponsiveVirtualList};
