@@ -78,7 +78,7 @@ const AppBase = kind({
 		layoutArrangeable,
 		onNextWelcomeView,
 		onPreviousWelcomeView,
-		onReset,
+		onResetAll,
 		onTogglePopup,
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
@@ -164,7 +164,7 @@ const AppBase = kind({
 				</TabbedPanels>
 				<UserSelectionPopup
 					onClose={onToggleUserSelectionPopup}
-					onReset={onReset}
+					onResetAll={onResetAll}
 					open={showUserSelectionPopup}
 				/>
 				<Popup
@@ -262,7 +262,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 			this.setState(({showWelcomePopup}) => ({showWelcomePopup: !showWelcomePopup}));
 		};
 
-		onReset = () => {
+		onResetAll = () => {
 			this.setState({index: 0, welcomeIndex: 0, showWelcomePopup: true, showUserSelectionPopup: false});
 		};
 
@@ -280,7 +280,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 					index={this.state.index}
 					onNextWelcomeView={this.onNextWelcomeView}
 					onPreviousWelcomeView={this.onPreviousWelcomeView}
-					onReset={this.onReset}
+					onResetAll={this.onResetAll}
 					onSelect={this.onSelect}
 					onTogglePopup={this.onTogglePopup}
 					onToggleBasicPopup={this.onToggleBasicPopup}

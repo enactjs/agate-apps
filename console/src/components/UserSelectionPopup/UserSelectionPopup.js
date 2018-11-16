@@ -43,8 +43,8 @@ const UserSelectionPopupBase = kind({
 	},
 
 	handlers: {
-		onResetAll: (ev, {onReset, resetAll}) => {
-			onReset();
+		onResetAll: (ev, {onResetAll, resetAll}) => {
+			onResetAll();
 			resetAll();
 		}
 	},
