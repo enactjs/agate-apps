@@ -4,15 +4,17 @@ import {Cell, Column, Row} from '@enact/ui/Layout';
 import Job from '@enact/core/util/Job';
 import kind from '@enact/core/kind';
 import LabeledItem from '@enact/agate/LabeledItem';
-import Popup from '@enact/agate/Popup';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import appConfig from '../../config';
 import Communicator from '../../../components/Communicator';
+import ScreenSelectionPopup from '../../../components/ScreenSelectionPopup';
 import NetworkInfo from '../../../components/NetworkInfo';
 
 import css from './App.less';
+
+const screenIds = [1, 2];
 
 const zeroPad = (val) => (val < 10 ? '0' + val : val);
 const formatTime = (time) => {
@@ -51,6 +53,18 @@ const formatDuration = (duration) => {
 	return durParts.filter(part => !!part).join(' ');
 };
 
+const IFrame = kind({
+	name: 'IFrame',
+	render: (props) => {
+		return (
+			<Cell
+				{...props}
+				component="iframe"
+			/>
+		);
+	}
+});
+
 const AppBase = kind({
 	name: 'App',
 
@@ -64,7 +78,7 @@ const AppBase = kind({
 		className: 'app'
 	},
 
-	render: ({adContent, duration, eta, ipAddress, popupOpen, setScreen, showAd, togglePopup, url, ...rest}) => {
+	render: ({adContent, duration, eta, ipAddress, popupOpen, showAd, onSetScreen, onTogglePopup, url, ...rest}) => {
 		return (
 			<Column {...rest}>
 				{eta ? <Cell shrink>
@@ -74,33 +88,24 @@ const AppBase = kind({
 					</Row>
 				</Cell> : null}
 				<Cell>
-					<Button style={{position: 'absolute', zIndex: 1}} icon="plug" onClick={togglePopup} />
+					<Button style={{position: 'absolute', zIndex: 1}} icon="plug" onClick={onTogglePopup} />
 					<Row className={css.bodyRow}>
-						<Cell
-							className={css.iframe}
-							allow="autoplay"
-							component="iframe"
-							src={url}
-						/>
+						<IFrame allow="autoplay" className={css.iframe} src={url} />
 						{!showAd ? null : <Cell className={css.adSpace} shrink>
 							{adContent}
 						</Cell>}
 					</Row>
 				</Cell>
-				<Popup
+				<ScreenSelectionPopup
 					open={popupOpen}
 					noAutoDismiss
-					onClose={togglePopup}
+					onClose={onTogglePopup}
+					onSelect={onSetScreen}
+					screenIds={screenIds}
+					title="Select Your Screen Source"
 				>
-					<title>
-						Select Your Screen Source
-					</title>
 					<p>IP Address: {ipAddress}</p>
-					<buttons>
-						<Button onClick={setScreen(1)}>Screen 1</Button>
-						<Button onClick={setScreen(2)}>Screen 2</Button>
-					</buttons>
-				</Popup>
+				</ScreenSelectionPopup>
 			</Column>
 		);
 	}
@@ -117,63 +122,65 @@ class App extends React.Component {
 		super(props);
 		this.state = {
 			adContent: this.props.adContent || 'Your Ad Here',
+			duration: null,
+			eta: null,
 			popupOpen: true,
 			screenId: 1,
 			showAd: this.props.showAd || false,
 			url: ''
 		};
 		// Job to control hiding ads
-		this.adTimer = new Job(this.hideAdSpace);
+		this.adTimer = new Job(this.onHideAdSpace);
 	}
 
 	componentWillUnmount () {
 		this.adTimer.stop();
 	}
 
-	onToggle = () => {
+	onHideAdSpace = () => {
+		this.setState({adContent: '', showAd: false});
+	};
+
+	onPlayVideo = ({url}) => {
+		this.setState({url});
+	};
+
+	// Note for this one we may need to include some logic to actually switch channels.
+	// for example if we're on screen 2, but we want to tune into screen 1 we can just switch.
+	onSetScreen = ({screenId}) => {
+		// set the new screen ID
+		this.setState({screenId});
+
+		// close the popup
+		this.onTogglePopup();
+	};
+
+	onShowAdSpace = ({adContent, duration}) => {
+		this.setState({adContent, showAd: true});
+		this.adTimer.startAfter(duration);
+	};
+
+	onShowETA = ({eta, duration}) => {
+		this.setState({eta, duration});
+		this.adTimer.startAfter(duration);
+	};
+
+	onTogglePopup = () => {
 		this.setState(({popupOpen}) => {
 			return {popupOpen: !popupOpen};
 		});
 	};
 
-	// Note for this one we may need to include some logic to actually switch channels.
-	// for example if we're on screen 2, but we want to tune into screen 1 we can just switch.
-	setScreen = (screenId) => () => {
-		// set the new screen ID
-		this.setState({screenId});
-
-		// close the popup
-		this.onToggle();
-	};
-
-	hideAdSpace = () => {
-		this.setState({adContent: '', showAd: false});
-	};
-
-	playVideo = ({url}) => {
-		this.setState({url});
-	};
-
-	showAdSpace = ({adContent, duration}) => {
-		this.setState({adContent, showAd: true});
-		this.adTimer.startAfter(duration);
-	};
-
-	showETA = ({eta, duration}) => {
-		this.setState({eta, duration});
-		this.adTimer.startAfter(duration);
-	}
-
 	render () {
-		const {adContent, popupOpen, showAd, url, eta, duration} = this.state;
+		const {adContent, duration, eta, popupOpen, showAd, url} = this.state;
 		const props = {
 			...this.props,
 			adContent,
+			duration,
+			eta,
 			popupOpen,
 			showAd,
-			url,
-			eta,
-			duration
+			url
 		};
 		delete props.accent;
 		delete props.highlight;
@@ -181,13 +188,17 @@ class App extends React.Component {
 		return (
 			<React.Fragment>
 				<Communicator
-					host={appConfig.communacitonServerHost}
+					host={appConfig.communicationServerHost}
 					screenId={this.state.screenId}
-					onPlayVideo={this.playVideo}
-					onShowAd={this.showAdSpace}
-					onShowETA={this.showETA}
+					onPlayVideo={this.onPlayVideo}
+					onShowAd={this.onShowAdSpace}
+					onShowETA={this.onShowETA}
 				/>
-				<AppBase {...props} togglePopup={this.onToggle} setScreen={this.setScreen} />
+				<AppBase
+					{...props}
+					onSetScreen={this.onSetScreen}
+					onTogglePopup={this.onTogglePopup}
+				/>
 			</React.Fragment>
 		);
 	}

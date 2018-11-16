@@ -211,7 +211,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 			return (
 				<React.Fragment>
-					<Communicator ref={this.comm} host={appConfig.communacitonServerHost} />
+					<Communicator ref={this.comm} host={appConfig.communicationServerHost} />
 					<Wrapped
 						{...rest}
 						sendVideo={this.sendVideo}

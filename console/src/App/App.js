@@ -160,7 +160,7 @@ const AppBase = kind({
 						arrangeable={layoutArrangeable}
 						onSelect={onSelect}
 					/>
-					<Multimedia sendVideo={sendVideo} />
+					<Multimedia onSendVideo={sendVideo} />
 				</TabbedPanels>
 				<UserSelectionPopup
 					onClose={onToggleUserSelectionPopup}
