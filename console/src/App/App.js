@@ -76,8 +76,6 @@ const AppBase = kind({
 		updateSkin,
 		layoutArrangeableToggle,
 		layoutArrangeable,
-		onNextWelcomeView,
-		onPreviousWelcomeView,
 		onResetAll,
 		onTogglePopup,
 		onToggleBasicPopup,
@@ -92,7 +90,6 @@ const AppBase = kind({
 		showUserSelectionPopup,
 		showWelcomePopup,
 		skinName,
-		welcomeIndex,
 		...rest
 	}) => {
 		delete rest.accent;
@@ -197,10 +194,7 @@ const AppBase = kind({
 					<DateTimePicker onClose={onToggleDateTimePopup} />
 				</Popup>
 				<WelcomePopup
-					index={welcomeIndex}
 					onClose={onToggleWelcomePopup}
-					onNextView={onNextWelcomeView}
-					onPreviousView={onPreviousWelcomeView}
 					onSendVideo={sendVideo}
 					open={showWelcomePopup}
 				/>
@@ -221,17 +215,8 @@ const AppState = hoc((configHoc, Wrapped) => {
 				showDateTimePopup: false,
 				showUserSelectionPopup: false,
 				showAppList: false,
-				showWelcomePopup: true,
-				welcomeIndex: 0
+				showWelcomePopup: true
 			};
-		}
-
-		onNextWelcomeView = () => {
-			this.setState((state) => ({welcomeIndex: state.welcomeIndex + 1}));
-		}
-
-		onPreviousWelcomeView = () => {
-			this.setState((state) => ({welcomeIndex: state.welcomeIndex - 1}));
 		}
 
 		onSelect = handle(
@@ -263,7 +248,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 		};
 
 		onResetAll = () => {
-			this.setState({index: 0, welcomeIndex: 0, showWelcomePopup: true, showUserSelectionPopup: false});
+			this.setState({index: 0, showWelcomePopup: true, showUserSelectionPopup: false});
 		};
 
 		render () {
@@ -278,8 +263,6 @@ const AppState = hoc((configHoc, Wrapped) => {
 					accent={colorAccent}
 					highlight={colorHighlight}
 					index={this.state.index}
-					onNextWelcomeView={this.onNextWelcomeView}
-					onPreviousWelcomeView={this.onPreviousWelcomeView}
 					onResetAll={this.onResetAll}
 					onSelect={this.onSelect}
 					onTogglePopup={this.onTogglePopup}
@@ -295,7 +278,6 @@ const AppState = hoc((configHoc, Wrapped) => {
 					showWelcomePopup={this.state.showWelcomePopup}
 					skin={skin}
 					skinName={skin}
-					welcomeIndex={this.state.welcomeIndex}
 				/>
 			);
 		}
