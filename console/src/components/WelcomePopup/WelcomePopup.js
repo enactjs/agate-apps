@@ -4,7 +4,7 @@ import FullscreenPopup from '@enact/agate/FullscreenPopup';
 import {Item} from '@enact/agate/Item';
 import {Panel, Panels} from '@enact/agate/Panels';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
-import {handle, forward} from '@enact/core/handle';
+import {handle, forProp, forward, returnsTrue} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import {Column, Row, Cell} from '@enact/ui/Layout';
@@ -26,12 +26,12 @@ const WelcomePopupBase = kind({
 
 	propTypes: {
 		index: PropTypes.number,
+		onCancelSelect: PropTypes.func,
 		onClose: PropTypes.func,
-		onNextView: PropTypes.func,
-		onPreviousView: PropTypes.func,
+		onSelectUser: PropTypes.func,
 		onSendVideo: PropTypes.func,
 		onSetDestination: PropTypes.func,
-		onTransition: PropTypes.func,
+		onShowWelcome: PropTypes.func,
 		positions: PropTypes.array,
 		profileName: PropTypes.string,
 		proposedDestination: propTypeLatLonList,
@@ -60,13 +60,9 @@ const WelcomePopupBase = kind({
 			forward('onClose')
 		),
 		handleTransition: handle(
-			(ev, {index, selected, updateUser}) => {
-				if (index === 1) {
-					updateUser({selected});
-				}
-				return true;
-			},
-			forward('onTransition')
+			forProp('index', 1),
+			returnsTrue((ev, {selected, updateUser}) => updateUser({selected})),
+			forward('onShowWelcome')
 		)
 	},
 
@@ -84,8 +80,8 @@ const WelcomePopupBase = kind({
 		handleClose,
 		handleTransition,
 		index,
-		onNextView,
-		onPreviousView,
+		onCancelSelect,
+		onSelectUser,
 		onSendVideo,
 		onSetDestination,
 		positions,
@@ -95,7 +91,7 @@ const WelcomePopupBase = kind({
 		...rest
 	}) => {
 		delete rest.onClose;
-		delete rest.onTransition;
+		delete rest.onShowWelcome;
 		delete rest.updateUser;
 		delete rest.setDestination;
 		delete rest.userId;
@@ -111,7 +107,7 @@ const WelcomePopupBase = kind({
 									component={Group}
 									childComponent={Cell}
 									itemProps={{component: LabeledIconButton, shrink: true, icon: 'user'}}
-									onSelect={onNextView}
+									onSelect={onSelectUser}
 									select="radio"
 									selectedProp="selected"
 									wrap
@@ -127,7 +123,7 @@ const WelcomePopupBase = kind({
 						<Column>
 							<Cell size="20%">
 								<Row align="center">
-									<Cell component={Button} icon="user" onClick={onPreviousView} shrink />
+									<Cell component={Button} icon="user" onClick={onCancelSelect} shrink />
 									<Cell component={Item} spotlightDisabled>
 										Hi {profileName}!
 									</Cell>
@@ -195,15 +191,15 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 			this.setState(({positions}) => ({destination: [positions[index]]}));
 		}
 
-		onNextView = ({selected}) => {
-			this.setState((state) => ({index: ++state.index, selected}));
+		handleSelectUser = ({selected}) => {
+			this.setState({index: 1, selected});
 		}
 
-		onPreviousView = () => {
+		handleCancelSelect = () => {
 			this.setState({index: 0});
 		}
 
-		onTransition = () => {
+		handleShowWelcome = () => {
 			this.setState(({index}) => index === 1 ? {index: ++index} : null);
 		}
 
@@ -213,10 +209,10 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 				<Wrapped
 					{...this.props}
 					index={index}
-					onNextView={this.onNextView}
-					onPreviousView={this.onPreviousView}
+					onSelectUser={this.handleSelectUser}
+					onCancelSelect={this.handleCancelSelect}
 					onSetDestination={this.handleSetDestination}
-					onTransition={this.onTransition}
+					onShowWelcome={this.handleShowWelcome}
 					positions={positions}
 					proposedDestination={destination}
 					selected={this.state.selected}
