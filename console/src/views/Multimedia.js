@@ -1,6 +1,7 @@
 import Button from '@enact/agate/Button';
 import {Cell, Row} from '@enact/ui/Layout';
 import Divider from '@enact/agate/Divider';
+import {Draggable, ResponsiveBox} from '@enact/agate/DropManager';
 import GridListImageItem from '@enact/ui/GridListImageItem';
 import Job from '@enact/core/util/Job';
 import kind from '@enact/core/kind';
@@ -9,7 +10,8 @@ import Popup from '@enact/agate/Popup';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ri from '@enact/ui/resolution';
-import {VirtualGridList} from '@enact/ui/VirtualList';
+import ThumbnailItem from '@enact/agate/ThumbnailItem';
+import {VirtualGridList, VirtualList} from '@enact/ui/VirtualList';
 
 import appConfig from '../../config';
 import Communicator from '../../../components/Communicator';
@@ -20,6 +22,8 @@ import youtubeVideos from '../data/youtubeapi.json';
 import css from './Multimedia.less';
 
 const screenIds = [0, 1, 2];
+
+const DraggableDiv = Draggable('div');
 
 const IFrame = kind({
 	name: 'IFrame',
@@ -32,6 +36,79 @@ const IFrame = kind({
 		);
 	}
 });
+
+const ResponsiveVirtualList = ResponsiveBox(kind({
+	name: 'ResponsiveVirtualList',
+	propTypes: {
+		direction: PropTypes.string,
+		onSelectVideo: PropTypes.func
+	},
+	defaultProps: {
+		direction: 'vertical'
+	},
+	computed: {
+		itemRenderer: ({containerShape, onSelectVideo, videos}) => ({index, ...rest}) => {
+			const {size: {relative}} = containerShape;
+			switch (relative) {
+				case 'large': {
+					return (
+						<GridListImageItem
+							{...rest}
+							caption={videos[index].snippet.title}
+							className={css.gridListItem}
+							source={videos[index].snippet.thumbnails.medium.url}
+							onClick={onSelectVideo(videos[index])}
+						/>
+					);
+				}
+				default: {
+					return (
+						<ThumbnailItem
+							{...rest}
+							css={css}
+							onClick={onSelectVideo(videos[index])}
+							src={videos[index].snippet.thumbnails.medium.url}
+						>
+							{videos[index].snippet.title}
+						</ThumbnailItem>
+					);
+				}
+			}
+		}
+	},
+	render: ({containerShape, direction, style = {}, ...rest}) => {
+		const {size: {relative}} = containerShape;
+		let List, spacing, itemSize;
+
+		switch (relative) {
+			case 'large': {
+				List = VirtualGridList;
+				spacing = ri.scale(66);
+				itemSize = {
+					minWidth: ri.scale(320),
+					minHeight: ri.scale(180)
+				};
+				break;
+			}
+			default: {
+				List = VirtualList;
+				spacing = ri.scale(15);
+				itemSize = ri.scale(90);
+			}
+		}
+
+		delete rest.onSelectVideo;
+		return (
+			<List
+				{...rest}
+				direction={direction}
+				style={style}
+				spacing={spacing}
+				itemSize={itemSize}
+			/>
+		);
+	}
+}));
 
 const MultimediaBase = kind({
 	name: 'Multimedia',
@@ -48,17 +125,6 @@ const MultimediaBase = kind({
 			});
 			screens.push(<Button key={screens.length} onClick={onBroadcastVideo}>All Screens</Button>);
 			return screens;
-		},
-		renderItem: ({onSelectVideo, videos}) => ({index, ...rest}) => {
-			return (
-				<GridListImageItem
-					{...rest}
-					caption={videos[index].snippet.title}
-					className={css.gridListItem}
-					source={videos[index].snippet.thumbnails.medium.url}
-					onClick={onSelectVideo(videos[index])}
-				/>
-			);
 		}
 	},
 
@@ -67,24 +133,23 @@ const MultimediaBase = kind({
 		arrangeable,
 		arrangement,
 		buttons,
-		renderItem,
 		showAd,
 		showPopup,
 		onArrange,
-		onTogglePopup,
+		onClosePopup,
+		onSelectVideo,
 		url,
 		videos,
 		...rest
 	}) => {
 		delete rest.onBroadcastVideo;
-		delete rest.onSelectVideo;
 		delete rest.onSendVideo;
 		return (
 			<React.Fragment>
 				<Popup
 					open={showPopup}
 					closeButton
-					onClose={onTogglePopup}
+					onClose={onClosePopup}
 				>
 					<title>
 						Select Screen
@@ -100,17 +165,14 @@ const MultimediaBase = kind({
 						onArrange={onArrange}
 					>
 						<left>
-							<Divider className={css.divider}>Recommended Videos</Divider>
-							<VirtualGridList
-								dataSize={videos.length}
-								itemRenderer={renderItem}
-								itemSize={{
-									minWidth: ri.scale(320),
-									minHeight: ri.scale(180)
-								}}
-								className={css.thumbnails}
-								spacing={ri.scale(66)}
-							/>
+							<DraggableDiv containerShape={{size: {relative: 'large'}}}>
+								<Divider className={css.divider}>Recommended Videos</Divider>
+								<ResponsiveVirtualList
+									dataSize={videos.length}
+									onSelectVideo={onSelectVideo}
+									videos={videos}
+								/>
+							</DraggableDiv>
 						</left>
 						<Row className={css.bodyRow}>
 							<IFrame allow="autoplay" className={css.iframe} src={url} />
@@ -153,8 +215,16 @@ class Multimedia extends React.Component {
 		});
 	};
 
+	onClosePopup = () => {
+		this.setState({showPopup: false});
+	};
+
 	onHideAdSpace = () => {
 		this.setState({adContent: '', showAd: false});
+	};
+
+	onOpenPopup = () => {
+		this.setState({showPopup: true});
 	};
 
 	onPlayVideo = ({url}) => {
@@ -163,22 +233,18 @@ class Multimedia extends React.Component {
 
 	onSelectVideo = (video) => () => {
 		this.selectedVideo = video;
-		this.onTogglePopup();
+		this.onOpenPopup();
 	};
 
 	onSendVideo = (screenId) => () => {
 		this.props.onSendVideo({screenId, video: this.selectedVideo});
 		this.selectedVideo = {};
-		this.onTogglePopup();
+		this.onClosePopup();
 	};
 
 	onShowAdSpace = ({adContent, duration}) => {
 		this.setState({adContent, showAd: true});
 		this.adTimer.startAfter(duration);
-	};
-
-	onTogglePopup = () => {
-		this.setState(({showPopup}) => ({showPopup: !showPopup}));
 	};
 
 	render () {
@@ -188,9 +254,9 @@ class Multimedia extends React.Component {
 			...this.props,
 			adContent,
 			onBroadcastVideo: this.onBroadcastVideo,
+			onClosePopup: this.onClosePopup,
 			onSelectVideo: this.onSelectVideo,
 			onSendVideo: this.onSendVideo,
-			onTogglePopup: this.onTogglePopup,
 			showAd,
 			showPopup,
 			url,
@@ -211,3 +277,4 @@ class Multimedia extends React.Component {
 }
 
 export default Multimedia;
+export {Multimedia, ResponsiveVirtualList};

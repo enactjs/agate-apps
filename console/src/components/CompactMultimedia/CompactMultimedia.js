@@ -2,11 +2,9 @@ import Button from '@enact/agate/Button';
 import kind from '@enact/core/kind';
 import Popup from '@enact/agate/Popup';
 import React from 'react';
-import ri from '@enact/ui/resolution';
-import ThumbnailItem from '@enact/agate/ThumbnailItem';
-import VirtualList from '@enact/ui/VirtualList';
 
-import css from './CompactMultimedia.less';
+import CustomLayout from '../CustomLayout';
+import {ResponsiveVirtualList} from '../../views/Multimedia';
 
 import youtubeVideos from '../../data/youtubeapi.json';
 
@@ -16,35 +14,24 @@ const CompactMultimediaBase = kind({
 	name: 'CompactMultimedia',
 
 	computed: {
-		buttons: ({onSendVideo}) => {
-			return screenIds.map((s, index) => {
+		buttons: ({onBroadcastVideo, onSendVideo}) => {
+			const screens = screenIds.map((s, index) => {
 				return (<Button key={index} onClick={onSendVideo(s)}>Screen {s}</Button>);
 			});
-		},
-		renderItem: ({onSelectVideo, videos}) => ({index, ...rest}) => {
-			return (
-				<ThumbnailItem
-					css={css}
-					onClick={onSelectVideo(videos[index])}
-					src={videos[index].snippet.thumbnails.medium.url}
-					{...rest}
-				>
-					{videos[index].snippet.title}
-				</ThumbnailItem>
-			);
+			screens.push(<Button key={screens.length} onClick={onBroadcastVideo}>All Screens</Button>);
+			return screens;
 		}
 	},
 
-	render: ({buttons, renderItem, showPopup, onTogglePopup, videos, ...rest}) => {
-		delete rest.onSelectVideo;
+	render: ({buttons, showPopup, onClosePopup, onSelectVideo, videos, ...rest}) => {
+		delete rest.onBroadcastVideo;
 		delete rest.onSendVideo;
-		delete rest.selectedVideo;
 		return (
 			<React.Fragment>
 				<Popup
 					open={showPopup}
 					closeButton
-					onClose={onTogglePopup}
+					onClose={onClosePopup}
 				>
 					<title>
 						Select Screen
@@ -53,13 +40,13 @@ const CompactMultimediaBase = kind({
 						{buttons}
 					</buttons>
 				</Popup>
-				<VirtualList
-					{...rest}
-					dataSize={videos.length}
-					itemRenderer={renderItem}
-					itemSize={ri.scale(90)}
-					spacing={ri.scale(15)}
-				/>
+				<CustomLayout>
+					<ResponsiveVirtualList
+						dataSize={videos.length}
+						onSelectVideo={onSelectVideo}
+						videos={videos}
+					/>
+				</CustomLayout>
 			</React.Fragment>
 		);
 	}
@@ -76,28 +63,40 @@ class CompactMultimedia extends React.Component {
 		this.selectedVideo = {};
 	}
 
+	onBroadcastVideo = () => {
+		const video = this.selectedVideo; // onSendVideo will reset this.selectedVideo
+		screenIds.forEach((s) => {
+			this.selectedVideo = video;
+			this.onSendVideo(s)();
+		});
+	};
+
+	onClosePopup = () => {
+		this.setState({showPopup: false});
+	};
+
+	onOpenPopup = () => {
+		this.setState({showPopup: true});
+	};
+
 	onSelectVideo = (video) => () => {
 		this.selectedVideo = video;
-		this.onTogglePopup();
+		this.onOpenPopup();
 	};
 
 	onSendVideo = (screenId) => () => {
 		this.props.onSendVideo({screenId, video: this.selectedVideo});
 		this.selectedVideo = {};
-		this.onTogglePopup();
-	};
-
-	onTogglePopup = () => {
-		this.setState(({showPopup}) => ({showPopup: !showPopup}));
+		this.onClosePopup();
 	};
 
 	render () {
 		const props = {
 			...this.props,
+			onBroadcastVideo: this.onBroadcastVideo,
+			onClosePopup: this.onClosePopup,
 			onSelectVideo: this.onSelectVideo,
 			onSendVideo: this.onSendVideo,
-			onTogglePopup: this.onTogglePopup,
-			selectedVideo: this.selectedVideo,
 			showPopup: this.state.showPopup,
 			videos: this.state.videos
 		};
