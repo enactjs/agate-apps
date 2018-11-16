@@ -164,6 +164,10 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'WelcomePopupState';
 
+		static propTypes = {
+			open: PropTypes.bool
+		}
+
 		constructor (props) {
 			super(props);
 			this.state = {
@@ -178,6 +182,12 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 				destination: null,
 				selected: null
 			};
+		}
+
+		componentWillReceiveProps (nextProps) {
+			if (this.props.open && !nextProps.open) {
+				this.setState({index: 0});
+			}
 		}
 
 		handleSetDestination = (ev) => {
