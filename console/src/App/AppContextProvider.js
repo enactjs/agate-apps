@@ -183,7 +183,7 @@ class AppContextProvider extends Component {
 	resetAll = () => {
 		const userIds = this.getAllSavedUserIds();
 		userIds.forEach(this.deleteUserSettings);
-
+		this.resetUserSettings();
 		this.repopulateUsersForDemo();
 	}
 

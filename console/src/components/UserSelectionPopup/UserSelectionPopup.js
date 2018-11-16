@@ -42,7 +42,14 @@ const UserSelectionPopupBase = kind({
 		}
 	},
 
-	render: ({userId, usersList, updateUser, resetUserSettings, resetAll, ...rest}) => (
+	handlers: {
+		onResetAll: (ev, {onResetAll, resetAll}) => {
+			onResetAll();
+			resetAll();
+		}
+	},
+
+	render: ({userId, usersList, updateUser, resetUserSettings, onResetAll, ...rest}) => (
 		<Popup
 			// onClose={onTogglePopup}
 			// open={showPopup}
@@ -66,7 +73,7 @@ const UserSelectionPopupBase = kind({
 
 			<buttons>
 				<Button onTap={resetUserSettings}>Reset Current User</Button>
-				<Button onTap={resetAll}>Start Demo</Button>
+				<Button onTap={onResetAll}>Start Demo</Button>
 			</buttons>
 		</Popup>
 	)
