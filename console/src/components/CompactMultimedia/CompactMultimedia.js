@@ -11,7 +11,9 @@ const screenIds = [1, 2];
 const CompactMultimediaBase = kind({
 	name: 'CompactMultimedia',
 
-	render: ({buttons, showPopup, onClosePopup, onSelectVideo, onSendVideo, videos, ...rest}) => {
+	render: ({showPopup, onClosePopup, onSelectVideo, onSendVideo, videos, ...rest}) => {
+		delete rest.adContent;
+		delete rest.showAd;
 		return (
 			<React.Fragment>
 				<ScreenSelectionPopup
@@ -23,6 +25,7 @@ const CompactMultimediaBase = kind({
 				/>
 				<CustomLayout>
 					<ResponsiveVirtualList
+						{...rest}
 						dataSize={videos.length}
 						onSelectVideo={onSelectVideo}
 						videos={videos}

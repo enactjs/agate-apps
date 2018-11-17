@@ -18,6 +18,7 @@ const UserSelectionPopupBase = kind({
 
 	propTypes: {
 		resetAll: PropTypes.func.isRequired,
+		resetPosition: PropTypes.func.isRequired,
 		resetUserSettings: PropTypes.func.isRequired,
 		updateUser: PropTypes.func.isRequired,
 		userId: PropTypes.number
@@ -51,34 +52,38 @@ const UserSelectionPopupBase = kind({
 		}
 	},
 
-	render: ({userId, usersList, updateUser, resetUserSettings, onResetAll, ...rest}) => (
-		<Popup
-			// onClose={onTogglePopup}
-			// open={showPopup}
-			closeButton
-			{...rest}
-		>
-			<title>User Selection</title>
-
-			<Group
-				childComponent={SwitchItem}
-				// itemProps={{
-				// 	inline: boolean('ItemProps-Inline', Group)
-				// }}
-				select="radio"
-				selectedProp="selected"
-				defaultSelected={userId - 1}
-				onSelect={updateUser}
+	render: ({userId, usersList, updateUser, resetUserSettings, onResetAll, ...rest}) => {
+		delete rest.resetAll;
+		delete rest.resetPosition;
+		return (
+			<Popup
+				// onClose={onTogglePopup}
+				// open={showPopup}
+				closeButton
+				{...rest}
 			>
-				{usersList}
-			</Group>
+				<title>User Selection</title>
 
-			<buttons>
-				<Button onTap={resetUserSettings}>Reset Current User</Button>
-				<Button onTap={onResetAll}>Start Demo</Button>
-			</buttons>
-		</Popup>
-	)
+				<Group
+					childComponent={SwitchItem}
+					// itemProps={{
+					// 	inline: boolean('ItemProps-Inline', Group)
+					// }}
+					select="radio"
+					selectedProp="selected"
+					defaultSelected={userId - 1}
+					onSelect={updateUser}
+				>
+					{usersList}
+				</Group>
+
+				<buttons>
+					<Button onTap={resetUserSettings}>Reset Current User</Button>
+					<Button onTap={onResetAll}>Start Demo</Button>
+				</buttons>
+			</Popup>
+		);
+	}
 });
 
 const UserSelectionPopup = AppContextConnect(({userId, resetUserSettings, resetAll, getUserNames, updateAppState}) => ({

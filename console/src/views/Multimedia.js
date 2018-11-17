@@ -123,7 +123,6 @@ const MultimediaBase = kind({
 		adContent,
 		arrangeable,
 		arrangement,
-		buttons,
 		showAd,
 		showPopup,
 		onArrange,
@@ -259,7 +258,7 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 				</React.Fragment>
 			);
 		}
-	}
+	};
 });
 
 const Multimedia = MultimediaDecorator(MultimediaBase);
