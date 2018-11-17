@@ -217,7 +217,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 				showDateTimePopup: false,
 				showUserSelectionPopup: false,
 				showAppList: false,
-				showWelcomePopup: true
+				showWelcomePopup: false
 			};
 		}
 
