@@ -1,6 +1,6 @@
-import kind from '@enact/core/kind';
-import GridListImageItem from '@enact/agate/GridListImageItem';
 import Button from '@enact/agate/Button';
+import GridListImageItem from '@enact/agate/GridListImageItem';
+import kind from '@enact/core/kind';
 import Layout from '@enact/ui/Layout';
 import React from 'react';
 
