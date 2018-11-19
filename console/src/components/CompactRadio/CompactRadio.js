@@ -43,9 +43,9 @@ const CompactRadioBase = kind({
 		className: 'compactRadio'
 	},
 
-	render: ({...rest}) => {
+	render: (props) => {
 		return (
-			<Layout {...rest} align="center center">
+			<Layout {...props} align="center center">
 				<GridListImageItem
 					align="center center"
 					caption="The Title"
