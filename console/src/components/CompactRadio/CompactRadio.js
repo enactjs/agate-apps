@@ -1,5 +1,6 @@
 import kind from '@enact/core/kind';
 import GridListImageItem from '@enact/agate/GridListImageItem';
+import Button from '@enact/agate/Button';
 import Layout from '@enact/ui/Layout';
 import React from 'react';
 
@@ -10,6 +11,29 @@ const placeholder =
 	'9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHN0cm9rZT0iIzU1NSIgZmlsbD0iI2FhYSIg' +
 	'ZmlsbC1vcGFjaXR5PSIwLjIiIHN0cm9rZS1vcGFjaXR5PSIwLjgiIHN0cm9rZS13aWR0aD0iNiIgLz48L3N2Zz' +
 	'4NCg==';
+
+const PlaybackControls = kind({
+	name: 'PlaybackControls',
+
+	styles: {
+		css,
+		className: 'playbackControls'
+	},
+
+	render: (props) => {
+		return (
+			<Layout
+				{...props}
+				orientation="horizontal"
+				align="center center"
+			>
+				<Button icon="skipbackward" small />
+				<Button icon="play" />
+				<Button icon="skipforward" small />
+			</Layout>
+		);
+	}
+});
 
 const CompactRadioBase = kind({
 	name: 'CompactRadio',
@@ -23,9 +47,12 @@ const CompactRadioBase = kind({
 		return (
 			<Layout {...rest} align="center center">
 				<GridListImageItem
-					caption="The Song"
+					align="center center"
+					caption="The Title"
 					className={css.album}
 					placeholder={placeholder}
+					selectionOverlay={PlaybackControls}
+					selectionOverlayShowing
 					src={placeholder}
 					subCaption="The Album by The Artist"
 				/>
