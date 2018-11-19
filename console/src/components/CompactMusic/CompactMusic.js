@@ -4,7 +4,7 @@ import Button from '@enact/agate/Button';
 import Layout from '@enact/ui/Layout';
 import React from 'react';
 
-import css from './CompactRadio.less';
+import css from './CompactMusic.less';
 
 const placeholder =
 	'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC' +
@@ -35,12 +35,12 @@ const PlaybackControls = kind({
 	}
 });
 
-const CompactRadioBase = kind({
-	name: 'CompactRadio',
+const CompactMusicBase = kind({
+	name: 'CompactMusic',
 
 	styles: {
 		css,
-		className: 'compactRadio'
+		className: 'compactMusic'
 	},
 
 	render: (props) => {
@@ -61,8 +61,8 @@ const CompactRadioBase = kind({
 	}
 });
 
-export default CompactRadioBase;
+export default CompactMusicBase;
 export {
-	CompactRadioBase as CompactRadio,
-	CompactRadioBase
+	CompactMusicBase as CompactMusic,
+	CompactMusicBase
 };

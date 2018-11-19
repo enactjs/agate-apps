@@ -10,7 +10,7 @@ import AppContextConnect from '../App/AppContextConnect';
 // import CompactHvac from '../components/CompactHVAC';
 import CompactMap from '../components/CompactMap';
 import CompactMultimedia from '../components/CompactMultimedia';
-import CompactRadio from '../components/CompactRadio';
+import CompactMusic from '../components/CompactMusic';
 import CompactWeather from '../components/CompactWeather';
 
 import css from './Home.less';
@@ -137,7 +137,7 @@ const Home = kind({
 		<Panel {...rest}>
 			<HomeLayout arrangeable={arrangeable}>
 				<small1><CompactWeather /></small1>
-				<small2><CompactRadio /></small2>
+				<small2><CompactMusic /></small2>
 				<medium><CompactMultimedia onSendVideo={onSendVideo} /></medium>
 				<large><CompactMap onSelect={onSelect} /></large>
 			</HomeLayout>
