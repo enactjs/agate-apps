@@ -47,6 +47,9 @@ const defaultUserSettings = {
 		rightHeat: false,
 		rightTemp: 0
 	},
+	components: {
+		welcome: {}
+	},
 	colorAccent: '#cccccc',
 	colorHighlight: '#66aabb',
 	fontSize: 0,

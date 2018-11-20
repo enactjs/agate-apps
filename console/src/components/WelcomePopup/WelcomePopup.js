@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import AppContextConnect from '../../App/AppContextConnect';
+import CompactHeater from '../CompactHeater';
 import CompactMultimedia from '../CompactMultimedia';
 import CompactWeather from '../CompactWeather';
 import DestinationList from '../DestinationList';
@@ -21,10 +22,28 @@ import {propTypeLatLonList} from '../../data/proptypes';
 
 import css from './WelcomePopup.less';
 
+const getCompactComponent = ({components, key, onSendVideo}) => {
+	let Component;
+
+	switch (components[key]) {
+		case 'multimedia':
+			Component = (<CompactMultimedia onSendVideo={onSendVideo} />);
+			break;
+		case 'heater':
+			Component = (<CompactHeater />);
+			break;
+		default:
+			Component = (<CompactWeather />);
+	}
+
+	return (<Cell>{Component}</Cell>);
+};
+
 const WelcomePopupBase = kind({
 	name: 'WelcomePopup',
 
 	propTypes: {
+		components: PropTypes.object,
 		index: PropTypes.number,
 		onCancelSelect: PropTypes.func,
 		onClose: PropTypes.func,
@@ -73,7 +92,9 @@ const WelcomePopupBase = kind({
 				users.push(usersList[user]);
 			}
 			return users;
-		}
+		},
+		small1Component: (props) => getCompactComponent({...props, key: 'small1'}),
+		small2Component: (props) => getCompactComponent({...props, key: 'small2'})
 	},
 
 	render: ({
@@ -82,15 +103,18 @@ const WelcomePopupBase = kind({
 		index,
 		onCancelSelect,
 		onSelectUser,
-		onSendVideo,
 		onSetDestination,
 		positions,
 		profileName,
 		proposedDestination,
+		small1Component: Small1Component,
+		small2Component: Small2Component,
 		usersList,
 		...rest
 	}) => {
+		delete rest.components;
 		delete rest.onClose;
+		delete rest.onSendVideo;
 		delete rest.onShowWelcome;
 		delete rest.updateUser;
 		delete rest.setDestination;
@@ -138,12 +162,8 @@ const WelcomePopupBase = kind({
 									<Cell component={MapCore} proposedDestination={proposedDestination} size="40%" />
 									<Cell size="35%">
 										<Column>
-											<Cell shrink>
-												<CompactWeather />
-											</Cell>
-											<Cell>
-												<CompactMultimedia onSendVideo={onSendVideo} />
-											</Cell>
+											{Small1Component}
+											{Small2Component}
 										</Column>
 									</Cell>
 								</Row>
@@ -223,7 +243,7 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 });
 
 const WelcomePopup = AppContextConnect(({getUserNames, updateAppState, userId, userSettings}) => ({
-	usersList: getUserNames(),
+	components: (userSettings.components && {...userSettings.components.welcome}),
 	profileName: userSettings.name,
 	setDestination: ({destination}) => {
 		updateAppState((state) => {
@@ -235,7 +255,8 @@ const WelcomePopup = AppContextConnect(({getUserNames, updateAppState, userId, u
 			state.userId = selected + 1;
 		});
 	},
-	userId
+	userId,
+	usersList: getUserNames()
 }))(WelcomePopupState(WelcomePopupBase));
 
 export default WelcomePopup;

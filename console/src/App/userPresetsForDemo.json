@@ -20,6 +20,12 @@
 		},
 		"colorAccent": "#75d1f0",
 		"colorHighlight": "#259aa7",
+		"components": {
+			"welcome": {
+				"small1": "heater",
+				"small2": "multimedia"
+			}
+		},
 		"fontSize": 0,
 		"name": "Laura & Steve",
 		"skin": "carbon"
@@ -68,6 +74,12 @@
 		},
 		"colorAccent": "#cccccc",
 		"colorHighlight": "#566af0",
+		"components": {
+			"welcome": {
+				"small1": "weather",
+				"small2": "multimedia"
+			}
+		},
 		"fontSize": 0,
 		"name": "Thomas",
 		"skin": "titanium"
@@ -90,6 +102,12 @@
 			"recirculate": false,
 			"rightHeat": false,
 			"rightTemp": 0
+		},
+		"components": {
+			"welcome": {
+				"small1": "weather",
+				"small2": "multimedia"
+			}
 		},
 		"colorAccent": "#0359f0",
 		"colorHighlight": "#f08c21",
