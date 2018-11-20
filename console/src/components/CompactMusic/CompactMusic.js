@@ -43,11 +43,10 @@ const CompactMusicBase = kind({
 		className: 'compactMusic'
 	},
 
-	render: (props) => {
+	render: ({...rest}) => {
 		return (
-			<Layout {...props} align="center center">
+			<Layout {...rest} orientation="vertical">
 				<GridListImageItem
-					align="center center"
 					caption="The Title"
 					className={css.album}
 					placeholder={placeholder}

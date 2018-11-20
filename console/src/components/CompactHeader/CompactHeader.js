@@ -11,6 +11,7 @@ const CompactHeader = kind({
 
 	propTypes: {
 		children: PropTypes.node,
+		isFor: PropTypes.string,
 		noExpandButton: PropTypes.bool,
 		onExpand: PropTypes.func
 	},
@@ -26,19 +27,20 @@ const CompactHeader = kind({
 	},
 
 	handlers: {
-		onTabChange: (ev, {onExpand}) => {
-			if ((ev.keyCode === 13 || ev.type === 'click') && ev.currentTarget.dataset.tabindex) {
-				onExpand({index: parseInt(ev.currentTarget.dataset.tabindex)});
+		onTabChange: (ev, {isFor, onExpand}) => {
+			const tabIndex = getPanelIndexOf(isFor);
+			if ((ev.keyCode === 13 || ev.type === 'click') && tabIndex) {
+				onExpand({index: parseInt(tabIndex)});
 			}
 		}
 	},
 
-	render: ({children, className, onExpand, size = 180, onTabChange, style, noExpandButton, ...rest}) => (
-		<div size={size} className={className} style={style} {...rest}>
-			{children}
+	render: ({children, className, onExpand, onTabChange, style, noExpandButton, ...rest}) => (
+		<div className={className} style={style} {...rest}>
+			<span className={css.title}>{children}</span>
 			{
 				!noExpandButton &&
-				<Button alt="Fullscreen" icon="fullscreen" data-tabindex={getPanelIndexOf('weather')} onSelect={onExpand} onKeyUp={onTabChange} onClick={onTabChange} />
+				<Button className={css.btn} small alt="Fullscreen" icon="fullscreen" onKeyUp={onTabChange} onClick={onTabChange} />
 			}
 		</div>
 	)

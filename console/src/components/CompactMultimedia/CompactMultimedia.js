@@ -2,7 +2,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 
 import {ScreenSelectionPopup} from '../../../../components/ScreenSelectionPopup';
-
+import CompactHeader from '../CompactHeader';
 import CustomLayout from '../CustomLayout';
 import {MultimediaDecorator, ResponsiveVirtualList} from '../../views/Multimedia';
 
@@ -11,11 +11,12 @@ const screenIds = [1, 2];
 const CompactMultimediaBase = kind({
 	name: 'CompactMultimedia',
 
-	render: ({showPopup, onClosePopup, onSelectVideo, onSendVideo, videos, ...rest}) => {
+	render: ({showPopup, onClosePopup, onSelectVideo, onSendVideo, videos, noHeader, onExpand, ...rest}) => {
 		delete rest.adContent;
 		delete rest.showAd;
 		return (
 			<React.Fragment>
+				{!noHeader && <CompactHeader isFor="multimedia" onExpand={onExpand}>MULTIMEDIA</CompactHeader>}
 				<ScreenSelectionPopup
 					showAllScreens
 					onClose={onClosePopup}

@@ -31,7 +31,7 @@ const CompactWeatherBase = kind({
 	render: ({cityName, high, description, onExpand, noHeader, ...rest}) => {
 		return (
 			<div {...rest}>
-				{!noHeader && <CompactHeader onExpand={onExpand}>WEATHER</CompactHeader>}
+				{!noHeader && <CompactHeader isFor="weather" onExpand={onExpand}>WEATHER</CompactHeader>}
 				<Row align="center">
 					<Cell shrink>{cityName}</Cell>
 				</Row>
