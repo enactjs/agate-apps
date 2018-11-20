@@ -125,7 +125,7 @@ const AppBase = kind({
 					</afterTabs>
 					<Home
 						arrangeable={layoutArrangeable}
-						onSelect={onSelect}
+						onCompactExpand={onSelect}
 						onSendVideo={sendVideo}
 					/>
 					<Phone arrangeable={layoutArrangeable} />

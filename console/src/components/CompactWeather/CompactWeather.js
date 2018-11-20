@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import kind from '@enact/core/kind';
 import {Row, Cell} from '@enact/ui/Layout';
 
+import CompactHeader from '../CompactHeader';
 import WeatherItem from '../WeatherItem';
 import AppStateConnect from '../../App/AppContextConnect';
 
@@ -14,7 +15,8 @@ const CompactWeatherBase = kind({
 	propTypes: {
 		cityName: PropTypes.string,
 		description: PropTypes.string,
-		high: PropTypes.number
+		high: PropTypes.number,
+		noHeader: PropTypes.bool
 	},
 
 	styles: {
@@ -26,10 +28,11 @@ const CompactWeatherBase = kind({
 		high: ({high}) => parseInt(high)
 	},
 
-	render: ({cityName, high, description, ...rest}) => {
+	render: ({cityName, high, description, onExpand, noHeader, ...rest}) => {
 		return (
 			<div {...rest}>
-				<Row align=" center">
+				{!noHeader && <CompactHeader onExpand={onExpand}>WEATHER</CompactHeader>}
+				<Row align="center">
 					<Cell shrink>{cityName}</Cell>
 				</Row>
 				<WeatherItem featured label="Current" high={high} description={description} />
