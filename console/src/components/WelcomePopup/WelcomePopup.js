@@ -1,7 +1,6 @@
 import Button from '@enact/agate/Button';
 import Divider from '@enact/agate/Divider';
 import FullscreenPopup from '@enact/agate/FullscreenPopup';
-import {Item} from '@enact/agate/Item';
 import {Panel, Panels} from '@enact/agate/Panels';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
 import {handle, forProp, forward, returnsTrue} from '@enact/core/handle';
@@ -36,7 +35,7 @@ const getCompactComponent = ({components, key, onSendVideo}) => {
 			Component = (<CompactWeather />);
 	}
 
-	return (<Cell>{Component}</Cell>);
+	return Component;
 };
 
 const WelcomePopupBase = kind({
@@ -120,6 +119,8 @@ const WelcomePopupBase = kind({
 		delete rest.setDestination;
 		delete rest.userId;
 
+		// todo: re-add DestinationList
+		// <DestinationList component={Button} onSetDestination={onSetDestination} positions={positions} title="Top Locations" />
 		return (
 			<FullscreenPopup {...rest}>
 				<Panels index={index} enteringProp="hideChildren" onTransition={handleTransition}>
@@ -144,31 +145,36 @@ const WelcomePopupBase = kind({
 					</Panel>
 					<Panel />
 					<Panel>
-						<Column>
-							<Cell size="20%">
-								<Row align="center">
-									<Cell component={Button} icon="user" onClick={onCancelSelect} shrink />
-									<Cell component={Item} spotlightDisabled>
-										Hi {profileName}!
+						<Row className={css.welcome}>
+							<Cell className={css.left} size="33%">
+								<Column>
+									<Cell shrink>
+										<Row>
+											<Cell shrink>
+												<Button icon="user" onClick={onCancelSelect} />
+											</Cell>
+											<Cell>
+												<Column align="start center">
+													<Cell shrink>Hi</Cell>
+													<Cell shrink>{profileName}!</Cell>
+												</Column>
+											</Cell>
+										</Row>
 									</Cell>
-									<Cell component={Button} icon="arrowsmallright" onClick={handleClose} shrink />
-								</Row>
+									<Cell shrink>
+										[insert time]
+									</Cell>
+									<Cell>
+										{Small1Component}
+									</Cell>
+									<Cell>
+										{Small2Component}
+									</Cell>
+									<Cell component={Button} onClick={handleClose} shrink>Continue</Cell>
+								</Column>
 							</Cell>
-							<Cell>
-								<Row className={css.bottomRow}>
-									<Cell size="25%">
-										<DestinationList component={Button} onSetDestination={onSetDestination} positions={positions} title="Top Locations" />
-									</Cell>
-									<Cell component={MapCore} proposedDestination={proposedDestination} size="40%" />
-									<Cell size="35%">
-										<Column>
-											{Small1Component}
-											{Small2Component}
-										</Column>
-									</Cell>
-								</Row>
-							</Cell>
-						</Column>
+							<Cell component={MapCore} proposedDestination={proposedDestination} />
+						</Row>
 					</Panel>
 				</Panels>
 			</FullscreenPopup>

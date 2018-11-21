@@ -1,12 +1,15 @@
 // WelcomePopup.less
 //
+@guideColor: rgba(255, 255, 255, 0.5);
 
 .welcomePopup {
-	.bottomRow {
+	.welcome {
 		height: 100%;
+		border: 1px solid @guideColor;
 
-		> * {
-			margin: 20px 5px 0;
+		.left {
+			border-right: 1px solid @guideColor;
+			margin-right: 3px;
 		}
 	}
 }
