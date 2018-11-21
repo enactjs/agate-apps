@@ -12,8 +12,8 @@ const Icon = kind({
 		className: 'icon'
 	},
 	computed: {
-		className: ({css, smallest, styler}) => {
-			return styler.append(smallest ? css.smallest : '');
+		className: ({css, size, styler}) => {
+			return styler.append(size && css[size]);
 		}
 	},
 	render: (props) => {
@@ -30,22 +30,26 @@ const IconButton = kind({
 		css: componentCss
 	},
 	computed: {
-		className: ({css, smallest, styler}) => {
-			return styler.append(smallest ? css.smallest : '');
+		className: ({css, size, styler}) => {
+			return styler.append(size && css[size]);
+		},
+		icon: ({children, css, icon, size, small}) => {
+			let value = children;
+
+			if (typeof icon === 'string') {
+				value = icon;
+			}
+
+			return <Icon size={size} small={small} className={css.icon}>{value}</Icon>;
 		}
 	},
-	render: ({children, css, icon, smallest, ...rest}) => {
+	render: ({css, small, ...rest}) => {
+		delete rest.children;
+		delete rest.size;
 		return (
 			<Button
 				css={css}
-				icon={
-					<Icon
-						small={rest.small}
-						smallest={smallest}
-					>
-						{icon}
-					</Icon>
-				}
+				small={small}
 				{...rest}
 			/>
 		);
