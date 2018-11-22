@@ -1,23 +1,27 @@
-import AgateIcon from '@enact/agate/Icon';
 import Button from '@enact/agate/Button';
+import AgateIcon from '@enact/agate/Icon';
 import kind from '@enact/core/kind';
+import PropTypes from 'prop-types';
 import React from 'react';
 
 import componentCss from './IconButton.less';
 
 const Icon = kind({
 	name: 'Icon',
+	propTypes: {
+		size: PropTypes.oneOf(['small', 'smallest'])
+	},
 	styles: {
 		css: componentCss,
 		className: 'icon'
 	},
 	computed: {
-		className: ({css, size, styler}) => {
-			return styler.append(size && css[size]);
-		}
+		className: ({size, styler}) => styler.append(size),
+		small: ({size}) => size === 'small'
 	},
 	render: (props) => {
-		delete props.smallest;
+		delete props.size;
+
 		return (
 			<AgateIcon {...props} />
 		);
@@ -26,35 +30,39 @@ const Icon = kind({
 
 const IconButton = kind({
 	name: 'IconButton',
+	propTypes: {
+		css: PropTypes.object,
+		size: PropTypes.oneOf(['small', 'smallest'])
+	},
 	styles: {
 		css: componentCss
 	},
 	computed: {
-		className: ({css, size, styler}) => {
-			return styler.append(size && css[size]);
-		},
-		icon: ({children, css, icon, size, small}) => {
+		className: ({size, styler}) => styler.append(size),
+		icon: ({children, css, icon, size}) => {
 			let value = children;
 
 			if (typeof icon === 'string') {
 				value = icon;
 			}
 
-			return <Icon size={size} small={small} className={css.icon}>{value}</Icon>;
-		}
+			return (
+				<Icon size={size} className={css.icon}>{value}</Icon>
+			);
+		},
+		small: ({size}) => size === 'small'
 	},
-	render: ({css, small, ...rest}) => {
-		delete rest.children;
-		delete rest.size;
+	render: (props) => {
+		delete props.children;
+		delete props.size;
+
 		return (
-			<Button
-				css={css}
-				small={small}
-				{...rest}
-			/>
+			<Button {...props} css={props.css} />
 		);
 	}
 });
 
 export default IconButton;
-export {IconButton};
+export {
+	IconButton
+};
