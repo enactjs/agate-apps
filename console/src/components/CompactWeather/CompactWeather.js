@@ -6,7 +6,6 @@ import {Row, Cell} from '@enact/ui/Layout';
 import CompactHeader from '../CompactHeader';
 import WeatherItem from '../WeatherItem';
 import AppStateConnect from '../../App/AppContextConnect';
-import {getPanelIndexOf} from '../../App';
 
 import css from './CompactWeather.less';
 
