@@ -1,15 +1,14 @@
 import Button from '@enact/agate/Button';
 import Divider from '@enact/agate/Divider';
 import FullscreenPopup from '@enact/agate/FullscreenPopup';
+import GridListImageItem from '@enact/agate/GridListImageItem';
 import {Item} from '@enact/agate/Item';
 import {Panel, Panels} from '@enact/agate/Panels';
 import Skinnable from '@enact/agate/Skinnable';
-import LabeledIconButton from '@enact/agate/LabeledIconButton';
 import {handle, forProp, forward, returnsTrue} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import {Column, Row, Cell} from '@enact/ui/Layout';
-import Group from '@enact/ui/Group';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -20,6 +19,9 @@ import CompactWeather from '../CompactWeather';
 import DestinationList from '../DestinationList';
 import MapCore from '../MapCore';
 import {propTypeLatLonList} from '../../data/proptypes';
+
+import steveAvatar from '../../../assets/steve.png';
+import thomasAvatar from '../../../assets/thomas.png';
 
 import css from './WelcomePopup.less';
 
@@ -40,29 +42,63 @@ const getCompactComponent = ({components, key, onSendVideo}) => {
 	return (<Cell>{Component}</Cell>);
 };
 
+const imageItemCss = {
+	gridListImageItem: css.avatar,
+	caption: css.caption,
+	image: css.image
+};
+
+const UserSelectionAvatar = kind({
+	name: 'UserSelectionAvatar',
+
+	handlers: {
+		onSelectUser: (ev, {index, onSelectUser}) => {
+			onSelectUser({selected: index});
+		}
+	},
+
+	computed: {
+		source: ({index}) => {
+			switch (index) {
+				case 0:
+					return steveAvatar;
+				case 1:
+					return thomasAvatar;
+			}
+		},
+		style: ({style, index}) => ({
+			...style,
+			'--user-index': index
+		})
+	},
+
+	render: ({children, onSelectUser, source, style}) => {
+		return (
+			<GridListImageItem
+				css={imageItemCss}
+				caption={children}
+				onClick={onSelectUser}
+				source={source}
+				style={style}
+			/>
+		);
+	}
+});
+
 const UserSelectionPanel = kind({
 	name: 'UserSelectionPanel',
 
 	render: ({onSelectUser, users}) => {
 		return (
-			<Panel>
-				<Column align="stretch center">
-					<Cell component={Divider} startSection shrink>User Selection</Cell>
-					<Cell shrink>
-						<Row
-							component={Group}
-							childComponent={Cell}
-							itemProps={{component: LabeledIconButton, shrink: true, icon: 'user'}}
-							onSelect={onSelectUser}
-							select="radio"
-							selectedProp="selected"
-							wrap
-							align="start space-evenly"
-						>
-							{users}
-						</Row>
-					</Cell>
-				</Column>
+			<Panel className={css.userSelectionPanel}>
+				<Divider slot="header" className={css.header}>Welcome</Divider>
+				<Row align="center space-evenly" className="enact-fit">
+					{users.map((user, index) => (
+						<UserSelectionAvatar index={index} onSelectUser={onSelectUser}>
+							{user}
+						</UserSelectionAvatar>
+					))}
+				</Row>
 			</Panel>
 		);
 	}
