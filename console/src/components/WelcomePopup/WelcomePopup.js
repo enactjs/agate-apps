@@ -273,6 +273,13 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 
 		render () {
 			const {destination, index, positions} = this.state;
+
+			// HACK: We need to use the yet-to-be-created theme for user selection and the "loading"
+			// placeholder panel. Until it's ready, carbon will be the proxy for it. The consequence
+			// of this in the near term is that selecting a user with the carbon skin will not look
+			// quite right on their welcome screen due to the customized background color.
+			const skin = index < 2 ? 'carbon' : this.props.skin;
+
 			return (
 				<Wrapped
 					{...this.props}
@@ -284,7 +291,7 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 					positions={positions}
 					proposedDestination={destination}
 					selected={this.state.selected}
-					skin={index < 2 ? 'carbon' : this.props.skin}
+					skin={skin}
 				/>
 			);
 		}
