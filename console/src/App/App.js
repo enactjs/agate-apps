@@ -2,7 +2,7 @@
 import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
-import {forward, handle} from '@enact/core/handle';
+import {adaptEvent, forward, handle} from '@enact/core/handle';
 import {Cell, Column} from '@enact/ui/Layout';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
@@ -223,14 +223,11 @@ const AppState = hoc((configHoc, Wrapped) => {
 		}
 
 		onSelect = handle(
-			forward('onSelect'),
-			(ev) => {
-				let {index} = ev;
-				if (isNaN(index)) {
-					index = getPanelIndexOf(index);
-				}
+			adaptEvent((ev, props) => {
+				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
 				this.setState(state => state.index === index ? null : {index});
-			}
+				return {index};
+			}, forward('onSelect'))
 		).bind(this);
 
 		onToggleUserSelectionPopup = () => {

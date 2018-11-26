@@ -32,15 +32,15 @@ const CompactWeatherBase = kind({
 	handlers: {
 		onTabChange: (ev, {onExpand}) => {
 			if (ev.keyCode === 13 || ev.type === 'click') {
-				onExpand({index: getPanelIndexOf('weather')});
+				onExpand({view: 'weather'});
 			}
 		}
 	},
 
-	render: ({cityName, high, description, onExpand, noHeader, ...rest}) => {
+	render: ({cityName, high, description, onTabChange, noHeader, ...rest}) => {
 		return (
 			<div {...rest}>
-				{!noHeader && <CompactHeader onExpand={onExpand}>weather</CompactHeader>}
+				{!noHeader && <CompactHeader onExpand={onTabChange}>weather</CompactHeader>}
 				<Row align="center">
 					<Cell shrink>{cityName}</Cell>
 				</Row>

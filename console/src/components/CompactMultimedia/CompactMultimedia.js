@@ -15,7 +15,7 @@ const CompactMultimediaBase = kind({
 	handlers: {
 		onTabChange: (ev, {onExpand}) => {
 			if (ev.keyCode === 13 || ev.type === 'click') {
-				onExpand({index: getPanelIndexOf('multimedia')});
+				onExpand({view: 'multimedia'});
 			}
 		}
 	},
