@@ -79,15 +79,6 @@ const getRoute = async (waypoints) => {
 	return await response.json();
 };
 
-const markerSvg = <svg xmlns="http://www.w3.org/2000/svg" width="46" height="64" viewBox="0 0 46 64">
-	<g fill="none" fillRule="evenodd">
-		<path fill="#8B6650" d="M23 0C10.294 0 0 10.029 0 22.4 0 42.56 23 64 23 64s23-21.44 23-41.6C46 10.029 35.7 0 23 0z" />
-		<text fill="#FFF" fontFamily="SourceSansPro-Bold, Source Sans Pro" fontSize="24" fontWeight="bold">
-			<tspan x="16.521" y="30">5</tspan>
-		</text>
-	</g>
-</svg>;
-
 const markerLayer = {
 	'id': 'symbols',
 	'type': 'symbol',
@@ -136,7 +127,7 @@ const markerLayer = {
 		}
 	},
 	'layout': {
-		'icon-image': markerSvg
+		'icon-image': 'rocket-15'
 	}
 };
 
