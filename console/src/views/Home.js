@@ -133,13 +133,13 @@ const Home = kind({
 		className: 'homePanel'
 	},
 
-	render: ({arrangeable, onCompactExpand, onSendVideo, ...rest}) => (
+	render: ({arrangeable, onCompactExpand, onSendVideo, onSelect, ...rest}) => (
 		<Panel {...rest}>
 			<HomeLayout arrangeable={arrangeable}>
 				<small1><CompactWeather onExpand={onCompactExpand} /></small1>
 				<small2><CompactMusic onExpand={onCompactExpand} /></small2>
 				<medium><CompactMultimedia onExpand={onCompactExpand} onSendVideo={onSendVideo} /></medium>
-				<large><CompactMap /></large>
+				<large><CompactMap onSelect={onSelect} /></large>
 			</HomeLayout>
 		</Panel>
 	)

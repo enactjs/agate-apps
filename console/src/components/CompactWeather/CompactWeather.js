@@ -6,6 +6,7 @@ import {Row, Cell} from '@enact/ui/Layout';
 import CompactHeader from '../CompactHeader';
 import WeatherItem from '../WeatherItem';
 import AppStateConnect from '../../App/AppContextConnect';
+import {getPanelIndexOf} from '../../App';
 
 import css from './CompactWeather.less';
 
@@ -28,10 +29,18 @@ const CompactWeatherBase = kind({
 		high: ({high}) => parseInt(high)
 	},
 
+	handlers: {
+		onTabChange: (ev, {onExpand}) => {
+			if (ev.keyCode === 13 || ev.type === 'click') {
+				onExpand({index: getPanelIndexOf('weather')});
+			}
+		}
+	},
+
 	render: ({cityName, high, description, onExpand, noHeader, ...rest}) => {
 		return (
 			<div {...rest}>
-				{!noHeader && <CompactHeader isFor="weather" onExpand={onExpand}>WEATHER</CompactHeader>}
+				{!noHeader && <CompactHeader onExpand={onExpand}>weather</CompactHeader>}
 				<Row align="center">
 					<Cell shrink>{cityName}</Cell>
 				</Row>

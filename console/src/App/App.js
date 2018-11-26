@@ -126,6 +126,7 @@ const AppBase = kind({
 					<Home
 						arrangeable={layoutArrangeable}
 						onCompactExpand={onSelect}
+						onSelect={onSelect}
 						onSendVideo={sendVideo}
 					/>
 					<Phone arrangeable={layoutArrangeable} />
@@ -224,7 +225,10 @@ const AppState = hoc((configHoc, Wrapped) => {
 		onSelect = handle(
 			forward('onSelect'),
 			(ev) => {
-				const {index} = ev;
+				let {index} = ev;
+				if (isNaN(index)) {
+					index = getPanelIndexOf(index);
+				}
 				this.setState(state => state.index === index ? null : {index});
 			}
 		).bind(this);

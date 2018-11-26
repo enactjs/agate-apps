@@ -5,18 +5,27 @@ import {ScreenSelectionPopup} from '../../../../components/ScreenSelectionPopup'
 import CompactHeader from '../CompactHeader';
 import CustomLayout from '../CustomLayout';
 import {MultimediaDecorator, ResponsiveVirtualList} from '../../views/Multimedia';
+import {getPanelIndexOf} from '../../App';
 
 const screenIds = [1, 2];
 
 const CompactMultimediaBase = kind({
 	name: 'CompactMultimedia',
 
-	render: ({showPopup, onClosePopup, onSelectVideo, onSendVideo, videos, noHeader, onExpand, ...rest}) => {
+	handlers: {
+		onTabChange: (ev, {onExpand}) => {
+			if (ev.keyCode === 13 || ev.type === 'click') {
+				onExpand({index: getPanelIndexOf('multimedia')});
+			}
+		}
+	},
+
+	render: ({showPopup, onClosePopup, onSelectVideo, onSendVideo, videos, noHeader, onTabChange, ...rest}) => {
 		delete rest.adContent;
 		delete rest.showAd;
 		return (
 			<React.Fragment>
-				{!noHeader && <CompactHeader isFor="multimedia" onExpand={onExpand}>MULTIMEDIA</CompactHeader>}
+				{!noHeader && <CompactHeader onExpand={onTabChange}>multimedia</CompactHeader>}
 				<ScreenSelectionPopup
 					showAllScreens
 					onClose={onClosePopup}
