@@ -12,20 +12,12 @@ const screenIds = [1, 2];
 const CompactMultimediaBase = kind({
 	name: 'CompactMultimedia',
 
-	handlers: {
-		onTabChange: (ev, {onExpand}) => {
-			if (ev.keyCode === 13 || ev.type === 'click') {
-				onExpand({view: 'multimedia'});
-			}
-		}
-	},
-
-	render: ({showPopup, onClosePopup, onSelectVideo, onSendVideo, videos, noHeader, onTabChange, ...rest}) => {
+	render: ({showPopup, onClosePopup, onSelectVideo, onSendVideo, videos, noHeader, onExpand, ...rest}) => {
 		delete rest.adContent;
 		delete rest.showAd;
 		return (
 			<React.Fragment>
-				{!noHeader && <CompactHeader onExpand={onTabChange}>multimedia</CompactHeader>}
+				{!noHeader && <CompactHeader onExpand={onExpand} view="multimedia">multimedia</CompactHeader>}
 				<ScreenSelectionPopup
 					showAllScreens
 					onClose={onClosePopup}

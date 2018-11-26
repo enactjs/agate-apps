@@ -1,4 +1,5 @@
 import Divider from '@enact/agate/Divider';
+import {adaptEvent, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -17,13 +18,19 @@ const CompactHeader = kind({
 		view: PropTypes.string
 	},
 
+	defaultProps: {
+		noExpandButton: false
+	},
+
 	styles: {
 		css,
 		className: 'compactHeader'
 	},
 
-	defaultProps: {
-		noExpandButton: false
+	handlers: {
+		onExpand: handle(
+			adaptEvent((ev, {view}) => ({view}), forward('onExpand'))
+		)
 	},
 
 	render: ({children, onExpand, noExpandButton, ...rest}) => (
@@ -35,7 +42,6 @@ const CompactHeader = kind({
 					size="smallest"
 					alt="Fullscreen"
 					icon="fullscreen"
-					onKeyUp={onExpand}
 					onClick={onExpand}
 				/>
 			) : null}
