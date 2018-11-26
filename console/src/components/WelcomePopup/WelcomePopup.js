@@ -42,6 +42,16 @@ const getCompactComponent = ({components, key, onSendVideo}) => {
 	return (<Cell>{Component}</Cell>);
 };
 
+const WelcomePanel = Skinnable({defaultSkin: 'carbon'}, Panel);
+
+import {fadeIn, fadeOut, reverse} from '@enact/ui/ViewManager/arrange';
+
+const Arranger = {
+	enter: reverse(fadeIn),
+	leave: reverse(fadeOut)
+};
+
+
 const imageItemCss = {
 	gridListImageItem: css.avatar,
 	caption: css.caption,
@@ -90,7 +100,7 @@ const UserSelectionPanel = kind({
 
 	render: ({onSelectUser, users}) => {
 		return (
-			<Panel className={css.userSelectionPanel}>
+			<WelcomePanel className={css.userSelectionPanel}>
 				<Divider slot="header" className={css.header}>Welcome</Divider>
 				<Row align="center space-evenly" className="enact-fit">
 					{users.map((user, index) => (
@@ -99,7 +109,7 @@ const UserSelectionPanel = kind({
 						</UserSelectionAvatar>
 					))}
 				</Row>
-			</Panel>
+			</WelcomePanel>
 		);
 	}
 });
@@ -151,6 +161,9 @@ const WelcomePopupBase = kind({
 	},
 
 	computed: {
+		className: ({index, styler}) => styler.append({
+			useWelcomeBackground: index < 2
+		}),
 		usersList: ({usersList}) => {
 			const users = [];
 			for (const user in usersList) {
@@ -187,9 +200,9 @@ const WelcomePopupBase = kind({
 
 		return (
 			<FullscreenPopup {...rest}>
-				<Panels index={index} enteringProp="hideChildren" onTransition={handleTransition}>
+				<Panels arranger={Arranger} index={index} enteringProp="hideChildren" onTransition={handleTransition}>
 					<UserSelectionPanel users={usersList} onSelectUser={onSelectUser} />
-					<Panel />
+					<WelcomePanel />
 					<Panel>
 						<Column>
 							<Cell size="20%">
@@ -274,12 +287,6 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 		render () {
 			const {destination, index, positions} = this.state;
 
-			// HACK: We need to use the yet-to-be-created theme for user selection and the "loading"
-			// placeholder panel. Until it's ready, carbon will be the proxy for it. The consequence
-			// of this in the near term is that selecting a user with the carbon skin will not look
-			// quite right on their welcome screen due to the customized background color.
-			const skin = index < 2 ? 'carbon' : this.props.skin;
-
 			return (
 				<Wrapped
 					{...this.props}
@@ -291,7 +298,6 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 					positions={positions}
 					proposedDestination={destination}
 					selected={this.state.selected}
-					skin={skin}
 				/>
 			);
 		}
@@ -307,7 +313,6 @@ const AppContextDecorator = AppContextConnect(({getUserNames, updateAppState, us
 				state.navigation.destination = destination;
 			});
 		},
-		skin: userSettings.skin,
 		updateUser: ({selected}) => {
 			updateAppState((state) => {
 				state.userId = selected + 1;
@@ -320,10 +325,7 @@ const AppContextDecorator = AppContextConnect(({getUserNames, updateAppState, us
 
 const WelcomePopup = AppContextDecorator(
 	WelcomePopupState(
-		Skinnable(
-			{defaultSkin: 'carbon'},
-			WelcomePopupBase
-		)
+		WelcomePopupBase
 	)
 );
 

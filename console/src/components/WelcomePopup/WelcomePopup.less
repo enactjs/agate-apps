@@ -2,6 +2,9 @@
 //
 
 .welcomePopup {
+	// suppress any transitioning for the popup
+	transition-property: none;
+
 	.bottomRow {
 		height: 100%;
 
@@ -10,8 +13,7 @@
 		}
 	}
 
-	// HACK: Remove once new theme is ready.
-	&:global(.carbon) {
+	&.useWelcomeBackground {
 		background: linear-gradient(to right, #0f151a 0%,#463c38 50%,#0f151a 100%);
 	}
 
