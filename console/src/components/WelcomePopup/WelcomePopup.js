@@ -3,6 +3,7 @@ import Divider from '@enact/agate/Divider';
 import FullscreenPopup from '@enact/agate/FullscreenPopup';
 import {Item} from '@enact/agate/Item';
 import {Panel, Panels} from '@enact/agate/Panels';
+import Skinnable from '@enact/agate/Skinnable';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
 import {handle, forProp, forward, returnsTrue} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
@@ -38,6 +39,34 @@ const getCompactComponent = ({components, key, onSendVideo}) => {
 
 	return (<Cell>{Component}</Cell>);
 };
+
+const UserSelectionPanel = kind({
+	name: 'UserSelectionPanel',
+
+	render: ({onSelectUser, users}) => {
+		return (
+			<Panel>
+				<Column align="stretch center">
+					<Cell component={Divider} startSection shrink>User Selection</Cell>
+					<Cell shrink>
+						<Row
+							component={Group}
+							childComponent={Cell}
+							itemProps={{component: LabeledIconButton, shrink: true, icon: 'user'}}
+							onSelect={onSelectUser}
+							select="radio"
+							selectedProp="selected"
+							wrap
+							align="start space-evenly"
+						>
+							{users}
+						</Row>
+					</Cell>
+				</Column>
+			</Panel>
+		);
+	}
+});
 
 const WelcomePopupBase = kind({
 	name: 'WelcomePopup',
@@ -123,25 +152,7 @@ const WelcomePopupBase = kind({
 		return (
 			<FullscreenPopup {...rest}>
 				<Panels index={index} enteringProp="hideChildren" onTransition={handleTransition}>
-					<Panel>
-						<Column align="stretch center">
-							<Cell component={Divider} startSection shrink>User Selection</Cell>
-							<Cell shrink>
-								<Row
-									component={Group}
-									childComponent={Cell}
-									itemProps={{component: LabeledIconButton, shrink: true, icon: 'user'}}
-									onSelect={onSelectUser}
-									select="radio"
-									selectedProp="selected"
-									wrap
-									align="start space-evenly"
-								>
-									{usersList}
-								</Row>
-							</Cell>
-						</Column>
-					</Panel>
+					<UserSelectionPanel users={usersList} onSelectUser={onSelectUser} />
 					<Panel />
 					<Panel>
 						<Column>
@@ -181,7 +192,8 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 		static displayName = 'WelcomePopupState';
 
 		static propTypes = {
-			open: PropTypes.bool
+			open: PropTypes.bool,
+			skin: PropTypes.string
 		}
 
 		constructor (props) {
@@ -236,28 +248,41 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 					positions={positions}
 					proposedDestination={destination}
 					selected={this.state.selected}
+					skin={index < 2 ? 'carbon' : this.props.skin}
 				/>
 			);
 		}
 	};
 });
 
-const WelcomePopup = AppContextConnect(({getUserNames, updateAppState, userId, userSettings}) => ({
-	components: (userSettings.components && {...userSettings.components.welcome}),
-	profileName: userSettings.name,
-	setDestination: ({destination}) => {
-		updateAppState((state) => {
-			state.navigation.destination = destination;
-		});
-	},
-	updateUser: ({selected}) => {
-		updateAppState((state) => {
-			state.userId = selected + 1;
-		});
-	},
-	userId,
-	usersList: getUserNames()
-}))(WelcomePopupState(WelcomePopupBase));
+const AppContextDecorator = AppContextConnect(({getUserNames, updateAppState, userId, userSettings}) => {
+	return {
+		components: (userSettings.components && {...userSettings.components.welcome}),
+		profileName: userSettings.name,
+		setDestination: ({destination}) => {
+			updateAppState((state) => {
+				state.navigation.destination = destination;
+			});
+		},
+		skin: userSettings.skin,
+		updateUser: ({selected}) => {
+			updateAppState((state) => {
+				state.userId = selected + 1;
+			});
+		},
+		userId,
+		usersList: getUserNames()
+	};
+});
+
+const WelcomePopup = AppContextDecorator(
+	WelcomePopupState(
+		Skinnable(
+			{defaultSkin: 'carbon'},
+			WelcomePopupBase
+		)
+	)
+);
 
 export default WelcomePopup;
 export {
