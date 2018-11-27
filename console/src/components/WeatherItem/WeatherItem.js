@@ -1,5 +1,6 @@
 import React from 'react';
 import kind from '@enact/core/kind';
+import Image from '@enact/ui/Image';
 import {Column, Cell} from '@enact/ui/Layout';
 import Divider from '@enact/agate/Divider';
 import Skinnable from '@enact/agate/Skinnable';
@@ -59,7 +60,7 @@ const WeatherItemBase = kind({
 						{label}
 					</Cell>
 				) : null}
-				<Cell component="img" className={css.icon} shrink src={src} />
+				<Cell component={Image} className={css.icon} shrink src={src} sizing="fit" />
 				<Cell className={css.item} shrink>
 					{description}
 				</Cell>
