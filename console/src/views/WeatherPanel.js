@@ -66,7 +66,7 @@ const Weather = kind({
 									status={currentWeather.status}
 									label="Now"
 									high={currentWeather.high}
-									description="sunny"
+									description={currentWeather.description}
 								/>
 							</Cell>
 							{threeHourlyWeather.map((hours) => {
