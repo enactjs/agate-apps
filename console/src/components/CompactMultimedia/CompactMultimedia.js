@@ -3,9 +3,11 @@ import GridListImageItem from '@enact/agate/GridListImageItem';
 import kind from '@enact/core/kind';
 import React from 'react';
 
+import Widget from '../Widget';
+
 import {ScreenSelectionPopup} from '../../../../components/ScreenSelectionPopup';
-import CompactHeader from '../CompactHeader';
 import {MultimediaDecorator, ResponsiveVirtualList} from '../../views/Multimedia';
+
 import css from './CompactMultimedia.less';
 
 const screenIds = [1, 2];
@@ -28,12 +30,12 @@ const CompactMultimediaBase = kind({
 		}
 	},
 
-	render: ({className, noHeader, onClosePopup, onExpand, onSelectVideo, onSendVideo, rearScreen1, showPopup, videos, ...rest}) => {
+	render: ({className, onClosePopup, onSelectVideo, onSendVideo, rearScreen1, showPopup, videos, ...rest}) => {
 		delete rest.adContent;
 		delete rest.showAd;
+
 		return (
-			<React.Fragment>
-				{!noHeader && <CompactHeader onExpand={onExpand} view="multimedia">Rear Screen</CompactHeader>}
+			<Widget {...rest} view="multimedia" header="Rear Screen">
 				<ScreenSelectionPopup
 					onClose={onClosePopup}
 					onSelect={onSendVideo}
@@ -63,7 +65,7 @@ const CompactMultimediaBase = kind({
 						videos={videos}
 					/>
 				</Column>
-			</React.Fragment>
+			</Widget>
 		);
 	}
 });

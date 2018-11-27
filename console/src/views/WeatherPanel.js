@@ -19,6 +19,7 @@ const Weather = kind({
 		currentWeather: ({weather}) => {
 			const weatherObj = {};
 			if (weather.current && weather.current.main) {
+				weatherObj.status = weather.current.weather[0].id;
 				weatherObj.high = parseInt(weather.current.main.temp);
 				weatherObj.low = parseInt(weather.current.main.temp_min);
 				weatherObj.description = weather.current.weather[0].description;
@@ -29,20 +30,19 @@ const Weather = kind({
 		},
 		threeHourlyWeather: ({weather}) => {
 			let threeHourly = [];
-			for (let index = 0; index < 3; index++) {
-				const weatherObj = {};
-				if (weather.threeHour && weather.threeHour.list) {
-					const threeHour = weather.threeHour.list[index];
+			if (weather.threeHour && weather.threeHour.list) {
+				threeHourly = weather.threeHour.list.slice(0, 3).map(threeHour => {
+					const weatherObj = {};
 
+					weatherObj.status = threeHour.weather[0].id;
 					weatherObj.high = parseInt(threeHour.main.temp_max);
 					weatherObj.low = parseInt(threeHour.main.temp_min);
 					weatherObj.description = threeHour.weather[0].description;
 					weatherObj.time = new Date(`${threeHour.dt_txt} UTC`);
 					weatherObj.time = `${weatherObj.time.getHours() % 12}:00`;
 
-					threeHourly.push(weatherObj);
-				}
-
+					return weatherObj;
+				});
 			}
 
 			return threeHourly;
@@ -53,19 +53,27 @@ const Weather = kind({
 		delete rest.weather;
 		return (
 			<Panel {...rest}>
-				<Column className="enact-fit" align="center space-evenly">
+				<Column className="enact-fit" align="center center">
 					<Cell component={Divider} shrink spacing="small">
 						{currentWeather.cityName} Weather
 					</Cell>
-					<Cell size="30%" style={{width: '100%'}}>
-						<Row className={css.row} align="center space-evenly">
+					<Cell style={{width: '100%'}}>
+						<Row className={css.row} align="stretch space-evenly">
 							<Cell>
-								<WeatherItem featured className={css.weatherItem} label="Now" high={currentWeather.high} description="sunny" />
+								<WeatherItem
+									featured
+									className={css.weatherItem}
+									status={currentWeather.status}
+									label="Now"
+									high={currentWeather.high}
+									description="sunny"
+								/>
 							</Cell>
 							{threeHourlyWeather.map((hours) => {
 								return (
 									<Cell key={hours.time}>
 										<WeatherItem
+											status={hours.status}
 											className={css.weatherItem}
 											label={hours.time}
 											high={hours.high}
@@ -74,26 +82,6 @@ const Weather = kind({
 									</Cell>
 								);
 							})}
-						</Row>
-					</Cell>
-					<Cell component={Divider} shrink spacing="small">
-						4-Day
-					</Cell>
-					{/* Did not connect these parts. This is more to show layout. We may need to switch api for daily weather. */}
-					<Cell size="30%" style={{width: '100%'}}>
-						<Row className={css.row} align="center space-evenly">
-							<Cell>
-								<WeatherItem className={css.weatherItem} label="Mon" high={70} low={59} description="sunny" />
-							</Cell>
-							<Cell>
-								<WeatherItem className={css.weatherItem} label="Tue" high={70} low={59} description="sunny" />
-							</Cell>
-							<Cell>
-								<WeatherItem className={css.weatherItem} label="Wed" high={70} low={59} description="sunny" />
-							</Cell>
-							<Cell>
-								<WeatherItem className={css.weatherItem} label="Thu" high={70} low={59} description="sunny" />
-							</Cell>
 						</Row>
 					</Cell>
 				</Column>
