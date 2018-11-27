@@ -1,14 +1,14 @@
 import Button from '@enact/agate/Button';
 import Divider from '@enact/agate/Divider';
 import FullscreenPopup from '@enact/agate/FullscreenPopup';
+import GridListImageItem from '@enact/agate/GridListImageItem';
 import {Item} from '@enact/agate/Item';
 import {Panel, Panels} from '@enact/agate/Panels';
-import LabeledIconButton from '@enact/agate/LabeledIconButton';
+import Skinnable from '@enact/agate/Skinnable';
 import {handle, forProp, forward, returnsTrue} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import {Column, Row, Cell} from '@enact/ui/Layout';
-import Group from '@enact/ui/Group';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -19,6 +19,9 @@ import CompactWeather from '../CompactWeather';
 import DestinationList from '../DestinationList';
 import MapCore from '../MapCore';
 import {propTypeLatLonList} from '../../data/proptypes';
+
+import steveAvatar from '../../../assets/steve.png';
+import thomasAvatar from '../../../assets/thomas.png';
 
 import css from './WelcomePopup.less';
 
@@ -38,6 +41,78 @@ const getCompactComponent = ({components, key, onSendVideo}) => {
 
 	return (<Cell>{Component}</Cell>);
 };
+
+const WelcomePanel = Skinnable({defaultSkin: 'carbon'}, Panel);
+
+import {fadeIn, fadeOut, reverse} from '@enact/ui/ViewManager/arrange';
+
+const Arranger = {
+	enter: reverse(fadeIn),
+	leave: reverse(fadeOut)
+};
+
+
+const imageItemCss = {
+	gridListImageItem: css.avatar,
+	caption: css.caption,
+	image: css.image
+};
+
+const UserSelectionAvatar = kind({
+	name: 'UserSelectionAvatar',
+
+	handlers: {
+		onSelectUser: (ev, {index, onSelectUser}) => {
+			onSelectUser({selected: index});
+		}
+	},
+
+	computed: {
+		source: ({index}) => {
+			switch (index) {
+				case 0:
+					return steveAvatar;
+				case 1:
+					return thomasAvatar;
+			}
+		},
+		style: ({style, index}) => ({
+			...style,
+			'--user-index': index
+		})
+	},
+
+	render: ({children, onSelectUser, source, style}) => {
+		return (
+			<GridListImageItem
+				css={imageItemCss}
+				caption={children}
+				onClick={onSelectUser}
+				source={source}
+				style={style}
+			/>
+		);
+	}
+});
+
+const UserSelectionPanel = kind({
+	name: 'UserSelectionPanel',
+
+	render: ({onSelectUser, users}) => {
+		return (
+			<WelcomePanel className={css.userSelectionPanel}>
+				<Divider slot="header" className={css.header}>Welcome</Divider>
+				<Row align="center space-evenly" className="enact-fit">
+					{users.map((user, index) => (
+						<UserSelectionAvatar index={index} onSelectUser={onSelectUser}>
+							{user}
+						</UserSelectionAvatar>
+					))}
+				</Row>
+			</WelcomePanel>
+		);
+	}
+});
 
 const WelcomePopupBase = kind({
 	name: 'WelcomePopup',
@@ -86,6 +161,9 @@ const WelcomePopupBase = kind({
 	},
 
 	computed: {
+		className: ({index, styler}) => styler.append({
+			useWelcomeBackground: index < 2
+		}),
 		usersList: ({usersList}) => {
 			const users = [];
 			for (const user in usersList) {
@@ -122,27 +200,9 @@ const WelcomePopupBase = kind({
 
 		return (
 			<FullscreenPopup {...rest}>
-				<Panels index={index} enteringProp="hideChildren" onTransition={handleTransition}>
-					<Panel>
-						<Column align="stretch center">
-							<Cell component={Divider} startSection shrink>User Selection</Cell>
-							<Cell shrink>
-								<Row
-									component={Group}
-									childComponent={Cell}
-									itemProps={{component: LabeledIconButton, shrink: true, icon: 'user'}}
-									onSelect={onSelectUser}
-									select="radio"
-									selectedProp="selected"
-									wrap
-									align="start space-evenly"
-								>
-									{usersList}
-								</Row>
-							</Cell>
-						</Column>
-					</Panel>
-					<Panel />
+				<Panels arranger={Arranger} index={index} enteringProp="hideChildren" onTransition={handleTransition}>
+					<UserSelectionPanel users={usersList} onSelectUser={onSelectUser} />
+					<WelcomePanel />
 					<Panel>
 						<Column>
 							<Cell size="20%">
@@ -181,7 +241,8 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 		static displayName = 'WelcomePopupState';
 
 		static propTypes = {
-			open: PropTypes.bool
+			open: PropTypes.bool,
+			skin: PropTypes.string
 		}
 
 		constructor (props) {
@@ -225,6 +286,7 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 
 		render () {
 			const {destination, index, positions} = this.state;
+
 			return (
 				<Wrapped
 					{...this.props}
@@ -242,22 +304,30 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 	};
 });
 
-const WelcomePopup = AppContextConnect(({getUserNames, updateAppState, userId, userSettings}) => ({
-	components: (userSettings.components && {...userSettings.components.welcome}),
-	profileName: userSettings.name,
-	setDestination: ({destination}) => {
-		updateAppState((state) => {
-			state.navigation.destination = destination;
-		});
-	},
-	updateUser: ({selected}) => {
-		updateAppState((state) => {
-			state.userId = selected + 1;
-		});
-	},
-	userId,
-	usersList: getUserNames()
-}))(WelcomePopupState(WelcomePopupBase));
+const AppContextDecorator = AppContextConnect(({getUserNames, updateAppState, userId, userSettings}) => {
+	return {
+		components: (userSettings.components && {...userSettings.components.welcome}),
+		profileName: userSettings.name,
+		setDestination: ({destination}) => {
+			updateAppState((state) => {
+				state.navigation.destination = destination;
+			});
+		},
+		updateUser: ({selected}) => {
+			updateAppState((state) => {
+				state.userId = selected + 1;
+			});
+		},
+		userId,
+		usersList: getUserNames()
+	};
+});
+
+const WelcomePopup = AppContextDecorator(
+	WelcomePopupState(
+		WelcomePopupBase
+	)
+);
 
 export default WelcomePopup;
 export {
