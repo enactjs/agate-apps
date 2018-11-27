@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import kind from '@enact/core/kind';
-import {Row, Cell} from '@enact/ui/Layout';
 
-import CompactHeader from '../CompactHeader';
+import Widget from '../Widget';
 import WeatherItem from '../WeatherItem';
 import AppStateConnect from '../../App/AppContextConnect';
 
@@ -15,8 +14,8 @@ const CompactWeatherBase = kind({
 	propTypes: {
 		cityName: PropTypes.string,
 		description: PropTypes.string,
-		high: PropTypes.number,
-		noHeader: PropTypes.bool
+		status: PropTypes.number,
+		temp: PropTypes.number
 	},
 
 	styles: {
@@ -25,28 +24,24 @@ const CompactWeatherBase = kind({
 	},
 
 	computed: {
-		high: ({high}) => parseInt(high)
+		temp: ({temp}) => parseInt(temp)
 	},
 
-	render: ({cityName, high, description, onTabChange, noHeader, ...rest}) => {
+	render: ({status, temp, ...rest}) => {
 		return (
-			<div {...rest}>
-				{!noHeader && <CompactHeader onExpand={onTabChange} view="weather">weather</CompactHeader>}
-				<Row align="center">
-					<Cell shrink>{cityName}</Cell>
-				</Row>
-				<WeatherItem featured label="Current" high={high} description={description} />
-			</div>
+			<Widget {...rest} header="Current" view="weather">
+				<WeatherItem featured status={status} high={temp} />
+			</Widget>
 		);
 	}
 });
 
+
 const CompactWeather = AppStateConnect(({weather}) => {
 	const weatherObj = {};
 	if (weather.current && weather.current.main) {
-		weatherObj.high = weather.current.main.temp;
-		weatherObj.description = weather.current.weather[0].description;
-		weatherObj.cityName = weather.current.name;
+		weatherObj.status = weather.current.weather[0].id;
+		weatherObj.temp = weather.current.main.temp;
 	}
 	return {...weatherObj};
 })(CompactWeatherBase);

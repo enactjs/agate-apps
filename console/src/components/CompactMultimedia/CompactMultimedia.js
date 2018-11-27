@@ -1,23 +1,25 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 
-import {ScreenSelectionPopup} from '../../../../components/ScreenSelectionPopup';
-import CompactHeader from '../CompactHeader';
+import Widget from '../Widget';
 import CustomLayout from '../CustomLayout';
+
+import {ScreenSelectionPopup} from '../../../../components/ScreenSelectionPopup';
 import {MultimediaDecorator, ResponsiveVirtualList} from '../../views/Multimedia';
-import {getPanelIndexOf} from '../../App';
+
+import css from './CompactMultimedia.less';
 
 const screenIds = [1, 2];
 
 const CompactMultimediaBase = kind({
 	name: 'CompactMultimedia',
 
-	render: ({showPopup, onClosePopup, onSelectVideo, onSendVideo, videos, noHeader, onExpand, ...rest}) => {
+	render: ({showPopup, onClosePopup, onSelectVideo, onSendVideo, videos, ...rest}) => {
 		delete rest.adContent;
 		delete rest.showAd;
+
 		return (
-			<React.Fragment>
-				{!noHeader && <CompactHeader onExpand={onExpand} view="multimedia">multimedia</CompactHeader>}
+			<Widget {...rest} view="multimedia" header="Multimedia">
 				<ScreenSelectionPopup
 					showAllScreens
 					onClose={onClosePopup}
@@ -25,7 +27,7 @@ const CompactMultimediaBase = kind({
 					open={showPopup}
 					screenIds={screenIds}
 				/>
-				<CustomLayout>
+				<CustomLayout className={css.list}>
 					<ResponsiveVirtualList
 						{...rest}
 						dataSize={videos.length}
@@ -33,7 +35,7 @@ const CompactMultimediaBase = kind({
 						videos={videos}
 					/>
 				</CustomLayout>
-			</React.Fragment>
+			</Widget>
 		);
 	}
 });
