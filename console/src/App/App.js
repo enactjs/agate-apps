@@ -224,7 +224,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 		}
 
 		onSelect = handle(
-			adaptEvent((ev, props) => {
+			adaptEvent((ev) => {
 				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
 				this.setState(state => state.index === index ? null : {index});
 				return {index};
