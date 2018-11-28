@@ -14,7 +14,6 @@ const screenIds = [1, 2];
 
 const CompactMultimediaBase = kind({
 	name: 'CompactMultimedia',
-
 	styles: {
 		css,
 		className: 'compactMultimedia'
