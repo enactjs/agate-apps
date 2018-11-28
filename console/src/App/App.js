@@ -197,6 +197,7 @@ const AppBase = kind({
 					<DateTimePicker onClose={onToggleDateTimePopup} />
 				</Popup>
 				<WelcomePopup
+					noAnimation
 					onClose={onToggleWelcomePopup}
 					onSendVideo={sendVideo}
 					open={showWelcomePopup}
