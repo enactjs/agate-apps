@@ -1,4 +1,4 @@
-import {Cell, Row} from '@enact/ui/Layout';
+import {Cell, Column, Row} from '@enact/ui/Layout';
 import Divider from '@enact/agate/Divider';
 import {Draggable, ResponsiveBox} from '@enact/agate/DropManager';
 import GridListImageItem from '@enact/ui/GridListImageItem';
@@ -14,6 +14,7 @@ import {VirtualGridList, VirtualList} from '@enact/ui/VirtualList';
 
 import appConfig from '../../config';
 import Communicator from '../../../components/Communicator';
+import IconButton from '../components/IconButton';
 import ScreenSelectionPopup from '../../../components/ScreenSelectionPopup';
 
 import CustomLayout from '../components/CustomLayout';
@@ -38,6 +39,16 @@ const IFrame = kind({
 	}
 });
 
+const ListItemOverlay = kind({
+	render: () => (
+		<Column align="center center">
+			<Cell shrink>
+				<IconButton icon="play" size="smallest" />
+			</Cell>
+		</Column>
+	)
+});
+
 const ResponsiveVirtualList = ResponsiveBox(kind({
 	name: 'ResponsiveVirtualList',
 	propTypes: {
@@ -47,18 +58,37 @@ const ResponsiveVirtualList = ResponsiveBox(kind({
 	defaultProps: {
 		direction: 'vertical'
 	},
+	styles: {
+		css,
+		className: 'mediaList'
+	},
 	computed: {
-		itemRenderer: ({containerShape, onSelectVideo, videos}) => ({index, ...rest}) => {
+		itemRenderer: ({containerShape, onSelectVideo, styler, videos}) => ({index, ...rest}) => {
 			const {size: {relative}} = containerShape;
+			const className = styler.append(css.listItem, relative && css[relative]);
 			switch (relative) {
-				case 'large': {
+				case 'full': {
 					return (
 						<GridListImageItem
 							{...rest}
+							aspectRatio="16:9"
 							caption={videos[index].snippet.title}
-							className={css.gridListItem}
+							className={className}
 							source={videos[index].snippet.thumbnails.medium.url}
 							onClick={onSelectVideo(videos[index])}
+						/>
+					);
+				}
+				case 'medium': {
+					return (
+						<GridListImageItem
+							{...rest}
+							aspectRatio="16:9"
+							className={className}
+							source={videos[index].snippet.thumbnails.medium.url}
+							onClick={onSelectVideo(videos[index])}
+							selectionOverlay={ListItemOverlay}
+							selectionOverlayShowing
 						/>
 					);
 				}
@@ -66,7 +96,7 @@ const ResponsiveVirtualList = ResponsiveBox(kind({
 					return (
 						<ThumbnailItem
 							{...rest}
-							css={css}
+							className={className}
 							onClick={onSelectVideo(videos[index])}
 							src={videos[index].snippet.thumbnails.medium.url}
 						>
@@ -82,13 +112,19 @@ const ResponsiveVirtualList = ResponsiveBox(kind({
 		let List, spacing, itemSize;
 
 		switch (relative) {
-			case 'large': {
+			case 'full': {
 				List = VirtualGridList;
 				spacing = ri.scale(66);
 				itemSize = {
 					minWidth: ri.scale(320),
 					minHeight: ri.scale(180)
 				};
+				break;
+			}
+			case 'medium': {
+				List = VirtualList;
+				spacing = ri.scale(24);
+				itemSize = ri.scale(192);
 				break;
 			}
 			default: {
@@ -136,11 +172,11 @@ const MultimediaBase = kind({
 		return (
 			<React.Fragment>
 				<ScreenSelectionPopup
-					showAllScreens
 					onClose={onClosePopup}
 					onSelect={onSendVideo}
 					open={showPopup}
 					screenIds={screenIds}
+					showAllScreens
 				/>
 				<Panel {...rest}>
 					<CustomLayout
@@ -149,7 +185,7 @@ const MultimediaBase = kind({
 						onArrange={onArrange}
 					>
 						<left>
-							<DraggableDiv containerShape={{size: {relative: 'large'}}}>
+							<DraggableDiv containerShape={{size: {relative: 'full'}}}>
 								<Divider className={css.divider}>Recommended Videos</Divider>
 								<ResponsiveVirtualList
 									dataSize={videos.length}

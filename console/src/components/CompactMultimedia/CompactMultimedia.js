@@ -1,38 +1,57 @@
+import {Cell, Column} from '@enact/ui/Layout';
+import GridListImageItem from '@enact/agate/GridListImageItem';
 import kind from '@enact/core/kind';
 import React from 'react';
 
 import {ScreenSelectionPopup} from '../../../../components/ScreenSelectionPopup';
 import CompactHeader from '../CompactHeader';
-import CustomLayout from '../CustomLayout';
 import {MultimediaDecorator, ResponsiveVirtualList} from '../../views/Multimedia';
-import {getPanelIndexOf} from '../../App';
+import css from './CompactMultimedia.less';
 
 const screenIds = [1, 2];
 
 const CompactMultimediaBase = kind({
 	name: 'CompactMultimedia',
+	styles: {
+		css,
+		className: 'compactMultimedia'
+	},
 
-	render: ({showPopup, onClosePopup, onSelectVideo, onSendVideo, videos, noHeader, onExpand, ...rest}) => {
+	render: ({className, noHeader, onClosePopup, onExpand, onSelectVideo, onSendVideo, showPopup, videos, ...rest}) => {
 		delete rest.adContent;
 		delete rest.showAd;
 		return (
 			<React.Fragment>
-				{!noHeader && <CompactHeader onExpand={onExpand} view="multimedia">multimedia</CompactHeader>}
+				{!noHeader && <CompactHeader onExpand={onExpand} view="multimedia">Rear Screen</CompactHeader>}
 				<ScreenSelectionPopup
-					showAllScreens
 					onClose={onClosePopup}
 					onSelect={onSendVideo}
 					open={showPopup}
 					screenIds={screenIds}
+					showAllScreens
 				/>
-				<CustomLayout>
-					<ResponsiveVirtualList
-						{...rest}
+				<Column className={className}>
+					<Cell
+						shrink
+					>
+						<GridListImageItem
+							aspectRatio="16:9"
+							caption={videos[0].snippet.title}
+							className={css.rearScreenImage}
+							css={css}
+							source={videos[0].snippet.thumbnails.medium.url}
+						/>
+					</Cell>
+					<Cell />
+					<Cell
+						component={ResponsiveVirtualList}
 						dataSize={videos.length}
+						direction="horizontal"
 						onSelectVideo={onSelectVideo}
+						size={192}
 						videos={videos}
 					/>
-				</CustomLayout>
+				</Column>
 			</React.Fragment>
 		);
 	}
