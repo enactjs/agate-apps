@@ -185,7 +185,7 @@ const MultimediaBase = kind({
 						onArrange={onArrange}
 					>
 						<left>
-							<DraggableDiv containerShape={{size: {relative: 'full'}}}>
+							<DraggableDiv className="enact-fit" containerShape={{size: {relative: 'full'}}}>
 								<Divider className={css.divider}>Recommended Videos</Divider>
 								<ResponsiveVirtualList
 									dataSize={videos.length}
