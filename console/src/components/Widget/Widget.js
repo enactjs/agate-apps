@@ -30,8 +30,8 @@ const WidgetBase = kind({
 	},
 
 	computed: {
-		children: ({children, containerShape, large, medium, small}) => {
-			const size = containerShape && containerShape.size && containerShape.size;
+		children: ({children, containerShape, full, large, medium, small}) => {
+			const size = containerShape && containerShape.size && containerShape.size.relative;
 
 			switch (size) {
 				case 'large':
