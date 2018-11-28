@@ -34,20 +34,23 @@ const WidgetBase = kind({
 			const size = containerShape && containerShape.size && containerShape.size.relative;
 
 			switch (size) {
+				case 'full':
+					return full || large || medium || small || children;
 				case 'large':
-					return large || medium || small || children;
+					return large || full || medium || small || children;
 				case 'medium':
-					return medium || small || large || children;
+					return medium || small || large || full || children;
 				case 'small':
-					return small || medium || large || children;
+					return small || medium || large || full || children;
 				default:
-					return children || small || medium || large;
+					return children || small || medium || large || full;
 			}
 		}
 	},
 
 	render: ({children, header, onExpand, noHeader, view, ...rest}) => {
 		delete rest.containerShape;
+		delete rest.full;
 		delete rest.large;
 		delete rest.medium;
 		delete rest.small;
@@ -67,7 +70,7 @@ const WidgetBase = kind({
 
 // eslint-disable-next-line no-unused-vars
 const WidgetDecorator = compose(
-	Slottable({slots: ['small', 'medium', 'large']}),
+	Slottable({slots: ['small', 'medium', 'large', 'full']}),
 	ResponsiveBox
 );
 
