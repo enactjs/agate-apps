@@ -2,6 +2,7 @@ import {Cell, Column} from '@enact/ui/Layout';
 import GridListImageItem from '@enact/agate/GridListImageItem';
 import kind from '@enact/core/kind';
 import React from 'react';
+import {ResponsiveBox} from '@enact/agate/DropManager';
 
 import Widget from '../Widget';
 
@@ -12,29 +13,42 @@ import css from './CompactMultimedia.less';
 
 const screenIds = [1, 2];
 
-const CompactMultimediaBase = kind({
+const CompactMultimediaBase = ResponsiveBox(kind({
 	name: 'CompactMultimedia',
+
 	styles: {
 		css,
 		className: 'compactMultimedia'
 	},
 
 	computed: {
+		className: ({containerShape: {size: {relative = 'small'}}, styler}) => styler.append(relative && css[relative]),
+		listCellSize: ({containerShape: {size: {relative = 'small'}}}) => {
+			if (relative === 'medium') {
+				return 81;
+			}
+
+			if (relative === 'large') {
+				return 162;
+			}
+			return '100%';
+		},
 		rearScreen1: ({videos}) => {
 			const {snippet} = videos[0];
 			return {
 				imgSrc: snippet.thumbnails.medium.url,
 				title: snippet.title
 			};
-		}
+		},
+		size: ({containerShape: {size: {relative = 'small'}}}) => relative
 	},
 
-	render: ({className, onClosePopup, onSelectVideo, onSendVideo, rearScreen1, showPopup, videos, ...rest}) => {
+	render: ({className, listCellSize, onClosePopup, onSelectVideo, onSendVideo, rearScreen1, showPopup, size, videos, ...rest}) => {
 		delete rest.adContent;
 		delete rest.showAd;
 
 		return (
-			<Widget {...rest} view="multimedia" header="Rear Screen">
+			<Widget {...rest} view="multimedia" header="Rear Screen" style={{paddingBottom: 0}}>
 				<ScreenSelectionPopup
 					onClose={onClosePopup}
 					onSelect={onSendVideo}
@@ -42,7 +56,8 @@ const CompactMultimediaBase = kind({
 					screenIds={screenIds}
 					showAllScreens
 				/>
-				<Column className={className}>
+				<Column align="start space-between" className={className}>
+					{size === 'small' ? null :
 					<Cell
 						shrink
 					>
@@ -53,21 +68,21 @@ const CompactMultimediaBase = kind({
 							css={css}
 							source={rearScreen1.imgSrc}
 						/>
-					</Cell>
-					<Cell />
+					</Cell>}
 					<Cell
 						component={ResponsiveVirtualList}
 						dataSize={videos.length}
-						direction="horizontal"
+						direction="auto"
 						onSelectVideo={onSelectVideo}
-						size={192}
+						shrink
+						size={listCellSize}
 						videos={videos}
 					/>
 				</Column>
 			</Widget>
 		);
 	}
-});
+}));
 
 const CompactMultimedia = MultimediaDecorator(CompactMultimediaBase);
 

@@ -1,13 +1,25 @@
 .compactMultimedia {
+	width: 100%;
 
-	.rearScreenImage {
-		height: 198px;
-		width: 352px;
+	&.medium {
 
-		.caption {
-			white-space: nowrap;
-			overflow: hidden;
-			text-overflow: ellipsis;
+		.rearScreenImage {
+			height: 198px;
+			width: 352px;
+
+			.caption {
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+		}
+	}
+
+	&.large {
+
+		.rearScreenImage {
+			height: 360px;
+			width: 640px;
 		}
 	}
 }

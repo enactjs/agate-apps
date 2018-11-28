@@ -63,45 +63,45 @@ const ResponsiveVirtualList = ResponsiveBox(kind({
 		className: 'mediaList'
 	},
 	computed: {
+		direction: ({containerShape, direction}) => {
+			const {size: {relative}} = containerShape;
+
+			if (direction !== 'auto') return direction;
+
+			if (relative === 'small' || relative === 'full') {
+				return 'vertical';
+			}
+			return 'horizontal';
+		},
 		itemRenderer: ({containerShape, onSelectVideo, styler, videos}) => ({index, ...rest}) => {
 			const {size: {relative}} = containerShape;
 			const className = styler.append(css.listItem, relative && css[relative]);
 			switch (relative) {
-				case 'full': {
+				case 'small': {
 					return (
-						<GridListImageItem
+						<ThumbnailItem
 							{...rest}
-							aspectRatio="16:9"
-							caption={videos[index].snippet.title}
 							className={className}
-							source={videos[index].snippet.thumbnails.medium.url}
+							css={css}
 							onClick={onSelectVideo(videos[index])}
-						/>
+							src={videos[index].snippet.thumbnails.medium.url}
+						>
+							{videos[index].snippet.title}
+						</ThumbnailItem>
 					);
 				}
-				case 'medium': {
+				default: {
 					return (
 						<GridListImageItem
 							{...rest}
 							aspectRatio="16:9"
+							caption={relative === 'full' ? videos[index].snippet.title : ''}
 							className={className}
 							source={videos[index].snippet.thumbnails.medium.url}
 							onClick={onSelectVideo(videos[index])}
 							selectionOverlay={ListItemOverlay}
 							selectionOverlayShowing
 						/>
-					);
-				}
-				default: {
-					return (
-						<ThumbnailItem
-							{...rest}
-							className={className}
-							onClick={onSelectVideo(videos[index])}
-							src={videos[index].snippet.thumbnails.medium.url}
-						>
-							{videos[index].snippet.title}
-						</ThumbnailItem>
 					);
 				}
 			}
@@ -121,10 +121,16 @@ const ResponsiveVirtualList = ResponsiveBox(kind({
 				};
 				break;
 			}
+			case 'large': {
+				List = VirtualList;
+				spacing = ri.scale(48);
+				itemSize = ri.scale(288);
+				break;
+			}
 			case 'medium': {
 				List = VirtualList;
 				spacing = ri.scale(24);
-				itemSize = ri.scale(192);
+				itemSize = ri.scale(144);
 				break;
 			}
 			default: {
