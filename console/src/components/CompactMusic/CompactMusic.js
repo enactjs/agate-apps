@@ -1,8 +1,10 @@
-import Button from '@enact/agate/Button';
 import GridListImageItem from '@enact/agate/GridListImageItem';
 import kind from '@enact/core/kind';
 import Layout from '@enact/ui/Layout';
 import React from 'react';
+
+import IconButton from '../IconButton';
+import Widget from '../Widget';
 
 import css from './CompactMusic.less';
 
@@ -27,9 +29,9 @@ const PlaybackControls = kind({
 				orientation="horizontal"
 				align="center center"
 			>
-				<Button icon="skipbackward" small />
-				<Button icon="play" />
-				<Button icon="skipforward" small />
+				<IconButton icon="skipbackward" size="smallest" />
+				<IconButton icon="play" size="small" />
+				<IconButton icon="skipforward" size="smallest" />
 			</Layout>
 		);
 	}
@@ -45,7 +47,7 @@ const CompactMusicBase = kind({
 
 	render: (props) => {
 		return (
-			<Layout {...props} orientation="vertical">
+			<Widget {...props} view="radio" header="Listen">
 				<GridListImageItem
 					caption="The Title"
 					className={css.album}
@@ -53,9 +55,9 @@ const CompactMusicBase = kind({
 					selectionOverlay={PlaybackControls}
 					selectionOverlayShowing
 					src={placeholder}
-					subCaption="The Album by The Artist"
+					subCaption="The Album"
 				/>
-			</Layout>
+			</Widget>
 		);
 	}
 });

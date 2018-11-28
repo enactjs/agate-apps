@@ -1,12 +1,16 @@
-@import '~@enact/agate/styles/variables.less';
+@import "~@enact/agate/styles/variables.less";
+@import "../../styles/console-variables.less";
 
 .compactHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    .applySkins({
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: @agate-app-keepout * 2;
 
-    .title {
-        padding-left: @agate-app-keepout;
-        text-transform: uppercase;
-    }
+        .title {
+            text-transform: uppercase;
+        }
+    });
 }
