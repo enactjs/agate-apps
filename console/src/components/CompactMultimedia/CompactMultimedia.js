@@ -12,12 +12,23 @@ const screenIds = [1, 2];
 
 const CompactMultimediaBase = kind({
 	name: 'CompactMultimedia',
+
 	styles: {
 		css,
 		className: 'compactMultimedia'
 	},
 
-	render: ({className, noHeader, onClosePopup, onExpand, onSelectVideo, onSendVideo, showPopup, videos, ...rest}) => {
+	computed: {
+		rearScreen1: ({videos}) => {
+			const {snippet} = videos[0];
+			return {
+				imgSrc: snippet.thumbnails.medium.url,
+				title: snippet.title
+			};
+		}
+	},
+
+	render: ({className, noHeader, onClosePopup, onExpand, onSelectVideo, onSendVideo, rearScreen1, showPopup, videos, ...rest}) => {
 		delete rest.adContent;
 		delete rest.showAd;
 		return (
@@ -36,10 +47,10 @@ const CompactMultimediaBase = kind({
 					>
 						<GridListImageItem
 							aspectRatio="16:9"
-							caption={videos[0].snippet.title}
+							caption={rearScreen1.title}
 							className={css.rearScreenImage}
 							css={css}
-							source={videos[0].snippet.thumbnails.medium.url}
+							source={rearScreen1.imgSrc}
 						/>
 					</Cell>
 					<Cell />
