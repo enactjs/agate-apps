@@ -12,7 +12,6 @@ import ToggleButton from '@enact/agate/ToggleButton';
 import AppContextConnect from '../../App/AppContextConnect';
 import appConfig from '../../../config';
 import {propTypeLatLon, propTypeLatLonList} from '../../data/proptypes';
-import {getPanelIndexOf} from '../../App';
 import CarPng from '../Dashboard/svg/car.png';
 
 import css from './MapCore.less';
@@ -570,7 +569,7 @@ class MapCoreBase extends React.Component {
 	// <ToggleButton alt="Follow" selected={this.state.follow} underline icon="forward" onClick={this.changeFollow} />
 
 	render () {
-		const {className, changePosition, onSelect, onTabChange, onSetDestination, ...rest} = this.props;
+		const {className, ...rest} = this.props;
 		delete rest.centeringDuration;
 		delete rest.destination;
 		delete rest.defaultFollow;
