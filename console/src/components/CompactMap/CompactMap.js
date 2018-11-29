@@ -1,11 +1,9 @@
 import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
-import Button from '@enact/agate/Button';
 import Skinnable from '@enact/agate/Skinnable';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {getPanelIndexOf} from '../../App';
 import {propTypeLatLonList} from '../../data/proptypes';
 
 import MapCore from '../MapCore';
@@ -39,10 +37,9 @@ const CompactMapBase = kind({
 		}
 	},
 
-	render: ({changePosition, onSelect, onTabChange, onSetDestination, ...rest}) => {
+	render: (props) => {
 		return (
-			<MapCore {...rest}>
-			</MapCore>
+			<MapCore {...props} />
 		);
 	}
 });
