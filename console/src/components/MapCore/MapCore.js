@@ -1,9 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import mapboxgl from 'mapbox-gl';
+import Button from '@enact/agate/Button';
 import classnames from 'classnames';
 import {equals} from 'ramda';
 import {Job} from '@enact/core/util';
+import mapboxgl from 'mapbox-gl';
+import PropTypes from 'prop-types';
+import React from 'react';
 import Slottable from '@enact/ui/Slottable';
 import ToggleButton from '@enact/agate/ToggleButton';
 
@@ -188,6 +189,7 @@ class MapCoreBase extends React.Component {
 		skin: PropTypes.string,
 		tools: PropTypes.node, // Buttons and tools for interacting with the map. (Slottable)
 		viewLockoutDuration: PropTypes.number,
+		zoomLevel: PropTypes.number, // Sets the starting zoom level for the map
 		zoomToSpeedScaleFactor: PropTypes.number
 	}
 
@@ -203,7 +205,8 @@ class MapCoreBase extends React.Component {
 
 		this.state = {
 			carShowing: true,
-			follow: props.defaultFollow || false
+			follow: this.props.defaultFollow || false,
+			zoomLevel: this.props.zoomLevel || 12
 		};
 	}
 
@@ -224,7 +227,7 @@ class MapCoreBase extends React.Component {
 			attributionControlboolean: false,
 			style,
 			center: toMapbox(startCoordinates),
-			zoom: 12
+			zoom: this.state.zoomLevel
 		});
 
 		this.map.addControl(new mapboxgl.GeolocateControl({
@@ -367,7 +370,26 @@ class MapCoreBase extends React.Component {
 		if (!this.viewLockTimer) {
 			const zoom = this.state.follow ? this.calculateZoomLevel(linearVelocity) : 15;
 			console.log('zoomTo:', zoom);
-			this.map.zoomTo(zoom);
+			this.zoomMap(zoom);
+		}
+	}
+
+	zoomMap = (zoomLevel) => {
+		this.setState({zoomLevel});
+		this.map.zoomTo(zoomLevel);
+	}
+
+	zoomIn = () => {
+		const {zoomLevel} = this.state;
+		if (zoomLevel < 20) {
+			this.zoomMap(zoomLevel + 1);
+		}
+	}
+
+	zoomOut = () => {
+		const {zoomLevel} = this.state;
+		if (zoomLevel > 0) {
+			this.zoomMap(zoomLevel - 1);
 		}
 	}
 
@@ -537,7 +559,7 @@ class MapCoreBase extends React.Component {
 				});
 			}
 		} else {
-			// wtf was in the data object anyway??
+			// what was in the data object anyway??
 			console.log('No routes in response:', data, waypoints);
 		}
 	}
@@ -567,6 +589,8 @@ class MapCoreBase extends React.Component {
 			<div {...rest} className={classnames(className, css.map)}>
 				{this.message ? <div className={css.message}>{this.message}</div> : null}
 				<nav className={css.tools}>
+					<Button alt="Zoom in" icon="plus" onClick={this.zoomIn} />
+					<Button alt="Zoom out" icon="minus" onClick={this.zoomOut} />
 					{tools}
 					<ToggleButton alt="Follow" selected={this.state.follow} underline icon="forward" onClick={this.changeFollow} />
 				</nav>
