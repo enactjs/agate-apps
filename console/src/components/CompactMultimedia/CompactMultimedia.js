@@ -1,8 +1,10 @@
+import GridListImageItem from '@enact/agate/GridListImageItem';
 import kind from '@enact/core/kind';
+import {Cell, Column} from '@enact/ui/Layout';
+import PropTypes from 'prop-types';
 import React from 'react';
 
-import Widget from '../Widget';
-import CustomLayout from '../CustomLayout';
+import {WidgetBase, WidgetDecorator} from '../Widget';
 
 import {ScreenSelectionPopup} from '../../../../components/ScreenSelectionPopup';
 import {MultimediaDecorator, ResponsiveVirtualList} from '../../views/Multimedia';
@@ -14,33 +16,98 @@ const screenIds = [1, 2];
 const CompactMultimediaBase = kind({
 	name: 'CompactMultimedia',
 
-	render: ({showPopup, onClosePopup, onSelectVideo, onSendVideo, videos, ...rest}) => {
+	propTypes: {
+		adContent: PropTypes.any,
+		containerShape: PropTypes.object,
+		onClosePopup: PropTypes.func,
+		onSelectVideo: PropTypes.func,
+		onSendVideo: PropTypes.func,
+		showAd: PropTypes.bool,
+		showPopup: PropTypes.bool,
+		videos: PropTypes.array
+	},
+
+	styles: {
+		css,
+		className: 'compactMultimedia'
+	},
+
+	computed: {
+		className: ({containerShape: {size: {relative = 'small'}}, styler}) => {
+			return styler.append(relative && css[relative]);
+		},
+		listCellSize: ({containerShape}) => containerShape.size.relative === 'large' ? 162 : 81,
+		rearScreen1: ({videos}) => {
+			const {snippet} = videos[0];
+			return {
+				imgSrc: snippet.thumbnails.medium.url,
+				title: snippet.title
+			};
+		}
+	},
+
+	render: ({containerShape, listCellSize, onClosePopup, onSelectVideo, onSendVideo, rearScreen1, showPopup, videos, ...rest}) => {
 		delete rest.adContent;
 		delete rest.showAd;
 
+		const size = containerShape.size.relative || 'small';
+
 		return (
-			<Widget {...rest} view="multimedia" header="Multimedia">
+			<React.Fragment>
 				<ScreenSelectionPopup
-					showAllScreens
 					onClose={onClosePopup}
 					onSelect={onSendVideo}
 					open={showPopup}
 					screenIds={screenIds}
+					showAllScreens
 				/>
-				<CustomLayout className={css.list}>
-					<ResponsiveVirtualList
-						{...rest}
-						dataSize={videos.length}
-						onSelectVideo={onSelectVideo}
-						videos={videos}
-					/>
-				</CustomLayout>
-			</Widget>
+				<WidgetBase
+					{...rest}
+					containerShape={containerShape}
+					view="multimedia"
+					header="Rear Screen"
+					small={
+						<ResponsiveVirtualList
+							dataSize={videos.length}
+							direction="auto"
+							onSelectVideo={onSelectVideo}
+							size="small"
+							videos={videos}
+						/>
+					}
+					medium={
+						<Column align="start space-between" style={{width: '100%'}}>
+							<GridListImageItem
+								aspectRatio="16:9"
+								caption={rearScreen1.title}
+								className={css.rearScreenImage}
+								css={css}
+								source={rearScreen1.imgSrc}
+							/>
+							<Cell size={listCellSize} style={{width: '100%'}}>
+								<ResponsiveVirtualList
+									dataSize={videos.length}
+									direction="auto"
+									onSelectVideo={onSelectVideo}
+									size={size}
+									videos={videos}
+								/>
+							</Cell>
+						</Column>
+					}
+				/>
+			</React.Fragment>
 		);
 	}
 });
 
-const CompactMultimedia = MultimediaDecorator(CompactMultimediaBase);
+const CompactMultimedia = MultimediaDecorator(
+	WidgetDecorator(
+		CompactMultimediaBase
+	)
+);
 
 export default CompactMultimedia;
-export {CompactMultimedia};
+export {
+	CompactMultimedia
+};
