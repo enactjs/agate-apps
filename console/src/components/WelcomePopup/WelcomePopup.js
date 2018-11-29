@@ -43,6 +43,8 @@ const getCompactComponent = ({components, key, onSendVideo}) => {
 	return Component;
 };
 
+const currentTime = () => new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
 const WelcomePanel = Skinnable({defaultSkin: 'carbon'}, Panel);
 
 const Arranger = {
@@ -171,6 +173,7 @@ const WelcomePopupBase = kind({
 		proposedDestination,
 		small1Component: Small1Component,
 		small2Component: Small2Component,
+		userId,
 		usersList,
 		...rest
 	}) => {
@@ -180,7 +183,6 @@ const WelcomePopupBase = kind({
 		delete rest.onShowWelcome;
 		delete rest.updateUser;
 		delete rest.setDestination;
-		delete rest.userId;
 
 		// todo: re-add DestinationList
 		// <DestinationList component={Button} onSetDestination={onSetDestination} positions={positions} title="Top Locations" />
@@ -196,7 +198,9 @@ const WelcomePopupBase = kind({
 									<Cell shrink>
 										<Row>
 											<Cell shrink>
-												<Button icon="user" onClick={onCancelSelect} />
+												<UserSelectionAvatar index={userId - 1} onSelectUser={onCancelSelect}>
+													{profileName}
+												</UserSelectionAvatar>
 											</Cell>
 											<Cell>
 												<Column align="start center">
@@ -207,7 +211,7 @@ const WelcomePopupBase = kind({
 										</Row>
 									</Cell>
 									<Cell shrink>
-										[insert time]
+										{currentTime()}
 									</Cell>
 									<Cell>
 										{Small1Component}
