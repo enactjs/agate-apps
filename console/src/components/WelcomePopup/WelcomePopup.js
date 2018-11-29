@@ -219,7 +219,7 @@ const WelcomePopupBase = kind({
 									<Cell size="25%">
 										<DestinationList component={Button} onSetDestination={onSetDestination} positions={positions} title="Top Locations" />
 									</Cell>
-									<Cell component={MapCore} proposedDestination={proposedDestination} size="40%" />
+									<Cell component={MapCore} controlScheme="compact" proposedDestination={proposedDestination} size="40%" />
 									<Cell size="35%">
 										<Column>
 											{Small1Component}

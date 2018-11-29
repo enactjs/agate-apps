@@ -181,6 +181,7 @@ class MapCoreBase extends React.Component {
 		setDestination: PropTypes.func.isRequired,
 		updateNavigation: PropTypes.func.isRequired,
 		centeringDuration: PropTypes.number,
+		controlScheme: PropTypes.oneOf(['compact', 'full']), // 'compact' or 'full' (default is full)
 		defaultFollow: PropTypes.bool, // Should the centering position follow the current location?
 		destination:propTypeLatLonList,
 		location: propTypeLatLon, // Our actual current location on the world
@@ -195,6 +196,7 @@ class MapCoreBase extends React.Component {
 
 	static defaultProps = {
 		centeringDuration: 2000,
+		controlScheme: 'full',
 		viewLockoutDuration: 4000,
 		zoomToSpeedScaleFactor: 0.02
 	}
@@ -573,7 +575,7 @@ class MapCoreBase extends React.Component {
 	setMapNode = (node) => (this.mapNode = node)
 
 	render () {
-		const {className, tools, ...rest} = this.props;
+		const {className, controlScheme, tools, ...rest} = this.props;
 		delete rest.centeringDuration;
 		delete rest.destination;
 		delete rest.defaultFollow;
@@ -589,8 +591,11 @@ class MapCoreBase extends React.Component {
 			<div {...rest} className={classnames(className, css.map)}>
 				{this.message ? <div className={css.message}>{this.message}</div> : null}
 				<nav className={css.tools}>
-					<Button alt="Zoom in" icon="plus" onClick={this.zoomIn} />
-					<Button alt="Zoom out" icon="minus" onClick={this.zoomOut} />
+					{controlScheme === 'compact' ? null :
+					<React.Fragment>
+						<Button alt="Zoom in" icon="plus" onClick={this.zoomIn}/>
+						<Button alt="Zoom out" icon="minus" onClick={this.zoomOut}/>
+					</React.Fragment>}
 					{tools}
 					<ToggleButton alt="Follow" selected={this.state.follow} underline icon="forward" onClick={this.changeFollow} />
 				</nav>

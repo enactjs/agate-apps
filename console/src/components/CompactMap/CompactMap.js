@@ -41,7 +41,7 @@ const CompactMapBase = kind({
 
 	render: ({changePosition, onSelect, onTabChange, onSetDestination, ...rest}) => {
 		return (
-			<MapCore {...rest}>
+			<MapCore controlScheme="compact" {...rest}>
 				<tools>
 					<Button alt="Fullscreen" icon="fullscreen" data-tabindex={getPanelIndexOf('map')} onSelect={onSelect} onKeyUp={onTabChange} onClick={onTabChange} />
 					<Button alt="Propose new destination" icon="arrowhookleft" onClick={changePosition} />
