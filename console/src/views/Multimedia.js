@@ -1,22 +1,21 @@
-import {Cell, Column, Row} from '@enact/ui/Layout';
 import Divider from '@enact/agate/Divider';
-import {Draggable, ResponsiveBox} from '@enact/agate/DropManager';
-import GridListImageItem from '@enact/ui/GridListImageItem';
-import hoc from '@enact/core/hoc';
-import Job from '@enact/core/util/Job';
-import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
+import ThumbnailItem from '@enact/agate/ThumbnailItem';
+import hoc from '@enact/core/hoc';
+import {Job} from '@enact/core/util';
+import kind from '@enact/core/kind';
+import {Cell, Column, Row} from '@enact/ui/Layout';
+import GridListImageItem from '@enact/ui/GridListImageItem';
+import ri from '@enact/ui/resolution';
+import {VirtualGridList, VirtualList} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ri from '@enact/ui/resolution';
-import ThumbnailItem from '@enact/agate/ThumbnailItem';
-import {VirtualGridList, VirtualList} from '@enact/ui/VirtualList';
 
 import appConfig from '../../config';
 import Communicator from '../../../components/Communicator';
-import IconButton from '../components/IconButton';
 import ScreenSelectionPopup from '../../../components/ScreenSelectionPopup';
 
+import IconButton from '../components/IconButton';
 import CustomLayout from '../components/CustomLayout';
 
 import youtubeVideos from '../data/youtubeapi.json';
@@ -24,8 +23,6 @@ import youtubeVideos from '../data/youtubeapi.json';
 import css from './Multimedia.less';
 
 const screenIds = [0, 1, 2];
-
-const DraggableDiv = Draggable('div');
 
 const IFrame = kind({
 	name: 'IFrame',
@@ -40,20 +37,22 @@ const IFrame = kind({
 });
 
 const ListItemOverlay = kind({
+	name: 'ListItemOverlay',
+
 	render: () => (
 		<Column align="center center">
-			<Cell shrink>
-				<IconButton icon="play" size="smallest" />
-			</Cell>
+			<IconButton icon="play" size="smallest" />
 		</Column>
 	)
 });
 
-const ResponsiveVirtualList = ResponsiveBox(kind({
+const ResponsiveVirtualList = kind({
 	name: 'ResponsiveVirtualList',
 	propTypes: {
 		direction: PropTypes.string,
-		onSelectVideo: PropTypes.func
+		onSelectVideo: PropTypes.func,
+		size: PropTypes.string,
+		videos: PropTypes.array
 	},
 	defaultProps: {
 		direction: 'vertical'
@@ -63,55 +62,50 @@ const ResponsiveVirtualList = ResponsiveBox(kind({
 		className: 'mediaList'
 	},
 	computed: {
-		direction: ({containerShape, direction}) => {
-			const {size: {relative}} = containerShape;
-
+		direction: ({size, direction}) => {
 			if (direction !== 'auto') return direction;
 
-			if (relative === 'small' || relative === 'full') {
+			if (size === 'small' || size === 'full') {
 				return 'vertical';
 			}
+
 			return 'horizontal';
 		},
-		itemRenderer: ({containerShape, onSelectVideo, styler, videos}) => ({index, ...rest}) => {
-			const {size: {relative}} = containerShape;
-			const className = styler.append(css.listItem, relative && css[relative]);
-			switch (relative) {
-				case 'small': {
-					return (
-						<ThumbnailItem
-							{...rest}
-							className={className}
-							css={css}
-							onClick={onSelectVideo(videos[index])}
-							src={videos[index].snippet.thumbnails.medium.url}
-						>
-							{videos[index].snippet.title}
-						</ThumbnailItem>
-					);
-				}
-				default: {
-					return (
-						<GridListImageItem
-							{...rest}
-							aspectRatio="16:9"
-							caption={relative === 'full' ? videos[index].snippet.title : ''}
-							className={className}
-							source={videos[index].snippet.thumbnails.medium.url}
-							onClick={onSelectVideo(videos[index])}
-							selectionOverlay={ListItemOverlay}
-							selectionOverlayShowing
-						/>
-					);
-				}
+		// eslint-disable-next-line enact/display-name,enact/prop-types
+		itemRenderer: ({onSelectVideo, size, styler, videos}) => ({index, ...rest}) => {
+			const className = styler.append(css.listItem, size && css[size]);
+			if (size === 'small') {
+				return (
+					<ThumbnailItem
+						{...rest}
+						className={className}
+						css={css}
+						onClick={onSelectVideo(videos[index])}
+						src={videos[index].snippet.thumbnails.medium.url}
+					>
+						{videos[index].snippet.title}
+					</ThumbnailItem>
+				);
 			}
+
+			return (
+				<GridListImageItem
+					{...rest}
+					aspectRatio="16:9"
+					caption={size === 'full' ? videos[index].snippet.title : ''}
+					className={className}
+					source={videos[index].snippet.thumbnails.medium.url}
+					onClick={onSelectVideo(videos[index])}
+					selectionOverlay={ListItemOverlay}
+					selectionOverlayShowing
+				/>
+			);
 		}
 	},
-	render: ({containerShape, direction, style = {}, ...rest}) => {
-		const {size: {relative}} = containerShape;
+	render: ({size, direction, style = {}, ...rest}) => {
 		let List, spacing, itemSize;
 
-		switch (relative) {
+		switch (size) {
 			case 'full': {
 				List = VirtualGridList;
 				spacing = ri.scale(66);
@@ -151,10 +145,24 @@ const ResponsiveVirtualList = ResponsiveBox(kind({
 			/>
 		);
 	}
-}));
+});
 
 const MultimediaBase = kind({
 	name: 'Multimedia',
+
+	propTypes: {
+		adContent: PropTypes.any,
+		arrangeable: PropTypes.any,
+		arrangement: PropTypes.any,
+		onArrange: PropTypes.func,
+		onClosePopup: PropTypes.func,
+		onSelectVideo: PropTypes.func,
+		onSendVideo: PropTypes.func,
+		showAd: PropTypes.bool,
+		showPopup: PropTypes.bool,
+		url: PropTypes.string,
+		videos: PropTypes.array
+	},
 
 	styles: {
 		css,
@@ -191,14 +199,13 @@ const MultimediaBase = kind({
 						onArrange={onArrange}
 					>
 						<left>
-							<DraggableDiv className="enact-fit" containerShape={{size: {relative: 'full'}}}>
-								<Divider className={css.divider}>Recommended Videos</Divider>
-								<ResponsiveVirtualList
-									dataSize={videos.length}
-									onSelectVideo={onSelectVideo}
-									videos={videos}
-								/>
-							</DraggableDiv>
+							<Divider className={css.divider}>Recommended Videos</Divider>
+							<ResponsiveVirtualList
+								dataSize={videos.length}
+								onSelectVideo={onSelectVideo}
+								size="full"
+								videos={videos}
+							/>
 						</left>
 						<Row className={css.bodyRow}>
 							<IFrame allow="autoplay" className={css.iframe} src={url} />
@@ -220,6 +227,12 @@ const defaultConfig = {
 const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'MultimediaDecorator';
+
+		static propTypes = {
+			adContent: PropTypes.any,
+			onSendVideo: PropTypes.func,
+			showAd: PropTypes.bool
+		}
 
 		constructor (props) {
 			super(props);

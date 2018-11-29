@@ -46,9 +46,11 @@ const CompactMultimediaBase = kind({
 		}
 	},
 
-	render: ({listCellSize, onClosePopup, onSelectVideo, onSendVideo, rearScreen1, showPopup, videos, ...rest}) => {
+	render: ({containerShape, listCellSize, onClosePopup, onSelectVideo, onSendVideo, rearScreen1, showPopup, videos, ...rest}) => {
 		delete rest.adContent;
 		delete rest.showAd;
+
+		const size = containerShape.size.relative || 'small';
 
 		return (
 			<React.Fragment>
@@ -61,6 +63,7 @@ const CompactMultimediaBase = kind({
 				/>
 				<WidgetBase
 					{...rest}
+					containerShape={containerShape}
 					view="multimedia"
 					header="Rear Screen"
 					small={
@@ -68,6 +71,7 @@ const CompactMultimediaBase = kind({
 							dataSize={videos.length}
 							direction="auto"
 							onSelectVideo={onSelectVideo}
+							size="small"
 							videos={videos}
 						/>
 					}
@@ -80,15 +84,15 @@ const CompactMultimediaBase = kind({
 								css={css}
 								source={rearScreen1.imgSrc}
 							/>
-							<Cell
-								component={ResponsiveVirtualList}
-								dataSize={videos.length}
-								direction="auto"
-								onSelectVideo={onSelectVideo}
-								shrink
-								size={listCellSize}
-								videos={videos}
-							/>
+							<Cell size={listCellSize} style={{width: '100%'}}>
+								<ResponsiveVirtualList
+									dataSize={videos.length}
+									direction="auto"
+									onSelectVideo={onSelectVideo}
+									size={size}
+									videos={videos}
+								/>
+							</Cell>
 						</Column>
 					}
 				/>
