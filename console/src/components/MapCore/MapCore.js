@@ -14,7 +14,6 @@ import ToggleButton from '@enact/agate/ToggleButton';
 import AppContextConnect from '../../App/AppContextConnect';
 import appConfig from '../../App/configLoader';
 import {propTypeLatLon, propTypeLatLonList} from '../../data/proptypes';
-import {getPanelIndexOf} from '../../App';
 import CarPng from '../Dashboard/svg/car.png';
 import {formatDuration, formatTime} from '../../../../components/Formatter';
 
