@@ -15,6 +15,7 @@ const WidgetBase = kind({
 
 	propTypes: {
 		containerShape: PropTypes.object,
+		full: PropTypes.node,
 		header: PropTypes.string,
 		large: PropTypes.node,
 		medium: PropTypes.node,
@@ -37,7 +38,7 @@ const WidgetBase = kind({
 				case 'full':
 					return full || large || medium || small || children;
 				case 'large':
-					return large || full || medium || small || children;
+					return large || medium || small || full || children;
 				case 'medium':
 					return medium || small || large || full || children;
 				case 'small':

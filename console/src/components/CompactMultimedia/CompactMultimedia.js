@@ -1,10 +1,10 @@
-import {Cell, Column} from '@enact/ui/Layout';
 import GridListImageItem from '@enact/agate/GridListImageItem';
 import kind from '@enact/core/kind';
+import {Cell, Column} from '@enact/ui/Layout';
+import PropTypes from 'prop-types';
 import React from 'react';
-import {ResponsiveBox} from '@enact/agate/DropManager';
 
-import Widget from '../Widget';
+import {WidgetBase, WidgetDecorator} from '../Widget';
 
 import {ScreenSelectionPopup} from '../../../../components/ScreenSelectionPopup';
 import {MultimediaDecorator, ResponsiveVirtualList} from '../../views/Multimedia';
@@ -13,8 +13,19 @@ import css from './CompactMultimedia.less';
 
 const screenIds = [1, 2];
 
-const CompactMultimediaBase = ResponsiveBox(kind({
+const CompactMultimediaBase = kind({
 	name: 'CompactMultimedia',
+
+	propTypes: {
+		adContent: PropTypes.any,
+		containerShape: PropTypes.object,
+		onClosePopup: PropTypes.func,
+		onSelectVideo: PropTypes.func,
+		onSendVideo: PropTypes.func,
+		showAd: PropTypes.bool,
+		showPopup: PropTypes.bool,
+		videos: PropTypes.array
+	},
 
 	styles: {
 		css,
@@ -22,33 +33,25 @@ const CompactMultimediaBase = ResponsiveBox(kind({
 	},
 
 	computed: {
-		className: ({containerShape: {size: {relative = 'small'}}, styler}) => styler.append(relative && css[relative]),
-		listCellSize: ({containerShape: {size: {relative = 'small'}}}) => {
-			if (relative === 'medium') {
-				return 81;
-			}
-
-			if (relative === 'large') {
-				return 162;
-			}
-			return '100%';
+		className: ({containerShape: {size: {relative = 'small'}}, styler}) => {
+			return styler.append(relative && css[relative]);
 		},
+		listCellSize: ({containerShape}) => containerShape.size.relative === 'large' ? 162 : 81,
 		rearScreen1: ({videos}) => {
 			const {snippet} = videos[0];
 			return {
 				imgSrc: snippet.thumbnails.medium.url,
 				title: snippet.title
 			};
-		},
-		size: ({containerShape: {size: {relative = 'small'}}}) => relative
+		}
 	},
 
-	render: ({className, listCellSize, onClosePopup, onSelectVideo, onSendVideo, rearScreen1, showPopup, size, videos, ...rest}) => {
+	render: ({listCellSize, onClosePopup, onSelectVideo, onSendVideo, rearScreen1, showPopup, videos, ...rest}) => {
 		delete rest.adContent;
 		delete rest.showAd;
 
 		return (
-			<Widget {...rest} view="multimedia" header="Rear Screen" style={{paddingBottom: 0}}>
+			<React.Fragment>
 				<ScreenSelectionPopup
 					onClose={onClosePopup}
 					onSelect={onSendVideo}
@@ -56,11 +59,20 @@ const CompactMultimediaBase = ResponsiveBox(kind({
 					screenIds={screenIds}
 					showAllScreens
 				/>
-				<Column align="start space-between" className={className}>
-					{size === 'small' ? null : (
-						<Cell
-							shrink
-						>
+				<WidgetBase
+					{...rest}
+					view="multimedia"
+					header="Rear Screen"
+					small={
+						<ResponsiveVirtualList
+							dataSize={videos.length}
+							direction="auto"
+							onSelectVideo={onSelectVideo}
+							videos={videos}
+						/>
+					}
+					medium={
+						<Column align="start space-between" style={{width: '100%'}}>
 							<GridListImageItem
 								aspectRatio="16:9"
 								caption={rearScreen1.title}
@@ -68,24 +80,30 @@ const CompactMultimediaBase = ResponsiveBox(kind({
 								css={css}
 								source={rearScreen1.imgSrc}
 							/>
-						</Cell>
-					)}
-					<Cell
-						component={ResponsiveVirtualList}
-						dataSize={videos.length}
-						direction="auto"
-						onSelectVideo={onSelectVideo}
-						shrink
-						size={listCellSize}
-						videos={videos}
-					/>
-				</Column>
-			</Widget>
+							<Cell
+								component={ResponsiveVirtualList}
+								dataSize={videos.length}
+								direction="auto"
+								onSelectVideo={onSelectVideo}
+								shrink
+								size={listCellSize}
+								videos={videos}
+							/>
+						</Column>
+					}
+				/>
+			</React.Fragment>
 		);
 	}
-}));
+});
 
-const CompactMultimedia = MultimediaDecorator(CompactMultimediaBase);
+const CompactMultimedia = MultimediaDecorator(
+	WidgetDecorator(
+		CompactMultimediaBase
+	)
+);
 
 export default CompactMultimedia;
-export {CompactMultimedia};
+export {
+	CompactMultimedia
+};
