@@ -57,18 +57,19 @@ const CompactMultimediaBase = ResponsiveBox(kind({
 					showAllScreens
 				/>
 				<Column align="start space-between" className={className}>
-					{size === 'small' ? null :
-					<Cell
-						shrink
-					>
-						<GridListImageItem
-							aspectRatio="16:9"
-							caption={rearScreen1.title}
-							className={css.rearScreenImage}
-							css={css}
-							source={rearScreen1.imgSrc}
-						/>
-					</Cell>}
+					{size === 'small' ? null : (
+						<Cell
+							shrink
+						>
+							<GridListImageItem
+								aspectRatio="16:9"
+								caption={rearScreen1.title}
+								className={css.rearScreenImage}
+								css={css}
+								source={rearScreen1.imgSrc}
+							/>
+						</Cell>
+					)}
 					<Cell
 						component={ResponsiveVirtualList}
 						dataSize={videos.length}
