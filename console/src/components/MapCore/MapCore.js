@@ -395,7 +395,7 @@ class MapCoreBase extends React.Component {
 		}
 	}
 
-	centerMap = ({center, instant = false}) => {
+	centerMap = ({center = this.props.location, instant = false}) => {
 		// Never center the map if we're currently in view-lock
 		if (!this.viewLockTimer) {
 			center = (center instanceof Array) ? center : toMapbox(center);
@@ -595,6 +595,7 @@ class MapCoreBase extends React.Component {
 					<React.Fragment>
 						<Button alt="Zoom in" icon="plus" onClick={this.zoomIn}/>
 						<Button alt="Zoom out" icon="minus" onClick={this.zoomOut}/>
+						<Button alt="Recenter map" icon="circle" onClick={this.centerMap} />
 					</React.Fragment>}
 					{tools}
 					<ToggleButton alt="Follow" selected={this.state.follow} underline icon="forward" onClick={this.changeFollow} />
