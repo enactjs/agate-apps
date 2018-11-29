@@ -198,6 +198,7 @@ class MapCoreBase extends React.Component {
 		centeringDuration: 2000,
 		controlScheme: 'full',
 		viewLockoutDuration: 4000,
+		zoomLevel: 12,
 		zoomToSpeedScaleFactor: 0.02
 	}
 
@@ -208,7 +209,7 @@ class MapCoreBase extends React.Component {
 		this.state = {
 			carShowing: true,
 			follow: this.props.defaultFollow || false,
-			zoomLevel: this.props.zoomLevel || 12
+			zoomLevel: this.props.zoomLevel
 		};
 	}
 
@@ -586,6 +587,7 @@ class MapCoreBase extends React.Component {
 		delete rest.skin;
 		delete rest.updateNavigation;
 		delete rest.viewLockoutDuration;
+		delete rest.zoomLevel;
 		delete rest.zoomToSpeedScaleFactor;
 		return (
 			<div {...rest} className={classnames(className, css.map)}>

@@ -1,7 +1,6 @@
 import Button from '@enact/agate/Button';
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
-import {Panel} from '@enact/agate/Panels';
 import React from 'react';
 
 import MapCore from '../components/MapCore';
@@ -16,15 +15,13 @@ const MapBase = kind({
 
 	render: ({changePosition, onSetDestination, ...rest}) => {
 		return (
-			<Panel {...rest}>
-				<MapCore>
-					<tools>
-						<Button alt="POI search" icon="search" />
-						<Button alt="Propose new destination" icon="arrowhookleft" onClick={changePosition} />
-						<Button alt="Navigate here" icon="play" onClick={onSetDestination} />
-					</tools>
-				</MapCore>
-			</Panel>
+			<MapCore {...rest}>
+				<tools>
+					<Button alt="POI search" icon="search" />
+					<Button alt="Propose new destination" icon="arrowhookleft" onClick={changePosition} />
+					<Button alt="Navigate here" icon="play" onClick={onSetDestination} />
+				</tools>
+			</MapCore>
 		);
 	}
 });
@@ -54,7 +51,6 @@ const MapBrains = hoc((configHoc, Wrapped) => {
 		}
 
 		changePosition = () => {
-			console.log('CHANGE POSITION');
 			this.setState(({positionIndex}) => ({
 				// go to the next position in the list
 				positionIndex: ((positionIndex + 1) % positions.length)
