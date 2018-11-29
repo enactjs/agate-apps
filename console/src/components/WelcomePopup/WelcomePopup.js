@@ -198,9 +198,7 @@ const WelcomePopupBase = kind({
 									<Cell shrink>
 										<Row>
 											<Cell shrink>
-												<UserSelectionAvatar index={userId - 1} onSelectUser={onCancelSelect}>
-													{profileName}
-												</UserSelectionAvatar>
+												<Button icon="user" onClick={onCancelSelect} />
 											</Cell>
 											<Cell>
 												<Column align="start center">
@@ -211,7 +209,7 @@ const WelcomePopupBase = kind({
 										</Row>
 									</Cell>
 									<Cell shrink>
-										{currentTime()}
+										[insert time]
 									</Cell>
 									<Cell>
 										{Small1Component}
