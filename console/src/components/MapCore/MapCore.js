@@ -117,17 +117,17 @@ const getRoute = async (waypoints) => {
 	return await response.json();
 };
 
-const locationGeoObject = {
+const createLocationGeoObject = (index, description, coordinates) => ({
 	'type': 'Feature',
 	'properties': {
-		'index': null,
-		'description': null
+		index,
+		description
 	},
 	'geometry': {
 		'type': 'Point',
-		'coordinates': null
+		coordinates
 	}
-};
+});
 
 const markerLayer = {
 	'id': 'symbols',
@@ -232,11 +232,7 @@ class MapCoreBase extends React.Component {
 		this.bbox = [[Math.min(...lats), Math.min(...lngs)], [Math.max(...lats), Math.max(...lngs)]];
 
 		this.topLocations = this.props.topLocations.map((loc, idx) => {
-			const location = JSON.parse(JSON.stringify(locationGeoObject));
-			location.properties.index = idx + 1;
-			location.properties.description = loc.description;
-			location.geometry.coordinates = loc.coordinates;
-			return location;
+			return createLocationGeoObject(idx + 1, loc.description, loc.coordinates);
 		});
 
 		markerLayer.source.data.features = this.topLocations;
