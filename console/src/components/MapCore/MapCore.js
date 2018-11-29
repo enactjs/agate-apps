@@ -323,6 +323,30 @@ class MapCoreBase extends React.Component {
 		if (this.map) this.map.remove();
 	}
 
+	panPercent ({x = 0, y = 0}) {
+		// Zoom level is an logarithmic function such that increasing the level by 1 decreases the
+		// viewable map by half. The following formula was derived experimentally using Mapbox's
+		// reported bounds for a given zoom level. It may need to be refined after further use.
+		const calcLatLngDimension = (z) => 333.27 / Math.pow(2, z - 1);
+
+		const zoom = this.map.getZoom();
+		const dim = calcLatLngDimension(zoom);
+		const center = this.map.getCenter();
+
+		const newCenter = {
+			lat: center.lat + dim * y,
+			lng: center.lng + dim * x
+		};
+
+		this.map.setCenter(newCenter);
+	}
+
+	panPixels ({x = 0, y = 0}) {
+		const {clientWidth: w, clientHeight: h} = this.mapNode;
+
+		this.panPercent({x: x / w, y: y / h});
+	}
+
 	actionManager = (actions) => {
 		for (const action in actions) {
 			if (action) {
