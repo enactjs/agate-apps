@@ -5,16 +5,54 @@ import classnames from 'classnames';
 import {equals} from 'ramda';
 import {Job} from '@enact/core/util';
 import Slottable from '@enact/ui/Slottable';
-import ToggleButton from '@enact/agate/ToggleButton';
+import Divider from '@enact/agate/Divider';
+import Button from '@enact/agate/Button';
 
 import AppContextConnect from '../../App/AppContextConnect';
 import appConfig from '../../../config';
 import {propTypeLatLon, propTypeLatLonList} from '../../data/proptypes';
+import {getPanelIndexOf} from '../../App';
 import CarPng from '../Dashboard/svg/car.png';
 
 import css from './MapCore.less';
 
 const linear = (input) => input;
+const zeroPad = (val) => (val < 10 ? '0' + val : val);
+
+const formatTime = (time) => {
+	const formattedEta = new Date(time);
+	const hour = formattedEta.getHours() % 12 || 12,
+		min = zeroPad(formattedEta.getMinutes()),
+		// sec = zeroPad(formattedEta.getSeconds()),
+		ampm = (formattedEta.getHours() >= 13 ? 'PM' : 'AM');
+	return `${hour}:${min} ${ampm}`;
+};
+
+// This array maps 1:1 to the durValues array below
+const durationIncrements = ['day', 'hour', 'min'];
+const formatDuration = (duration) => {
+	duration = Math.ceil(duration);
+	const durValues = [
+		Math.floor(duration / (60 * 60 * 24)),  // lol we can stop at days
+		Math.floor(duration / (60 * 60)) % 24,
+		Math.floor(duration / 60) % 60
+	];
+
+	// It's only useful to show the two largest increments
+	const durParts = [];
+	for (let i = 0, useful = 0; i < durValues.length && useful < 2; i++) {
+		if (durValues[i] || useful) {
+			useful++;
+		}
+		// `zero` values are not displayed, but still counted as useful
+		if (durValues[i]) {
+			// stack up the number, unit, and pluralize the unit
+			durParts[i] = durValues[i] + ' ' + durationIncrements[i] + (durValues[i] === 1 ? '' : 's');
+		}
+	}
+	// Prune the empty ones and join the rest.
+	return durParts.filter(part => !!part).join(' ');
+};
 
 if (!appConfig.mapApiKey) {
 	Error('Please set `mapApiKey` key in your `config.js` file to your own Mapbox API key.');
@@ -60,7 +98,7 @@ const buildQueryString = (props) => {
 // Get Directions
 //
 const getRoute = async (waypoints) => {
-	let bearing = waypoints[0].orientation;
+	let bearing = waypoints[0].orientation || 0;
 	if (bearing < 0) bearing += 360;
 
 	// Take the list of LatLon objects and convert each to a string of "x,y", then join those with a ";"
@@ -79,6 +117,18 @@ const getRoute = async (waypoints) => {
 	return await response.json();
 };
 
+const locationGeoObject = {
+	'type': 'Feature',
+	'properties': {
+		'index': null,
+		'description': null
+	},
+	'geometry': {
+		'type': 'Point',
+		'coordinates': null
+	}
+};
+
 const markerLayer = {
 	'id': 'symbols',
 	'type': 'symbol',
@@ -86,48 +136,13 @@ const markerLayer = {
 		'type': 'geojson',
 		'data': {
 			'type': 'FeatureCollection',
-			'features': [
-				{
-					'type': 'Feature',
-					'properties': {
-						'description': 'Tasty Subs & Pizza'
-					},
-					'geometry': {
-						'type': 'Point',
-						'coordinates': [
-							-121.995479, 37.384965
-						]
-					}
-				},
-				{
-					'type': 'Feature',
-					'properties': {
-						'description': 'Hobee\'s'
-					},
-					'geometry': {
-						'type': 'Point',
-						'coordinates': [
-							-122.023559, 37.396325
-						]
-					}
-				},
-				{
-					'type': 'Feature',
-					'properties': {
-						'description': 'Dishdash'
-					},
-					'geometry': {
-						'type': 'Point',
-						'coordinates': [
-							-122.026600, 37.376994
-						]
-					}
-				}
-			]
+			'features': null
 		}
 	},
 	'layout': {
-		'icon-image': 'rocket-15'
+		'icon-image': 'marker-15',
+		'icon-size': 3,
+		'text-field': ['format', ['to-string', ['get', 'index']], {'font-scale': 0.8}]
 	}
 };
 
@@ -172,7 +187,7 @@ const addCarLayer = ({coordinates, iconURL, map, orientation = 0}) => {
 const skinStyles = {
 	carbon: 'mapbox://styles/mapbox/dark-v9',
 	electro: '',
-	titanium: 'mapbox://styles/haileyr/cjn4x0ynt04jq2qpf5sb21jc5'
+	titanium: 'mapbox://styles/mapbox/light-v9'
 };
 
 class MapCoreBase extends React.Component {
@@ -211,6 +226,20 @@ class MapCoreBase extends React.Component {
 		if (!mapboxgl.accessToken) {
 			this.message = 'MapBox API key is not set. The map cannot be loaded.';
 		}
+
+		const lats = this.props.topLocations.map(loc => loc.coordinates[0]);
+		const lngs = this.props.topLocations.map(loc => loc.coordinates[1]);
+		this.bbox = [[Math.min(...lats), Math.min(...lngs)], [Math.max(...lats), Math.max(...lngs)]];
+
+		this.topLocations = this.props.topLocations.map((loc, idx) => {
+			const location = JSON.parse(JSON.stringify(locationGeoObject));
+			location.properties.index = idx + 1;
+			location.properties.description = loc.description;
+			location.geometry.coordinates = loc.coordinates;
+			return location;
+		});
+
+		markerLayer.source.data.features = this.topLocations;
 	}
 
 	componentDidMount () {
@@ -244,20 +273,8 @@ class MapCoreBase extends React.Component {
 			});
 		});
 
-		this.map.on('click', 'symbols', (e) => {
-			// This method is a bit messy because it now intermixes different coordinates systems
-			// `coordinates` comes in as Mapbox format and `startCoordinates` is latlon format.
-			// This could be updated, but it's marginally faster to leave it this way.
-			let coordinates = e.features[0].geometry.coordinates.slice();
-			let description = e.features[0].properties.description;
-
-			while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-				coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-			}
-
-			this.showPopup(coordinates, description);
-			this.drawDirection(startCoordinates, {lon: coordinates[0], lat: coordinates[1]});
-			this.centerMap({center: [(coordinates[0] + startCoordinates.lon) / 2, (coordinates[1] + startCoordinates.lat) / 2]});
+		this.map.fitBounds(this.bbox, {
+			padding: {top: 30, bottom:30, left: 30, right: 350}
 		});
 	}
 
@@ -321,6 +338,26 @@ class MapCoreBase extends React.Component {
 
 	componentWillUnmount () {
 		if (this.map) this.map.remove();
+	}
+
+	panPercent ({x = 0, y = 0}) {
+		// Zoom level is an logarithmic function such that increasing the level by 1 decreases the
+		// viewable map by half. The following formula was derived experimentally using Mapbox's
+		// reported bounds for a given zoom level. It may need to be refined after further use.
+		const calcLatLngDimension = (z) => 333.27 / Math.pow(2, z - 1);
+		const zoom = this.map.getZoom();
+		const dim = calcLatLngDimension(zoom);
+		const center = this.map.getCenter();
+		const newCenter = {
+			lat: center.lat + dim * y,
+			lng: center.lng + dim * x
+		};
+		this.map.setCenter(newCenter);
+	}
+
+	panPixels ({x = 0, y = 0}) {
+		const {clientWidth: w, clientHeight: h} = this.mapNode;
+		this.panPercent({x: x / w, y: y / h});
 	}
 
 	actionManager = (actions) => {
@@ -450,70 +487,25 @@ class MapCoreBase extends React.Component {
 	}
 
 	drawDirection = async (waypoints) => {
-		const endMb = toMapbox(waypoints[waypoints.length - 1]);  // Get the last point
-
 		this.setState({carShowing: true});
-
-		// const startPoint = this.map.getSource('start');
-		const endPoint = this.map.getSource('end');
 		const direction = this.map.getSource('route');
-		// if (startPoint) {
-		// 	startPoint.setData({
-		// 		type: 'Feature',
-		// 		geometry: {
-		// 			type: 'Point',
-		// 			coordinates: start
-		// 		}
-		// 	});
-		// } else {
-		// 	this.map.addLayer({
-		// 		id: 'start',
-		// 		type: 'circle',
-		// 		source: {
-		// 			type: 'geojson',
-		// 			data: {
-		// 				type: 'Feature',
-		// 				geometry: {
-		// 					type: 'Point',
-		// 					coordinates: start
-		// 				}
-		// 			}
-		// 		}
-		// 	});
-		// }
-		if (endPoint) {
-			endPoint.setData({
-				type: 'Feature',
-				geometry: {
-					type: 'Point',
-					coordinates: endMb
-				}
-			});
-		} else {
-			this.map.addLayer({
-				id: 'end',
-				type: 'circle',
-				source: {
-					type: 'geojson',
-					data: {
-						type: 'Feature',
-						geometry: {
-							type: 'Point',
-							coordinates: endMb
-						}
-					}
-				}
-			});
-		}
 
 		const data = await getRoute(waypoints);
 		if (data.routes && data.routes[0]) {
 			const route = data.routes[0];
 			this.showFullRouteOnMap(waypoints);
+			const startTime = new Date().getTime();
+			const eta = new Date(startTime + (route.duration * 1000)).getTime();
 
-			this.props.updateNavigation({
-				duration: route.duration
-			});
+			const travelInfo = {
+				duration: route.duration,
+				eta,
+				startTime,
+				distance: route.distance
+			};
+
+			this.props.updateNavigation(travelInfo);
+			this.setState(travelInfo);
 
 			if (direction) {
 				direction.setData({
@@ -542,6 +534,26 @@ class MapCoreBase extends React.Component {
 		}
 	}
 
+	// this.map.on('click', 'symbols', (e) => {
+	// 	// This method is a bit messy because it now intermixes different coordinates systems
+	// 	// `coordinates` comes in as Mapbox format and `startCoordinates` is latlon format.
+	// 	// This could be updated, but it's marginally faster to leave it this way.
+	// 	let coordinates = e.features[0].geometry.coordinates.slice();
+	// 	let description = e.features[0].properties.description;
+
+	// 	while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+	// 		coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+	// 	}
+
+	// 	this.showPopup(coordinates, description);
+	// 	this.drawDirection(startCoordinates, {lon: coordinates[0], lat: coordinates[1]});
+	// 	this.centerMap({center: [(coordinates[0] + startCoordinates.lon) / 2, (coordinates[1] + startCoordinates.lat) / 2]});
+	// });
+
+	estimateRoute = (destination) => () => {
+		this.drawDirection([startCoordinates, {lon: destination[0], lat: destination[1]}]);
+	}
+
 	changeFollow = () => {
 		this.setState(({follow}) => ({
 			follow: !follow
@@ -550,8 +562,14 @@ class MapCoreBase extends React.Component {
 
 	setMapNode = (node) => (this.mapNode = node)
 
+	// Button options
+	// <Button alt="Fullscreen" icon="fullscreen" data-tabindex={getPanelIndexOf('map')} onSelect={onSelect} onKeyUp={onTabChange} onClick={onTabChange} />
+	// <Button alt="Propose new destination" icon="arrowhookleft" onClick={changePosition} />
+	// <Button alt="Navigate Here" icon="play" onClick={onSetDestination} />
+	// <ToggleButton alt="Follow" selected={this.state.follow} underline icon="forward" onClick={this.changeFollow} />
+
 	render () {
-		const {className, tools, ...rest} = this.props;
+		const {className, changePosition, onSelect, onTabChange, onSetDestination, ...rest} = this.props;
 		delete rest.centeringDuration;
 		delete rest.destination;
 		delete rest.defaultFollow;
@@ -560,16 +578,39 @@ class MapCoreBase extends React.Component {
 		delete rest.proposedDestination;
 		delete rest.setDestination;
 		delete rest.skin;
+		delete rest.topLocations;
 		delete rest.updateNavigation;
 		delete rest.viewLockoutDuration;
 		delete rest.zoomToSpeedScaleFactor;
+		const {duration, distance, eta} = this.state;
+
 		return (
 			<div {...rest} className={classnames(className, css.map)}>
 				{this.message ? <div className={css.message}>{this.message}</div> : null}
-				<nav className={css.tools}>
-					{tools}
-					<ToggleButton alt="Follow" selected={this.state.follow} underline icon="forward" onClick={this.changeFollow} />
-				</nav>
+				<div className={css.tools}>
+					<Divider>TOP LOCATIONS</Divider>
+					<ul>
+						{
+							this.topLocations && this.topLocations.map(({geometry, properties}) => {
+								const {index, description} = properties;
+								return <Button
+									small
+									key={`${description}-btn`}
+									onClick={this.estimateRoute(geometry.coordinates)}
+								>
+									{`${index} - ${description}`}
+								</Button>;
+							})
+						}
+					</ul>
+					{
+						duration &&
+						<div>
+							<p>{formatDuration(duration)}</p>
+							<p>{(distance / 1609.344).toFixed(1)} mi - {formatTime(eta)}</p>
+						</div>
+					}
+				</div>
 				<div
 					ref={this.setMapNode}
 					className={css.mapNode}
@@ -582,6 +623,7 @@ class MapCoreBase extends React.Component {
 const ConnectedMap = AppContextConnect(({location, userSettings, updateAppState}) => ({
 	// We should import the app-level variable for our current location then feed that in as the "start"
 	skin: userSettings.skin,
+	topLocations: userSettings.topLocations,
 	location,
 	// destination: navigation.destination,
 	setDestination: ({destination}) => {
@@ -589,12 +631,10 @@ const ConnectedMap = AppContextConnect(({location, userSettings, updateAppState}
 			state.navigation.destination = destination;
 		});
 	},
-	updateNavigation: ({duration}) => {
-		const now = new Date().getTime();
-		const eta = new Date(now + (duration * 1000)).getTime();
+	updateNavigation: ({duration, eta, startTime}) => {
 		updateAppState((state) => {
 			state.navigation.duration = duration;
-			state.navigation.startTime = now;
+			state.navigation.startTime = startTime;
 			state.navigation.eta = eta;
 			// console.log('updateNavigation:', state.navigation);
 		});
