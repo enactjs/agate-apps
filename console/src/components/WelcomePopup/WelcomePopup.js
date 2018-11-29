@@ -1,7 +1,6 @@
 import Button from '@enact/agate/Button';
 import Divider from '@enact/agate/Divider';
 import FullscreenPopup from '@enact/agate/FullscreenPopup';
-import GridListImageItem from '@enact/agate/GridListImageItem';
 import {Item} from '@enact/agate/Item';
 import {Panel, Panels} from '@enact/agate/Panels';
 import Skinnable from '@enact/agate/Skinnable';
@@ -9,6 +8,7 @@ import {handle, forProp, forward, returnsTrue} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import {Column, Row, Cell} from '@enact/ui/Layout';
+import {fadeIn, fadeOut, reverse} from '@enact/ui/ViewManager/arrange';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -18,10 +18,8 @@ import CompactMultimedia from '../CompactMultimedia';
 import CompactWeather from '../CompactWeather';
 import DestinationList from '../DestinationList';
 import MapCore from '../MapCore';
+import UserSelectionAvatar from '../UserSelectionAvatar';
 import {propTypeLatLonList} from '../../data/proptypes';
-
-import steveAvatar from '../../../assets/steve.png';
-import thomasAvatar from '../../../assets/thomas.png';
 
 import css from './WelcomePopup.less';
 
@@ -44,56 +42,10 @@ const getCompactComponent = ({components, key, onSendVideo}) => {
 
 const WelcomePanel = Skinnable({defaultSkin: 'carbon'}, Panel);
 
-import {fadeIn, fadeOut, reverse} from '@enact/ui/ViewManager/arrange';
-
 const Arranger = {
 	enter: reverse(fadeIn),
 	leave: reverse(fadeOut)
 };
-
-
-const imageItemCss = {
-	gridListImageItem: css.avatar,
-	caption: css.caption,
-	image: css.image
-};
-
-const UserSelectionAvatar = kind({
-	name: 'UserSelectionAvatar',
-
-	handlers: {
-		onSelectUser: (ev, {index, onSelectUser}) => {
-			onSelectUser({selected: index});
-		}
-	},
-
-	computed: {
-		source: ({index}) => {
-			switch (index) {
-				case 0:
-					return steveAvatar;
-				case 1:
-					return thomasAvatar;
-			}
-		},
-		style: ({style, index}) => ({
-			...style,
-			'--user-index': index
-		})
-	},
-
-	render: ({children, onSelectUser, source, style}) => {
-		return (
-			<GridListImageItem
-				css={imageItemCss}
-				caption={children}
-				onClick={onSelectUser}
-				source={source}
-				style={style}
-			/>
-		);
-	}
-});
 
 const UserSelectionPanel = kind({
 	name: 'UserSelectionPanel',

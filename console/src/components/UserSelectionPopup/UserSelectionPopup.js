@@ -1,17 +1,15 @@
-import kind from '@enact/core/kind';
-// import hoc from '@enact/core/hoc';
-import Group from '@enact/ui/Group';
-import Popup from '@enact/agate/Popup';
 import Button from '@enact/agate/Button';
-import SwitchItem from '@enact/agate/SwitchItem';
-// import {Layout, Cell} from '@enact/ui/Layout';
+import FullscreenPopup from '@enact/agate/FullscreenPopup';
+import {forward, handle} from '@enact/core/handle';
+import kind from '@enact/core/kind';
+import {Column, Row} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import AppContextConnect from '../../App/AppContextConnect';
+import UserSelectionAvatar from '../UserSelectionAvatar';
 
 import css from './UserSelectionPopup.less';
-
 
 const UserSelectionPopupBase = kind({
 	name: 'UserSelectionPopup',
@@ -44,6 +42,10 @@ const UserSelectionPopupBase = kind({
 	},
 
 	handlers: {
+		onSelectUser: handle(
+			forward('onSelectUser'),
+			forward('onClose')
+		),
 		onResetAll: (ev, {onResetAll, resetAll, resetPosition}) => {
 			onResetAll();
 			resetAll();
@@ -52,46 +54,36 @@ const UserSelectionPopupBase = kind({
 		}
 	},
 
-	render: ({userId, usersList, updateUser, resetUserSettings, onResetAll, ...rest}) => {
+	render: ({usersList, resetUserSettings, onResetAll, onSelectUser, ...rest}) => {
 		delete rest.resetAll;
 		delete rest.resetPosition;
+
 		return (
-			<Popup
-				// onClose={onTogglePopup}
-				// open={showPopup}
-				closeButton
-				{...rest}
-			>
-				<title>User Selection</title>
+			<FullscreenPopup {...rest}>
+				<Column align="normal space-between" className="enact-fit">
+					<Row align="center space-evenly">
+						{usersList.map((user, index) => (
+							<UserSelectionAvatar index={index} onSelectUser={onSelectUser}>
+								{user}
+							</UserSelectionAvatar>
+						))}
+					</Row>
 
-				<Group
-					childComponent={SwitchItem}
-					// itemProps={{
-					// 	inline: boolean('ItemProps-Inline', Group)
-					// }}
-					select="radio"
-					selectedProp="selected"
-					defaultSelected={userId - 1}
-					onSelect={updateUser}
-				>
-					{usersList}
-				</Group>
-
-				<buttons>
-					<Button onTap={resetUserSettings}>Reset Current User</Button>
-					<Button onTap={onResetAll}>Start Demo</Button>
-				</buttons>
-			</Popup>
+					<Row align="center space-evenly">
+						<Button onTap={resetUserSettings}>Reset Current User</Button>
+						<Button onTap={onResetAll}>Start Demo</Button>
+					</Row>
+				</Column>
+			</FullscreenPopup>
 		);
 	}
 });
 
-const UserSelectionPopup = AppContextConnect(({userId, resetUserSettings, resetAll, getUserNames, updateAppState}) => ({
+const UserSelectionPopup = AppContextConnect(({resetUserSettings, resetAll, getUserNames, updateAppState}) => ({
 	usersList: getUserNames(),
-	userId,
 	resetUserSettings,
 	resetAll,
-	updateUser: ({selected}) => {
+	onSelectUser: ({selected}) => {
 		updateAppState((state) => {
 			state.userId = selected + 1;
 		});
