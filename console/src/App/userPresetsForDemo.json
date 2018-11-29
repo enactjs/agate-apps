@@ -28,7 +28,40 @@
 		},
 		"fontSize": 0,
 		"name": "Laura & Steve",
-		"skin": "carbon"
+		"skin": "carbon",
+		"topLocations": [
+			{
+					"description": "Home",
+					"coordinates": [
+						-121.990382, 37.39236
+					]
+			},
+			{
+					"description": "Tasty Subs & Pizza",
+					"coordinates": [
+						-121.995479, 37.384965
+					]
+			},
+			{
+					"description": "School",
+					"coordinates": [
+						-121.990265, 37.396996
+					]
+			},
+			{
+					"description": "Work",
+					"coordinates": [
+						-121.978302, 37.405484
+					]
+			},
+			{
+					"description": "Dishdash",
+					"coordinates": [
+						-122.026600, 37.376994
+					]
+			}
+		]
+		
 	},
 	"user2": {
 		"arrangements": {
@@ -82,7 +115,39 @@
 		},
 		"fontSize": 0,
 		"name": "Thomas",
-		"skin": "titanium"
+		"skin": "titanium",
+		"topLocations": [
+			{
+					"description": "Home",
+					"coordinates": [
+						-121.990382, 37.39236
+					]
+			},
+			{
+					"description": "Tasty Subs & Pizza",
+					"coordinates": [
+						-121.995479, 37.384965
+					]
+			},
+			{
+					"description": "School",
+					"coordinates": [
+						-121.990265, 37.396996
+					]
+			},
+			{
+					"description": "Work",
+					"coordinates": [
+						-121.978302, 37.405484
+					]
+			},
+			{
+					"description": "Dishdash",
+					"coordinates": [
+						-122.026600, 37.376994
+					]
+			}
+		]
 	},
 	"user3": {
 		"arrangements": {
@@ -113,6 +178,38 @@
 		"colorHighlight": "#f08c21",
 		"fontSize": 0,
 		"name": "Gary",
-		"skin": "electro"
+		"skin": "electro",
+		"topLocations": [
+			{
+					"description": "Home",
+					"coordinates": [
+						-121.990382, 37.39236
+					]
+			},
+			{
+					"description": "Tasty Subs & Pizza",
+					"coordinates": [
+						-121.995479, 37.384965
+					]
+			},
+			{
+					"description": "School",
+					"coordinates": [
+						-121.990265, 37.396996
+					]
+			},
+			{
+					"description": "Work",
+					"coordinates": [
+						-121.978302, 37.405484
+					]
+			},
+			{
+					"description": "Dishdash",
+					"coordinates": [
+						-122.026600, 37.376994
+					]
+			}
+		]
 	}
 }
