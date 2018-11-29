@@ -7,6 +7,7 @@ import {Job} from '@enact/core/util';
 import Slottable from '@enact/ui/Slottable';
 import Divider from '@enact/agate/Divider';
 import Button from '@enact/agate/Button';
+import ToggleButton from '@enact/agate/ToggleButton';
 
 import AppContextConnect from '../../App/AppContextConnect';
 import appConfig from '../../App/configLoader';
@@ -608,6 +609,7 @@ class MapCoreBase extends React.Component {
 						<div>
 							<p>{formatDuration(duration)}</p>
 							<p>{(distance / 1609.344).toFixed(1)} mi - {formatTime(eta)}</p>
+							<ToggleButton small alt="Follow" selected={this.state.follow} underline onClick={this.changeFollow}>START NAVIGATION</ToggleButton>
 						</div>
 					}
 				</div>
