@@ -565,7 +565,7 @@ class MapCoreBase extends React.Component {
 								return {
 									children: `${index} - ${description}`,
 									className: css.button,
-									key: `${description}-btn`,
+									key: `${description}-${index}`,
 									small: true
 								};
 							}) : []}
