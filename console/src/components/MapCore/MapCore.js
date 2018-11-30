@@ -20,6 +20,10 @@ import {formatDuration, formatTime} from '../../../../components/Formatter';
 import css from './MapCore.less';
 
 const linear = (input) => input;
+<<<<<<< HEAD
+=======
+
+>>>>>>> Moved time duration formatter to component folder.
 
 if (!appConfig.mapApiKey) {
 	Error('Please set `mapApiKey` key in your `config.js` file to your own Mapbox API key.');
@@ -550,6 +554,7 @@ class MapCoreBase extends React.Component {
 		delete rest.viewLockoutDuration;
 		delete rest.zoomToSpeedScaleFactor;
 		const {duration, distance, eta, selectedDestination, selfDriving} = this.state;
+		const durationIncrements = ['day', 'hour', 'min'];
 
 		return (
 			<div {...rest} className={classnames(className, css.map)}>
@@ -598,7 +603,7 @@ class MapCoreBase extends React.Component {
 					{
 						selectedDestination &&
 						<div>
-							<p>{formatDuration(duration)}</p>
+							<p>{formatDuration(duration, durationIncrements)}</p>
 							<p>{(distance / 1609.344).toFixed(1)} mi - {formatTime(eta)}</p>
 							<ToggleButton
 								className={css.button}
