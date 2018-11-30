@@ -5,7 +5,7 @@ const getValue = (key, value) => {
 	const parsed = qs.parse(window.location.search);
 
 	if (parsed[key]) {
-		if (typeof window !== undefined) {
+		if (typeof window !== 'undefined') {
 			window.localStorage.setItem(key, parsed[key]);
 		}
 	}
@@ -28,7 +28,7 @@ const getConfig = (config) => {
 	}
 
 	const stringified = qs.stringify({...parsed, ...newConfig});
-	if (typeof window !== undefined) {
+	if (typeof window !== 'undefined') {
 		window.history.replaceState('', '', `/?${stringified}`);
 	}
 
