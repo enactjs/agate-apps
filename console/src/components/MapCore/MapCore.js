@@ -571,7 +571,7 @@ class MapCoreBase extends React.Component {
 	// <ToggleButton alt="Follow" selected={this.state.follow} underline icon="forward" onClick={this.changeFollow} />
 
 	render () {
-		const {className, ...rest} = this.props;
+		const {className, selfDrivingSelection, ...rest} = this.props;
 		delete rest.centeringDuration;
 		delete rest.destination;
 		delete rest.defaultFollow;
@@ -584,7 +584,7 @@ class MapCoreBase extends React.Component {
 		delete rest.updateNavigation;
 		delete rest.viewLockoutDuration;
 		delete rest.zoomToSpeedScaleFactor;
-		const {duration, distance, eta} = this.state;
+		const {duration, distance, eta, selectedDestination, selfDriving} = this.state;
 
 		return (
 			<div {...rest} className={classnames(className, css.map)}>
@@ -605,7 +605,33 @@ class MapCoreBase extends React.Component {
 						</Group>
 					</div>
 					{
-						duration &&
+						selfDrivingSelection && <div>
+							<Divider>SELF DRIVING</Divider>
+							<Button small>AUTO</Button>
+							<Button small>MANUAL</Button>
+						</div>
+					}
+					{
+						this.topLocations && <ul>
+							<Divider>TOP LOCATIONS</Divider>
+							{
+								this.topLocations && this.topLocations.map(({geometry, properties}) => {
+									const {index, description} = properties;
+
+									return <Button
+										small
+										key={`${description}-btn`}
+										onClick={this.estimateRoute(description, geometry.coordinates)}
+										highlighted={selectedDestination === description}
+									>
+										{`${index} - ${description}`}
+									</Button>;
+								})
+							}
+						</ul>
+					}
+					{
+						selectedDestination &&
 						<div>
 							<p>{formatDuration(duration)}</p>
 							<p>{(distance / 1609.344).toFixed(1)} mi - {formatTime(eta)}</p>
