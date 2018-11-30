@@ -1,11 +1,13 @@
 import qs from 'query-string';
 
-// If value is in url as a param use that, if not pull from localstorage, if not fallback to value
+// If value is in url as a param use that, if not pull from localstorage, if not fallback to config value
 const getValue = (key, value) => {
 	const parsed = qs.parse(window.location.search);
 
 	if (parsed[key]) {
-		window.localStorage.setItem(key, parsed[key]);
+		if (typeof window !== undefined) {
+			window.localStorage.setItem(key, parsed[key]);
+		}
 	}
 
 	const newValue = parsed[key] || window.localStorage.getItem(key) || value;
@@ -26,7 +28,9 @@ const getConfig = (config) => {
 	}
 
 	const stringified = qs.stringify({...parsed, ...newConfig});
-	window.history.replaceState('', '', `/?${stringified}`);
+	if (typeof window !== undefined) {
+		window.history.replaceState('', '', `/?${stringified}`);
+	}
 
 	return newConfig;
 };
