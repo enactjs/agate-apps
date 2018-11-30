@@ -222,7 +222,7 @@ const WelcomePopupBase = kind({
 									<Cell component={Button} onClick={handleClose} shrink>Continue</Cell>
 								</Column>
 							</Cell>
-							<Cell component={MapCore} proposedDestination={proposedDestination} />
+							<Cell component={MapCore} selfDrivingSelection proposedDestination={proposedDestination} />
 						</Row>
 					</Panel>
 				</Panels>
