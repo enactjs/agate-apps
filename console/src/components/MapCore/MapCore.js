@@ -5,6 +5,8 @@ import classnames from 'classnames';
 import {equals} from 'ramda';
 import {Job} from '@enact/core/util';
 import Slottable from '@enact/ui/Slottable';
+import Group from '@enact/ui/Group';
+import {Column} from '@enact/ui/Layout';
 import Divider from '@enact/agate/Divider';
 import Button from '@enact/agate/Button';
 import ToggleButton from '@enact/agate/ToggleButton';
@@ -546,7 +548,11 @@ class MapCoreBase extends React.Component {
 	// 	this.centerMap({center: [(coordinates[0] + startCoordinates.lon) / 2, (coordinates[1] + startCoordinates.lat) / 2]});
 	// });
 
-	estimateRoute = (destination) => () => {
+	estimateRoute = ({selected}) => {
+		// TODO: Clear the route when deselecting a destination
+		if (selected == null) return;
+
+		const destination = this.topLocations[selected].geometry.coordinates;
 		this.drawDirection([startCoordinates, {lon: destination[0], lat: destination[1]}]);
 	}
 
@@ -583,31 +589,39 @@ class MapCoreBase extends React.Component {
 		return (
 			<div {...rest} className={classnames(className, css.map)}>
 				{this.message ? <div className={css.message}>{this.message}</div> : null}
-				<div className={css.tools}>
-					<Divider>TOP LOCATIONS</Divider>
-					<ul>
-						{
-							this.topLocations && this.topLocations.map(({geometry, properties}) => {
+				<Column className={css.tools} align="stretch space-between">
+					<div>
+						<Divider>TOP LOCATIONS</Divider>
+						<Group childComponent={Button} onSelect={this.estimateRoute} selectedProp="selected">
+							{this.topLocations ? this.topLocations.map(({properties}) => {
 								const {index, description} = properties;
-								return <Button
-									small
-									key={`${description}-btn`}
-									onClick={this.estimateRoute(geometry.coordinates)}
-								>
-									{`${index} - ${description}`}
-								</Button>;
-							})
-						}
-					</ul>
+								return {
+									children: `${index} - ${description}`,
+									className: css.button,
+									key: `${description}-btn`,
+									small: true
+								};
+							}) : []}
+						</Group>
+					</div>
 					{
 						duration &&
 						<div>
 							<p>{formatDuration(duration)}</p>
 							<p>{(distance / 1609.344).toFixed(1)} mi - {formatTime(eta)}</p>
-							<ToggleButton small alt="Follow" selected={this.state.follow} underline onClick={this.changeFollow}>START NAVIGATION</ToggleButton>
+							<ToggleButton
+								className={css.button}
+								small
+								alt="Follow"
+								selected={this.state.follow}
+								underline
+								onClick={this.changeFollow}
+							>
+								Start Navigation
+							</ToggleButton>
 						</div>
 					}
-				</div>
+				</Column>
 				<div
 					ref={this.setMapNode}
 					className={css.mapNode}

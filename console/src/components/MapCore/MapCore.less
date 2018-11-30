@@ -18,17 +18,14 @@
 
 	.tools {
 		position: absolute;
-		top: 0;
-		right: 0;
+		.position(0, 0, 0, auto);
 		z-index: 10;
-		padding-top: 0.5em;
-		ul {
-			text-transform: uppercase;
-			display: grid;
-			padding-left: 0;
-			div[role="button"]  {
-				margin-bottom: 0.5em;
-			}
+		padding: @agate-app-keepout;
+		width: 384px;
+
+		.button {
+			margin: 9px 0;
+			display: block;
 		}
 	}
 }
