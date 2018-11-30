@@ -10,14 +10,17 @@ const formatTime = (time) => {
 };
 
 // This array maps 1:1 to the durValues array below
-const durationIncrements = ['day', 'hour', 'min'];
-const formatDuration = (duration) => {
+const formatDuration = (duration, durationIncrements) => {
 	duration = Math.ceil(duration);
 	const durValues = [
 		Math.floor(duration / (60 * 60 * 24)),  // lol we can stop at days
 		Math.floor(duration / (60 * 60)) % 24,
 		Math.floor(duration / 60) % 60
 	];
+
+	if (durationIncrements[-1] === 'second') {
+		durValues.push(duration % 60);
+	}
 
 	// It's only useful to show the two largest increments
 	const durParts = [];
