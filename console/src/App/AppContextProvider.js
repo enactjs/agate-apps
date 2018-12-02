@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import produce from 'immer';
 import {mergeDeepRight} from 'ramda';
 
-import appConfig from '../../config';
+import appConfig from '../App/configLoader';
 import userPresetsForDemo from './userPresetsForDemo';
 
 const Context = React.createContext();

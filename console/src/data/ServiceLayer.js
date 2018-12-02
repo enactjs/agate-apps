@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import {propTypeLatLon, propTypeLatLonList} from './proptypes';
 import connect from './connector';
 import {getLatLongFromSim, radiansToDegrees} from './conversion';
-import appConfig from '../../config';
+import appConfig from '../App/configLoader';
 import Communicator from '../../../components/Communicator';
 
 import AppStateConnect from '../App/AppContextConnect';

@@ -1,6 +1,4 @@
-import {getConfig} from '../components/urlParser';
-
-const config = {
+export default {
 	// For weather to work, you'll need to get an OpenWeatherMaps.org API key.
 	// Here's where: https://openweathermap.org/appid
 	weatherApiKey: '<Insert your OpenWeatherMaps API key here>',
@@ -20,7 +18,3 @@ const config = {
 	// Ex: localhost:3000
 	communicationServerHost: 'localhost:3000'
 };
-
-const newConfig = getConfig(config);
-
-export default newConfig;
