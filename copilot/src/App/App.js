@@ -7,11 +7,11 @@ import LabeledItem from '@enact/agate/LabeledItem';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import appConfig from '../../config';
 import Communicator from '../../../components/Communicator';
 import ScreenSelectionPopup from '../../../components/ScreenSelectionPopup';
 import NetworkInfo from '../../../components/NetworkInfo';
 
+import appConfig from './configLoader';
 import css from './App.less';
 
 const screenIds = [1, 2];
