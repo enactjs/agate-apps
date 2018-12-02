@@ -13,9 +13,6 @@ const getValue = (key, value) => {
 
 	const newValue = parsed[key] || window.localStorage.getItem(key) || value;
 
-	// Set new value to url
-	parsed[key] = newValue;
-
 	return newValue;
 };
 
