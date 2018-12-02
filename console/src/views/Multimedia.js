@@ -1,11 +1,11 @@
 import Divider from '@enact/agate/Divider';
 import {Panel} from '@enact/agate/Panels';
+import GridListImageItem from '@enact/agate/GridListImageItem';
 import ThumbnailItem from '@enact/agate/ThumbnailItem';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import kind from '@enact/core/kind';
 import {Cell, Column, Row} from '@enact/ui/Layout';
-import GridListImageItem from '@enact/ui/GridListImageItem';
 import ri from '@enact/ui/resolution';
 import {VirtualGridList, VirtualList} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';

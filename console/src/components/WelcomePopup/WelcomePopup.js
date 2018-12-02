@@ -9,6 +9,7 @@ import {handle, forProp, forward, returnsTrue} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import {Column, Row, Cell} from '@enact/ui/Layout';
+import {fadeIn, fadeOut, reverse} from '@enact/ui/ViewManager/arrange';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -24,6 +25,8 @@ import steveAvatar from '../../../assets/steve.png';
 import thomasAvatar from '../../../assets/thomas.png';
 
 import css from './WelcomePopup.less';
+
+const userAvatars = [steveAvatar, thomasAvatar];
 
 const getCompactComponent = ({components, key, onSendVideo}) => {
 	let Component;
@@ -44,52 +47,35 @@ const getCompactComponent = ({components, key, onSendVideo}) => {
 
 const WelcomePanel = Skinnable({defaultSkin: 'carbon'}, Panel);
 
-import {fadeIn, fadeOut, reverse} from '@enact/ui/ViewManager/arrange';
-
 const Arranger = {
 	enter: reverse(fadeIn),
 	leave: reverse(fadeOut)
-};
-
-
-const imageItemCss = {
-	gridListImageItem: css.avatar,
-	caption: css.caption,
-	image: css.image
 };
 
 const UserSelectionAvatar = kind({
 	name: 'UserSelectionAvatar',
 
 	handlers: {
-		onSelectUser: (ev, {index, onSelectUser}) => {
+		onClick: (ev, {index, onSelectUser}) => {
 			onSelectUser({selected: index});
 		}
 	},
 
 	computed: {
-		source: ({index}) => {
-			switch (index) {
-				case 0:
-					return steveAvatar;
-				case 1:
-					return thomasAvatar;
-			}
-		},
+		source: ({index}) => (userAvatars[index] || 'none'),
 		style: ({style, index}) => ({
 			...style,
 			'--user-index': index
 		})
 	},
 
-	render: ({children, onSelectUser, source, style}) => {
+	render: ({children, ...rest}) => {
+		delete rest.onSelectUser;
 		return (
 			<GridListImageItem
-				css={imageItemCss}
+				{...rest}
+				css={css}
 				caption={children}
-				onClick={onSelectUser}
-				source={source}
-				style={style}
 			/>
 		);
 	}
@@ -104,7 +90,7 @@ const UserSelectionPanel = kind({
 				<Divider slot="header" className={css.header}>Welcome</Divider>
 				<Row align="center space-evenly" className="enact-fit">
 					{users.map((user, index) => (
-						<UserSelectionAvatar index={index} onSelectUser={onSelectUser}>
+						<UserSelectionAvatar key={'userKey' + index} index={index} onSelectUser={onSelectUser}>
 							{user}
 						</UserSelectionAvatar>
 					))}
