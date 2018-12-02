@@ -9,7 +9,7 @@ import Slottable from '@enact/ui/Slottable';
 import ToggleButton from '@enact/agate/ToggleButton';
 
 import AppContextConnect from '../../App/AppContextConnect';
-import appConfig from '../../../config';
+import appConfig from '../../App/configLoader';
 import {propTypeLatLon, propTypeLatLonList} from '../../data/proptypes';
 import CarPng from '../Dashboard/svg/car.png';
 
