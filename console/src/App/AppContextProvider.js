@@ -74,6 +74,7 @@ class AppContextProvider extends Component {
 				orientation: 0
 			},
 			navigation: {
+				description: '',
 				destination: [
 					{
 						lat: 0,
