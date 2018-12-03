@@ -110,12 +110,9 @@ const WelcomePopupBase = kind({
 		onClose: PropTypes.func,
 		onSelectUser: PropTypes.func,
 		onSendVideo: PropTypes.func,
-		onSetDestination: PropTypes.func,
 		onShowWelcome: PropTypes.func,
 		positions: PropTypes.array,
 		profileName: PropTypes.string,
-		proposedDestination: propTypeLatLonList,
-		setDestination: PropTypes.func,  // Incoming function from AppStateConnect
 		updateUser: PropTypes.func,
 		userId: PropTypes.number
 	},
@@ -131,12 +128,6 @@ const WelcomePopupBase = kind({
 
 	handlers: {
 		handleClose: handle(
-			(ev, {proposedDestination, setDestination}) => {
-				if (proposedDestination) {
-					setDestination({destination: proposedDestination});
-				}
-				return true;
-			},
 			forward('onClose')
 		),
 		handleTransition: handle(
@@ -167,10 +158,7 @@ const WelcomePopupBase = kind({
 		index,
 		onCancelSelect,
 		onSelectUser,
-		onSetDestination,
-		positions,
 		profileName,
-		proposedDestination,
 		small1Component: Small1Component,
 		small2Component: Small2Component,
 		userId,
@@ -182,10 +170,7 @@ const WelcomePopupBase = kind({
 		delete rest.onSendVideo;
 		delete rest.onShowWelcome;
 		delete rest.updateUser;
-		delete rest.setDestination;
 
-		// todo: re-add DestinationList
-		// <DestinationList component={Button} onSetDestination={onSetDestination} positions={positions} title="Top Locations" />
 		return (
 			<FullscreenPopup {...rest}>
 				<Panels arranger={Arranger} index={index} enteringProp="hideChildren" onTransition={handleTransition}>
@@ -222,7 +207,7 @@ const WelcomePopupBase = kind({
 									<Cell component={Button} onClick={handleClose} shrink>Continue</Cell>
 								</Column>
 							</Cell>
-							<Cell component={MapCore} selfDrivingSelection proposedDestination={proposedDestination} />
+							<Cell component={MapCore} locationSelection selfDrivingSelection />
 						</Row>
 					</Panel>
 				</Panels>
@@ -244,14 +229,6 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 			super(props);
 			this.state = {
 				index: 0,
-				positions: [
-					{lat: 37.788818, lon: -122.404568}, // LG office
-					{lat: 37.791356, lon: -122.400823}, // Blue Bottle Coffee
-					{lat: 37.788988, lon: -122.401076},
-					{lat: 37.7908574786, lon: -122.399391029},
-					{lat: 37.786116, lon: -122.402140}
-				],
-				destination: null,
 				selected: null
 			};
 		}
@@ -260,11 +237,6 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 			if (this.props.open && !nextProps.open) {
 				this.setState({index: 0});
 			}
-		}
-
-		handleSetDestination = (ev) => {
-			const index = ev.currentTarget.dataset.index;
-			this.setState(({positions}) => ({destination: [positions[index]]}));
 		}
 
 		handleSelectUser = ({selected}) => {
@@ -280,7 +252,7 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 		}
 
 		render () {
-			const {destination, index, positions} = this.state;
+			const {index, positions} = this.state;
 
 			return (
 				<Wrapped
@@ -288,10 +260,8 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 					index={index}
 					onSelectUser={this.handleSelectUser}
 					onCancelSelect={this.handleCancelSelect}
-					onSetDestination={this.handleSetDestination}
 					onShowWelcome={this.handleShowWelcome}
 					positions={positions}
-					proposedDestination={destination}
 					selected={this.state.selected}
 				/>
 			);
@@ -303,11 +273,6 @@ const AppContextDecorator = AppContextConnect(({getUserNames, updateAppState, us
 	return {
 		components: (userSettings.components && {...userSettings.components.welcome}),
 		profileName: userSettings.name,
-		setDestination: ({destination}) => {
-			updateAppState((state) => {
-				state.navigation.destination = destination;
-			});
-		},
 		updateUser: ({selected}) => {
 			updateAppState((state) => {
 				state.userId = selected + 1;
