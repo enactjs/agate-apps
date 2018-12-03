@@ -189,7 +189,8 @@ class MapCoreBase extends React.Component {
 
 		this.state = {
 			carShowing: true,
-			follow: props.defaultFollow || false
+			follow: props.defaultFollow || false,
+			selfDriving: true
 		};
 	}
 
@@ -456,7 +457,6 @@ class MapCoreBase extends React.Component {
 	drawDirection = async (waypoints) => {
 		this.setState({carShowing: true});
 		const direction = this.map.getSource('route');
-
 		const data = await getRoute(waypoints);
 		if (data.routes && data.routes[0]) {
 			const route = data.routes[0];
@@ -523,6 +523,10 @@ class MapCoreBase extends React.Component {
 
 		const destination = this.topLocations[selected].geometry.coordinates;
 		this.drawDirection([startCoordinates, {lon: destination[0], lat: destination[1]}]);
+<<<<<<< HEAD
+=======
+		this.props.setDestination(this.topLocations[selected]);
+>>>>>>> Added self driving toggle logic and button hide/show logic.
 	}
 
 	changeFollow = () => {
@@ -533,6 +537,10 @@ class MapCoreBase extends React.Component {
 
 	setMapNode = (node) => (this.mapNode = node)
 
+	toggleSelfDriving = () => {
+		this.setState(({selfDriving}) => ({selfDriving: !selfDriving}));
+	}
+
 	// Button options
 	// <Button alt="Fullscreen" icon="fullscreen" data-tabindex={getPanelIndexOf('map')} onSelect={onSelect} onKeyUp={onTabChange} onClick={onTabChange} />
 	// <Button alt="Propose new destination" icon="arrowhookleft" onClick={changePosition} />
@@ -540,7 +548,7 @@ class MapCoreBase extends React.Component {
 	// <ToggleButton alt="Follow" selected={this.state.follow} underline icon="forward" onClick={this.changeFollow} />
 
 	render () {
-		const {className, selfDrivingSelection, ...rest} = this.props;
+		const {className, selfDrivingSelection, locationSelection, compact, navigation, ...rest} = this.props;
 		delete rest.centeringDuration;
 		delete rest.destination;
 		delete rest.defaultFollow;
@@ -553,12 +561,13 @@ class MapCoreBase extends React.Component {
 		delete rest.updateNavigation;
 		delete rest.viewLockoutDuration;
 		delete rest.zoomToSpeedScaleFactor;
-		const {duration, distance, eta, selectedDestination, selfDriving} = this.state;
 		const durationIncrements = ['day', 'hour', 'min'];
+		const {selfDriving} = this.state;
 
 		return (
 			<div {...rest} className={classnames(className, css.map)}>
 				{this.message ? <div className={css.message}>{this.message}</div> : null}
+<<<<<<< HEAD
 				<Column className={css.tools} align="stretch space-between">
 					<div>
 						<Divider>TOP LOCATIONS</Divider>
@@ -602,9 +611,45 @@ class MapCoreBase extends React.Component {
 					}
 					{
 						selectedDestination &&
+=======
+				<Column className={css.tools}>
+					{
+						selfDrivingSelection && <div>
+							<Divider>SELF DRIVING</Divider>
+							<Button onClick={this.toggleSelfDriving} highlighted={selfDriving} small>AUTO</Button>
+							<Button onClick={this.toggleSelfDriving} highlighted={!selfDriving} small>MANUAL</Button>
+						</div>
+					}
+					{
+						locationSelection && <div>
+							<Divider>TOP LOCATIONS</Divider>
+							<Group childComponent={Button} onSelect={this.estimateRoute} selectedProp="highlighted">
+								{this.topLocations ? this.topLocations.map(({properties}) => {
+									const {index, description} = properties;
+									return {
+										children: `${index} - ${description}`,
+										className: css.button,
+										key: `${description}-${index}`,
+										small: true
+									};
+								}) : []}
+							</Group>
+						</div>
+					}
+					{
+						compact && navigation && <Button
+							className={css.button}
+							small
+							highlighted
+							disabled
+						>{navigation.description}</Button>
+					}
+					{
+						navigation && navigation.navigating &&
+>>>>>>> Added self driving toggle logic and button hide/show logic.
 						<div>
-							<p>{formatDuration(duration, durationIncrements)}</p>
-							<p>{(distance / 1609.344).toFixed(1)} mi - {formatTime(eta)}</p>
+							<p>{formatDuration(navigation.duration, durationIncrements)}</p>
+							<p>{(navigation.distance / 1609.344).toFixed(1)} mi - {formatTime(navigation.eta)}</p>
 							<ToggleButton
 								className={css.button}
 								small
@@ -627,22 +672,24 @@ class MapCoreBase extends React.Component {
 	}
 }
 
-const ConnectedMap = AppContextConnect(({location, userSettings, updateAppState}) => ({
+const ConnectedMap = AppContextConnect(({location, userSettings, navigation, updateAppState}) => ({
 	// We should import the app-level variable for our current location then feed that in as the "start"
 	skin: userSettings.skin,
 	topLocations: userSettings.topLocations,
 	location,
-	// destination: navigation.destination,
-	setDestination: ({destination}) => {
+	navigation,
+	setDestination: (destination) => {
 		updateAppState((state) => {
-			state.navigation.destination = destination;
+			state.navigation.destination = destination.geometry.coordinates;
+			state.navigation.description = destination.properties.description;
 		});
 	},
-	updateNavigation: ({duration, eta, startTime}) => {
+	updateNavigation: ({duration, eta, startTime, distance}) => {
 		updateAppState((state) => {
 			state.navigation.duration = duration;
 			state.navigation.startTime = startTime;
 			state.navigation.eta = eta;
+			state.navigation.distance = distance;
 			// console.log('updateNavigation:', state.navigation);
 		});
 	}
