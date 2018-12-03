@@ -3,6 +3,7 @@ import hoc from '@enact/core/hoc';
 import Skinnable from '@enact/agate/Skinnable';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Widget from '../Widget';
 
 import {propTypeLatLonList} from '../../data/proptypes';
 
@@ -20,7 +21,6 @@ const CompactMapBase = kind({
 		follow: PropTypes.bool,
 		onSelect: PropTypes.func,
 		// A local state method to assign the local destination to the destination prop listed above.
-		onSetDestination: PropTypes.func,
 		proposedDestination: propTypeLatLonList
 	},
 
@@ -39,7 +39,9 @@ const CompactMapBase = kind({
 
 	render: (props) => {
 		return (
-			<MapCore compact selfDrivingSelection {...props} />
+			<Widget {...props} view="map">
+				<MapCore compact selfDrivingSelection />
+			</Widget>
 		);
 	}
 });
