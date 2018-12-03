@@ -29,7 +29,7 @@ const CompactAppList = kind({
 	},
 
 	render: ({onTabChange, ...rest}) => (
-		<DropRow align="start space-evenly" {...rest} wrap>
+		<DropRow align="start space-around" {...rest} wrap>
 			<DraggableAppIcon name="00" icon="compass">Navigation</DraggableAppIcon>
 			<DraggableAppIcon name="01" icon="audio" onKeyUp={onTabChange} onClick={onTabChange}>Audio</DraggableAppIcon>
 			<DraggableAppIcon name="02" icon="resumeplay" data-tabindex={getPanelIndexOf('multimedia')} onKeyUp={onTabChange} onClick={onTabChange}>Multimedia</DraggableAppIcon>
@@ -43,7 +43,7 @@ const ResponsiveCompactAppList = ResponsiveBox(({containerShape, ...rest}) => {
 	if (containerShape.edges.left) axisAlign = 'start';
 	if (containerShape.edges.right) axisAlign = 'end';
 	return (
-		<CompactAppList align={axisAlign + ' space-evenly'} {...rest} />
+		<CompactAppList align={axisAlign + ' space-around'} {...rest} />
 	);
 });
 
