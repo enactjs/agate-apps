@@ -523,10 +523,7 @@ class MapCoreBase extends React.Component {
 
 		const destination = this.topLocations[selected].geometry.coordinates;
 		this.drawDirection([startCoordinates, {lon: destination[0], lat: destination[1]}]);
-<<<<<<< HEAD
-=======
 		this.props.setDestination(this.topLocations[selected]);
->>>>>>> Added self driving toggle logic and button hide/show logic.
 	}
 
 	changeFollow = () => {
@@ -567,51 +564,6 @@ class MapCoreBase extends React.Component {
 		return (
 			<div {...rest} className={classnames(className, css.map)}>
 				{this.message ? <div className={css.message}>{this.message}</div> : null}
-<<<<<<< HEAD
-				<Column className={css.tools} align="stretch space-between">
-					<div>
-						<Divider>TOP LOCATIONS</Divider>
-						<Group childComponent={Button} onSelect={this.estimateRoute} selectedProp="selected">
-							{this.topLocations ? this.topLocations.map(({properties}) => {
-								const {index, description} = properties;
-								return {
-									children: `${index} - ${description}`,
-									className: css.button,
-									key: `${description}-${index}`,
-									small: true
-								};
-							}) : []}
-						</Group>
-					</div>
-					{
-						selfDrivingSelection && <div>
-							<Divider>SELF DRIVING</Divider>
-							<Button small>AUTO</Button>
-							<Button small>MANUAL</Button>
-						</div>
-					}
-					{
-						this.topLocations && <ul>
-							<Divider>TOP LOCATIONS</Divider>
-							{
-								this.topLocations && this.topLocations.map(({geometry, properties}) => {
-									const {index, description} = properties;
-
-									return <Button
-										small
-										key={`${description}-btn`}
-										onClick={this.estimateRoute(description, geometry.coordinates)}
-										highlighted={selectedDestination === description}
-									>
-										{`${index} - ${description}`}
-									</Button>;
-								})
-							}
-						</ul>
-					}
-					{
-						selectedDestination &&
-=======
 				<Column className={css.tools}>
 					{
 						selfDrivingSelection && <div>
@@ -646,7 +598,6 @@ class MapCoreBase extends React.Component {
 					}
 					{
 						navigation && navigation.navigating &&
->>>>>>> Added self driving toggle logic and button hide/show logic.
 						<div>
 							<p>{formatDuration(navigation.duration, durationIncrements)}</p>
 							<p>{(navigation.distance / 1609.344).toFixed(1)} mi - {formatTime(navigation.eta)}</p>
@@ -657,9 +608,9 @@ class MapCoreBase extends React.Component {
 								selected={this.state.follow}
 								underline
 								onClick={this.changeFollow}
-							>
-								Start Navigation
-							</ToggleButton>
+								toggleOnLabel="Stop Navigation"
+								toggleOffLabel="Start Navigation"
+							/>
 						</div>
 					}
 				</Column>
