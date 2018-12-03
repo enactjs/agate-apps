@@ -219,7 +219,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 				showDateTimePopup: false,
 				showUserSelectionPopup: false,
 				showAppList: false,
-				showWelcomePopup: 'defaultShowWelcomePopup' in props ? Boolean(props.defaultShowWelcomePopup) : true
+				showWelcomePopup: ('defaultShowWelcomePopup' in props ? Boolean(props.defaultShowWelcomePopup) : true)
 			};
 		}
 
@@ -260,6 +260,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 
 			delete rest.defaultIndex;
 			delete rest.defaultSkin;
+			delete rest.defaultShowWelcomePopup;
 
 			return (
 				<Wrapped
