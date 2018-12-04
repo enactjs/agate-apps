@@ -5,25 +5,16 @@ import classnames from 'classnames';
 import {equals} from 'ramda';
 import {Job} from '@enact/core/util';
 import Slottable from '@enact/ui/Slottable';
-import Group from '@enact/ui/Group';
 import {Column} from '@enact/ui/Layout';
-import Divider from '@enact/agate/Divider';
-import Button from '@enact/agate/Button';
-import ToggleButton from '@enact/agate/ToggleButton';
 
 import AppContextConnect from '../../App/AppContextConnect';
 import appConfig from '../../App/configLoader';
 import {propTypeLatLon, propTypeLatLonList} from '../../data/proptypes';
 import CarPng from '../Dashboard/svg/car.png';
-import {formatDuration, formatTime} from '../../../../components/Formatter';
 
 import css from './MapCore.less';
 
 const linear = (input) => input;
-<<<<<<< HEAD
-=======
-
->>>>>>> Moved time duration formatter to component folder.
 
 if (!appConfig.mapApiKey) {
 	Error('Please set `mapApiKey` key in your `config.js` file to your own Mapbox API key.');
