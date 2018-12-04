@@ -6,6 +6,8 @@ import Skinnable from '@enact/agate/Skinnable';
 
 import MapCore from '../components/MapCore';
 
+import css from './Map.less';
+
 const MapBase = kind({
 	name: 'Map',
 
