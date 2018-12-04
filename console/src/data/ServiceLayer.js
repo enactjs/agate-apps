@@ -3,6 +3,7 @@
 // External
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
+import Pure from '@enact/ui/internal/Pure';
 import React from 'react';
 import compose from 'ramda/src/compose';
 import {equals} from 'ramda';
@@ -12,13 +13,15 @@ import PropTypes from 'prop-types';
 import {propTypeLatLon, propTypeLatLonList} from './proptypes';
 import connect from './connector';
 import {getLatLongFromSim, radiansToDegrees} from './conversion';
-import appConfig from '../../config';
+import appConfig from '../App/configLoader';
 import Communicator from '../../../components/Communicator';
 
 import AppStateConnect from '../App/AppContextConnect';
 
+const ServiceLayerContext = React.createContext();
 
 const ServiceLayerBase = hoc((configHoc, Wrapped) => {
+	const PureWrapped = Wrapped;
 	return class extends React.Component {
 		static displayName = 'ServiceLayer';
 
@@ -180,6 +183,10 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 		setDestination = ({destination} = {}) => {
 			const {navigation, location} = this.props;
+			// console.log(location);
+
+			// const location = {lat: 37.78996,linearVelocity: 0,lon: -122.400461,orientation: 224.49038325105812}
+
 
 			const destDiffersFromState = (!equals(destination, navigation.destination));
 			destination = destination || navigation.destination; // Accept external args, in case the request came from within this component, but fallback to the navigation prop (the preferred usage).
@@ -215,54 +222,56 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 			return (
 				<React.Fragment>
-					<Communicator ref={this.comm} host={appConfig.communicationServerHost} />
-					<Wrapped
-						{...rest}
-						sendVideo={this.sendVideo}
-						resetPosition={this.resetPosition}
-					/>
+					<ServiceLayerContext.Provider value={{}}>
+						<Communicator ref={this.comm} host={appConfig.communicationServerHost} />
+						<PureWrapped
+							{...rest}
+							sendVideo={this.sendVideo}
+							resetPosition={this.resetPosition}
+						/>
+					</ServiceLayerContext.Provider>
 				</React.Fragment>
 			);
 		}
 	};
 });
-
+const methods = ({location: locationProp, navigation, updateAppState}) => ({
+	location: locationProp,
+	navigation,
+	// tickleCount: tickleCountProp,
+	// setTickle: ({tickleCount}) => {
+	// 	updateAppState((state) => {
+	// 		state.tickleCount = tickleCount;
+	// 	});
+	// },
+	setConnected: (connected) => {
+		updateAppState((state) => {
+			if (state.connections.serviceLayer === connected) return null;
+			state.connections.serviceLayer = connected;
+		});
+	},
+	setLocation: ({location}) => {
+		updateAppState((state) => {
+			// console.log('Setting location app state:', location);
+			state.location = location;
+		});
+	},
+	updateDestination: ({destination, navigating}) => {
+		updateAppState((state) => {
+			state.navigation.destination = destination;
+			if (navigating != null) {
+				state.navigation.navigating = navigating;
+			}
+		});
+	}
+	// endNavigation: ({navigating}) => {
+	// 	updateAppState((state) => {
+	// 		state.navigation.navigating = navigating;
+	// 	});
+	// }
+});
 const ServiceLayer = compose(
-	AppStateConnect(({location: locationProp, navigation, updateAppState}) => ({
-		location: locationProp,
-		navigation,
-		// tickleCount: tickleCountProp,
-		// setTickle: ({tickleCount}) => {
-		// 	updateAppState((state) => {
-		// 		state.tickleCount = tickleCount;
-		// 	});
-		// },
-		setConnected: (connected) => {
-			updateAppState((state) => {
-				if (state.connections.serviceLayer === connected) return null;
-				state.connections.serviceLayer = connected;
-			});
-		},
-		setLocation: ({location}) => {
-			updateAppState((state) => {
-				// console.log('Setting location app state:', location);
-				state.location = location;
-			});
-		},
-		updateDestination: ({destination, navigating}) => {
-			updateAppState((state) => {
-				state.navigation.destination = destination;
-				if (navigating != null) {
-					state.navigation.navigating = navigating;
-				}
-			});
-		}
-		// endNavigation: ({navigating}) => {
-		// 	updateAppState((state) => {
-		// 		state.navigation.navigating = navigating;
-		// 	});
-		// }
-	})),
+	AppStateConnect(methods),
 	ServiceLayerBase
 );
 

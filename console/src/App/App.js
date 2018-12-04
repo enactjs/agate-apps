@@ -96,6 +96,9 @@ const AppBase = kind({
 		delete rest.accent;
 		delete rest.highlight;
 		delete rest.endNavigation;
+		delete rest.defaultIndex;
+		delete rest.defaultSkin;
+
 		return (
 			<div {...rest}>
 				<TabbedPanels
@@ -207,88 +210,10 @@ const AppBase = kind({
 	}
 });
 
-const AppState = hoc((configHoc, Wrapped) => {
-	return class extends React.Component {
-		static displayName = 'AppState';
-		constructor (props) {
-			super(props);
-			// this.state = {
-			// 	index: props.defaultIndex || 0,
-			// 	showPopup: false,
-			// 	showBasicPopup: false,
-			// 	// showDateTimePopup: false,
-			// 	// showUserSelectionPopup: false,
-			// 	showAppList: false,
-			// 	// showWelcomePopup: 'defaultShowWelcomePopup' in props ? Boolean(props.defaultShowWelcomePopup) : true
-			// };
-		}
-
-		// onSelect = handle(
-		// 	adaptEvent((ev) => {
-		// 		const {index = getPanelIndexOf(ev.view || 'home')} = ev;
-		// 		this.setState(state => state.index === index ? null : {index});
-		// 		return {index};
-		// 	}, forward('onSelect'))
-		// ).bind(this);
-
-
-
-		// onTogglePopup = () => {
-		// 	this.setState(({showPopup}) => ({showPopup: !showPopup}));
-		// };
-
-		// onToggleBasicPopup = () => {
-		// 	this.setState(({showBasicPopup}) => ({showBasicPopup: !showBasicPopup}));
-		// };
-
-		// onToggleDateTimePopup = () => {
-		// 	this.setState(({showDateTimePopup}) => ({showDateTimePopup: !showDateTimePopup}));
-		// };
-
-		// onToggleWelcomePopup = () => {
-		// 	this.setState(({showWelcomePopup}) => ({showWelcomePopup: !showWelcomePopup}));
-		// };
-
-		// onResetAll = () => {
-		// 	this.setState({index: 0, showWelcomePopup: true, showUserSelectionPopup: false});
-		// };
-
-		render () {
-			const {colorAccent, colorHighlight, skin, ...rest} = this.props;
-
-			delete rest.defaultIndex;
-			delete rest.defaultSkin;
-
-			return (
-				<Wrapped
-					{...rest}
-					accent={colorAccent}
-					highlight={colorHighlight}
-					index={this.props.index}
-					onResetAll={this.props.onResetAll}
-					onSelect={this.props.onSelect}
-					onTogglePopup={this.props.onTogglePopup}
-					onToggleBasicPopup={this.onToggleBasicPopup}
-					onToggleDateTimePopup={this.props.onToggleDateTimePopup}
-					onToggleUserSelectionPopup={this.props.onToggleUserSelectionPopup}
-					onToggleWelcomePopup={this.props.onToggleWelcomePopup}
-					orientation={(skin !== 'carbon') ? 'horizontal' : 'vertical'}
-					showPopup={this.props.showPopup}
-					showBasicPopup={this.props.showBasicPopup}
-					showDateTimePopup={this.props.showDateTimePopup}
-					showUserSelectionPopup={this.props.showUserSelectionPopup}
-					showWelcomePopup={this.props.showWelcomePopup}
-					skin={skin}
-					skinName={skin}
-				/>
-			);
-		}
-	};
-});
-
 const AppDecorator = compose(
 	AppStateConnect(({appState, userSettings, updateAppState}) => ({
 		skin: userSettings.skin,
+		skinName: userSettings.skin,
 		colorAccent: userSettings.colorAccent,
 		colorHighlight: userSettings.colorHighlight,
 		layoutArrangeable: userSettings.arrangements.arrangeable,
@@ -300,7 +225,7 @@ const AppDecorator = compose(
 		showUserSelectionPopup: appState.showUserSelectionPopup,
 		showAppList: appState.showAppList,
 		showWelcomePopup: appState.showWelcomePopup,
-
+		orientation: (userSettings.skin !== 'carbon') ? 'horizontal' : 'vertical',
 		layoutArrangeableToggle: ({selected}) => {
 			updateAppState((state) => {
 				state.userSettings.arrangements.arrangeable = selected;
@@ -324,10 +249,9 @@ const AppDecorator = compose(
 		},
 		onSelect: handle(
 			adaptEvent((ev) => {
-				console.log(ev);
 				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
 				updateAppState((state) => {
-					state.appState.index = state.appState.index === index ? null : {index}
+					state.appState.index = state.appState.index === index ? null : index;
 				});
 				return {index};
 			}, forward('onSelect'))
@@ -366,7 +290,6 @@ const AppDecorator = compose(
 			});
 		},
 	})),
-	AppState,
 	ServiceLayer,
 	AgateDecorator
 );

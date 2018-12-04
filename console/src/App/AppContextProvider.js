@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import produce from 'immer';
 import {mergeDeepRight} from 'ramda';
 
-import appConfig from '../../config';
+import appConfig from '../App/configLoader';
 import userPresetsForDemo from './userPresetsForDemo';
 
 const Context = React.createContext();
@@ -95,7 +95,8 @@ class AppContextProvider extends Component {
 				startTime: 0,
 				navigating: false
 			},
-			weather: {}
+			weather: {},
+			updateAppState: this.updateAppState
 		};
 	}
 
@@ -263,7 +264,7 @@ class AppContextProvider extends Component {
 		const context = {
 			...this.state,
 			getUserNames: this.getUserNames,
-			updateAppState: this.updateAppState,
+			// updateAppState: this.updateAppState,
 			resetUserSettings: this.resetUserSettings,
 			resetAll: this.resetAll
 		};
@@ -289,4 +290,4 @@ class PureFragment extends React.PureComponent {
 }
 
 export default AppContextProvider;
-export {AppContextProvider, Context as AppContext};
+export {AppContextProvider, Context as AppContext, PureFragment};

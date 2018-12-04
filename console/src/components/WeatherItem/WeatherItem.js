@@ -1,8 +1,8 @@
 import React from 'react';
 import kind from '@enact/core/kind';
-import Image from '@enact/ui/Image';
 import {Column, Cell} from '@enact/ui/Layout';
 import Divider from '@enact/agate/Divider';
+import Image from '@enact/agate/Image';
 import Skinnable from '@enact/agate/Skinnable';
 
 import cloudy from '../../../assets/weather/cloudy.png';
@@ -46,7 +46,7 @@ const WeatherItemBase = kind({
 					return cloudy;
 			}
 
-			return '';
+			return null;
 		}
 	},
 
