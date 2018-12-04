@@ -88,11 +88,13 @@ const UserSelectionPanel = kind({
 		return (
 			<WelcomePanel className={css.userSelectionPanel}>
 				<Divider slot="header" className={css.header}>Welcome</Divider>
-				<Row align="center space-evenly" className="enact-fit">
+				<Row align="center space-around" className={css.bodyRow}>
 					{users.map((user, index) => (
-						<UserSelectionAvatar key={'userKey' + index} index={index} onSelectUser={onSelectUser}>
-							{user}
-						</UserSelectionAvatar>
+						<Cell shrink key={'userKey' + index}>
+							<UserSelectionAvatar index={index} onSelectUser={onSelectUser}>
+								{user}
+							</UserSelectionAvatar>
+						</Cell>
 					))}
 				</Row>
 			</WelcomePanel>
