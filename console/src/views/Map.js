@@ -9,10 +9,10 @@ import MapCore from '../components/MapCore';
 const MapBase = kind({
 	name: 'Map',
 
-	// styles: {
-	// 	css,
-	// 	className: 'map'
-	// },
+	styles: {
+		css,
+		className: 'map'
+	},
 
 	render: ({changePosition, onSetDestination, ...rest}) => {
 		return (
