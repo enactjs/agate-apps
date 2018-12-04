@@ -2,6 +2,7 @@ import Button from '@enact/agate/Button';
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import React from 'react';
+import Skinnable from '@enact/agate/Skinnable';
 
 import MapCore from '../components/MapCore';
 
@@ -72,7 +73,7 @@ const MapBrains = hoc((configHoc, Wrapped) => {
 	};
 });
 
-const MapView = MapBrains(MapBase);
+const MapView = Skinnable(MapBrains(MapBase));
 
 export default MapView;
 export {MapView as Map};
