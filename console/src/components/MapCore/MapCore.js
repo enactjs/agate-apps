@@ -30,8 +30,9 @@ if (!appConfig.mapApiKey) {
 }
 mapboxgl.accessToken = appConfig.mapApiKey;
 
-const startCoordinates = {lon: -121.979125, lat: 37.405189};
-
+const startCoordinates = {lon: -122.394558, lat: 37.786600};
+// 37.786600, -122.394558
+// {lon: -121.979125, lat: 37.405189};
 //
 // Map Utilities
 //
@@ -73,7 +74,14 @@ const getRoute = async (waypoints) => {
 	if (bearing < 0) bearing += 360;
 
 	// Take the list of LatLon objects and convert each to a string of "x,y", then join those with a ";"
-	const waypointParts = waypoints.map(point => toMapbox(point).join(','));
+	const waypointParts = waypoints.map(point => {
+		if (point.lat) {
+			return toMapbox(point).join(',');
+		} else if (Array.isArray(point)) {
+			return point.join(',');
+		}
+	});
+
 	const waypointString = waypointParts.join(';');
 
 	// geometries=geojson&bearings=${bearing},45;&radiuses=100;100&access_token=${mapboxgl.accessToken}
@@ -170,7 +178,7 @@ class MapCoreBase extends React.Component {
 		destination:propTypeLatLonList,
 		location: propTypeLatLon, // Our actual current location on the world
 		position: propTypeLatLon, // The map's centering position
-		proposedDestination: propTypeLatLonList,
+		proposedDestinationIndex: propTypeLatLonList,
 		skin: PropTypes.string,
 		tools: PropTypes.node, // Buttons and tools for interacting with the map. (Slottable)
 		viewLockoutDuration: PropTypes.number,
@@ -211,7 +219,8 @@ class MapCoreBase extends React.Component {
 	}
 
 	componentDidMount () {
-		const style = skinStyles[this.props.skin] || skinStyles.titanium;
+		const {skin, location, navigation} = this.props;
+		const style = skinStyles[skin] || skinStyles.titanium;
 
 		// stop drawing map if accessToken is not set.
 		if (!mapboxgl.accessToken) return;
@@ -237,13 +246,21 @@ class MapCoreBase extends React.Component {
 				coordinates: toMapbox(startCoordinates),
 				iconURL: CarPng,
 				map: this.map,
-				orientation: this.props.location.orientation
+				orientation: location.orientation
+			});
+			this.map.on('click', 'symbols', (e) => {
+				this.estimateRoute({selected: e.features[0].properties.index - 1});
+			});
+
+			if (navigation && navigation.navigating) {
+				this.drawDirection([startCoordinates, {lon: navigation.destination[0], lat: navigation.destination[1]}]);
+			}
+
+			this.map.fitBounds(this.bbox, {
+				padding: {top: 30, bottom:30, left: 30, right: 350}
 			});
 		});
 
-		this.map.fitBounds(this.bbox, {
-			padding: {top: 30, bottom:30, left: 30, right: 350}
-		});
 	}
 
 	componentDidUpdate (prevProps) {
@@ -272,9 +289,9 @@ class MapCoreBase extends React.Component {
 
 		// Received a new orientation
 
-		// Received a new proposedDestination
-		if (!equals(prevProps.proposedDestination, this.props.proposedDestination)) {
-			actions.plotRoute = [this.props.location, ...this.props.proposedDestination];
+		// Received a new proposedDestinationIndex
+		if (!equals(prevProps.proposedDestinationIndex, this.props.proposedDestinationIndex)) {
+			actions.plotRoute = [this.props.location, this.topLocations[this.props.proposedDestinationIndex].geometry.coordinates];
 		}
 
 		// Received a new velocity
@@ -439,8 +456,11 @@ class MapCoreBase extends React.Component {
 	showFullRouteOnMap = (waypoints) => {
 		// Currently we're just looking at the first and last waypoint, but this could be expanded
 		// to calculate the farthest boundry and plot that.
-		const bounds = newBounds(waypoints[0], waypoints[waypoints.length - 1]);
-		this.map.fitBounds(bounds, {padding: 50});
+		const bounds = waypoints.reduce((result, coord) => {
+			return result.extend(coord);
+		}, new mapboxgl.LngLatBounds(waypoints[0], waypoints[0]));
+
+		this.map.fitBounds(bounds, {padding: 150});
 
 		// Set a time to automatically pan back to the current position.
 		if (this.viewLockTimert) this.viewLockTimer.stop();
@@ -460,7 +480,7 @@ class MapCoreBase extends React.Component {
 		const data = await getRoute(waypoints);
 		if (data.routes && data.routes[0]) {
 			const route = data.routes[0];
-			this.showFullRouteOnMap(waypoints);
+			this.showFullRouteOnMap(data.routes[0].geometry.coordinates);
 			const startTime = new Date().getTime();
 			const eta = new Date(startTime + (route.duration * 1000)).getTime();
 
@@ -491,7 +511,8 @@ class MapCoreBase extends React.Component {
 						}
 					},
 					paint: {
-						'line-width': 3
+						'line-width': 5,
+						'line-color': this.props.colorAccent
 					}
 				});
 			}
@@ -500,22 +521,6 @@ class MapCoreBase extends React.Component {
 			console.log('No routes in response:', data, waypoints);
 		}
 	}
-
-	// this.map.on('click', 'symbols', (e) => {
-	// 	// This method is a bit messy because it now intermixes different coordinates systems
-	// 	// `coordinates` comes in as Mapbox format and `startCoordinates` is latlon format.
-	// 	// This could be updated, but it's marginally faster to leave it this way.
-	// 	let coordinates = e.features[0].geometry.coordinates.slice();
-	// 	let description = e.features[0].properties.description;
-
-	// 	while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-	// 		coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-	// 	}
-
-	// 	this.showPopup(coordinates, description);
-	// 	this.drawDirection(startCoordinates, {lon: coordinates[0], lat: coordinates[1]});
-	// 	this.centerMap({center: [(coordinates[0] + startCoordinates.lon) / 2, (coordinates[1] + startCoordinates.lat) / 2]});
-	// });
 
 	estimateRoute = ({selected}) => {
 		// TODO: Clear the route when deselecting a destination
@@ -534,10 +539,6 @@ class MapCoreBase extends React.Component {
 
 	setMapNode = (node) => (this.mapNode = node)
 
-	toggleSelfDriving = () => {
-		this.setState(({selfDriving}) => ({selfDriving: !selfDriving}));
-	}
-
 	// Button options
 	// <Button alt="Fullscreen" icon="fullscreen" data-tabindex={getPanelIndexOf('map')} onSelect={onSelect} onKeyUp={onTabChange} onClick={onTabChange} />
 	// <Button alt="Propose new destination" icon="arrowhookleft" onClick={changePosition} />
@@ -545,74 +546,25 @@ class MapCoreBase extends React.Component {
 	// <ToggleButton alt="Follow" selected={this.state.follow} underline icon="forward" onClick={this.changeFollow} />
 
 	render () {
-		const {className, selfDrivingSelection, locationSelection, compact, navigation, ...rest} = this.props;
+		const {className, tools, ...rest} = this.props;
 		delete rest.centeringDuration;
 		delete rest.destination;
 		delete rest.defaultFollow;
 		delete rest.location;
 		delete rest.position;
-		delete rest.proposedDestination;
+		delete rest.proposedDestinationIndex;
 		delete rest.setDestination;
 		delete rest.skin;
 		delete rest.topLocations;
 		delete rest.updateNavigation;
 		delete rest.viewLockoutDuration;
 		delete rest.zoomToSpeedScaleFactor;
-		const durationIncrements = ['day', 'hour', 'min'];
-		const {selfDriving} = this.state;
 
 		return (
 			<div {...rest} className={classnames(className, css.map)}>
 				{this.message ? <div className={css.message}>{this.message}</div> : null}
 				<Column className={css.tools}>
-					{
-						selfDrivingSelection && <div>
-							<Divider>SELF DRIVING</Divider>
-							<Button onClick={this.toggleSelfDriving} highlighted={selfDriving} small>AUTO</Button>
-							<Button onClick={this.toggleSelfDriving} highlighted={!selfDriving} small>MANUAL</Button>
-						</div>
-					}
-					{
-						locationSelection && <div>
-							<Divider>TOP LOCATIONS</Divider>
-							<Group childComponent={Button} onSelect={this.estimateRoute} selectedProp="highlighted">
-								{this.topLocations ? this.topLocations.map(({properties}) => {
-									const {index, description} = properties;
-									return {
-										children: `${index} - ${description}`,
-										className: css.button,
-										key: `${description}-${index}`,
-										small: true
-									};
-								}) : []}
-							</Group>
-						</div>
-					}
-					{
-						compact && navigation && <Button
-							className={css.button}
-							small
-							highlighted
-							disabled
-						>{navigation.description}</Button>
-					}
-					{
-						navigation && navigation.navigating &&
-						<div>
-							<p>{formatDuration(navigation.duration, durationIncrements)}</p>
-							<p>{(navigation.distance / 1609.344).toFixed(1)} mi - {formatTime(navigation.eta)}</p>
-							<ToggleButton
-								className={css.button}
-								small
-								alt="Follow"
-								selected={this.state.follow}
-								underline
-								onClick={this.changeFollow}
-								toggleOnLabel="Stop Navigation"
-								toggleOffLabel="Start Navigation"
-							/>
-						</div>
-					}
+					{tools}
 				</Column>
 				<div
 					ref={this.setMapNode}
@@ -629,6 +581,7 @@ const ConnectedMap = AppContextConnect(({location, userSettings, navigation, upd
 	topLocations: userSettings.topLocations,
 	location,
 	navigation,
+	colorAccent: userSettings.colorAccent,
 	setDestination: (destination) => {
 		updateAppState((state) => {
 			state.navigation.destination = destination.geometry.coordinates;
