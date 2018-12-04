@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
 import classnames from 'classnames';
-import {equals} from 'ramda';
+import {equals, compose} from 'ramda';
 import {Job} from '@enact/core/util';
 import Slottable from '@enact/ui/Slottable';
 import ri from '@enact/ui/resolution';
@@ -11,6 +11,7 @@ import AppContextConnect from '../../App/AppContextConnect';
 import appConfig from '../../App/configLoader';
 import {propTypeLatLon, propTypeLatLonList} from '../../data/proptypes';
 import CarPng from '../Dashboard/svg/car.png';
+import ServiceLayer from '../../data/ServiceLayer';
 
 import css from './MapCore.less';
 

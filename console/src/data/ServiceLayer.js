@@ -155,6 +155,8 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					console.log('Destination Reached:', location, 'Automatic driving mode now disabled.');
 				}
 			}
+			console.log('location');
+			// this.setState({location});
 			this.props.setLocation({location});
 		}
 
@@ -214,9 +216,9 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 		render () {
 			const {...rest} = this.props;
-			delete rest.autonomous;
-			delete rest.location;
-			delete rest.navigating;
+			delete rest.setLocation;
+			delete rest.setConnected;
+			delete rest.updateDestination;
 			delete rest.navigation;
 			delete rest.setConnected;
 			delete rest.setLocation;
