@@ -39,10 +39,9 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 			this.done = false;
 			this.comm = React.createRef();
-
-			// this.state = {
-			// 	showAppList: false
-			// };
+			this.state = {
+				location: {}
+			};
 
 			// const tickler = setInterval(this.doTickle, 1000);
 		}
@@ -159,6 +158,8 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					console.log('Destination Reached:', location, 'Automatic driving mode now disabled.');
 				}
 			}
+			console.log('location');
+			// this.setState({location});
 			this.props.setLocation({location});
 		}
 
@@ -182,11 +183,8 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		//
 
 		setDestination = ({destination} = {}) => {
-			const {navigation, location} = this.props;
-			// console.log(location);
-
-			// const location = {lat: 37.78996,linearVelocity: 0,lon: -122.400461,orientation: 224.49038325105812}
-
+			const {location} = this.state;
+			const {navigation} = this.props;
 
 			const destDiffersFromState = (!equals(destination, navigation.destination));
 			destination = destination || navigation.destination; // Accept external args, in case the request came from within this component, but fallback to the navigation prop (the preferred usage).
@@ -216,25 +214,24 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			delete rest.setLocation;
 			delete rest.setConnected;
 			delete rest.updateDestination;
-			delete rest.location;
 			delete rest.navigation;
 			// delete rest.setTickle;
 
 			return (
 				<React.Fragment>
-					<ServiceLayerContext.Provider value={{}}>
-						<Communicator ref={this.comm} host={appConfig.communicationServerHost} />
-						<PureWrapped
-							{...rest}
-							sendVideo={this.sendVideo}
-							resetPosition={this.resetPosition}
-						/>
-					</ServiceLayerContext.Provider>
+					<Communicator ref={this.comm} host={appConfig.communicationServerHost} />
+					<Wrapped
+						{...rest}
+						sendVideo={this.sendVideo}
+						resetPosition={this.resetPosition}
+					/>
 				</React.Fragment>
 			);
 		}
 	};
 });
+
+
 const methods = ({location: locationProp, navigation, updateAppState}) => ({
 	location: locationProp,
 	navigation,
@@ -252,6 +249,7 @@ const methods = ({location: locationProp, navigation, updateAppState}) => ({
 	},
 	setLocation: ({location}) => {
 		updateAppState((state) => {
+			console.log('here');
 			// console.log('Setting location app state:', location);
 			state.location = location;
 		});

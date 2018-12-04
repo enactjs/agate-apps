@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
 import classnames from 'classnames';
-import {equals} from 'ramda';
+import {equals, compose} from 'ramda';
 import {Job} from '@enact/core/util';
 import Slottable from '@enact/ui/Slottable';
 import ToggleButton from '@enact/agate/ToggleButton';
@@ -11,6 +11,7 @@ import AppContextConnect from '../../App/AppContextConnect';
 import appConfig from '../../App/configLoader';
 import {propTypeLatLon, propTypeLatLonList} from '../../data/proptypes';
 import CarPng from '../Dashboard/svg/car.png';
+import ServiceLayer from '../../data/ServiceLayer';
 
 import css from './MapCore.less';
 
@@ -579,27 +580,29 @@ class MapCoreBase extends React.Component {
 	}
 }
 
-const ConnectedMap = AppContextConnect(({location, userSettings, updateAppState}) => ({
-	// We should import the app-level variable for our current location then feed that in as the "start"
-	skin: userSettings.skin,
-	location,
-	// destination: navigation.destination,
-	setDestination: ({destination}) => {
-		updateAppState((state) => {
-			state.navigation.destination = destination;
-		});
-	},
-	updateNavigation: ({duration}) => {
-		const now = new Date().getTime();
-		const eta = new Date(now + (duration * 1000)).getTime();
-		updateAppState((state) => {
-			state.navigation.duration = duration;
-			state.navigation.startTime = now;
-			state.navigation.eta = eta;
-			// console.log('updateNavigation:', state.navigation);
-		});
-	}
-}));
+const ConnectedMap = compose(
+	AppContextConnect(({location, userSettings, updateAppState}) => ({
+		// We should import the app-level variable for our current location then feed that in as the "start"
+		skin: userSettings.skin,
+		// destination: navigation.destination,
+		setDestination: ({destination}) => {
+			updateAppState((state) => {
+				state.navigation.destination = destination;
+			});
+		},
+		updateNavigation: ({duration}) => {
+			const now = new Date().getTime();
+			const eta = new Date(now + (duration * 1000)).getTime();
+			updateAppState((state) => {
+				state.navigation.duration = duration;
+				state.navigation.startTime = now;
+				state.navigation.eta = eta;
+				// console.log('updateNavigation:', state.navigation);
+			});
+		}
+	})),
+	ServiceLayer
+);
 
 const MapCore = ConnectedMap(Slottable({slots: ['tools']}, MapCoreBase));
 

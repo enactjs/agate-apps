@@ -14,7 +14,7 @@ import React from 'react';
 import compose from 'ramda/src/compose';
 
 // Data Services
-import ServiceLayer from '../data/ServiceLayer';
+
 
 // Components
 import Clock from '../components/Clock';
@@ -70,6 +70,67 @@ const AppBase = kind({
 		className: 'app'
 	},
 
+	handlers: {
+		layoutArrangeableToggle: ({updateAppState}) => ({selected}) => {
+			updateAppState((state) => {
+				state.userSettings.arrangements.arrangeable = selected;
+			});
+		},
+		updateSkin: ({updateAppState}) => () => {
+			updateAppState((state) => {
+				let newSkin;
+				switch (state.userSettings.skin) {
+					case 'titanium': newSkin = 'electro'; break;
+					case 'carbon': newSkin = 'titanium'; break;
+					default: newSkin = 'carbon';
+				}
+				state.userSettings.skin = newSkin;
+			});
+		},
+		onSelect: ({updateAppState}) => handle(
+			adaptEvent((ev) => {
+				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
+				updateAppState((state) => {
+					state.appState.index = state.appState.index === index ? null : index;
+				});
+				return {index};
+			}, forward('onSelect'))
+		),
+
+		onToggleUserSelectionPopup: ({updateAppState}) => () => {
+			updateAppState((state) => {
+				state.appState.showUserSelectionPopup = !state.appState.showUserSelectionPopup;
+			});
+		},
+		onToggleDateTimePopup: ({updateAppState}) => () => {
+			updateAppState((state) => {
+				state.appState.showDateTimePopup = !state.appState.showDateTimePopup;
+			});
+		},
+		onToggleWelcomePopup:  ({updateAppState}) => () => {
+			updateAppState((state) => {
+				state.appState.showWelcomePopup = !state.appState.showWelcomePopup;
+			});
+		},
+		onTogglePopup: ({updateAppState}) => {
+			updateAppState((state) => {
+				state.appState.showPopup = !state.appState.showPopup;
+			});
+		},
+		onToggleBasicPopup: ({updateAppState}) => () => {
+			updateAppState((state) => {
+				state.appState.showBasicPopup = !state.appState.showBasicPopup;
+			});
+		},
+		onResetAll: ({updateAppState}) => () => {
+			updateAppState((state) => {
+				state.appState.index = 0;
+				state.appState.showWelcomePopup = true;
+				state.appState.showUserSelectionPopup = false;
+			});
+		},
+	},
+
 	render: ({
 		index,
 		onSelect,
@@ -98,7 +159,7 @@ const AppBase = kind({
 		delete rest.endNavigation;
 		delete rest.defaultIndex;
 		delete rest.defaultSkin;
-
+		console.log('app rendering');
 		return (
 			<div {...rest}>
 				<TabbedPanels
@@ -226,71 +287,66 @@ const AppDecorator = compose(
 		showAppList: appState.showAppList,
 		showWelcomePopup: appState.showWelcomePopup,
 		orientation: (userSettings.skin !== 'carbon') ? 'horizontal' : 'vertical',
-		layoutArrangeableToggle: ({selected}) => {
-			updateAppState((state) => {
-				state.userSettings.arrangements.arrangeable = selected;
-			});
-		},
-		// endNavigation: ({navigating}) => {
+		updateAppState,
+		// layoutArrangeableToggle: ({selected}) => {
 		// 	updateAppState((state) => {
-		// 		state.navigation.navigating = navigating;
+		// 		state.userSettings.arrangements.arrangeable = selected;
 		// 	});
 		// },
-		updateSkin: () => {
-			updateAppState((state) => {
-				let newSkin;
-				switch (state.userSettings.skin) {
-					case 'titanium': newSkin = 'electro'; break;
-					case 'carbon': newSkin = 'titanium'; break;
-					default: newSkin = 'carbon';
-				}
-				state.userSettings.skin = newSkin;
-			});
-		},
-		onSelect: handle(
-			adaptEvent((ev) => {
-				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
-				updateAppState((state) => {
-					state.appState.index = state.appState.index === index ? null : index;
-				});
-				return {index};
-			}, forward('onSelect'))
-		),
+		// updateSkin: () => {
+		// 	updateAppState((state) => {
+		// 		let newSkin;
+		// 		switch (state.userSettings.skin) {
+		// 			case 'titanium': newSkin = 'electro'; break;
+		// 			case 'carbon': newSkin = 'titanium'; break;
+		// 			default: newSkin = 'carbon';
+		// 		}
+		// 		state.userSettings.skin = newSkin;
+		// 	});
+		// },
+		// onSelect: handle(
+		// 	adaptEvent((ev) => {
+		// 		const {index = getPanelIndexOf(ev.view || 'home')} = ev;
+		// 		updateAppState((state) => {
+		// 			state.appState.index = state.appState.index === index ? null : index;
+		// 		});
+		// 		return {index};
+		// 	}, forward('onSelect'))
+		// ),
 
-		onToggleUserSelectionPopup: () => {
-			updateAppState((state) => {
-				state.appState.showUserSelectionPopup = !state.appState.showUserSelectionPopup;
-			});
-		},
-		onToggleDateTimePopup: () => {
-			updateAppState((state) => {
-				state.appState.showDateTimePopup = !state.appState.showDateTimePopup;
-			});
-		},
-		onToggleWelcomePopup: () => {
-			updateAppState((state) => {
-				state.appState.showWelcomePopup = !state.appState.showWelcomePopup;
-			});
-		},
-		onTogglePopup: () => {
-			updateAppState((state) => {
-				state.appState.showPopup = !state.appState.showPopup;
-			});
-		},
-		onToggleBasicPopup: () => {
-			updateAppState((state) => {
-				state.appState.showBasicPopup = !state.appState.showBasicPopup;
-			});
-		},
-		onResetAll: () => {
-			updateAppState((state) => {
-				state.appState.index = 0;
-				state.appState.showWelcomePopup = true;
-				state.appState.showUserSelectionPopup = false;
-			});
-		},
+		// onToggleUserSelectionPopup: () => {
+		// 	updateAppState((state) => {
+		// 		state.appState.showUserSelectionPopup = !state.appState.showUserSelectionPopup;
+		// 	});
+		// },
+		// onToggleDateTimePopup: () => {
+		// 	updateAppState((state) => {
+		// 		state.appState.showDateTimePopup = !state.appState.showDateTimePopup;
+		// 	});
+		// },
+		// onToggleWelcomePopup: () => {
+		// 	updateAppState((state) => {
+		// 		state.appState.showWelcomePopup = !state.appState.showWelcomePopup;
+		// 	});
+		// },
+		// onTogglePopup: () => {
+		// 	updateAppState((state) => {
+		// 		state.appState.showPopup = !state.appState.showPopup;
+		// 	});
+		// },
+		// onToggleBasicPopup: () => {
+		// 	updateAppState((state) => {
+		// 		state.appState.showBasicPopup = !state.appState.showBasicPopup;
+		// 	});
+		// },
+		// onResetAll: () => {
+		// 	updateAppState((state) => {
+		// 		state.appState.index = 0;
+		// 		state.appState.showWelcomePopup = true;
+		// 		state.appState.showUserSelectionPopup = false;
+		// 	});
+		// },
 	})),
-	ServiceLayer,
 	AgateDecorator
 );
 
