@@ -212,48 +212,46 @@ const AppState = hoc((configHoc, Wrapped) => {
 		static displayName = 'AppState';
 		constructor (props) {
 			super(props);
-			this.state = {
-				index: props.defaultIndex || 0,
-				showPopup: false,
-				showBasicPopup: false,
-				showDateTimePopup: false,
-				showUserSelectionPopup: false,
-				showAppList: false,
-				showWelcomePopup: ('defaultShowWelcomePopup' in props ? Boolean(props.defaultShowWelcomePopup) : true)
-			};
+			// this.state = {
+			// 	index: props.defaultIndex || 0,
+			// 	showPopup: false,
+			// 	showBasicPopup: false,
+			// 	// showDateTimePopup: false,
+			// 	// showUserSelectionPopup: false,
+			// 	showAppList: false,
+			// 	// showWelcomePopup: 'defaultShowWelcomePopup' in props ? Boolean(props.defaultShowWelcomePopup) : true
+			// };
 		}
 
-		onSelect = handle(
-			adaptEvent((ev) => {
-				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
-				this.setState(state => state.index === index ? null : {index});
-				return {index};
-			}, forward('onSelect'))
-		).bind(this);
+		// onSelect = handle(
+		// 	adaptEvent((ev) => {
+		// 		const {index = getPanelIndexOf(ev.view || 'home')} = ev;
+		// 		this.setState(state => state.index === index ? null : {index});
+		// 		return {index};
+		// 	}, forward('onSelect'))
+		// ).bind(this);
 
-		onToggleUserSelectionPopup = () => {
-			this.setState(({showUserSelectionPopup}) => ({showUserSelectionPopup: !showUserSelectionPopup}));
-		};
 
-		onTogglePopup = () => {
-			this.setState(({showPopup}) => ({showPopup: !showPopup}));
-		};
 
-		onToggleBasicPopup = () => {
-			this.setState(({showBasicPopup}) => ({showBasicPopup: !showBasicPopup}));
-		};
+		// onTogglePopup = () => {
+		// 	this.setState(({showPopup}) => ({showPopup: !showPopup}));
+		// };
 
-		onToggleDateTimePopup = () => {
-			this.setState(({showDateTimePopup}) => ({showDateTimePopup: !showDateTimePopup}));
-		};
+		// onToggleBasicPopup = () => {
+		// 	this.setState(({showBasicPopup}) => ({showBasicPopup: !showBasicPopup}));
+		// };
 
-		onToggleWelcomePopup = () => {
-			this.setState(({showWelcomePopup}) => ({showWelcomePopup: !showWelcomePopup}));
-		};
+		// onToggleDateTimePopup = () => {
+		// 	this.setState(({showDateTimePopup}) => ({showDateTimePopup: !showDateTimePopup}));
+		// };
 
-		onResetAll = () => {
-			this.setState({index: 0, showWelcomePopup: true, showUserSelectionPopup: false});
-		};
+		// onToggleWelcomePopup = () => {
+		// 	this.setState(({showWelcomePopup}) => ({showWelcomePopup: !showWelcomePopup}));
+		// };
+
+		// onResetAll = () => {
+		// 	this.setState({index: 0, showWelcomePopup: true, showUserSelectionPopup: false});
+		// };
 
 		render () {
 			const {colorAccent, colorHighlight, skin, ...rest} = this.props;
@@ -267,20 +265,20 @@ const AppState = hoc((configHoc, Wrapped) => {
 					{...rest}
 					accent={colorAccent}
 					highlight={colorHighlight}
-					index={this.state.index}
-					onResetAll={this.onResetAll}
-					onSelect={this.onSelect}
-					onTogglePopup={this.onTogglePopup}
+					index={this.props.index}
+					onResetAll={this.props.onResetAll}
+					onSelect={this.props.onSelect}
+					onTogglePopup={this.props.onTogglePopup}
 					onToggleBasicPopup={this.onToggleBasicPopup}
-					onToggleDateTimePopup={this.onToggleDateTimePopup}
-					onToggleUserSelectionPopup={this.onToggleUserSelectionPopup}
-					onToggleWelcomePopup={this.onToggleWelcomePopup}
+					onToggleDateTimePopup={this.props.onToggleDateTimePopup}
+					onToggleUserSelectionPopup={this.props.onToggleUserSelectionPopup}
+					onToggleWelcomePopup={this.props.onToggleWelcomePopup}
 					orientation={(skin !== 'carbon') ? 'horizontal' : 'vertical'}
-					showPopup={this.state.showPopup}
-					showBasicPopup={this.state.showBasicPopup}
-					showDateTimePopup={this.state.showDateTimePopup}
-					showUserSelectionPopup={this.state.showUserSelectionPopup}
-					showWelcomePopup={this.state.showWelcomePopup}
+					showPopup={this.props.showPopup}
+					showBasicPopup={this.props.showBasicPopup}
+					showDateTimePopup={this.props.showDateTimePopup}
+					showUserSelectionPopup={this.props.showUserSelectionPopup}
+					showWelcomePopup={this.props.showWelcomePopup}
 					skin={skin}
 					skinName={skin}
 				/>
@@ -290,12 +288,21 @@ const AppState = hoc((configHoc, Wrapped) => {
 });
 
 const AppDecorator = compose(
-	AppStateConnect(({userSettings, updateAppState}) => ({
+	AppStateConnect(({appState, userSettings, updateAppState}) => ({
 		skin: userSettings.skin,
 		colorAccent: userSettings.colorAccent,
 		colorHighlight: userSettings.colorHighlight,
 		layoutArrangeable: userSettings.arrangements.arrangeable,
-		layoutArrangeableToggle: () => {
+		// old app state
+		index: appState.index,
+		showPopup: appState.showPopup,
+		showBasicPopup: appState.showBasicPopup,
+		showDateTimePopup: appState.showDateTimePopup,
+		showUserSelectionPopup: appState.showUserSelectionPopup,
+		showAppList: appState.showAppList,
+		showWelcomePopup: appState.showWelcomePopup,
+
+		layoutArrangeableToggle: ({selected}) => {
 			updateAppState((state) => {
 				state.userSettings.arrangements.arrangeable = !userSettings.arrangements.arrangeable;
 			});
@@ -315,7 +322,50 @@ const AppDecorator = compose(
 				}
 				state.userSettings.skin = newSkin;
 			});
-		}
+		},
+		onSelect: handle(
+			adaptEvent((ev) => {
+				console.log(ev);
+				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
+				updateAppState((state) => {
+					state.appState.index = state.appState.index === index ? null : {index}
+				});
+				return {index};
+			}, forward('onSelect'))
+		),
+
+		onToggleUserSelectionPopup: () => {
+			updateAppState((state) => {
+				state.appState.showUserSelectionPopup = !state.appState.showUserSelectionPopup;
+			});
+		},
+		onToggleDateTimePopup: () => {
+			updateAppState((state) => {
+				state.appState.showDateTimePopup = !state.appState.showDateTimePopup;
+			});
+		},
+		onToggleWelcomePopup: () => {
+			updateAppState((state) => {
+				state.appState.showWelcomePopup = !state.appState.showWelcomePopup;
+			});
+		},
+		onTogglePopup: () => {
+			updateAppState((state) => {
+				state.appState.showPopup = !state.appState.showPopup;
+			});
+		},
+		onToggleBasicPopup: () => {
+			updateAppState((state) => {
+				state.appState.showBasicPopup = !state.appState.showBasicPopup;
+			});
+		},
+		onResetAll: () => {
+			updateAppState((state) => {
+				state.appState.index = 0;
+				state.appState.showWelcomePopup = true;
+				state.appState.showUserSelectionPopup = false;
+			});
+		},
 	})),
 	AppState,
 	ServiceLayer,
