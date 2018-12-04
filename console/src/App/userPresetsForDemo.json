@@ -28,40 +28,39 @@
 		},
 		"fontSize": 0,
 		"name": "Laura & Steve",
-		"skin": "carbon",
+		"skin": "carbon",	
 		"topLocations": [
 			{
 					"description": "Home",
 					"coordinates": [
-						-121.990382, 37.39236
+						-122.396601, 37.790246
 					]
 			},
 			{
-					"description": "Tasty Subs & Pizza",
+					"description": "Philz coffee",
 					"coordinates": [
-						-121.995479, 37.384965
+						-122.392775, 37.789026
 					]
 			},
 			{
 					"description": "School",
 					"coordinates": [
-						-121.990265, 37.396996
+						-122.401929, 37.778545
 					]
 			},
 			{
 					"description": "Work",
 					"coordinates": [
-						-121.978302, 37.405484
+						-122.405339, 37.785215
 					]
 			},
 			{
-					"description": "Dishdash",
+					"description": "MOMA",
 					"coordinates": [
-						-122.026600, 37.376994
+						-122.404202, 37.786445
 					]
 			}
-		]
-		
+		]	
 	},
 	"user2": {
 		"arrangements": {
@@ -120,31 +119,31 @@
 			{
 					"description": "Home",
 					"coordinates": [
-						-121.990382, 37.39236
+						-122.396601, 37.790246
 					]
 			},
 			{
-					"description": "Tasty Subs & Pizza",
+					"description": "Philz coffee",
 					"coordinates": [
-						-121.995479, 37.384965
+						-122.392775, 37.789026
 					]
 			},
 			{
 					"description": "School",
 					"coordinates": [
-						-121.990265, 37.396996
+						-122.401929, 37.778545
 					]
 			},
 			{
 					"description": "Work",
 					"coordinates": [
-						-121.978302, 37.405484
+						-122.405339, 37.785215
 					]
 			},
 			{
-					"description": "Dishdash",
+					"description": "MOMA",
 					"coordinates": [
-						-122.026600, 37.376994
+						-122.404202, 37.786445
 					]
 			}
 		]
