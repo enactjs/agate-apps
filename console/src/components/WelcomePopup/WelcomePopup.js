@@ -16,7 +16,7 @@ import AppContextConnect from '../../App/AppContextConnect';
 import CompactHeater from '../CompactHeater';
 import CompactMultimedia from '../CompactMultimedia';
 import CompactWeather from '../CompactWeather';
-import MapCore from '../MapCore';
+import MapController from '../MapController';
 import {propTypeLatLonList} from '../../data/proptypes';
 
 import steveAvatar from '../../../assets/steve.png';
@@ -207,7 +207,12 @@ const WelcomePopupBase = kind({
 									<Cell component={Button} onClick={handleClose} shrink>Continue</Cell>
 								</Column>
 							</Cell>
-							<Cell component={MapCore} locationSelection selfDrivingSelection />
+							<Cell
+								component={MapController}
+								noStartStopToggle
+								locationSelection
+								selfDrivingSelection
+							/>
 						</Row>
 					</Panel>
 				</Panels>

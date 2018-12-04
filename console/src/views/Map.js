@@ -2,7 +2,7 @@ import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
 import React from 'react';
 
-import MapCore from '../components/MapCore';
+import MapController from '../components/MapController';
 
 // import css from './Map.less';
 
@@ -17,7 +17,7 @@ const MapViewBase = kind({
 	render: ({...rest}) => {
 		return (
 			<Panel {...rest}>
-				<MapCore />
+				<MapController selfDrivingSelection locationSelection />
 			</Panel>
 		);
 	}

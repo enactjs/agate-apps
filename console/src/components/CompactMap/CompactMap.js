@@ -7,7 +7,7 @@ import Widget from '../Widget';
 
 import {propTypeLatLonList} from '../../data/proptypes';
 
-import MapCore from '../MapCore';
+import MapController from '../MapController';
 
 import css from './CompactMap.less';
 
@@ -40,7 +40,7 @@ const CompactMapBase = kind({
 	render: (props) => {
 		return (
 			<Widget {...props} view="map">
-				<MapCore compact selfDrivingSelection />
+				<MapController compact selfDrivingSelection />
 			</Widget>
 		);
 	}
