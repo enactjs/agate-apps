@@ -1,6 +1,5 @@
 // External
 import kind from '@enact/core/kind';
-import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
 import {adaptEvent, forward, handle} from '@enact/core/handle';
 import {Cell, Column} from '@enact/ui/Layout';
@@ -32,6 +31,8 @@ import DisplaySettings from '../views/DisplaySettings';
 import Weather from '../views/WeatherPanel';
 import Dashboard from '../views/Dashboard';
 import Multimedia from '../views/Multimedia';
+import Communicator from '../../../components/Communicator';
+import appConfig from './configLoader';
 
 // Local Components
 import AppStateConnect from './AppContextConnect';
@@ -128,7 +129,7 @@ const AppBase = kind({
 				state.appState.showWelcomePopup = true;
 				state.appState.showUserSelectionPopup = false;
 			});
-		},
+		}
 	},
 
 	render: ({
@@ -162,6 +163,7 @@ const AppBase = kind({
 
 		return (
 			<div {...rest}>
+
 				<TabbedPanels
 					orientation={orientation}
 					tabs={[
@@ -271,85 +273,36 @@ const AppBase = kind({
 	}
 });
 
-const AppState = hoc((configHoc, Wrapped) => {
-	return class extends React.Component {
-		static displayName = 'AppState';
+
+const CommunicationLayer = (Wrapped) => {
+	return class Communication extends React.Component {
 		constructor (props) {
 			super(props);
-			// this.state = {
-			// 	index: props.defaultIndex || 0,
-			// 	showPopup: false,
-			// 	showBasicPopup: false,
-			// 	// showDateTimePopup: false,
-			// 	// showUserSelectionPopup: false,
-			// 	showAppList: false,
-			// 	// showWelcomePopup: 'defaultShowWelcomePopup' in props ? Boolean(props.defaultShowWelcomePopup) : true
-			// };
+			this.comm = React.createRef();
 		}
 
-		// onSelect = handle(
-		// 	adaptEvent((ev) => {
-		// 		const {index = getPanelIndexOf(ev.view || 'home')} = ev;
-		// 		this.setState(state => state.index === index ? null : {index});
-		// 		return {index};
-		// 	}, forward('onSelect'))
-		// ).bind(this);
+		sendVideo = (args) => {
+			this.comm.current.sendVideo(args);
+		}
 
-
-
-		// onTogglePopup = () => {
-		// 	this.setState(({showPopup}) => ({showPopup: !showPopup}));
-		// };
-
-		// onToggleBasicPopup = () => {
-		// 	this.setState(({showBasicPopup}) => ({showBasicPopup: !showBasicPopup}));
-		// };
-
-		// onToggleDateTimePopup = () => {
-		// 	this.setState(({showDateTimePopup}) => ({showDateTimePopup: !showDateTimePopup}));
-		// };
-
-		// onToggleWelcomePopup = () => {
-		// 	this.setState(({showWelcomePopup}) => ({showWelcomePopup: !showWelcomePopup}));
-		// };
-
-		// onResetAll = () => {
-		// 	this.setState({index: 0, showWelcomePopup: true, showUserSelectionPopup: false});
-		// };
+		resetPosition = (coordinates) => {
+			this.connection.send('positionReset', coordinates);
+		}
 
 		render () {
-			const {colorAccent, colorHighlight, skin, ...rest} = this.props;
-
-			delete rest.defaultIndex;
-			delete rest.defaultSkin;
-			delete rest.defaultShowWelcomePopup;
-
 			return (
-				<Wrapped
-					{...rest}
-					accent={colorAccent}
-					highlight={colorHighlight}
-					index={this.props.index}
-					onResetAll={this.props.onResetAll}
-					onSelect={this.props.onSelect}
-					onTogglePopup={this.props.onTogglePopup}
-					onToggleBasicPopup={this.onToggleBasicPopup}
-					onToggleDateTimePopup={this.props.onToggleDateTimePopup}
-					onToggleUserSelectionPopup={this.props.onToggleUserSelectionPopup}
-					onToggleWelcomePopup={this.props.onToggleWelcomePopup}
-					orientation={(skin !== 'carbon') ? 'horizontal' : 'vertical'}
-					showPopup={this.props.showPopup}
-					showBasicPopup={this.props.showBasicPopup}
-					showDateTimePopup={this.props.showDateTimePopup}
-					showUserSelectionPopup={this.props.showUserSelectionPopup}
-					showWelcomePopup={this.props.showWelcomePopup}
-					skin={skin}
-					skinName={skin}
-				/>
+				<React.Fragment>
+					<Communicator ref={this.comm} host={appConfig.communicationServerHost} />
+					<Wrapped
+						{...this.props}
+						sendVideo={this.sendVideo}
+						resetPosition={this.resetPosition}
+					/>
+				</React.Fragment>
 			);
 		}
 	};
-});
+};
 
 const AppDecorator = compose(
 	AppStateConnect(({appState, userSettings, updateAppState}) => ({
@@ -367,70 +320,14 @@ const AppDecorator = compose(
 		showWelcomePopup: appState.showWelcomePopup,
 		orientation: (userSettings.skin !== 'carbon') ? 'horizontal' : 'vertical',
 		updateAppState
-		// layoutArrangeableToggle: ({selected}) => {
-		// 	updateAppState((state) => {
-		// 		state.userSettings.arrangements.arrangeable = selected;
-		// 	});
-		// },
-		// updateSkin: () => {
-		// 	updateAppState((state) => {
-		// 		let newSkin;
-		// 		switch (state.userSettings.skin) {
-		// 			case 'titanium': newSkin = 'electro'; break;
-		// 			case 'carbon': newSkin = 'titanium'; break;
-		// 			default: newSkin = 'carbon';
-		// 		}
-		// 		state.userSettings.skin = newSkin;
-		// 	});
-		// },
-		// onSelect: handle(
-		// 	adaptEvent((ev) => {
-		// 		const {index = getPanelIndexOf(ev.view || 'home')} = ev;
-		// 		updateAppState((state) => {
-		// 			state.appState.index = state.appState.index === index ? null : index;
-		// 		});
-		// 		return {index};
-		// 	}, forward('onSelect'))
-		// ),
-
-		// onToggleUserSelectionPopup: () => {
-		// 	updateAppState((state) => {
-		// 		state.appState.showUserSelectionPopup = !state.appState.showUserSelectionPopup;
-		// 	});
-		// },
-		// onToggleDateTimePopup: () => {
-		// 	updateAppState((state) => {
-		// 		state.appState.showDateTimePopup = !state.appState.showDateTimePopup;
-		// 	});
-		// },
-		// onToggleWelcomePopup: () => {
-		// 	updateAppState((state) => {
-		// 		state.appState.showWelcomePopup = !state.appState.showWelcomePopup;
-		// 	});
-		// },
-		// onTogglePopup: () => {
-		// 	updateAppState((state) => {
-		// 		state.appState.showPopup = !state.appState.showPopup;
-		// 	});
-		// },
-		// onToggleBasicPopup: () => {
-		// 	updateAppState((state) => {
-		// 		state.appState.showBasicPopup = !state.appState.showBasicPopup;
-		// 	});
-		// },
-		// onResetAll: () => {
-		// 	updateAppState((state) => {
-		// 		state.appState.index = 0;
-		// 		state.appState.showWelcomePopup = true;
-		// 		state.appState.showUserSelectionPopup = false;
-		// 	});
-		// },
 	})),
+	CommunicationLayer,
 	AgateDecorator
 );
 
-const App = AppDecorator(AppBase);
 
+
+const App = AppDecorator(AppBase);
 export default App;
 export {
 	App,

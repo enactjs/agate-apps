@@ -17,7 +17,6 @@ import Communicator from '../../../components/Communicator';
 
 import AppStateConnect from '../App/AppContextConnect';
 
-
 const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'ServiceLayer';
@@ -212,13 +211,13 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			this.connection.send('routingRequest', [this.props.location, this.props.location]);
 		}
 
-		sendVideo = (args) => {
-			this.comm.current.sendVideo(args);
-		}
+		// sendVideo = (args) => {
+		// 	this.comm.current.sendVideo(args);
+		// }
 
-		resetPosition = (coordinates) => {
-			this.connection.send('positionReset', coordinates);
-		}
+		// resetPosition = (coordinates) => {
+		// 	this.connection.send('positionReset', coordinates);
+		// }
 
 		sendNavigation = () => {
 			this.comm.current.sendETA(this.props.navigation);
@@ -239,8 +238,6 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					<Communicator ref={this.comm} host={appConfig.communicationServerHost} />
 					<Wrapped
 						{...rest}
-						sendVideo={this.sendVideo}
-						resetPosition={this.resetPosition}
 					/>
 				</React.Fragment>
 			);
