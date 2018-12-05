@@ -55,7 +55,7 @@ class MapControllerBase extends React.Component {
 	}
 
 	handleSetDestination = ({selected}) => {
-		this.setState({destinationIndex: selected});
+		this.props.updateProposedDestination(this.props.topLocations[selected]);
 	}
 
     startNavigation = () => {
@@ -64,11 +64,11 @@ class MapControllerBase extends React.Component {
     }
 
 	toggleSelfDriving = () => {
-		this.setState(({selfDriving}) => ({selfDriving: !selfDriving}));
+		this.props.toggleSelfDriving();
 	}
 
 	render () {
-		const {className, location, topLocations, selfDrivingSelection, locationSelection, compact, navigation, noStartStopToggle, ...rest} = this.props;
+		const {className, location, topLocations, selfDrivingSelection, locationSelection, compact, navigation, noStartStopToggle, proposedDestination, ...rest} = this.props;
 		delete rest.centeringDuration;
 		delete rest.destination;
 		delete rest.defaultFollow;
@@ -79,12 +79,11 @@ class MapControllerBase extends React.Component {
 		delete rest.viewLockoutDuration;
 		delete rest.zoomToSpeedScaleFactor;
 		const durationIncrements = ['day', 'hour', 'min'];
-		const {selfDriving, destinationIndex, destination} = this.state;
+		const {selfDriving, destination} = this.state;
 
 		return (
 			<div {...rest} className={classnames(className, css.map)}>
 				<MapCore
-					proposedDestinationIndex={destinationIndex}
 					destination={destination}
 					onSetDestination={this.handleSetDestination}
 					location={location}
@@ -106,15 +105,15 @@ class MapControllerBase extends React.Component {
 							</Cell>
 						}
 						{
-							compact && destinationIndex && <Button
+							compact && proposedDestination && <Button
 								className={css.button}
 								small
 								highlighted
 								disabled
-							>{topLocations[destinationIndex].description}</Button>
+							>{proposedDestination.description}</Button>
 						}
 						{
-							destinationIndex &&
+							proposedDestination &&
 							<Cell>
 								<p>{formatDuration(navigation.duration, durationIncrements)}</p>
 								<p>{(navigation.distance / 1609.344).toFixed(1)} mi - {formatTime(navigation.eta)}</p>
@@ -144,10 +143,19 @@ const ConnectedMap = AppContextConnect(({location, userSettings, navigation, upd
 	location,
 	navigation,
 	colorAccent: userSettings.colorAccent,
+	toggleSelfDriving: () => {
+		updateAppState((state) => {
+			state.navigation.auto = !state.navigation.auto;
+		});
+	},
+	updateProposedDestination: (proposedDestination) => {
+		updateAppState((state) => {
+			state.navigation.proposedDestination = proposedDestination;
+		});
+	},
 	setDestination: ({destination}) => {
 		updateAppState((state) => {
 			state.navigation.destination = destination.coordinates;
-			console.log(state.navigation);
 		});
 	},
 	updateNavigation: ({duration, eta, startTime, distance}) => {
