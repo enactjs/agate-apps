@@ -62,8 +62,6 @@ const CompactMapBrains = hoc((configHoc, Wrapped) => {
 				<Wrapped
 					{...this.props}
 					changePosition={this.changePosition}
-					follow={this.state.follow}
-					destination={this.state.destination}
 				/>
 			);
 		}

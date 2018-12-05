@@ -21,7 +21,7 @@ if (!appConfig.mapApiKey) {
 }
 mapboxgl.accessToken = appConfig.mapApiKey;
 
-const startCoordinates = {lon: -122.394558, lat: 37.786600};
+let startCoordinates = {lon: -122.394558, lat: 37.786600};
 // 37.786600, -122.394558
 // {lon: -121.979125, lat: 37.405189};
 //
@@ -162,7 +162,7 @@ const skinStyles = {
 
 class MapCoreBase extends React.Component {
 	static propTypes = {
-		setDestination: PropTypes.func.isRequired,
+		onSetDestination: PropTypes.func.isRequired,
 		updateNavigation: PropTypes.func.isRequired,
 		centeringDuration: PropTypes.number,
 		defaultFollow: PropTypes.bool, // Should the centering position follow the current location?
@@ -210,9 +210,11 @@ class MapCoreBase extends React.Component {
 	}
 
 	componentDidMount () {
-		const {skin, location, navigation} = this.props;
+		const {skin, location, proposedDestinationIndex} = this.props;
 		const style = skinStyles[skin] || skinStyles.titanium;
-
+		if (location) {
+			startCoordinates = location;
+		}
 		// stop drawing map if accessToken is not set.
 		if (!mapboxgl.accessToken) return;
 
@@ -240,11 +242,16 @@ class MapCoreBase extends React.Component {
 				orientation: location.orientation
 			});
 			this.map.on('click', 'symbols', (e) => {
-				this.estimateRoute({selected: e.features[0].properties.index - 1});
+				let coordinates = e.features[0].geometry.coordinates.slice();
+				while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+					coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+				}
+				this.props.onSetDestination({selected: e.features[0].properties.index - 1});
 			});
 
-			if (navigation && navigation.navigating) {
-				this.drawDirection([startCoordinates, {lon: navigation.destination[0], lat: navigation.destination[1]}]);
+			if (proposedDestinationIndex && this.props.topLocations[proposedDestinationIndex]) {
+				const destinationCoor = this.props.topLocations[proposedDestinationIndex].coordinates;
+				this.drawDirection([startCoordinates, {lon: destinationCoor[0], lat: destinationCoor[1]}]);
 			}
 
 			this.map.fitBounds(this.bbox, {
@@ -259,14 +266,13 @@ class MapCoreBase extends React.Component {
 			const style = skinStyles[prevProps.skin] || skinStyles.titanium;
 			this.map.setStyle(style);
 
-			// car layer needs to be added everytime the map reloaded when skin changes
+			// car and route layer needs to be added everytime the map reloaded when skin changes
 			addCarLayer({
-				coordinates: toMapbox(startCoordinates),
+				coordinates: this.props.location,
 				iconURL: CarPng,
 				map: this.map,
 				orientation: this.props.location.orientation
 			});
-
 			// make sure the map is resized after the container updates
 			setTimeout(this.map.resize.bind(this.map), 0);
 		}
@@ -299,11 +305,12 @@ class MapCoreBase extends React.Component {
 		}
 
 		// Received a new destination
-		if (!equals(prevProps.destination, this.props.destination)) {
-			console.log('Initiating navigation to a new destination:', this.props.destination);
-			actions.plotRoute = [this.props.location, ...this.props.destination];
-			actions.startNavigating = this.props.destination;
-		}
+		// if (!equals(prevProps.destination, this.props.destination)) {
+		// 	console.log('Initiating navigation to a new destination:', this.props.destination);
+		// 	debugger
+		// 	actions.plotRoute = [this.props.location, this.props.destination];
+		// 	actions.startNavigating = this.props.destination;
+		// }
 
 		if (!actions.center && !equals(prevProps.position, this.props.position)) {
 			actions.center = this.props.position;
@@ -342,10 +349,6 @@ class MapCoreBase extends React.Component {
 				switch (action) {
 					case 'plotRoute': {
 						this.drawDirection(actions[action]);
-						break;
-					}
-					case 'startNavigating': {
-						this.props.setDestination({destination: actions[action]});
 						break;
 					}
 					case 'positionCar': {
@@ -469,6 +472,7 @@ class MapCoreBase extends React.Component {
 		this.setState({carShowing: true});
 		const direction = this.map.getSource('route');
 		const data = await getRoute(waypoints);
+		this.setState({routeData: data});
 		if (data.routes && data.routes[0]) {
 			const route = data.routes[0];
 			this.showFullRouteOnMap(data.routes[0].geometry.coordinates);
@@ -519,7 +523,7 @@ class MapCoreBase extends React.Component {
 
 		const destination = this.topLocations[selected].geometry.coordinates;
 		this.drawDirection([startCoordinates, {lon: destination[0], lat: destination[1]}]);
-		this.props.setDestination(this.topLocations[selected]);
+		// this.props.setDestination(this.topLocations[selected]);
 	}
 
 	changeFollow = () => {
@@ -544,7 +548,7 @@ class MapCoreBase extends React.Component {
 		delete rest.location;
 		delete rest.position;
 		delete rest.proposedDestinationIndex;
-		delete rest.setDestination;
+		delete rest.onSetDestination;
 		delete rest.skin;
 		delete rest.topLocations;
 		delete rest.updateNavigation;
@@ -573,12 +577,6 @@ const ConnectedMap = AppContextConnect(({location, userSettings, navigation, upd
 	location,
 	navigation,
 	colorAccent: userSettings.colorAccent,
-	setDestination: (destination) => {
-		updateAppState((state) => {
-			state.navigation.destination = destination.geometry.coordinates;
-			state.navigation.description = destination.properties.description;
-		});
-	},
 	updateNavigation: ({duration, eta, startTime, distance}) => {
 		updateAppState((state) => {
 			state.navigation.duration = duration;

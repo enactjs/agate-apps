@@ -19,8 +19,6 @@ import {formatDuration, formatTime} from '../../../../components/Formatter';
 
 import css from './MapController.less';
 
-const startCoordinates = {lon: -122.394558, lat: 37.786600};
-
 class MapControllerBase extends React.Component {
 	static propTypes = {
 		setDestination: PropTypes.func.isRequired,
@@ -60,16 +58,20 @@ class MapControllerBase extends React.Component {
 		this.setState({destinationIndex: selected});
 	}
 
-	toggleSelfDriving = () => {
-		this.setState(({selfDriving}) => ({selfDriving: !selfDriving}));
+    startNavigation = () => {
+    	console.log('start navigation to', this.props.topLocations[this.state.destinationIndex], this.state.destinationIndex);
+    	this.props.setDestination({destination: this.props.topLocations[this.state.destinationIndex]});
     }
 
+	toggleSelfDriving = () => {
+		this.setState(({selfDriving}) => ({selfDriving: !selfDriving}));
+	}
+
 	render () {
-		const {className, topLocations, selfDrivingSelection, locationSelection, compact, navigation, noStartStopToggle, ...rest} = this.props;
+		const {className, location, topLocations, selfDrivingSelection, locationSelection, compact, navigation, noStartStopToggle, ...rest} = this.props;
 		delete rest.centeringDuration;
 		delete rest.destination;
 		delete rest.defaultFollow;
-		delete rest.location;
 		delete rest.position;
 		delete rest.setDestination;
 		delete rest.skin;
@@ -77,11 +79,16 @@ class MapControllerBase extends React.Component {
 		delete rest.viewLockoutDuration;
 		delete rest.zoomToSpeedScaleFactor;
 		const durationIncrements = ['day', 'hour', 'min'];
-		const {selfDriving, destinationIndex} = this.state;
-		console.log('here', destinationIndex);
+		const {selfDriving, destinationIndex, destination} = this.state;
+
 		return (
 			<div {...rest} className={classnames(className, css.map)}>
-				<MapCore proposedDestinationIndex={destinationIndex}>
+				<MapCore
+					proposedDestinationIndex={destinationIndex}
+					destination={destination}
+					onSetDestination={this.handleSetDestination}
+					location={location}
+				>
 					<tools>
 						{
 							selfDrivingSelection && <Cell>
@@ -104,7 +111,7 @@ class MapControllerBase extends React.Component {
 								small
 								highlighted
 								disabled
-							>{navigation.description}</Button>
+							>{topLocations[destinationIndex].description}</Button>
 						}
 						{
 							destinationIndex &&
@@ -117,10 +124,8 @@ class MapControllerBase extends React.Component {
 							!noStartStopToggle && <ToggleButton
 								className={css.button}
 								small
-								alt="Follow"
-								selected={this.state.follow}
-								underline
-								onClick={this.changeFollow}
+								selected={navigation.navigating}
+								onClick={this.startNavigation}
 								toggleOnLabel="Stop Navigation"
 								toggleOffLabel="Start Navigation"
 							/>
@@ -139,10 +144,10 @@ const ConnectedMap = AppContextConnect(({location, userSettings, navigation, upd
 	location,
 	navigation,
 	colorAccent: userSettings.colorAccent,
-	setDestination: (destination) => {
+	setDestination: ({destination}) => {
 		updateAppState((state) => {
-			state.navigation.destination = destination.geometry.coordinates;
-			state.navigation.description = destination.properties.description;
+			state.navigation.destination = destination.coordinates;
+			console.log(state.navigation);
 		});
 	},
 	updateNavigation: ({duration, eta, startTime, distance}) => {
