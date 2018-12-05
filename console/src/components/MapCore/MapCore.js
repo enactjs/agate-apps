@@ -169,7 +169,6 @@ class MapCoreBase extends React.Component {
 		destination:propTypeLatLonList,
 		location: propTypeLatLon, // Our actual current location on the world
 		position: propTypeLatLon, // The map's centering position
-		proposedDestinationIndex: propTypeLatLonList,
 		skin: PropTypes.string,
 		tools: PropTypes.node, // Buttons and tools for interacting with the map. (Slottable)
 		viewLockoutDuration: PropTypes.number,
@@ -210,7 +209,7 @@ class MapCoreBase extends React.Component {
 	}
 
 	componentDidMount () {
-		const {skin, location, proposedDestinationIndex} = this.props;
+		const {skin, location, navigation} = this.props;
 		const style = skinStyles[skin] || skinStyles.titanium;
 		if (location) {
 			startCoordinates = location;
@@ -249,11 +248,6 @@ class MapCoreBase extends React.Component {
 				this.props.onSetDestination({selected: e.features[0].properties.index - 1});
 			});
 
-			if (proposedDestinationIndex && this.props.topLocations[proposedDestinationIndex]) {
-				const destinationCoor = this.props.topLocations[proposedDestinationIndex].coordinates;
-				this.drawDirection([startCoordinates, {lon: destinationCoor[0], lat: destinationCoor[1]}]);
-			}
-
 			this.map.fitBounds(this.bbox, {
 				padding: {top: 30, bottom:30, left: 30, right: 350}
 			});
@@ -287,8 +281,8 @@ class MapCoreBase extends React.Component {
 		// Received a new orientation
 
 		// Received a new proposedDestinationIndex
-		if (!equals(prevProps.proposedDestinationIndex, this.props.proposedDestinationIndex)) {
-			actions.plotRoute = [this.props.location, this.topLocations[this.props.proposedDestinationIndex].geometry.coordinates];
+		if (!equals(prevProps.navigation.proposedDestination, this.props.navigation.proposedDestination)) {
+			actions.plotRoute = [this.props.location, this.props.navigation.proposedDestination.coordinates];
 		}
 
 		// Received a new velocity
@@ -547,7 +541,7 @@ class MapCoreBase extends React.Component {
 		delete rest.defaultFollow;
 		delete rest.location;
 		delete rest.position;
-		delete rest.proposedDestinationIndex;
+		delete rest.proposedDestination;
 		delete rest.onSetDestination;
 		delete rest.skin;
 		delete rest.topLocations;
