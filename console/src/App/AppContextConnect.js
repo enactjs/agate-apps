@@ -13,7 +13,6 @@ const AppStateConnect = (mapContextToProps) => (Wrapped) => {
 				<AppContext.Consumer>
 					{(context) => {
 						const contextProps = mapContextToProps(context, this.props);
-
 						return <PureWrapped {...this.props} {...contextProps} />;
 					}}
 				</AppContext.Consumer>

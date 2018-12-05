@@ -95,8 +95,7 @@ class AppContextProvider extends Component {
 				startTime: 0,
 				navigating: false
 			},
-			weather: {},
-			updateAppState: this.updateAppState
+			weather: {}
 		};
 	}
 
@@ -264,7 +263,7 @@ class AppContextProvider extends Component {
 		const context = {
 			...this.state,
 			getUserNames: this.getUserNames,
-			// updateAppState: this.updateAppState,
+			updateAppState: this.updateAppState,
 			resetUserSettings: this.resetUserSettings,
 			resetAll: this.resetAll
 		};
@@ -290,4 +289,4 @@ class PureFragment extends React.PureComponent {
 }
 
 export default AppContextProvider;
-export {AppContextProvider, Context as AppContext, PureFragment};
+export {AppContextProvider, Context as AppContext};

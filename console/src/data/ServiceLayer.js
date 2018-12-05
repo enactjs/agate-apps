@@ -3,7 +3,6 @@
 // External
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
-import Pure from '@enact/ui/internal/Pure';
 import React from 'react';
 import compose from 'ramda/src/compose';
 import {equals} from 'ramda';
@@ -17,6 +16,7 @@ import appConfig from '../App/configLoader';
 import Communicator from '../../../components/Communicator';
 
 import AppStateConnect from '../App/AppContextConnect';
+
 
 const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 	return class extends React.Component {
@@ -55,9 +55,11 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		componentDidMount () {
 			this.mounted = true;
 			this.initializeConnection();
-			this.thing = window.setInterval(() => {
+
+			// sync location to app state every 5 seconds.
+			this.appStateSyncInterval = window.setInterval(() => {
 				this.props.setLocation({location: this.state.location});
-			}, 2000);
+			}, 5000);
 		}
 
 		componentDidUpdate (prevProps) {
@@ -72,7 +74,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 		componentWillUnmount () {
 			this.mounted = false;
-			window.clearInterval(this.thing);
+			window.clearInterval(this.appStateSyncInterval);
 		}
 
 		initializeConnection () {
@@ -202,14 +204,6 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 				this.connection.send('routingRequest', [location, ...destination]);
 			}
 		}
-
-		// sendVideo = (args) => {
-		// 	this.comm.current.sendVideo(args);
-		// }
-
-		// resetPosition = (coordinates) => {
-		// 	this.connection.send('positionReset', coordinates);
-		// }
 
 		sendNavigation = () => {
 			// console.log('sendNavigation:', this.props.navigation);
