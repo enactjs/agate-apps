@@ -8,8 +8,8 @@ import MapCore from '../components/MapCore';
 
 import css from './Map.less';
 
-const MapBase = kind({
-	name: 'Map',
+const MapViewBase = kind({
+	name: 'MapView',
 
 	styles: {
 		css,
@@ -75,7 +75,7 @@ const MapBrains = hoc((configHoc, Wrapped) => {
 	};
 });
 
-const MapView = Skinnable(MapBrains(MapBase));
+const MapView = Skinnable(MapBrains(MapViewBase));
 
 export default MapView;
-export {MapView as Map};
+export {MapView};

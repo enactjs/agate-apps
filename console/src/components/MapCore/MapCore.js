@@ -370,30 +370,27 @@ class MapCoreBase extends React.Component {
 	}
 
 	velocityZoom = (linearVelocity) => {
-		if (!this.viewLockTimer) {
-			const zoom = this.state.follow ? this.calculateZoomLevel(linearVelocity) : 15;
-			console.log('zoomTo:', zoom);
-			this.zoomMap(zoom);
-		}
+		const zoom = this.state.follow ? this.calculateZoomLevel(linearVelocity) : this.state.zoomLevel;
+		console.log('zoomTo:', zoom);
+		this.zoomMap(zoom);
 	}
 
 	zoomMap = (zoomLevel) => {
+		zoomLevel = Math.min(20, Math.max(0, zoomLevel));
 		this.setState({zoomLevel});
-		this.map.zoomTo(zoomLevel);
+		if (!this.viewLockTimer) {
+			this.map.zoomTo(zoomLevel);
+		}
 	}
 
 	zoomIn = () => {
 		const {zoomLevel} = this.state;
-		if (zoomLevel < 20) {
-			this.zoomMap(zoomLevel + 1);
-		}
+		this.zoomMap(zoomLevel + 1);
 	}
 
 	zoomOut = () => {
 		const {zoomLevel} = this.state;
-		if (zoomLevel > 0) {
-			this.zoomMap(zoomLevel - 1);
-		}
+		this.zoomMap(zoomLevel - 1);
 	}
 
 	centerMap = ({center = this.props.location, instant = false}) => {
@@ -463,7 +460,7 @@ class MapCoreBase extends React.Component {
 		this.map.fitBounds(bounds, {padding: 50});
 
 		// Set a time to automatically pan back to the current position.
-		if (this.viewLockTimert) this.viewLockTimer.stop();
+		if (this.viewLockTimer) this.viewLockTimer.stop();
 		this.viewLockTimer = new Job(this.finishedShowingFullRouteOnMap, this.props.viewLockoutDuration);
 		// console.log('Starting view-lock');
 		this.viewLockTimer.start();
