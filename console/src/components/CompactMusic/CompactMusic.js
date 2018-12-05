@@ -41,7 +41,7 @@ const CompactMusicBase = kind({
 
 	render: (props) => {
 		return (
-			<Widget {...props} view="radio" header="Listen">
+			<Widget {...props} title="Listen" description="Listen to your favorite tunes" view="radio">
 				<GridListImageItem
 					caption="The Title"
 					className={css.album}

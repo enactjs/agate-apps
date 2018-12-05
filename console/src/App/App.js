@@ -6,7 +6,7 @@ import {adaptEvent, forward, handle} from '@enact/core/handle';
 import {Cell, Column} from '@enact/ui/Layout';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
-import ToggleButton from '@enact/agate/ToggleButton';
+import {ToggleButtonBase} from '@enact/agate/ToggleButton';
 import Popup from '@enact/agate/Popup';
 import DateTimePicker from '@enact/agate/DateTimePicker';
 import {TabbedPanels} from '@enact/agate/Panels';
@@ -119,7 +119,7 @@ const AppBase = kind({
 							<Cell shrink>
 								<Button type="grid" icon="user" small onTap={onToggleUserSelectionPopup} />
 								<Button type="grid" icon="series" small onTap={updateSkin} />
-								<ToggleButton defaultSelected={layoutArrangeable} underline type="grid" toggleOnLabel="Finish" toggleOffLabel="Edit" small onToggle={layoutArrangeableToggle} />
+								<ToggleButtonBase selected={layoutArrangeable} underline type="grid" toggleOnLabel="Finish" toggleOffLabel="Edit" small onTap={layoutArrangeableToggle} />
 							</Cell>
 						</Column>
 					</afterTabs>
@@ -295,9 +295,9 @@ const AppDecorator = compose(
 		colorAccent: userSettings.colorAccent,
 		colorHighlight: userSettings.colorHighlight,
 		layoutArrangeable: userSettings.arrangements.arrangeable,
-		layoutArrangeableToggle: ({selected}) => {
+		layoutArrangeableToggle: () => {
 			updateAppState((state) => {
-				state.userSettings.arrangements.arrangeable = selected;
+				state.userSettings.arrangements.arrangeable = !userSettings.arrangements.arrangeable;
 			});
 		},
 		// endNavigation: ({navigating}) => {

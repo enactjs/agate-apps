@@ -4,6 +4,7 @@ import Droppable, {Draggable, ResponsiveBox} from '@enact/agate/DropManager';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Widget from '../Widget';
 import AppIconCell from '../AppIconCell';
 import {getPanelIndexOf} from '../../App';
 
@@ -29,12 +30,14 @@ const CompactAppList = kind({
 	},
 
 	render: ({onTabChange, ...rest}) => (
-		<DropRow align="start space-around" {...rest} wrap>
-			<DraggableAppIcon name="00" icon="compass">Navigation</DraggableAppIcon>
-			<DraggableAppIcon name="01" icon="audio" onKeyUp={onTabChange} onClick={onTabChange}>Audio</DraggableAppIcon>
-			<DraggableAppIcon name="02" icon="resumeplay" data-tabindex={getPanelIndexOf('multimedia')} onKeyUp={onTabChange} onClick={onTabChange}>Multimedia</DraggableAppIcon>
-			<DraggableAppIcon name="03" icon="gear" data-tabindex={getPanelIndexOf('settings')} onKeyUp={onTabChange} onClick={onTabChange}>Settings</DraggableAppIcon>
-		</DropRow>
+		<Widget {...rest} title="Favorite Apps" description="A selection of your favorite apps" view="applist">
+			<DropRow align="start space-around" {...rest} wrap>
+				<DraggableAppIcon name="00" icon="compass">Navigation</DraggableAppIcon>
+				<DraggableAppIcon name="01" icon="audio" onKeyUp={onTabChange} onClick={onTabChange}>Audio</DraggableAppIcon>
+				<DraggableAppIcon name="02" icon="resumeplay" data-tabindex={getPanelIndexOf('multimedia')} onKeyUp={onTabChange} onClick={onTabChange}>Multimedia</DraggableAppIcon>
+				<DraggableAppIcon name="03" icon="gear" data-tabindex={getPanelIndexOf('settings')} onKeyUp={onTabChange} onClick={onTabChange}>Settings</DraggableAppIcon>
+			</DropRow>
+		</Widget>
 	)
 });
 
