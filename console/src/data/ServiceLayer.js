@@ -18,10 +18,7 @@ import Communicator from '../../../components/Communicator';
 
 import AppStateConnect from '../App/AppContextConnect';
 
-const ServiceLayerContext = React.createContext();
-
 const ServiceLayerBase = hoc((configHoc, Wrapped) => {
-	const PureWrapped = Wrapped;
 	return class extends React.Component {
 		static displayName = 'ServiceLayer';
 
@@ -206,13 +203,13 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			}
 		}
 
-		sendVideo = (args) => {
-			this.comm.current.sendVideo(args);
-		}
+		// sendVideo = (args) => {
+		// 	this.comm.current.sendVideo(args);
+		// }
 
-		resetPosition = (coordinates) => {
-			this.connection.send('positionReset', coordinates);
-		}
+		// resetPosition = (coordinates) => {
+		// 	this.connection.send('positionReset', coordinates);
+		// }
 
 		sendNavigation = () => {
 			// console.log('sendNavigation:', this.props.navigation);
@@ -232,8 +229,6 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					<Communicator ref={this.comm} host={appConfig.communicationServerHost} />
 					<Wrapped
 						{...rest}
-						sendVideo={this.sendVideo}
-						resetPosition={this.resetPosition}
 					/>
 				</React.Fragment>
 			);
@@ -241,44 +236,42 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 	};
 });
 
-
-const methods = ({location: locationProp, navigation, updateAppState}) => ({
-	location: locationProp,
-	navigation,
-	// tickleCount: tickleCountProp,
-	// setTickle: ({tickleCount}) => {
-	// 	updateAppState((state) => {
-	// 		state.tickleCount = tickleCount;
-	// 	});
-	// },
-	setConnected: (connected) => {
-		updateAppState((state) => {
-			if (state.connections.serviceLayer === connected) return null;
-			state.connections.serviceLayer = connected;
-		});
-	},
-	setLocation: ({location}) => {
-		updateAppState((state) => {
-			// console.log('Setting location app state:', location);
-			state.location = location;
-		});
-	},
-	updateDestination: ({destination, navigating}) => {
-		updateAppState((state) => {
-			state.navigation.destination = destination;
-			if (navigating != null) {
-				state.navigation.navigating = navigating;
-			}
-		});
-	}
-	// endNavigation: ({navigating}) => {
-	// 	updateAppState((state) => {
-	// 		state.navigation.navigating = navigating;
-	// 	});
-	// }
-});
 const ServiceLayer = compose(
-	AppStateConnect(methods),
+	AppStateConnect(({location: locationProp, navigation, updateAppState}) => ({
+		location: locationProp,
+		navigation,
+		// tickleCount: tickleCountProp,
+		// setTickle: ({tickleCount}) => {
+		// 	updateAppState((state) => {
+		// 		state.tickleCount = tickleCount;
+		// 	});
+		// },
+		setConnected: (connected) => {
+			updateAppState((state) => {
+				if (state.connections.serviceLayer === connected) return null;
+				state.connections.serviceLayer = connected;
+			});
+		},
+		setLocation: ({location}) => {
+			updateAppState((state) => {
+				// console.log('Setting location app state:', location);
+				state.location = location;
+			});
+		},
+		updateDestination: ({destination, navigating}) => {
+			updateAppState((state) => {
+				state.navigation.destination = destination;
+				if (navigating != null) {
+					state.navigation.navigating = navigating;
+				}
+			});
+		}
+		// endNavigation: ({navigating}) => {
+		// 	updateAppState((state) => {
+		// 		state.navigation.navigating = navigating;
+		// 	});
+		// }
+	})),
 	ServiceLayerBase
 );
 
