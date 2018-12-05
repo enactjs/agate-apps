@@ -95,6 +95,8 @@ class AppContextProvider extends Component {
 		// If there are no users in the list when we load for the first time, stamp some out and prepare the system.
 		if (Object.keys(usersList).length <= 0) {
 			this.resetAll();
+		} else {
+			this.resetArrangeableStatus();
 		}
 
 		this.setUserSettings(this.state.userId);
@@ -188,6 +190,17 @@ class AppContextProvider extends Component {
 		userIds.forEach(this.deleteUserSettings);
 		this.resetUserSettings();
 		this.repopulateUsersForDemo();
+	}
+
+	resetArrangeableStatus = () => {
+		this.getAllSavedUserIds().forEach(userKey => {
+			const settings = this.loadUserSettings(userKey);
+
+			if (settings.arrangements.arrangeable) {
+				settings.arrangements.arrangeable = false;
+				this.saveUserSettings(userKey, settings);
+			}
+		});
 	}
 
 	repopulateUsersForDemo = () => {
