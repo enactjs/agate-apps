@@ -65,7 +65,8 @@ const CompactMultimediaBase = kind({
 					{...rest}
 					containerShape={containerShape}
 					view="multimedia"
-					header="Rear Screen"
+					title="Rear Screen"
+					description="Watch videos or listen to music"
 					small={
 						<ResponsiveVirtualList
 							dataSize={videos.length}

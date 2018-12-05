@@ -4,8 +4,7 @@ import Repeater from '@enact/ui/Repeater';
 import {Row, Column, Cell} from '@enact/ui/Layout';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Droppable, {Draggable, ResponsiveBox} from '@enact/agate/DropManager';
-import IconItem from '@enact/agate/IconItem';
+import Droppable, {Draggable} from '@enact/agate/DropManager';
 import Button from '@enact/agate/Button';
 import Divider from '@enact/agate/Divider';
 import Drawer from '@enact/agate/Drawer';
@@ -23,24 +22,6 @@ import css from './Home.less';
 const allSlotNames = ['small1', 'small2', 'medium', 'large', 'tray1', 'tray2', 'tray3', 'tray4'];
 
 const DraggableCell = Draggable(Cell);
-
-// This component allows its consumer to assign a "title" to `component`, which is used in a list
-// context. Outside a list context, the component is returned as-is, any other props and all.
-//
-// The `description` here is a little silly and is more of a POC, but could be useful with some
-// tweaking. It could also be removed if it adds no value to the user.
-const ResponsiveWidget = ResponsiveBox(({component: Component, containerShape, description, title, ...rest}) => {
-	const relativeSize = (containerShape && containerShape.size && containerShape.size.relative);
-	switch (relativeSize) {
-		case 'list': return (
-			<IconItem css={css} label={description} icon="list">{title}</IconItem>
-		);
-		default: return (
-			<Component {...rest} />
-		);
-	}
-});
-
 
 const WidgetTray = kind({
 	name: 'WidgetTray',
@@ -221,9 +202,11 @@ const Home = kind({
 				// <small2><ResponsiveWidget title="Radio" description="Listen to AM/FM" component={CompactRadio} /></small2>
 				/// <medium><ResponsiveWidget title="Multimedia" description="Watch videos or listen to music" component={CompactMultimedia} onSendVideo={onSendVideo} /></medium>
 				// <large><ResponsiveWidget title="Map" description="Choose a destination and navigate" component={CompactMap} onSelect={onSelect} /></large>
+				<tray1><CompactAppList /></tray1>
+				<tray2><CompactHvac /></tray2>
 
 				<small1><CompactWeather /></small1>
-				<small2><CompactRadio /></small2>
+				<small2><CompactMusic /></small2>
 				<medium><CompactMultimedia onSendVideo={onSendVideo} /></medium>
 				<large><CompactMap onSelect={onSelect} /></large>
 			</HomeLayout>

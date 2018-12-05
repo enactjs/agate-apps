@@ -9,6 +9,7 @@ import {getPanelIndexOf} from '../../App';
 import {propTypeLatLonList} from '../../data/proptypes';
 
 import MapCore from '../MapCore';
+import Widget from '../Widget';
 
 import css from './CompactMap.less';
 
@@ -39,15 +40,21 @@ const CompactMapBase = kind({
 		}
 	},
 
-	render: ({changePosition, onSelect, onTabChange, onSetDestination, ...rest}) => {
+	render: ({changePosition, destination, follow, onSelect, onSetDestination, onTabChange, proposedDestination, ...rest}) => {
 		return (
-			<MapCore {...rest}>
-				<tools>
-					<Button alt="Fullscreen" icon="fullscreen" data-tabindex={getPanelIndexOf('map')} onSelect={onSelect} onKeyUp={onTabChange} onClick={onTabChange} />
-					<Button alt="Propose new destination" icon="arrowhookleft" onClick={changePosition} />
-					<Button alt="Navigate Here" icon="play" onClick={onSetDestination} />
-				</tools>
-			</MapCore>
+			<Widget {...rest} title="Map" description="Choose a destination and navigate" noHeader>
+				<MapCore
+					follow={follow}
+					destination={destination}
+					proposedDestination={proposedDestination}
+				>
+					<tools>
+						<Button alt="Fullscreen" icon="fullscreen" data-tabindex={getPanelIndexOf('map')} onSelect={onSelect} onKeyUp={onTabChange} onClick={onTabChange} />
+						<Button alt="Propose new destination" icon="arrowhookleft" onClick={changePosition} />
+						<Button alt="Navigate Here" icon="play" onClick={onSetDestination} />
+					</tools>
+				</MapCore>
+			</Widget>
 		);
 	}
 });
