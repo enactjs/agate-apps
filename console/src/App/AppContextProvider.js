@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import produce from 'immer';
-import {mergeDeepRight} from 'ramda';
+import {assocPath, mergeDeepRight, path} from 'ramda';
 
 import appConfig from '../App/configLoader';
 import userPresetsForDemo from './userPresetsForDemo';
@@ -96,7 +96,7 @@ class AppContextProvider extends Component {
 		if (Object.keys(usersList).length <= 0) {
 			this.resetAll();
 		} else {
-			this.resetArrangeableStatus();
+			this.updateUserSettings(['arrangements', 'arrangeable'], false);
 		}
 
 		this.setUserSettings(this.state.userId);
@@ -165,6 +165,16 @@ class AppContextProvider extends Component {
 		window.localStorage.removeItem(`user${userId}`);
 	}
 
+	updateUserSettings = (key, value) => {
+		this.getAllSavedUserIds().forEach(userKey => {
+			const settings = this.loadUserSettings(userKey);
+
+			if (path(key, settings) !== value) {
+				this.saveUserSettings(userKey, assocPath(key, value, settings));
+			}
+		});
+	}
+
 	setUserSettings = (userId = this.state.userId, userSettings) => {
 		const settings = userSettings || this.loadSavedUserSettings(userId);
 
@@ -190,17 +200,6 @@ class AppContextProvider extends Component {
 		userIds.forEach(this.deleteUserSettings);
 		this.resetUserSettings();
 		this.repopulateUsersForDemo();
-	}
-
-	resetArrangeableStatus = () => {
-		this.getAllSavedUserIds().forEach(userKey => {
-			const settings = this.loadUserSettings(userKey);
-
-			if (settings.arrangements.arrangeable) {
-				settings.arrangements.arrangeable = false;
-				this.saveUserSettings(userKey, settings);
-			}
-		});
 	}
 
 	repopulateUsersForDemo = () => {
