@@ -41,7 +41,11 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		}
 
 		componentDidMount () {
+			this.mounted = true;
 			this.initializeConnection();
+			this.thing = window.setInterval(() => {
+				this.props.setLocation({location: this.state.location});
+			}, 2000);
 		}
 
 		componentDidUpdate (prevProps) {
@@ -64,6 +68,11 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			if (prevProps.navigation.duration !== this.props.navigation.duration) {
 				this.sendNavigation();
 			}
+		}
+
+		componentWillUnmount () {
+			this.mounted = false;
+			window.clearInterval(this.thing);
 		}
 
 		initializeConnection () {
@@ -155,9 +164,10 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					console.log('Destination Reached:', location, 'Automatic driving mode now disabled.');
 				}
 			}
-			console.log('location');
-			// this.setState({location});
-			this.props.setLocation({location});
+
+			if (this.mounted) {
+				this.setState({location});
+			}
 		}
 
 		onRoutingRequest = (message) => {
