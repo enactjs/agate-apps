@@ -7,17 +7,22 @@ export const CommunicationLayer = (Wrapped) => {
 			super(props);
 			this.comm = React.createRef();
 		}
+
 		sendVideo = (args) => {
 			this.comm.current.sendVideo(args);
 		};
+
 		resetPosition = (coordinates) => {
 			this.connection.send('positionReset', coordinates);
 		};
+
 		render () {
-			return (<React.Fragment>
-				<Communicator ref={this.comm} host={appConfig.communicationServerHost} />
-				<Wrapped {...this.props} sendVideo={this.sendVideo} resetPosition={this.resetPosition} />
-			</React.Fragment>);
+			return (
+				<React.Fragment>
+					<Communicator ref={this.comm} host={appConfig.communicationServerHost} />
+					<Wrapped {...this.props} sendVideo={this.sendVideo} resetPosition={this.resetPosition} />
+				</React.Fragment>
+			);
 		}
 	};
 };
