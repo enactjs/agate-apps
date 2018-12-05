@@ -1,4 +1,5 @@
 // External
+import React from 'react';
 import kind from '@enact/core/kind';
 import {add} from '@enact/core/keymap';
 import {adaptEvent, forward, handle} from '@enact/core/handle';
@@ -9,7 +10,6 @@ import {ToggleButtonBase} from '@enact/agate/ToggleButton';
 import Popup from '@enact/agate/Popup';
 import DateTimePicker from '@enact/agate/DateTimePicker';
 import {TabbedPanels} from '@enact/agate/Panels';
-import React from 'react';
 import compose from 'ramda/src/compose';
 
 // Data Services
@@ -31,14 +31,13 @@ import DisplaySettings from '../views/DisplaySettings';
 import Weather from '../views/WeatherPanel';
 import Dashboard from '../views/Dashboard';
 import Multimedia from '../views/Multimedia';
-import Communicator from '../../../components/Communicator';
-import appConfig from './configLoader';
 
 // Local Components
 import AppStateConnect from './AppContextConnect';
 
 // CSS/LESS Styling
 import css from './App.less';
+import {CommunicationLayer} from '../data/CommunicationLayer';
 
 
 add('backspace', 8);
@@ -273,36 +272,6 @@ const AppBase = kind({
 	}
 });
 
-
-const CommunicationLayer = (Wrapped) => {
-	return class Communication extends React.Component {
-		constructor (props) {
-			super(props);
-			this.comm = React.createRef();
-		}
-
-		sendVideo = (args) => {
-			this.comm.current.sendVideo(args);
-		}
-
-		resetPosition = (coordinates) => {
-			this.connection.send('positionReset', coordinates);
-		}
-
-		render () {
-			return (
-				<React.Fragment>
-					<Communicator ref={this.comm} host={appConfig.communicationServerHost} />
-					<Wrapped
-						{...this.props}
-						sendVideo={this.sendVideo}
-						resetPosition={this.resetPosition}
-					/>
-				</React.Fragment>
-			);
-		}
-	};
-};
 
 const AppDecorator = compose(
 	AppStateConnect(({appState, userSettings, updateAppState}) => ({
