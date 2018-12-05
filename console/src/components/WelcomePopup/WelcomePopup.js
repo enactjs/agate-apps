@@ -128,6 +128,7 @@ const WelcomePopupBase = kind({
 
 	handlers: {
 		handleClose: handle(
+			forward('onContinue'),
 			forward('onClose')
 		),
 		handleTransition: handle(
@@ -274,13 +275,21 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 	};
 });
 
-const AppContextDecorator = AppContextConnect(({getUserNames, updateAppState, userId, userSettings}) => {
+const AppContextDecorator = AppContextConnect(({getUserNames, updateAppState, navigation, userId, userSettings}) => {
 	return {
 		components: (userSettings.components && {...userSettings.components.welcome}),
 		profileName: userSettings.name,
+		proposedDestination: navigation.proposedDestination,
 		updateUser: ({selected}) => {
 			updateAppState((state) => {
 				state.userId = selected + 1;
+			});
+		},
+		onContinue: () => {
+			updateAppState((state) => {
+				if (state.navigation.auto && state.navigation.proposedDestination) {
+					state.navigation.destination = state.navigation.proposedDestination.coordinates;
+				}
 			});
 		},
 		userId,
