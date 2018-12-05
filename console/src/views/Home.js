@@ -100,6 +100,8 @@ const HomeLayouts = kind({
 
 		// Layouts below are modeled after the UX layout recommendation document, numbered for this
 		// case as 1-4 in the left column and 5-8 on the right column.
+		// 4 4 3 3
+		// 4 4 1 2
 		switch (skin) {
 			// Layout #3
 			case 'titanium': return (
@@ -128,6 +130,8 @@ const HomeLayouts = kind({
 				</Row>
 			);
 			// Layout #2
+			// 1 2 4 4
+			// 3 3 4 4
 			default: return (
 				<Row {...rest}>
 					{widgetTray}
@@ -196,13 +200,13 @@ const Home = kind({
 	render: ({arrangeable, onCompactExpand, onSendVideo, onSelect, ...rest}) => (
 		<Panel {...rest}>
 			<HomeLayout arrangeable={arrangeable}>
-				<tray1><CompactAppList /></tray1>
-				<tray2><CompactHvac /></tray2>
+				<tray1><CompactAppList onExpand={onCompactExpand} /></tray1>
+				<tray2><CompactHvac onExpand={onCompactExpand} /></tray2>
 
-				<small1><CompactWeather /></small1>
-				<small2><CompactMusic /></small2>
-				<medium><CompactMultimedia onSendVideo={onSendVideo} /></medium>
-				<large><CompactMap onSelect={onSelect} /></large>
+				<small1><CompactWeather onExpand={onCompactExpand} /></small1>
+				<small2><CompactMusic onExpand={onCompactExpand} /></small2>
+				<medium><CompactMultimedia onExpand={onCompactExpand} onSendVideo={onSendVideo} /></medium>
+				<large><CompactMap onExpand={onCompactExpand} onSelect={onSelect} /></large>
 			</HomeLayout>
 		</Panel>
 	)
