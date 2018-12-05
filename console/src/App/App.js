@@ -294,8 +294,6 @@ const AppDecorator = compose(
 	AgateDecorator
 );
 
-
-
 const App = AppDecorator(AppBase);
 export default App;
 export {
