@@ -209,17 +209,6 @@ class AppContextProvider extends Component {
 		this.repopulateUsersForDemo();
 	}
 
-	resetArrangeableStatus = () => {
-		this.getAllSavedUserIds().forEach(userKey => {
-			const settings = this.loadUserSettings(userKey);
-
-			if (settings.arrangements.arrangeable) {
-				settings.arrangements.arrangeable = false;
-				this.saveUserSettings(userKey, settings);
-			}
-		});
-	}
-
 	repopulateUsersForDemo = () => {
 		for (const userId in userPresetsForDemo) {
 			this.saveUserSettings(userId.replace('user', ''), userPresetsForDemo[userId]);
