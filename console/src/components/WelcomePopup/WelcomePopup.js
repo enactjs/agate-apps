@@ -88,11 +88,13 @@ const UserSelectionPanel = kind({
 		return (
 			<WelcomePanel className={css.userSelectionPanel}>
 				<Divider slot="header" className={css.header}>Welcome</Divider>
-				<Row align="center space-evenly" className="enact-fit">
+				<Row align="center space-around" className={css.bodyRow}>
 					{users.map((user, index) => (
-						<UserSelectionAvatar key={'userKey' + index} index={index} onSelectUser={onSelectUser}>
-							{user}
-						</UserSelectionAvatar>
+						<Cell shrink key={'userKey' + index}>
+							<UserSelectionAvatar index={index} onSelectUser={onSelectUser}>
+								{user}
+							</UserSelectionAvatar>
+						</Cell>
 					))}
 				</Row>
 			</WelcomePanel>
@@ -205,7 +207,7 @@ const WelcomePopupBase = kind({
 									<Cell size="25%">
 										<DestinationList component={Button} onSetDestination={onSetDestination} positions={positions} title="Top Locations" />
 									</Cell>
-									<Cell component={MapCore} controlScheme="compact" proposedDestination={proposedDestination} size="40%" />
+									<Cell component={MapCore} proposedDestination={proposedDestination} size="40%" />
 									<Cell size="35%">
 										<Column>
 											{Small1Component}
