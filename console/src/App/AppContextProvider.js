@@ -85,7 +85,8 @@ class AppContextProvider extends Component {
 				duration: 0,
 				eta: 0,
 				startTime: 0,
-				navigating: false
+				navigating: false,
+				auto: true
 			},
 			weather: {}
 		};
