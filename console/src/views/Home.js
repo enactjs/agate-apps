@@ -57,6 +57,7 @@ const HomeLayouts = kind({
 		arrangeable: PropTypes.bool,
 		arrangement: PropTypes.object,
 		large: PropTypes.node,
+		layoutArrangeableEnd: PropTypes.func,
 		medium: PropTypes.node,
 		skin: PropTypes.string,
 		small1: PropTypes.node,
@@ -195,13 +196,6 @@ const Home = kind({
 	render: ({arrangeable, onCompactExpand, onSendVideo, onSelect, ...rest}) => (
 		<Panel {...rest}>
 			<HomeLayout arrangeable={arrangeable}>
-				// <tray1><ResponsiveWidget title="Favorite Apps" description="A selection of your favorite apps" component={CompactAppList} /></tray1>
-				// <tray2><ResponsiveWidget title="A/C" description="Air conditioning and seat warmers" component={CompactHvac} /></tray2>
-
-				// <small1><ResponsiveWidget title="Weather" description="Local weather information" component={CompactWeather} /></small1>
-				// <small2><ResponsiveWidget title="Radio" description="Listen to AM/FM" component={CompactRadio} /></small2>
-				/// <medium><ResponsiveWidget title="Multimedia" description="Watch videos or listen to music" component={CompactMultimedia} onSendVideo={onSendVideo} /></medium>
-				// <large><ResponsiveWidget title="Map" description="Choose a destination and navigate" component={CompactMap} onSelect={onSelect} /></large>
 				<tray1><CompactAppList /></tray1>
 				<tray2><CompactHvac /></tray2>
 

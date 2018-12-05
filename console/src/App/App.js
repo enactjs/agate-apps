@@ -112,7 +112,7 @@ const AppBase = kind({
 					index={index}
 				>
 					<afterTabs>
-						<Column align="center space-evenly">
+						<Column align="center space-around">
 							<Cell shrink>
 								<Clock />
 							</Cell>
