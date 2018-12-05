@@ -87,8 +87,8 @@ const AppBase = kind({
 				state.userSettings.skin = newSkin;
 			});
 		},
-		onSelect: ({updateAppState}) => handle(
-			adaptEvent((ev) => {
+		onSelect: handle(
+			adaptEvent((ev, {updateAppState}) => {
 				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
 				updateAppState((state) => {
 					state.appState.index = state.appState.index === index ? null : index;
@@ -97,32 +97,32 @@ const AppBase = kind({
 			}, forward('onSelect'))
 		),
 
-		onToggleUserSelectionPopup: ({updateAppState}) => () => {
+		onToggleUserSelectionPopup: (ev, {updateAppState}) => {
 			updateAppState((state) => {
 				state.appState.showUserSelectionPopup = !state.appState.showUserSelectionPopup;
 			});
 		},
-		onToggleDateTimePopup: ({updateAppState}) => () => {
+		onToggleDateTimePopup: (ev, {updateAppState}) => {
 			updateAppState((state) => {
 				state.appState.showDateTimePopup = !state.appState.showDateTimePopup;
 			});
 		},
-		onToggleWelcomePopup:  ({updateAppState}) => () => {
+		onToggleWelcomePopup: (ev, {updateAppState}) => {
 			updateAppState((state) => {
 				state.appState.showWelcomePopup = !state.appState.showWelcomePopup;
 			});
 		},
-		onTogglePopup: ({updateAppState}) => {
+		onTogglePopup: (ev, {updateAppState}) => {
 			updateAppState((state) => {
 				state.appState.showPopup = !state.appState.showPopup;
 			});
 		},
-		onToggleBasicPopup: ({updateAppState}) => () => {
+		onToggleBasicPopup: (ev, {updateAppState}) => () => {
 			updateAppState((state) => {
 				state.appState.showBasicPopup = !state.appState.showBasicPopup;
 			});
 		},
-		onResetAll: ({updateAppState}) => () => {
+		onResetAll: (ev, {updateAppState}) => () => {
 			updateAppState((state) => {
 				state.appState.index = 0;
 				state.appState.showWelcomePopup = true;
@@ -366,7 +366,7 @@ const AppDecorator = compose(
 		showAppList: appState.showAppList,
 		showWelcomePopup: appState.showWelcomePopup,
 		orientation: (userSettings.skin !== 'carbon') ? 'horizontal' : 'vertical',
-		updateAppState,
+		updateAppState
 		// layoutArrangeableToggle: ({selected}) => {
 		// 	updateAppState((state) => {
 		// 		state.userSettings.arrangements.arrangeable = selected;
