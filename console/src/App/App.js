@@ -2,7 +2,7 @@
 import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
-import {forward, handle} from '@enact/core/handle';
+import {adaptEvent, forward, handle} from '@enact/core/handle';
 import {Cell, Column} from '@enact/ui/Layout';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
@@ -125,6 +125,7 @@ const AppBase = kind({
 					</afterTabs>
 					<Home
 						arrangeable={layoutArrangeable}
+						onCompactExpand={onSelect}
 						onSelect={onSelect}
 						onSendVideo={sendVideo}
 					/>
@@ -196,6 +197,7 @@ const AppBase = kind({
 					<DateTimePicker onClose={onToggleDateTimePopup} />
 				</Popup>
 				<WelcomePopup
+					noAnimation
 					onClose={onToggleWelcomePopup}
 					onSendVideo={sendVideo}
 					open={showWelcomePopup}
@@ -217,16 +219,16 @@ const AppState = hoc((configHoc, Wrapped) => {
 				showDateTimePopup: false,
 				showUserSelectionPopup: false,
 				showAppList: false,
-				showWelcomePopup: true
+				showWelcomePopup: ('defaultShowWelcomePopup' in props ? Boolean(props.defaultShowWelcomePopup) : true)
 			};
 		}
 
 		onSelect = handle(
-			forward('onSelect'),
-			(ev) => {
-				const {index} = ev;
+			adaptEvent((ev) => {
+				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
 				this.setState(state => state.index === index ? null : {index});
-			}
+				return {index};
+			}, forward('onSelect'))
 		).bind(this);
 
 		onToggleUserSelectionPopup = () => {
@@ -258,6 +260,7 @@ const AppState = hoc((configHoc, Wrapped) => {
 
 			delete rest.defaultIndex;
 			delete rest.defaultSkin;
+			delete rest.defaultShowWelcomePopup;
 
 			return (
 				<Wrapped

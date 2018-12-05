@@ -15,7 +15,7 @@ import CompactAppList from '../components/CompactAppList';
 import CompactHvac from '../components/CompactHVAC';
 import CompactMap from '../components/CompactMap';
 import CompactMultimedia from '../components/CompactMultimedia';
-import CompactRadio from '../components/CompactRadio';
+import CompactMusic from '../components/CompactMusic';
 import CompactWeather from '../components/CompactWeather';
 
 import css from './Home.less';
@@ -203,7 +203,7 @@ const Home = kind({
 
 	propTypes: {
 		arrangeable: PropTypes.bool,
-		onSelect: PropTypes.func
+		onCompactExpand: PropTypes.func
 	},
 
 	styles: {
@@ -211,16 +211,21 @@ const Home = kind({
 		className: 'homePanel'
 	},
 
-	render: ({arrangeable, onSelect, onSendVideo, ...rest}) => (
+	render: ({arrangeable, onCompactExpand, onSendVideo, onSelect, ...rest}) => (
 		<Panel {...rest}>
 			<HomeLayout arrangeable={arrangeable}>
-				<tray1><ResponsiveWidget title="Favorite Apps" description="A selection of your favorite apps" component={CompactAppList} /></tray1>
-				<tray2><ResponsiveWidget title="A/C" description="Air conditioning and seat warmers" component={CompactHvac} /></tray2>
+				// <tray1><ResponsiveWidget title="Favorite Apps" description="A selection of your favorite apps" component={CompactAppList} /></tray1>
+				// <tray2><ResponsiveWidget title="A/C" description="Air conditioning and seat warmers" component={CompactHvac} /></tray2>
 
-				<small1><ResponsiveWidget title="Weather" description="Local weather information" component={CompactWeather} /></small1>
-				<small2><ResponsiveWidget title="Radio" description="Listen to AM/FM" component={CompactRadio} /></small2>
-				<medium><ResponsiveWidget title="Multimedia" description="Watch videos or listen to music" component={CompactMultimedia} onSendVideo={onSendVideo} /></medium>
-				<large><ResponsiveWidget title="Map" description="Choose a destination and navigate" component={CompactMap} onSelect={onSelect} /></large>
+				// <small1><ResponsiveWidget title="Weather" description="Local weather information" component={CompactWeather} /></small1>
+				// <small2><ResponsiveWidget title="Radio" description="Listen to AM/FM" component={CompactRadio} /></small2>
+				/// <medium><ResponsiveWidget title="Multimedia" description="Watch videos or listen to music" component={CompactMultimedia} onSendVideo={onSendVideo} /></medium>
+				// <large><ResponsiveWidget title="Map" description="Choose a destination and navigate" component={CompactMap} onSelect={onSelect} /></large>
+
+				<small1><CompactWeather /></small1>
+				<small2><CompactRadio /></small2>
+				<medium><CompactMultimedia onSendVideo={onSendVideo} /></medium>
+				<large><CompactMap onSelect={onSelect} /></large>
 			</HomeLayout>
 		</Panel>
 	)
