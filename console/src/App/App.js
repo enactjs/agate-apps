@@ -183,7 +183,10 @@ const AppBase = kind({
 							<Cell shrink>
 								<Button type="grid" icon="user" small onTap={onToggleUserSelectionPopup} />
 								<Button type="grid" icon="series" small onTap={updateSkin} />
-								<ToggleButtonBase selected={layoutArrangeable} underline type="grid" toggleOnLabel="Finish" toggleOffLabel="Edit" small onTap={layoutArrangeableToggle} />
+								<ToggleButtonBase selected={layoutArrangeable} underline type="grid" toggleOnLabel="Finish" toggleOffLabel="Edit" small onTap={() => {
+									console.log('here');
+									layoutArrangeableToggle()
+								}} />
 							</Cell>
 						</Column>
 					</afterTabs>
