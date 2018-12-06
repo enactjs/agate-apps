@@ -158,7 +158,7 @@ const AppBase = kind({
 		delete rest.endNavigation;
 		delete rest.defaultIndex;
 		delete rest.defaultSkin;
-
+		console.log('app');
 		return (
 			<div {...rest}>
 

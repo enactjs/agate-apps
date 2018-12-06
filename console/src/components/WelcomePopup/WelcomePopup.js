@@ -272,6 +272,18 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 			this.setState(({index}) => index === 1 ? {index: ++index} : null);
 		}
 
+		setDestination = ({destination}) => {
+			this.props.updateAppState((state) => {
+				state.navigation.destination = destination;
+			});
+		}
+
+		updateUser = ({selected}) => {
+			this.props.updateAppState((state) => {
+				state.userId = selected + 1;
+			});
+		}
+
 		render () {
 			const {destination, index, positions} = this.state;
 
@@ -286,28 +298,21 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 					positions={positions}
 					proposedDestination={destination}
 					selected={this.state.selected}
+					updateUser={this.updateUser}
+					setDestination={this.setDestination}
 				/>
 			);
 		}
 	};
 });
 
-const AppContextDecorator = AppContextConnect(({getUserNames, updateAppState, userId, userSettings}) => {
+const AppContextDecorator = AppContextConnect(({usersList, updateAppState, userId, userSettings}) => {
 	return {
-		components: (userSettings.components && {...userSettings.components.welcome}),
+		components: (userSettings.components && userSettings.components.welcome),
 		profileName: userSettings.name,
-		setDestination: ({destination}) => {
-			updateAppState((state) => {
-				state.navigation.destination = destination;
-			});
-		},
-		updateUser: ({selected}) => {
-			updateAppState((state) => {
-				state.userId = selected + 1;
-			});
-		},
 		userId,
-		usersList: getUserNames()
+		usersList: usersList,
+		updateAppState
 	};
 });
 
