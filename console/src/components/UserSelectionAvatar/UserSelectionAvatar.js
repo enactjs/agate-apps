@@ -9,6 +9,8 @@ import thomasAvatar from '../../../assets/thomas.png';
 
 import css from './UserSelectionAvatar.less';
 
+const userAvatars = [steveAvatar, thomasAvatar];
+
 const UserSelectionAvatar = kind({
 	name: 'UserSelectionAvatar',
 
@@ -17,41 +19,29 @@ const UserSelectionAvatar = kind({
 		onSelectUser: PropTypes.func
 	},
 
-	styles: {
-		css,
-		className: 'avatar'
-	},
-
 	handlers: {
-		onSelectUser: handle(
+		onClick: handle(
 			adaptEvent((ev, {index}) => ({selected: index}), forward('onSelectUser'))
 		)
 	},
 
 	computed: {
-		source: ({index}) => {
-			switch (index) {
-				case 0:
-					return steveAvatar;
-				case 1:
-					return thomasAvatar;
-			}
-		},
+		source: ({index}) => (userAvatars[index] || 'none'),
 		style: ({style, index}) => ({
 			...style,
 			'--user-index': index
 		})
 	},
 
-	render: ({children, onSelectUser, ...rest}) => {
+	render: ({children, ...rest}) => {
 		delete rest.index;
+		delete rest.onSelectUser;
 
 		return (
 			<GridListImageItem
 				{...rest}
 				css={css}
 				caption={children}
-				onClick={onSelectUser}
 			/>
 		);
 	}

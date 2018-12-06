@@ -98,7 +98,7 @@ const DisplaySettings = kind({
 								Display Settings
 						</Cell>
 						<Cell shrink className={css.spacedItem}>
-							<FormRow align="start space-evenly" alignLabel="center">
+							<FormRow align="start space-around" alignLabel="center">
 								<AccentColorSetting label="Accent Color">{swatchPalette}</AccentColorSetting>
 								<HighlightColorSetting label="Highlight Color">{swatchPalette}</HighlightColorSetting>
 							</FormRow>

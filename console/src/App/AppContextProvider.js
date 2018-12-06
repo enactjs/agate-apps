@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import produce from 'immer';
-import {mergeDeepRight} from 'ramda';
+import {assocPath, mergeDeepRight, path} from 'ramda';
 
-import appConfig from '../../config';
+import appConfig from '../App/configLoader';
 import userPresetsForDemo from './userPresetsForDemo';
 
 const Context = React.createContext();
@@ -95,6 +95,8 @@ class AppContextProvider extends Component {
 		// If there are no users in the list when we load for the first time, stamp some out and prepare the system.
 		if (Object.keys(usersList).length <= 0) {
 			this.resetAll();
+		} else {
+			this.updateUserSettings(['arrangements', 'arrangeable'], false);
 		}
 
 		this.setUserSettings(this.state.userId);
@@ -161,6 +163,16 @@ class AppContextProvider extends Component {
 
 	deleteUserSettings = (userId) => {
 		window.localStorage.removeItem(`user${userId}`);
+	}
+
+	updateUserSettings = (key, value) => {
+		this.getAllSavedUserIds().forEach(userKey => {
+			const settings = this.loadUserSettings(userKey);
+
+			if (path(key, settings) !== value) {
+				this.saveUserSettings(userKey, assocPath(key, value, settings));
+			}
+		});
 	}
 
 	setUserSettings = (userId = this.state.userId, userSettings) => {
