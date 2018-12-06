@@ -17,7 +17,6 @@ import Communicator from '../../../components/Communicator';
 
 import AppStateConnect from '../App/AppContextConnect';
 
-
 const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'ServiceLayer';
