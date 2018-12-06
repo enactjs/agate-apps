@@ -116,7 +116,6 @@ const AppBase = kind({
 
 	computed: {
 		layoutArrangeableToggle: ({updateAppState}) => () => {
-			console.log('layout');
 			updateAppState((state) => {
 				state.userSettings.arrangements.arrangeable = !state.userSettings.arrangements.arrangeable;
 			});
@@ -162,7 +161,7 @@ const AppBase = kind({
 		delete rest.endNavigation;
 		delete rest.defaultIndex;
 		delete rest.defaultSkin;
-		console.log('ob', onToggleBasicPopup);
+
 		return (
 			<div {...rest}>
 
