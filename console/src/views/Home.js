@@ -69,8 +69,23 @@ const HomeLayouts = kind({
 		className: 'home'
 	},
 
+	handlers: {
+		layoutArrangeableEnd: (ev, {updateAppState}) => {
+			updateAppState((state) => {
+				state.userSettings.arrangements.arrangeable = false;
+			});
+		},
+		onArrange: (ev, {updateAppState, arrangement}) => {
+			updateAppState((state) => {
+				if (!state.userSettings.arrangements) state.userSettings.arrangements = {};
+				state.userSettings.arrangements.home = {...arrangement};
+			});
+		}
+	},
+
 	render: ({arrangeable, skin, small1, small2, medium, large, layoutArrangeableEnd, ...rest}) => {
 		delete rest.arrangement;
+		console.log('home');
 
 		const widgetTray = (
 			<Drawer open={arrangeable} scrimType="none">
@@ -162,19 +177,8 @@ const HomeLayouts = kind({
 });
 
 const LayoutSetting = AppContextConnect(({userSettings, updateAppState}) => ({
-	arrangement: (userSettings.arrangements ? {...userSettings.arrangements.home} : {}),
-	skin: userSettings.skin,
-	layoutArrangeableEnd: () => {
-		updateAppState((state) => {
-			state.userSettings.arrangements.arrangeable = false;
-		});
-	},
-	onArrange: ({arrangement}) => {
-		updateAppState((state) => {
-			if (!state.userSettings.arrangements) state.userSettings.arrangements = {};
-			state.userSettings.arrangements.home = {...arrangement};
-		});
-	}
+	arrangement: userSettings.arrangements ? userSettings.arrangements.home : {},
+	skin: userSettings.skin
 }));
 
 const HomeLayout =

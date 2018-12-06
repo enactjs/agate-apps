@@ -24,6 +24,21 @@ const CompactHeaterBase = kind({
 		className: 'compactHeater'
 	},
 
+	handlers: {
+		onToggleLeftHeater: (ev, {updateAppState}) => {
+			updateAppState((state) => {
+				const heat = state.userSettings.climate.leftHeat;
+				state.userSettings.climate.leftHeat = !heat;
+			});
+		},
+		onToggleRightHeater: (ev, {updateAppState}) => {
+			updateAppState((state) => {
+				const heat = state.userSettings.climate.rightHeat;
+				state.userSettings.climate.rightHeat = !heat;
+			});
+		}
+	},
+
 	computed: {
 		leftStatus: ({leftHeat}) => leftHeat ? 'on' : 'off',
 		rightStatus: ({rightHeat}) => rightHeat ? 'on' : 'off'
@@ -53,18 +68,7 @@ const CompactHeaterBase = kind({
 const CompactHeater = AppStateConnect(({userSettings: {climate}, updateAppState}) => ({
 	leftHeat: (climate && climate.leftHeat),
 	rightHeat: (climate && climate.rightHeat),
-	onToggleLeftHeater: () => {
-		updateAppState((state) => {
-			const heat = state.userSettings.climate.leftHeat;
-			state.userSettings.climate.leftHeat = !heat;
-		});
-	},
-	onToggleRightHeater: () => {
-		updateAppState((state) => {
-			const heat = state.userSettings.climate.rightHeat;
-			state.userSettings.climate.rightHeat = !heat;
-		});
-	}
+	updateAppState
 }))(CompactHeaterBase);
 
 export default CompactHeater;

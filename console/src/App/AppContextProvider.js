@@ -73,6 +73,7 @@ class AppContextProvider extends Component {
 			},
 			userId: 1,
 			userSettings: this.getDefaultUserSettings(props),
+			usersList: {},
 			connections: {
 				serviceLayer: false
 			},
@@ -101,6 +102,10 @@ class AppContextProvider extends Component {
 
 	componentWillMount () {
 		const usersList = this.getUserNames();
+
+		this.updateAppState((state) => {
+			state.usersList = usersList;
+		});
 		// If there are no users in the list when we load for the first time, stamp some out and prepare the system.
 		if (Object.keys(usersList).length <= 0) {
 			this.resetAll();
