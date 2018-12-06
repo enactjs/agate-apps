@@ -100,12 +100,12 @@ const AppBase = kind({
 				state.appState.showPopup = !state.appState.showPopup;
 			});
 		},
-		onToggleBasicPopup: (ev, {updateAppState}) => () => {
+		onToggleBasicPopup: (ev, {updateAppState}) => {
 			updateAppState((state) => {
 				state.appState.showBasicPopup = !state.appState.showBasicPopup;
 			});
 		},
-		onResetAll: (ev, {updateAppState}) => () => {
+		onResetAll: (ev, {updateAppState}) => {
 			updateAppState((state) => {
 				state.appState.index = 0;
 				state.appState.showWelcomePopup = true;
@@ -162,7 +162,7 @@ const AppBase = kind({
 		delete rest.endNavigation;
 		delete rest.defaultIndex;
 		delete rest.defaultSkin;
-
+		console.log('ob', onToggleBasicPopup);
 		return (
 			<div {...rest}>
 
@@ -187,10 +187,7 @@ const AppBase = kind({
 							<Cell shrink>
 								<Button type="grid" icon="user" small onTap={onToggleUserSelectionPopup} />
 								<Button type="grid" icon="series" small onTap={updateSkin} />
-								<ToggleButtonBase selected={layoutArrangeable} underline type="grid" toggleOnLabel="Finish" toggleOffLabel="Edit" small onTap={() => {
-									console.log('here');
-									layoutArrangeableToggle()
-								}} />
+								<ToggleButtonBase selected={layoutArrangeable} underline type="grid" toggleOnLabel="Finish" toggleOffLabel="Edit" small onTap={layoutArrangeableToggle} />
 							</Cell>
 						</Column>
 					</afterTabs>
