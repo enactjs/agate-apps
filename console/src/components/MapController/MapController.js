@@ -79,20 +79,18 @@ class MapControllerBase extends React.Component {
 		delete rest.viewLockoutDuration;
 		delete rest.zoomToSpeedScaleFactor;
 		const durationIncrements = ['day', 'hour', 'min'];
-		const {selfDriving, destination} = this.state;
 
 		return (
 			<div {...rest} className={classnames(className, css.map)}>
 				<MapCore
-					destination={destination}
 					onSetDestination={this.handleSetDestination}
 					location={location}
 				>
 					<tools>
 						{
 							selfDrivingSelection && <Cell>
-								<Button onClick={this.toggleSelfDriving} highlighted={selfDriving} small>AUTO</Button>
-								<Button onClick={this.toggleSelfDriving} highlighted={!selfDriving} small>MANUAL</Button>
+								<Button onClick={this.toggleSelfDriving} highlighted={navigation.auto} small>AUTO</Button>
+								<Button onClick={this.toggleSelfDriving} highlighted={!navigation.auto} small>MANUAL</Button>
 							</Cell>
 						}
 						{
@@ -123,7 +121,7 @@ class MapControllerBase extends React.Component {
 							!noStartStopToggle && <ToggleButton
 								className={css.button}
 								small
-								selected={navigation.navigating}
+								selected={navigation.proposedDestination && navigation.navigating}
 								onClick={this.startNavigation}
 								toggleOnLabel="Stop Navigation"
 								toggleOffLabel="Start Navigation"
@@ -164,7 +162,6 @@ const ConnectedMap = AppContextConnect(({location, userSettings, navigation, upd
 			state.navigation.startTime = startTime;
 			state.navigation.eta = eta;
 			state.navigation.distance = distance;
-			// console.log('updateNavigation:', state.navigation);
 		});
 	}
 }));
