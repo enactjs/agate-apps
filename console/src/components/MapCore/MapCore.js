@@ -600,8 +600,7 @@ const ConnectedMap = compose(
 				// console.log('updateNavigation:', state.navigation);
 			});
 		}
-	})),
-	ServiceLayer
+	}))
 );
 
 const MapCore = ConnectedMap(Slottable({slots: ['tools']}, MapCoreBase));
