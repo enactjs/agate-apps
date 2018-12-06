@@ -1,14 +1,9 @@
 import React from 'react';
-import Pure from '@enact/ui/internal/Pure';
 import {AppContext} from './AppContextProvider';
 
 const AppStateConnect = (mapContextToProps) => (Wrapped) => {
-	const PureWrapped = Pure(Wrapped);
+	const PureWrapped = React.memo(Wrapped);
 
-	// Changeable
-	// CompactWeather
-	// AppStateConnect
-	// ServiceLayer
 	return class extends React.Component {
 		static displayName = 'AppStateConnect'
 
@@ -17,7 +12,6 @@ const AppStateConnect = (mapContextToProps) => (Wrapped) => {
 				<AppContext.Consumer>
 					{(context) => {
 						const contextProps = mapContextToProps(context, this.props);
-						console.log(Wrapped.displayName);
 						return <PureWrapped {...this.props} {...contextProps} />;
 					}}
 				</AppContext.Consumer>
