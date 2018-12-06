@@ -70,22 +70,6 @@ const AppBase = kind({
 	},
 
 	handlers: {
-		layoutArrangeableToggle: ({updateAppState}) => () => {
-			updateAppState((state) => {
-				state.userSettings.arrangements.arrangeable = !state.userSettings.arrangements.arrangeable;
-			});
-		},
-		updateSkin: ({updateAppState}) => () => {
-			updateAppState((state) => {
-				let newSkin;
-				switch (state.userSettings.skin) {
-					case 'titanium': newSkin = 'electro'; break;
-					case 'carbon': newSkin = 'titanium'; break;
-					default: newSkin = 'carbon';
-				}
-				state.userSettings.skin = newSkin;
-			});
-		},
 		onSelect: handle(
 			adaptEvent((ev, {updateAppState}) => {
 				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
@@ -116,18 +100,38 @@ const AppBase = kind({
 				state.appState.showPopup = !state.appState.showPopup;
 			});
 		},
-		onToggleBasicPopup: (ev, {updateAppState}) => () => {
+		onToggleBasicPopup: (ev, {updateAppState}) => {
 			updateAppState((state) => {
 				state.appState.showBasicPopup = !state.appState.showBasicPopup;
 			});
 		},
-		onResetAll: (ev, {updateAppState}) => () => {
+		onResetAll: (ev, {updateAppState}) => {
 			updateAppState((state) => {
 				state.appState.index = 0;
 				state.appState.showWelcomePopup = true;
 				state.appState.showUserSelectionPopup = false;
 			});
 		}
+	},
+
+	computed: {
+		layoutArrangeableToggle: ({updateAppState}) => () => {
+			console.log('layout');
+			updateAppState((state) => {
+				state.userSettings.arrangements.arrangeable = !state.userSettings.arrangements.arrangeable;
+			});
+		},
+		updateSkin: ({updateAppState}) => () => {
+			updateAppState((state) => {
+				let newSkin;
+				switch (state.userSettings.skin) {
+					case 'titanium': newSkin = 'electro'; break;
+					case 'carbon': newSkin = 'titanium'; break;
+					default: newSkin = 'carbon';
+				}
+				state.userSettings.skin = newSkin;
+			});
+		},
 	},
 
 	render: ({
@@ -158,7 +162,7 @@ const AppBase = kind({
 		delete rest.endNavigation;
 		delete rest.defaultIndex;
 		delete rest.defaultSkin;
-		console.log('app');
+
 		return (
 			<div {...rest}>
 
