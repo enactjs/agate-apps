@@ -54,7 +54,7 @@ const WeatherItemBase = kind({
 		delete rest.featured;
 
 		return (
-			<Column {...rest} align="center space-evenly">
+			<Column {...rest} align="center space-around">
 				{label ? (
 					<Cell className={css.item} component={Divider} shrink>
 						{label}
