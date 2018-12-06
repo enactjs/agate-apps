@@ -38,6 +38,12 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 			this.done = false;
 			this.comm = React.createRef();
+			this.isFirstPosition = true;
+			this.state = {
+				location: this.props.location
+			};
+
+			// const tickler = setInterval(this.doTickle, 1000);
 		}
 
 		componentDidMount () {
@@ -168,6 +174,11 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			}
 
 			if (this.mounted) {
+				// update app state the first time we get a position.
+				if (this.isFirstPosition) {
+					this.props.setLocation({location: this.state.location});
+					this.isFirstPosition = false;
+				}
 				this.setState({location});
 			}
 		}
