@@ -72,7 +72,7 @@ const AppBase = kind({
 	handlers: {
 		layoutArrangeableToggle: ({updateAppState}) => () => {
 			updateAppState((state) => {
-				state.userSettings.arrangements.arrangeable = !userSettings.arrangements.arrangeable;
+				state.userSettings.arrangements.arrangeable = !state.userSettings.arrangements.arrangeable;
 			});
 		},
 		updateSkin: ({updateAppState}) => () => {
