@@ -6,6 +6,7 @@ import Picker from '@enact/agate/Picker';
 import ToggleButton from '@enact/agate/ToggleButton';
 
 import AppStateConnect from '../../App/AppContextConnect';
+import Widget from '../Widget';
 
 import css from './CompactHVAC.less';
 
@@ -28,7 +29,7 @@ const CompactHvacBase = kind({
 	},
 
 	render: ({temp, ...rest}) => (
-		<div {...rest}>
+		<Widget {...rest} title="A/C" description="Air conditioning and seat warmers" view="hvac">
 			{(temp >= 66 && temp <= 74) && <div>
 				<Row className={css.row} align="center space-around">
 					<Cell component={ToggleButton} size="30%" type="grid" className={css.button}>A/C</Cell>
@@ -54,7 +55,7 @@ const CompactHvacBase = kind({
 					<Cell shrink><ToggleButton type="grid" icon="aircirculation" className={css.button} /></Cell>
 				</Row>
 			</div>}
-		</div>
+		</Widget>
 	)
 });
 

@@ -58,7 +58,7 @@ const Weather = kind({
 						{currentWeather.cityName} Weather
 					</Cell>
 					<Cell style={{width: '100%'}}>
-						<Row className={css.row} align="stretch space-evenly">
+						<Row className={css.row} align="stretch space-around">
 							<Cell>
 								<WeatherItem
 									featured

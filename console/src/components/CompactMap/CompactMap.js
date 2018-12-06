@@ -1,13 +1,15 @@
 import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
+import Button from '@enact/agate/Button';
 import Skinnable from '@enact/agate/Skinnable';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Widget from '../Widget';
 
+import {getPanelIndexOf} from '../../App';
 import {propTypeLatLonList} from '../../data/proptypes';
 
 import MapController from '../MapController';
+import Widget from '../Widget';
 
 import css from './CompactMap.less';
 
@@ -37,16 +39,36 @@ const CompactMapBase = kind({
 		}
 	},
 
-	render: (props) => {
+	render: ({changePosition, destination, follow, onSelect, onSetDestination, onTabChange, proposedDestination, ...rest}) => {
 		return (
-			<Widget {...props} view="map">
-				<MapController compact selfDrivingSelection />
+			<Widget {...rest} title="Map" description="Choose a destination and navigate" noHeader>
+				<MapController
+					compact
+					selfDrivingSelection
+					follow={follow}
+					destination={destination}
+					proposedDestination={proposedDestination}
+				>
+					<tools>
+						<Button alt="Fullscreen" icon="fullscreen" data-tabindex={getPanelIndexOf('map')} onSelect={onSelect} onKeyUp={onTabChange} onClick={onTabChange} />
+						<Button alt="Propose new destination" icon="arrowhookleft" onClick={changePosition} />
+						<Button alt="Navigate Here" icon="play" onClick={onSetDestination} />
+					</tools>
+				</MapCore>
 			</Widget>
 		);
 	}
 });
 
 const CompactMapBrains = hoc((configHoc, Wrapped) => {
+	const positions = [
+		{lat: 37.788818, lon: -122.404568}, // LG office
+		{lat: 37.791356, lon: -122.400823}, // Blue Bottle Coffee
+		{lat: 37.788988, lon: -122.401076},
+		{lat: 37.7908574786, lon: -122.399391029},
+		{lat: 37.786116, lon: -122.402140}
+	];
+
 	return class extends React.Component {
 		static displayName = 'CompactMapBrains';
 		constructor (props) {
@@ -57,17 +79,33 @@ const CompactMapBrains = hoc((configHoc, Wrapped) => {
 			};
 		}
 
+		handleSetDestination = () => {
+			// Take our current position and assign it as our internal (local to this HOC) destination
+			this.setState(({positionIndex}) => ({destination: [positions[positionIndex]]}));
+		}
+
+		changePosition = () => {
+			this.setState(({positionIndex}) => ({
+				// go to the next position in the list
+				positionIndex: ((positionIndex + 1) % positions.length)
+			}));
+		}
+
 		render () {
 			return (
 				<Wrapped
 					{...this.props}
 					changePosition={this.changePosition}
+					follow={this.state.follow}
+					onSetDestination={this.handleSetDestination}
+					destination={this.state.destination}
+					proposedDestination={[positions[this.state.positionIndex]]}
 				/>
 			);
 		}
 	};
 });
 
-const CompactMap = Skinnable(CompactMapBrains(CompactMapBase));
+const CompactMap = Skinnable(CompactMapBase);
 
 export default CompactMap;
