@@ -38,22 +38,16 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 			this.done = false;
 			this.comm = React.createRef();
-			this.isFirstPosition = true;
-			this.state = {
-				location: this.props.location
-			};
+
+			// this.state = {
+			// 	showAppList: false
+			// };
 
 			// const tickler = setInterval(this.doTickle, 1000);
 		}
 
 		componentDidMount () {
-			this.mounted = true;
 			this.initializeConnection();
-
-			// sync location to app state every 5 seconds.
-			this.appStateSyncInterval = window.setInterval(() => {
-				this.setLocation({location: this.state.location});
-			}, 5000);
 		}
 
 		componentDidUpdate (prevProps) {
@@ -78,11 +72,6 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			}
 		}
 
-		componentWillUnmount () {
-			this.mounted = false;
-			window.clearInterval(this.appStateSyncInterval);
-		}
-
 		initializeConnection () {
 			if (!this.connection) {
 				console.log('Connecting to', appConfig.servicesLayerHost);
@@ -91,7 +80,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					onConnection: () => {
 						console.log('%cConnected to Service Layer', 'color: green');
 						if (this.reconnectLater) this.reconnectLater.stop();
-						this.setConnected(true);
+						this.props.setConnected(true);
 					},
 					onClose: () => {
 						console.log('%cDisconnected from Service Layer', 'color: red');
@@ -99,7 +88,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 						this.initiateAutomaticReconnect();
 
 						// Activate a reconnect button
-						this.setConnected(false);
+						this.props.setConnected(false);
 					},
 					onError: message => {
 						Error(':( Service Error', message);
@@ -107,7 +96,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 						this.initiateAutomaticReconnect();
 
 						// Activate a reconnect button
-						this.setConnected(false);
+						this.props.setConnected(false);
 					},
 					onPosition: this.onPosition,
 					onRoutingRequest: this.onRoutingRequest,
@@ -172,15 +161,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					console.log('Destination Reached:', location, 'Automatic driving mode now disabled.');
 				}
 			}
-
-			if (this.mounted) {
-				// update app state the first time we get a position.
-				if (this.isFirstPosition) {
-					this.setLocation({location: this.state.location});
-					this.isFirstPosition = false;
-				}
-				this.setState({location});
-			}
+			this.props.setLocation({location});
 		}
 
 		onRoutingRequest = (message) => {
@@ -236,20 +217,17 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			});
 		}
 
-		setLocation = ({location}) => {
-			this.props.updateAppState((state) => {
-				// console.log('Setting location app state:', location);
-				state.location = location;
-			});
+		sendVideo = (args) => {
+			this.comm.current.sendVideo(args);
 		}
 
-		updateDestination = ({destination, navigating}) => {
-			this.props.updateAppState((state) => {
-				state.navigation.destination = destination;
-				if (navigating != null) {
-					state.navigation.navigating = navigating;
-				}
-			});
+		resetPosition = (coordinates) => {
+			this.connection.send('positionReset', coordinates);
+		}
+
+		sendNavigation = () => {
+			// console.log('sendNavigation:', this.props.navigation);
+			this.comm.current.sendETA(this.props.navigation);
 		}
 
 		render () {
@@ -257,6 +235,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			delete rest.setLocation;
 			delete rest.setConnected;
 			delete rest.updateDestination;
+			delete rest.location;
 			delete rest.navigation;
 			delete rest.setConnected;
 			delete rest.setLocation;
@@ -267,6 +246,8 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					<Communicator ref={this.comm} host={appConfig.communicationServerHost} />
 					<Wrapped
 						{...rest}
+						sendVideo={this.sendVideo}
+						resetPosition={this.resetPosition}
 					/>
 				</React.Fragment>
 			);
@@ -287,26 +268,26 @@ const ServiceLayer = compose(
 		// 		state.tickleCount = tickleCount;
 		// 	});
 		// },
-		// setConnected: (connected) => {
-		// 	updateAppState((state) => {
-		// 		if (state.connections.serviceLayer === connected) return null;
-		// 		state.connections.serviceLayer = connected;
-		// 	});
-		// },
-		// setLocation: ({location}) => {
-		// 	updateAppState((state) => {
-		// 		// console.log('Setting location app state:', location);
-		// 		state.location = location;
-		// 	});
-		// },
-		// updateDestination: ({destination, navigating}) => {
-		// 	updateAppState((state) => {
-		// 		state.navigation.destination = destination;
-		// 		if (navigating != null) {
-		// 			state.navigation.navigating = navigating;
-		// 		}
-		// 	});
-		// }
+		setConnected: (connected) => {
+			updateAppState((state) => {
+				if (state.connections.serviceLayer === connected) return null;
+				state.connections.serviceLayer = connected;
+			});
+		},
+		setLocation: ({location}) => {
+			updateAppState((state) => {
+				// console.log('Setting location app state:', location);
+				state.location = location;
+			});
+		},
+		updateDestination: ({destination, navigating}) => {
+			updateAppState((state) => {
+				state.navigation.destination = destination;
+				if (navigating != null) {
+					state.navigation.navigating = navigating;
+				}
+			});
+		}
 		// endNavigation: ({navigating}) => {
 		// 	updateAppState((state) => {
 		// 		state.navigation.navigating = navigating;

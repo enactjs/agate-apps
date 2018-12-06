@@ -33,10 +33,11 @@ import Dashboard from '../views/Dashboard';
 import Multimedia from '../views/Multimedia';
 
 // Local Components
-import AppStateConnect from './AppContextConnect';
+import AppContextConnect from './AppContextConnect';
 
 // CSS/LESS Styling
 import css from './App.less';
+import ServiceLayer from '../data/ServiceLayer';
 
 
 add('backspace', 8);
@@ -273,7 +274,7 @@ const AppBase = kind({
 
 
 const AppDecorator = compose(
-	AppStateConnect(({appState, userSettings, updateAppState}) => ({
+	AppContextConnect(({appState, userSettings, updateAppState}) => ({
 		skin: userSettings.skin,
 		colorAccent: userSettings.colorAccent,
 		colorHighlight: userSettings.colorHighlight,
@@ -287,9 +288,9 @@ const AppDecorator = compose(
 		showAppList: appState.showAppList,
 		showWelcomePopup: appState.showWelcomePopup,
 		orientation: (userSettings.skin !== 'carbon') ? 'horizontal' : 'vertical',
-		updateAppState
+		updateAppState,
 	})),
-	CommunicationLayer,
+	ServiceLayer,
 	AgateDecorator
 );
 
