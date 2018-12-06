@@ -582,6 +582,7 @@ class MapCoreBase extends React.Component {
 
 const ConnectedMap = compose(
 	AppContextConnect(({location, userSettings, updateAppState}) => ({
+		location,
 		// We should import the app-level variable for our current location then feed that in as the "start"
 		skin: userSettings.skin,
 		// destination: navigation.destination,
