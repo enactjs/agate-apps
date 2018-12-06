@@ -70,22 +70,6 @@ const AppBase = kind({
 	},
 
 	handlers: {
-		layoutArrangeableToggle: ({updateAppState}) => () => {
-			updateAppState((state) => {
-				state.userSettings.arrangements.arrangeable = !state.userSettings.arrangements.arrangeable;
-			});
-		},
-		updateSkin: ({updateAppState}) => () => {
-			updateAppState((state) => {
-				let newSkin;
-				switch (state.userSettings.skin) {
-					case 'titanium': newSkin = 'electro'; break;
-					case 'carbon': newSkin = 'titanium'; break;
-					default: newSkin = 'carbon';
-				}
-				state.userSettings.skin = newSkin;
-			});
-		},
 		onSelect: handle(
 			adaptEvent((ev, {updateAppState}) => {
 				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
@@ -128,6 +112,26 @@ const AppBase = kind({
 				state.appState.showUserSelectionPopup = false;
 			});
 		}
+	},
+
+	computed: {
+		layoutArrangeableToggle: ({updateAppState}) => () => {
+			console.log('layout');
+			updateAppState((state) => {
+				state.userSettings.arrangements.arrangeable = !state.userSettings.arrangements.arrangeable;
+			});
+		},
+		updateSkin: ({updateAppState}) => () => {
+			updateAppState((state) => {
+				let newSkin;
+				switch (state.userSettings.skin) {
+					case 'titanium': newSkin = 'electro'; break;
+					case 'carbon': newSkin = 'titanium'; break;
+					default: newSkin = 'carbon';
+				}
+				state.userSettings.skin = newSkin;
+			});
+		},
 	},
 
 	render: ({
@@ -183,7 +187,10 @@ const AppBase = kind({
 							<Cell shrink>
 								<Button type="grid" icon="user" small onTap={onToggleUserSelectionPopup} />
 								<Button type="grid" icon="series" small onTap={updateSkin} />
-								<ToggleButtonBase selected={layoutArrangeable} underline type="grid" toggleOnLabel="Finish" toggleOffLabel="Edit" small onTap={layoutArrangeableToggle} />
+								<ToggleButtonBase selected={layoutArrangeable} underline type="grid" toggleOnLabel="Finish" toggleOffLabel="Edit" small onTap={() => {
+									console.log('here');
+									layoutArrangeableToggle()
+								}} />
 							</Cell>
 						</Column>
 					</afterTabs>
