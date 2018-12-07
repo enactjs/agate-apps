@@ -16,11 +16,18 @@ if (typeof window !== 'undefined') {
 	const index = parseInt(args.index || 0);
 	const skin = args.skin;
 
-	const onSelect = (ev) => window.history.pushState(ev, '', `?index=${ev.index}`);
+	const onSelect = (ev) => {
+		const params = qs.parse(window.location.search);
+		params.index = ev.index;
+		const stringified = qs.stringify(params);
+
+		window.history.pushState(ev, '', `/?${stringified}`);
+	};
 
 	appElement = (
 		<AppContextProvider defaultSkin={skin}>
 			<App
+				defaultShowWelcomePopup={args.showWelcomePopup !== 'false'}
 				defaultIndex={index}
 				onSelect={onSelect}
 			/>
