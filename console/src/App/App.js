@@ -71,22 +71,6 @@ const AppBase = kind({
 	},
 
 	handlers: {
-		layoutArrangeableToggle: ({updateAppState}) => ({selected}) => {
-			updateAppState((state) => {
-				state.userSettings.arrangements.arrangeable = !state.userSettings.arrangements.arrangeable;
-			});
-		},
-		updateSkin: ({updateAppState}) => () => {
-			updateAppState((state) => {
-				let newSkin;
-				switch (state.userSettings.skin) {
-					case 'titanium': newSkin = 'electro'; break;
-					case 'carbon': newSkin = 'titanium'; break;
-					default: newSkin = 'carbon';
-				}
-				state.userSettings.skin = newSkin;
-			});
-		},
 		onSelect: handle(
 			adaptEvent((ev, {updateAppState}) => {
 				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
@@ -128,6 +112,22 @@ const AppBase = kind({
 				state.appState.showWelcomePopup = true;
 				state.appState.showUserSelectionPopup = false;
 			});
+		},
+		layoutArrangeableToggle: (ev, {updateAppState}) => {
+			updateAppState((state) => {
+				state.userSettings.arrangements.arrangeable = !state.userSettings.arrangements.arrangeable;
+			});
+		},
+		updateSkin: (ev, {updateAppState}) => {
+			updateAppState((state) => {
+				let newSkin;
+				switch (state.userSettings.skin) {
+					case 'titanium': newSkin = 'electro'; break;
+					case 'carbon': newSkin = 'titanium'; break;
+					default: newSkin = 'carbon';
+				}
+				state.userSettings.skin = newSkin;
+			});
 		}
 	},
 
@@ -162,7 +162,6 @@ const AppBase = kind({
 
 		return (
 			<div {...rest}>
-
 				<TabbedPanels
 					orientation={orientation}
 					tabs={[

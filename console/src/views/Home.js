@@ -178,7 +178,8 @@ const HomeLayouts = kind({
 
 const LayoutSetting = AppContextConnect(({userSettings, updateAppState}) => ({
 	arrangement: userSettings.arrangements ? userSettings.arrangements.home : {},
-	skin: userSettings.skin
+	skin: userSettings.skin,
+	updateAppState
 }));
 
 const HomeLayout =

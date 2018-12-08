@@ -11,7 +11,7 @@ import AppContextConnect from '../../App/AppContextConnect';
 import appConfig from '../../App/configLoader';
 import {propTypeLatLon, propTypeLatLonList} from '../../data/proptypes';
 import CarPng from '../Dashboard/svg/car.png';
-import ServiceLayer from '../../data/ServiceLayer';
+import {ServiceLayerContext} from '../../data/ServiceLayer';
 
 import css from './MapCore.less';
 
@@ -168,6 +168,7 @@ const skinStyles = {
 };
 
 class MapCoreBase extends React.Component {
+	static contextType = ServiceLayerContext;
 	static propTypes = {
 		updateDestination: PropTypes.func.isRequired,
 		updateNavigation: PropTypes.func.isRequired,
@@ -250,6 +251,8 @@ class MapCoreBase extends React.Component {
 				map: this.map,
 				orientation: location.orientation
 			});
+			
+		});
 
 			// Adds clickable targets to the map
 			this.map.on('click', 'symbols', (e) => {
@@ -280,6 +283,8 @@ class MapCoreBase extends React.Component {
 				this.actionManager(actions);
 			}
 		});
+
+		this.setContextRef();
 	}
 
 	componentDidUpdate (prevProps) {
@@ -335,6 +340,7 @@ class MapCoreBase extends React.Component {
 	}
 
 	componentWillUnmount () {
+		this.context.onMapUnmount(this);
 		if (this.map) this.map.remove();
 	}
 
@@ -592,6 +598,10 @@ class MapCoreBase extends React.Component {
 		this.setState(({follow}) => ({
 			follow: !follow
 		}));
+	}
+
+	setContextRef = () => {
+		this.context.getMap(this);
 	}
 
 	setMapNode = (node) => (this.mapNode = node)
