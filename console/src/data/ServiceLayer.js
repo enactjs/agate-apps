@@ -17,7 +17,10 @@ import Communicator from '../../../components/Communicator';
 
 import AppStateConnect from '../App/AppContextConnect';
 
+const ServiceLayerContext = React.createContext();
+
 const ServiceLayerBase = hoc((configHoc, Wrapped) => {
+	const PureWrapped = React.memo(Wrapped);
 	return class extends React.Component {
 		static displayName = 'ServiceLayer';
 
@@ -35,7 +38,9 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 			this.done = false;
 			this.comm = React.createRef();
-
+			this.maps = new Set();
+			this.location = this.props.location;
+			this.isFirstPosition = true;
 			// this.state = {
 			// 	showAppList: false
 			// };
@@ -54,6 +59,9 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 		componentDidMount () {
 			this.initializeConnection();
+			this.appStateSyncInterval = window.setInterval(() => {
+				this.setLocation({location: this.location});
+			}, 5000);
 		}
 
 		componentDidUpdate (prevProps) {
@@ -66,6 +74,10 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			}
 		}
 
+		componentWillUnmount () {
+			window.clearInterval(this.appStateSyncInterval);
+		}
+
 		initializeConnection () {
 			if (!this.connection) {
 				console.log('Connecting to', appConfig.servicesLayerHost);
@@ -74,7 +86,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					onConnection: () => {
 						console.log('%cConnected to Service Layer', 'color: green');
 						if (this.reconnectLater) this.reconnectLater.stop();
-						this.props.setConnected(true);
+						this.setConnected(true);
 					},
 					onClose: () => {
 						console.log('%cDisconnected from Service Layer', 'color: red');
@@ -82,7 +94,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 						this.initiateAutomaticReconnect();
 
 						// Activate a reconnect button
-						this.props.setConnected(false);
+						this.setConnected(false);
 					},
 					onError: message => {
 						Error(':( Service Error', message);
@@ -90,7 +102,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 						this.initiateAutomaticReconnect();
 
 						// Activate a reconnect button
-						this.props.setConnected(false);
+						this.setConnected(false);
 					},
 					onPosition: this.onPosition,
 					onRoutingRequest: this.onRoutingRequest,
@@ -155,7 +167,21 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					console.log('Destination Reached:', location, 'Automatic driving mode now disabled.');
 				}
 			}
-			this.props.setLocation({location});
+
+			this.location = location;
+			if (this.isFirstPosition) {
+				this.setLocation({location});
+				this.isFirstPosition = false;
+			}
+
+			if (this.maps.size > 0) {
+				for (let map of this.maps) {
+					if (map.updateCarLayer && map.centerMap) {
+						map.updateCarLayer({location: location});
+						map.centerMap({center: location});
+					}
+				}
+			}
 		}
 
 		onRoutingRequest = (message) => {
@@ -183,7 +209,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			const destDiffersFromState = (!equals(destination, navigation.destination));
 			destination = destination || navigation.destination; // Accept external args, in case the request came from within this component, but fallback to the navigation prop (the preferred usage).
 			// console.log('location, dest(s):', [location, ...destination]);
-			this.props.updateDestination({destination, navigating: true});
+			this.updateDestination({destination, navigating: true});
 
 			if (destDiffersFromState && destination.slice(-1).lat !== 0) {
 				this.connection.send('routingRequest', [location, ...destination]);
@@ -203,6 +229,37 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			this.comm.current.sendETA(this.props.navigation);
 		}
 
+		setConnected = (connected) => {
+			this.props.updateAppState((state) => {
+				if (state.connections.serviceLayer === connected) return null;
+				state.connections.serviceLayer = connected;
+			});
+		}
+
+		setLocation = ({location}) => {
+			this.props.updateAppState((state) => {
+				// console.log('Setting location app state:', location);
+				state.location = location;
+			});
+		}
+
+		updateDestination = ({destination, navigating}) => {
+			this.props.updateAppState((state) => {
+				state.navigation.destination = destination;
+				if (navigating != null) {
+					state.navigation.navigating = navigating;
+				}
+			});
+		}
+
+		getMap = (map) => {
+			this.maps.add(map);
+		}
+
+		onMapUnmount = (map) => {
+			this.maps.delete(map);
+		}
+
 		render () {
 			const {...rest} = this.props;
 			delete rest.setLocation;
@@ -214,12 +271,14 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 			return (
 				<React.Fragment>
-					<Communicator ref={this.comm} host={appConfig.communicationServerHost} />
-					<Wrapped
-						{...rest}
-						sendVideo={this.sendVideo}
-						resetPosition={this.resetPosition}
-					/>
+					<ServiceLayerContext.Provider value={{getMap: this.getMap, onMapUnmount: this.onMapUnmount}}>
+						<Communicator ref={this.comm} host={appConfig.communicationServerHost} />
+						<PureWrapped
+							{...rest}
+							sendVideo={this.sendVideo}
+							resetPosition={this.resetPosition}
+						/>
+					</ServiceLayerContext.Provider>
 				</React.Fragment>
 			);
 		}
@@ -230,32 +289,13 @@ const ServiceLayer = compose(
 	AppStateConnect(({location: locationProp, navigation, updateAppState}) => ({
 		location: locationProp,
 		navigation,
+		updateAppState
 		// tickleCount: tickleCountProp,
 		// setTickle: ({tickleCount}) => {
 		// 	updateAppState((state) => {
 		// 		state.tickleCount = tickleCount;
 		// 	});
 		// },
-		setConnected: (connected) => {
-			updateAppState((state) => {
-				if (state.connections.serviceLayer === connected) return null;
-				state.connections.serviceLayer = connected;
-			});
-		},
-		setLocation: ({location}) => {
-			updateAppState((state) => {
-				// console.log('Setting location app state:', location);
-				state.location = location;
-			});
-		},
-		updateDestination: ({destination, navigating}) => {
-			updateAppState((state) => {
-				state.navigation.destination = destination;
-				if (navigating != null) {
-					state.navigation.navigating = navigating;
-				}
-			});
-		}
 		// endNavigation: ({navigating}) => {
 		// 	updateAppState((state) => {
 		// 		state.navigation.navigating = navigating;
@@ -267,5 +307,6 @@ const ServiceLayer = compose(
 
 export default ServiceLayer;
 export {
-	ServiceLayer
+	ServiceLayer,
+	ServiceLayerContext
 };

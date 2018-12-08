@@ -112,16 +112,13 @@ const AppBase = kind({
 				state.appState.showWelcomePopup = true;
 				state.appState.showUserSelectionPopup = false;
 			});
-		}
-	},
-
-	computed: {
-		layoutArrangeableToggle: ({updateAppState}) => () => {
+		},
+		layoutArrangeableToggle: (ev, {updateAppState}) => {
 			updateAppState((state) => {
 				state.userSettings.arrangements.arrangeable = !state.userSettings.arrangements.arrangeable;
 			});
 		},
-		updateSkin: ({updateAppState}) => () => {
+		updateSkin: (ev, {updateAppState}) => {
 			updateAppState((state) => {
 				let newSkin;
 				switch (state.userSettings.skin) {
@@ -131,7 +128,7 @@ const AppBase = kind({
 				}
 				state.userSettings.skin = newSkin;
 			});
-		},
+		}
 	},
 
 	render: ({
@@ -165,7 +162,6 @@ const AppBase = kind({
 
 		return (
 			<div {...rest}>
-
 				<TabbedPanels
 					orientation={orientation}
 					tabs={[
