@@ -28,6 +28,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			updateDestination: PropTypes.func.isRequired,
 			destination: propTypeLatLonList,
 			location: propTypeLatLon,
+			navigating: PropTypes.bool,
 			navigation: PropTypes.object
 		}
 
@@ -58,7 +59,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
-			if (!equals(prevProps.navigation.destination, this.props.navigation.destination)) {
+			if (!equals(prevProps.destination, this.props.destination)) {
 				this.setDestination();
 			}
 
@@ -80,7 +81,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					onClose: () => {
 						console.log('%cDisconnected from Service Layer', 'color: red');
 
-						this.initiateAutomaticReconnect();
+						// this.initiateAutomaticReconnect();
 
 						// Activate a reconnect button
 						this.props.setConnected(false);
@@ -88,7 +89,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					onError: message => {
 						Error(':( Service Error', message);
 
-						this.initiateAutomaticReconnect();
+						// this.initiateAutomaticReconnect();
 
 						// Activate a reconnect button
 						this.props.setConnected(false);
@@ -171,25 +172,49 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			// We may be able to load multiple previous waypoints here, if more than one was sent
 			const {x, y} = message.routing_request.waypoint.slice(-1).pop().pose;
 			const destination = [getLatLongFromSim(x, y)];
-			this.setDestination({destination});
+			this.setDestination({destination, navigating: true});
 		}
 
 		//
 		// General Event Handling
 		//
 
-		setDestination = ({destination} = {}) => {
-			const {navigation, location} = this.props;
+		setDestination = ({destination, navigating} = {}) => {
+			// Accept external args, in case the request came from within this component,
+			// but fallback to the navigation prop (the preferred usage).
+			let destDiffersFromState;
+			if (destination == null) {
+				destination = this.props.destination;
+			} else {
+				destDiffersFromState = (!equals(destination, this.props.destination));
+				this.props.updateDestination({destination});
+			}
+			if (navigating == null) navigating = this.props.navigating;
 
-			const destDiffersFromState = (!equals(destination, navigation.destination));
-			destination = destination || navigation.destination; // Accept external args, in case the request came from within this component, but fallback to the navigation prop (the preferred usage).
-			// console.log('location, dest(s):', [location, ...destination]);
-			this.props.updateDestination({destination, navigating: true});
+			// If the destination is still null, replace the destination with our current location
+			// so we can "trick" the simulator into thinking we're already at our goal location
+			// thus stopping the self driving function.
+			// if ((!destination || destination.length === 0) && navigating) {
+			// 	destination = [this.props.location];
+			// 	destDiffersFromState = true;
+			// }
 
-			if (destDiffersFromState && destination.slice(-1).lat !== 0) {
-				this.connection.send('routingRequest', [location, ...destination]);
+			if (navigating && destDiffersFromState && destination.slice(-1).lat !== 0) {
+				this.connection.send('routingRequest', [this.props.location, ...destination]);
 			}
 		}
+		// setDestination = ({destination, navigating} = {}) => {
+		// 	const {navigation, location} = this.props;
+
+		// 	const destDiffersFromState = (!equals(destination, navigation.destination));
+		// 	destination = destination || navigation.destination; // Accept external args, in case the request came from within this component, but fallback to the navigation prop (the preferred usage).
+		// 	// console.log('location, dest(s):', [location, ...destination]);
+		// 	this.props.updateDestination({destination, navigating});
+
+		// 	if (navigating && destDiffersFromState && destination.slice(-1).lat !== 0) {
+		// 		this.connection.send('routingRequest', [location, ...destination]);
+		// 	}
+		// }
 
 		sendVideo = (args) => {
 			this.comm.current.sendVideo(args);
@@ -210,6 +235,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			delete rest.setConnected;
 			delete rest.updateDestination;
 			delete rest.location;
+			delete rest.navigating;
 			delete rest.navigation;
 			// delete rest.setTickle;
 
@@ -229,8 +255,10 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 const ServiceLayer = compose(
 	AppStateConnect(({location: locationProp, navigation, updateAppState}) => ({
+		destination: navigation.destination,
 		location: locationProp,
 		navigation,
+		navigating: navigation.navigating,
 		// tickleCount: tickleCountProp,
 		// setTickle: ({tickleCount}) => {
 		// 	updateAppState((state) => {

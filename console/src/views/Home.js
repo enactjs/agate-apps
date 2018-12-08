@@ -189,7 +189,8 @@ const Home = kind({
 
 	propTypes: {
 		arrangeable: PropTypes.bool,
-		onCompactExpand: PropTypes.func
+		onCompactExpand: PropTypes.func,
+		onSendVideo: PropTypes.func
 	},
 
 	styles: {
@@ -197,7 +198,7 @@ const Home = kind({
 		className: 'homePanel'
 	},
 
-	render: ({arrangeable, onCompactExpand, onSendVideo, onSelect, ...rest}) => (
+	render: ({arrangeable, onCompactExpand, onSendVideo, ...rest}) => (
 		<Panel {...rest}>
 			<HomeLayout arrangeable={arrangeable}>
 				<tray1><CompactAppList onExpand={onCompactExpand} /></tray1>

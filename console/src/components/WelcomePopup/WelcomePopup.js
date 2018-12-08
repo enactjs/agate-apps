@@ -17,7 +17,7 @@ import CompactHeater from '../CompactHeater';
 import CompactMultimedia from '../CompactMultimedia';
 import CompactWeather from '../CompactWeather';
 import MapController from '../MapController';
-import {propTypeLatLonList} from '../../data/proptypes';
+// import {propTypeLatLonList} from '../../data/proptypes';
 
 import steveAvatar from '../../../assets/steve.png';
 import thomasAvatar from '../../../assets/thomas.png';
@@ -113,7 +113,7 @@ const WelcomePopupBase = kind({
 		onSelectUser: PropTypes.func,
 		onSendVideo: PropTypes.func,
 		onShowWelcome: PropTypes.func,
-		positions: PropTypes.array,
+		// positions: PropTypes.array,
 		profileName: PropTypes.string,
 		updateUser: PropTypes.func,
 		userId: PropTypes.number
@@ -170,6 +170,7 @@ const WelcomePopupBase = kind({
 	}) => {
 		delete rest.components;
 		delete rest.onClose;
+		delete rest.onContinue;
 		delete rest.onSendVideo;
 		delete rest.onShowWelcome;
 		delete rest.updateUser;
@@ -210,12 +211,13 @@ const WelcomePopupBase = kind({
 									<Cell component={Button} onClick={handleClose} shrink>Continue</Cell>
 								</Column>
 							</Cell>
-							<Cell
-								component={MapController}
-								noStartStopToggle
-								locationSelection
-								selfDrivingSelection
-							/>
+							<Cell>
+								<MapController
+									noStartStopToggle
+									locationSelection
+									selfDrivingSelection
+								/>
+							</Cell>
 						</Row>
 					</Panel>
 				</Panels>
@@ -260,7 +262,7 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 		}
 
 		render () {
-			const {index, positions} = this.state;
+			const {index} = this.state;
 
 			return (
 				<Wrapped
@@ -269,7 +271,7 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 					onSelectUser={this.handleSelectUser}
 					onCancelSelect={this.handleCancelSelect}
 					onShowWelcome={this.handleShowWelcome}
-					positions={positions}
+					// positions={positions}
 					selected={this.state.selected}
 				/>
 			);
@@ -277,11 +279,11 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 	};
 });
 
-const AppContextDecorator = AppContextConnect(({getUserNames, updateAppState, navigation, userId, userSettings}) => {
+const AppContextDecorator = AppContextConnect(({getUserNames, updateAppState, userId, userSettings}) => {
 	return {
 		components: (userSettings.components && {...userSettings.components.welcome}),
 		profileName: userSettings.name,
-		proposedDestination: navigation.proposedDestination,
+		// proposedDestination: navigation.proposedDestination,
 		updateUser: ({selected}) => {
 			updateAppState((state) => {
 				state.userId = selected + 1;
@@ -289,7 +291,7 @@ const AppContextDecorator = AppContextConnect(({getUserNames, updateAppState, na
 		},
 		onContinue: () => {
 			updateAppState((state) => {
-				if (state.navigation.auto && state.navigation.proposedDestination) {
+				if (state.navigation.autonomous && state.navigation.proposedDestination) {
 					state.navigation.destination = state.navigation.proposedDestination.coordinates;
 				}
 			});

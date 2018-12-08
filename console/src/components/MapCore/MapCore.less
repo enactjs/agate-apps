@@ -30,6 +30,16 @@
 	}
 }
 
+// We don't want the empty tools column area to be an invisible unclickable space
+// This selector is here instead of above due to a precedence race-condition
+.tools {
+	pointer-events: none;
+
+	> * {
+		pointer-events: auto;
+	}
+}
+
 // Sorry MapBox, we respect you and want to give credit, but we can't risk opening a new window that
 // we don't have control over and can't get back to our app from.
 :global(.mapboxgl-control-container) * {

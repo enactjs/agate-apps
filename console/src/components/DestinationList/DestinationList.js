@@ -12,6 +12,7 @@ const DestinationList = kind({
 	propTypes: {
 		positions: PropTypes.array.isRequired,
 		onSetDestination: PropTypes.func,
+		selected: PropTypes.number,  // The index of the currently selected position
 		title: PropTypes.string
 	},
 
@@ -23,22 +24,29 @@ const DestinationList = kind({
 	// 	))
 	// },
 
-	render: ({positions, onSetDestination, title, ...rest}) => {
+	render: ({positions, onSetDestination, selected, title, ...rest}) => {
 		return (
 			<Column {...rest}>
-				<Cell component={Divider} startSection shrink>{title}</Cell>
+				<Cell component={Divider} shrink>{title}</Cell>
 				<Cell>
-					<Column>
-						<Group childComponent={Button} onSelect={onSetDestination} selectedProp="highlighted">
-							{positions ? positions.map(({description}, index) => {
-								return {
-									children: `${index + 1} - ${description}`,
-									key: `${description}-${index + 1}`,
-									small: true,
-									'data-index': index
-								};
-							}) : []}
-						</Group>
+					<Column
+						component={Group}
+						childComponent={Button}
+						onSelect={onSetDestination}
+						selectedProp="highlighted"
+						selected={selected}
+						itemProps={{small: true}}
+					>
+						{
+							positions.map(({description}, index) => `${index + 1} - ${description}`)
+							// 	return {
+							// 		children: `${index + 1} - ${description}`,
+							// 		key: `${description}-${index}`,
+							// 		small: true
+							// 		// 'data-index': index
+							// 	};
+							// })
+						}
 					</Column>
 				</Cell>
 			</Column>
