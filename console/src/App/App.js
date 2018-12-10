@@ -131,8 +131,6 @@ const AppBase = kind({
 	},
 
 	render: ({
-		colorAccent: accent,
-		colorHighlight: highlight,
 		index,
 		layoutArrangeable,
 		layoutArrangeableToggle,
