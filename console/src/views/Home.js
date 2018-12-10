@@ -70,17 +70,17 @@ const HomeLayouts = kind({
 	},
 
 	handlers: {
-		layoutArrangeableEnd: (ev, {updateAppState}) => {
-			updateAppState((state) => {
-				state.userSettings.arrangements.arrangeable = false;
-			});
-		},
-		onArrange: (ev, {updateAppState, arrangement}) => {
-			updateAppState((state) => {
-				if (!state.userSettings.arrangements) state.userSettings.arrangements = {};
-				state.userSettings.arrangements.home = {...arrangement};
-			});
-		}
+		// layoutArrangeableEnd: (ev, {updateAppState}) => {
+		// 	updateAppState((state) => {
+		// 		state.userSettings.arrangements.arrangeable = false;
+		// 	});
+		// },
+		// onArrange: (ev, {updateAppState, arrangement}) => {
+		// 	updateAppState((state) => {
+		// 		if (!state.userSettings.arrangements) state.userSettings.arrangements = {};
+		// 		state.userSettings.arrangements.home = {...arrangement};
+		// 	});
+		// }
 	},
 
 	render: ({arrangeable, skin, small1, small2, medium, large, layoutArrangeableEnd, ...rest}) => {
@@ -179,7 +179,18 @@ const HomeLayouts = kind({
 const LayoutSetting = AppContextConnect(({userSettings, updateAppState}) => ({
 	arrangement: userSettings.arrangements ? userSettings.arrangements.home : {},
 	skin: userSettings.skin,
-	updateAppState
+	updateAppState,
+	layoutArrangeableEnd: () => {
+		updateAppState((state) => {
+			state.userSettings.arrangements.arrangeable = false;
+		});
+	},
+	onArrange: ({arrangement}) => {
+		updateAppState((state) => {
+			if (!state.userSettings.arrangements) state.userSettings.arrangements = {};
+			state.userSettings.arrangements.home = {...arrangement};
+		});
+	}
 }));
 
 const HomeLayout =
