@@ -13,7 +13,7 @@ import React from 'react';
 import compose from 'ramda/src/compose';
 
 // Data Services
-import {CommunicationLayer} from '../data/CommunicationLayer';
+import ServiceLayer from '../data/ServiceLayer';
 
 // Components
 import Clock from '../components/Clock';
@@ -37,7 +37,6 @@ import AppContextConnect from './AppContextConnect';
 
 // CSS/LESS Styling
 import css from './App.less';
-import ServiceLayer from '../data/ServiceLayer';
 
 
 add('backspace', 8);
