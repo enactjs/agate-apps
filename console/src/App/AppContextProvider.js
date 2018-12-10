@@ -54,13 +54,13 @@ const defaultUserSettings = {
 	colorHighlight: '#66aabb',
 	fontSize: 0,
 	name: '',
-	skin: 'carbon',
-	topLocations: [
-		{
-			description: 'The Ocean, oops!',
-			coordinates: {'lat': 0, 'lon': 0}
-		}
-	]
+	skin: 'carbon'
+	// topLocations: [
+	// 	{
+	// 		description: 'The Ocean, oops!',
+	// 		coordinates: {'lat': 0, 'lon': 0}
+	// 	}
+	// ]
 };
 
 class AppContextProvider extends Component {
@@ -82,12 +82,7 @@ class AppContextProvider extends Component {
 			navigation: {
 				autonomous: true,
 				description: '',
-				destination: [
-					{
-						lat: 0,
-						lon: 0
-					}
-				],
+				destination: null,
 				distance: 0,
 				duration: 0,
 				eta: 0,

@@ -265,15 +265,10 @@ class MapCoreBase extends React.Component {
 					coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
 				}
 
-				console.log('Clicked Symbol:', coordinates);
 				this.props.updateDestination({
 					destination: [toLatLon(coordinates)],
 					navigating: false
 				});
-				// this.actionManager({
-				// 	plotRoute: [toLatLon(coordinates)]
-				// });
-				// this.props.onSetDestination({selected: e.features[0].properties.index - 1});
 			});
 
 			this.bbox = getBoundsOfAll([toMapbox(startCoordinates)], this.bbox);
@@ -282,8 +277,18 @@ class MapCoreBase extends React.Component {
 			this.map.fitBounds(this.bbox, {
 				padding: getMapPadding()
 			});
-		});
 
+			const actions = {};
+			if (this.props.destination instanceof Array && this.props.destination.slice(-1).lat !== 0) {
+				if (this.props.navigating) actions.startNavigating = this.props.destination;
+				actions.plotRoute = this.props.destination;
+			}
+
+			// If there is stuff to do, do it!
+			if (Object.keys(actions).length) {
+				this.actionManager(actions);
+			}
+		});
 	}
 
 	componentDidUpdate (prevProps) {
@@ -308,17 +313,6 @@ class MapCoreBase extends React.Component {
 		// This allows multiple scenarios to invoke the same action and have them not conflict with
 		// each other, and have the logic of what to do abstracted from when to do it.
 		const actions = {};
-
-		// Received a new orientation
-
-		// Received a new proposedDestination
-		// if (!equals(prevProps.proposedDestination, this.props.proposedDestination)) {
-		// 	if (this.props.proposedDestination) {
-		// 		actions.plotRoute = [this.props.location, ...this.props.proposedDestination];
-		// 	} else {
-		// 		actions.plotRoute = [this.props.location, this.props.location];
-		// 	}
-		// }
 
 		// Received a new velocity
 		if (this.props.location && (!prevProps.location ||
@@ -350,13 +344,13 @@ class MapCoreBase extends React.Component {
 
 		// Starting navigation
 		if (this.props.navigating !== prevProps.navigating && this.props.navigating) {
-			console.log('STARTING nav');
+			// console.log('STARTING nav');
 			actions.startNavigating = this.props.destination;
 			actions.plotRoute = this.props.destination;
 		}
 		// Stopping navigation
 		if (this.props.navigating !== prevProps.navigating && !this.props.navigating) {
-			console.log('STOPPING nav');
+			// console.log('STOPPING nav');
 			actions.stopNavigating = true;
 			// actions.plotRoute = [this.props.location];
 		}

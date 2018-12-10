@@ -81,7 +81,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					onClose: () => {
 						console.log('%cDisconnected from Service Layer', 'color: red');
 
-						// this.initiateAutomaticReconnect();
+						this.initiateAutomaticReconnect();
 
 						// Activate a reconnect button
 						this.props.setConnected(false);
@@ -89,7 +89,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					onError: message => {
 						Error(':( Service Error', message);
 
-						// this.initiateAutomaticReconnect();
+						this.initiateAutomaticReconnect();
 
 						// Activate a reconnect button
 						this.props.setConnected(false);
