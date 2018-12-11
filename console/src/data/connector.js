@@ -106,6 +106,19 @@ function connect ({url, onConnection, onError, onClose, ...topics} = {}) {
 				}
 				break;
 			}
+			//
+			// This is an alternate way to stop the navigation. It needs to talk to a different
+			// socket than the routing requests. We'll also need to fire the 'start' after setting a
+			// new destination if we've previously run 'stop'.
+			//
+			// case 'haltRouting': {
+			// 	payload = {
+			// 		type: 'ExecuteModuleCommand',
+			// 		module: 'control',
+			// 		command: 'stop'
+			// 	};
+			// 	break;
+			// }
 			default:
 				payload = message;
 		}
