@@ -211,7 +211,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			// true, since this change comes directly from the simulator, and the only way to get a
 			// destination from the simulator is if it's already "navigating".
 			if (!equals(destination, this.props.destination)) {
-				this.props.updateDestination({destination, navigating: true});
+				this.updateDestination({destination, navigating: true});
 			}
 		}
 
