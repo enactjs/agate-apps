@@ -1,13 +1,10 @@
 import kind from '@enact/core/kind';
-import hoc from '@enact/core/hoc';
 import Skinnable from '@enact/agate/Skinnable';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Widget from '../Widget';
-
-import {propTypeLatLonList} from '../../data/proptypes';
 
 import MapController from '../MapController';
+import Widget from '../Widget';
 
 import css from './CompactMap.less';
 
@@ -15,13 +12,7 @@ const CompactMapBase = kind({
 	name: 'CompactMap',
 
 	propTypes: {
-		changeFollow: PropTypes.func,
-		changePosition: PropTypes.func,
-		destination: propTypeLatLonList,
-		follow: PropTypes.bool,
-		onSelect: PropTypes.func,
-		// A local state method to assign the local destination to the destination prop listed above.
-		proposedDestination: propTypeLatLonList
+		follow: PropTypes.bool
 	},
 
 	styles: {
@@ -29,45 +20,25 @@ const CompactMapBase = kind({
 		className: 'compactMap'
 	},
 
-	handlers: {
-		onTabChange: (ev, {onSelect}) => {
-			if ((ev.keyCode === 13 || ev.type === 'click') && ev.currentTarget.dataset.tabindex) {
-				onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
-			}
-		}
-	},
-
-	render: (props) => {
+	render: ({follow, ...rest}) => {
 		return (
-			<Widget {...props} view="map">
-				<MapController compact selfDrivingSelection />
+			<Widget {...rest} title="Map" description="Choose a destination and navigate" noHeader>
+				<MapController
+					compact
+					autonomousSelection
+					follow={follow}
+				>
+					{/* <tools>
+						<Button alt="Fullscreen" icon="fullscreen" data-tabindex={getPanelIndexOf('map')} onSelect={onSelect} onKeyUp={onTabChange} onClick={onTabChange} />
+						<Button alt="Propose new destination" icon="arrowhookleft" onClick={changePosition} />
+						<Button alt="Navigate Here" icon="play" onClick={onSetDestination} />
+					</tools>*/}
+				</MapController>
 			</Widget>
 		);
 	}
 });
 
-const CompactMapBrains = hoc((configHoc, Wrapped) => {
-	return class extends React.Component {
-		static displayName = 'CompactMapBrains';
-		constructor (props) {
-			super(props);
-			this.state = {
-				positionIndex: 0,
-				destination: null
-			};
-		}
-
-		render () {
-			return (
-				<Wrapped
-					{...this.props}
-					changePosition={this.changePosition}
-				/>
-			);
-		}
-	};
-});
-
-const CompactMap = Skinnable(CompactMapBrains(CompactMapBase));
+const CompactMap = Skinnable(CompactMapBase);
 
 export default CompactMap;

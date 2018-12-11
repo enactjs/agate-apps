@@ -1,4 +1,5 @@
 import {ResponsiveBox} from '@enact/agate/DropManager';
+import IconItem from '@enact/agate/IconItem';
 import kind from '@enact/core/kind';
 import Layout, {Cell} from '@enact/ui/Layout';
 import Slottable from '@enact/ui/Slottable';
@@ -15,13 +16,14 @@ const WidgetBase = kind({
 
 	propTypes: {
 		containerShape: PropTypes.object,
+		description: PropTypes.string,
 		full: PropTypes.node,
-		header: PropTypes.string,
 		large: PropTypes.node,
 		medium: PropTypes.node,
-		noHeader: PropTypes.string,
+		noHeader: PropTypes.bool,
 		onExpand: PropTypes.func,
 		small: PropTypes.node,
+		title: PropTypes.string,
 		view: PropTypes.string
 	},
 
@@ -31,10 +33,12 @@ const WidgetBase = kind({
 	},
 
 	computed: {
-		children: ({children, containerShape, full, large, medium, small}) => {
+		children: ({children, containerShape, full, large, medium, small, title}) => {
 			const size = containerShape && containerShape.size && containerShape.size.relative;
 
 			switch (size) {
+				case 'list':
+					return title || 'Widget';
 				case 'full':
 					return full || large || medium || small || children;
 				case 'large':
@@ -49,23 +53,29 @@ const WidgetBase = kind({
 		}
 	},
 
-	render: ({children, header, onExpand, noHeader, view, ...rest}) => {
+	render: ({children, containerShape, description, onExpand, noHeader, title, view, ...rest}) => {
 		delete rest.containerShape;
 		delete rest.full;
 		delete rest.large;
 		delete rest.medium;
 		delete rest.small;
 
-		return (
-			<Layout {...rest} orientation="vertical" align="center center">
-				{!noHeader ? (
-					<Cell shrink component={CompactHeader} onExpand={onExpand} view={view}>
-						{header}
-					</Cell>
-				) : null}
-				{children}
-			</Layout>
-		);
+		const relativeSize = (containerShape && containerShape.size && containerShape.size.relative);
+		switch (relativeSize) {
+			case 'list': return (
+				<IconItem css={css} label={description} icon="list">{title}</IconItem>
+			);
+			default: return (
+				<Layout {...rest} orientation="vertical" align="center center">
+					{!noHeader ? (
+						<Cell shrink component={CompactHeader} onExpand={onExpand} view={view}>
+							{title}
+						</Cell>
+					) : null}
+					{children}
+				</Layout>
+			);
+		}
 	}
 });
 

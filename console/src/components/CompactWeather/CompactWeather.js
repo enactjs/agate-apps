@@ -29,7 +29,7 @@ const CompactWeatherBase = kind({
 
 	render: ({status, temp, ...rest}) => {
 		return (
-			<Widget {...rest} header="Current" view="weather">
+			<Widget {...rest} title="Current Weather" description="Local weather information" view="weather">
 				<WeatherItem featured status={status} high={temp} />
 			</Widget>
 		);

@@ -17,7 +17,6 @@ import CompactHeater from '../CompactHeater';
 import CompactMultimedia from '../CompactMultimedia';
 import CompactWeather from '../CompactWeather';
 import MapController from '../MapController';
-import {propTypeLatLonList} from '../../data/proptypes';
 
 import steveAvatar from '../../../assets/steve.png';
 import thomasAvatar from '../../../assets/thomas.png';
@@ -88,11 +87,13 @@ const UserSelectionPanel = kind({
 		return (
 			<WelcomePanel className={css.userSelectionPanel}>
 				<Divider slot="header" className={css.header}>Welcome</Divider>
-				<Row align="center space-evenly" className="enact-fit">
+				<Row align="center space-around" className={css.bodyRow}>
 					{users.map((user, index) => (
-						<UserSelectionAvatar key={'userKey' + index} index={index} onSelectUser={onSelectUser}>
-							{user}
-						</UserSelectionAvatar>
+						<Cell shrink key={'userKey' + index}>
+							<UserSelectionAvatar index={index} onSelectUser={onSelectUser}>
+								{user}
+							</UserSelectionAvatar>
+						</Cell>
 					))}
 				</Row>
 			</WelcomePanel>
@@ -104,14 +105,15 @@ const WelcomePopupBase = kind({
 	name: 'WelcomePopup',
 
 	propTypes: {
+		updateAppState: PropTypes.func.isRequired,
 		components: PropTypes.object,
 		index: PropTypes.number,
 		onCancelSelect: PropTypes.func,
 		onClose: PropTypes.func,
+		onContinue: PropTypes.func,
 		onSelectUser: PropTypes.func,
 		onSendVideo: PropTypes.func,
 		onShowWelcome: PropTypes.func,
-		positions: PropTypes.array,
 		profileName: PropTypes.string,
 		updateUser: PropTypes.func,
 		userId: PropTypes.number
@@ -168,8 +170,11 @@ const WelcomePopupBase = kind({
 	}) => {
 		delete rest.components;
 		delete rest.onClose;
+		delete rest.onContinue;
 		delete rest.onSendVideo;
 		delete rest.onShowWelcome;
+		delete rest.setDestination; // This needs to be assigned to somewhere. Most likely, this just needs to be toggling `navigating`, since the destination is set elsewhere.
+		delete rest.updateAppState;
 		delete rest.updateUser;
 
 		return (
@@ -208,12 +213,13 @@ const WelcomePopupBase = kind({
 									<Cell component={Button} onClick={handleClose} shrink>Continue</Cell>
 								</Column>
 							</Cell>
-							<Cell
-								component={MapController}
-								noStartStopToggle
-								locationSelection
-								selfDrivingSelection
-							/>
+							<Cell>
+								<MapController
+									noStartStopToggle
+									locationSelection
+									autonomousSelection
+								/>
+							</Cell>
 						</Row>
 					</Panel>
 				</Panels>
@@ -257,8 +263,20 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 			this.setState(({index}) => index === 1 ? {index: ++index} : null);
 		}
 
+		setDestination = ({destination}) => {
+			this.props.updateAppState((state) => {
+				state.navigation.destination = destination;
+			});
+		}
+
+		updateUser = ({selected}) => {
+			this.props.updateAppState((state) => {
+				state.userId = selected + 1;
+			});
+		}
+
 		render () {
-			const {index, positions} = this.state;
+			const {index} = this.state;
 
 			return (
 				<Wrapped
@@ -267,33 +285,22 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 					onSelectUser={this.handleSelectUser}
 					onCancelSelect={this.handleCancelSelect}
 					onShowWelcome={this.handleShowWelcome}
-					positions={positions}
 					selected={this.state.selected}
+					updateUser={this.updateUser}
+					setDestination={this.setDestination}
 				/>
 			);
 		}
 	};
 });
 
-const AppContextDecorator = AppContextConnect(({getUserNames, updateAppState, navigation, userId, userSettings}) => {
+const AppContextDecorator = AppContextConnect(({usersList, updateAppState, userId, userSettings}) => {
 	return {
-		components: (userSettings.components && {...userSettings.components.welcome}),
+		components: (userSettings.components && userSettings.components.welcome),
 		profileName: userSettings.name,
-		proposedDestination: navigation.proposedDestination,
-		updateUser: ({selected}) => {
-			updateAppState((state) => {
-				state.userId = selected + 1;
-			});
-		},
-		onContinue: () => {
-			updateAppState((state) => {
-				if (state.navigation.auto && state.navigation.proposedDestination) {
-					state.navigation.destination = state.navigation.proposedDestination.coordinates;
-				}
-			});
-		},
 		userId,
-		usersList: getUserNames()
+		usersList: usersList,
+		updateAppState
 	};
 });
 

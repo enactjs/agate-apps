@@ -28,39 +28,29 @@
 		},
 		"fontSize": 0,
 		"name": "Laura & Steve",
-		"skin": "carbon",	
+		"skin": "carbon",
 		"topLocations": [
 			{
 					"description": "Home",
-					"coordinates": [
-						-122.396601, 37.790246
-					]
+					"coordinates": {"lat": 37.790246, "lon": -122.396601}
 			},
 			{
 					"description": "Philz coffee",
-					"coordinates": [
-						-122.392775, 37.789026
-					]
+					"coordinates": {"lat": 37.789026, "lon": -122.392775}
 			},
 			{
 					"description": "School",
-					"coordinates": [
-						-122.401929, 37.778545
-					]
+					"coordinates": {"lat": 37.79395, "lon": -122.40185}
 			},
 			{
 					"description": "Work",
-					"coordinates": [
-						-122.405339, 37.785215
-					]
+					"coordinates": {"lat": 37.78353, "lon": -122.39615}
 			},
 			{
 					"description": "MOMA",
-					"coordinates": [
-						-122.404202, 37.786445
-					]
+					"coordinates": {"lat": 37.786445, "lon": -122.404202}
 			}
-		]	
+		]
 	},
 	"user2": {
 		"arrangements": {
@@ -118,33 +108,23 @@
 		"topLocations": [
 			{
 					"description": "Home",
-					"coordinates": [
-						-122.396601, 37.790246
-					]
+					"coordinates": {"lat": 37.790246, "lon": -122.396601}
 			},
 			{
 					"description": "Philz coffee",
-					"coordinates": [
-						-122.392775, 37.789026
-					]
+					"coordinates": {"lat": 37.789026, "lon": -122.392775}
 			},
 			{
 					"description": "School",
-					"coordinates": [
-						-122.401929, 37.778545
-					]
+					"coordinates": {"lat": 37.79395, "lon": -122.40185}
 			},
 			{
 					"description": "Work",
-					"coordinates": [
-						-122.405339, 37.785215
-					]
+					"coordinates": {"lat": 37.78353, "lon": -122.39615}
 			},
 			{
 					"description": "MOMA",
-					"coordinates": [
-						-122.404202, 37.786445
-					]
+					"coordinates": {"lat": 37.786445, "lon": -122.404202}
 			}
 		]
 	},
@@ -181,33 +161,23 @@
 		"topLocations": [
 			{
 					"description": "Home",
-					"coordinates": [
-						-121.990382, 37.39236
-					]
+					"coordinates": {"lat": 37.39236, "lon": -121.990382}
 			},
 			{
 					"description": "Tasty Subs & Pizza",
-					"coordinates": [
-						-121.995479, 37.384965
-					]
+					"coordinates": {"lat": 37.384965, "lon": -121.995479}
 			},
 			{
 					"description": "School",
-					"coordinates": [
-						-121.990265, 37.396996
-					]
+					"coordinates": {"lat": 37.79395, "lon": -122.40185}
 			},
 			{
 					"description": "Work",
-					"coordinates": [
-						-121.978302, 37.405484
-					]
+					"coordinates": {"lat": 37.78353, "lon": -122.39615}
 			},
 			{
 					"description": "Dishdash",
-					"coordinates": [
-						-122.026600, 37.376994
-					]
+					"coordinates": {"lat": 37.376994, "lon": -122.026600}
 			}
 		]
 	}

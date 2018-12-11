@@ -1,9 +1,8 @@
 import React from 'react';
-import Pure from '@enact/ui/internal/Pure';
 import {AppContext} from './AppContextProvider';
 
 const AppStateConnect = (mapContextToProps) => (Wrapped) => {
-	const PureWrapped = Pure(Wrapped);
+	const PureWrapped = React.memo(Wrapped);
 
 	return class extends React.Component {
 		static displayName = 'AppStateConnect'

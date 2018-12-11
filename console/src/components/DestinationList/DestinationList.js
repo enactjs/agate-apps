@@ -5,40 +5,52 @@ import Button from '@enact/agate/Button';
 import Group from '@enact/ui/Group';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {equals} from 'ramda';
+
+import {propTypeLatLonList} from '../../data/proptypes';
 
 const DestinationList = kind({
 	name: 'DestinationList',
 
 	propTypes: {
 		positions: PropTypes.array.isRequired,
+		destination: propTypeLatLonList,
 		onSetDestination: PropTypes.func,
 		title: PropTypes.string
 	},
 
-	// computed: {
-	// 	destinations: ({onSetDestination, positions}) => positions.map((item, i) => (
-	// 		<Cell component={Button} small data-index={i} key={i} onClick={onSetDestination} shrink>
-	// 			{`${i + 1} - ${item.description}`}
-	// 		</Cell>
-	// 	))
-	// },
+	computed: {
+		selected: ({destination, positions}) => {
+			let matchingDestIndex;
 
-	render: ({positions, onSetDestination, title, ...rest}) => {
+			// console.log('findDestinationInList:', {topLocations, destination});
+			positions.forEach((loc, index) => {
+				// console.log('comparing:', [loc.coordinates], 'and', destination);
+				if (equals([loc.coordinates], destination)) {
+					// console.log('MATCH!', index);
+					matchingDestIndex = index;
+				}
+			});
+			return matchingDestIndex;
+		}
+	},
+
+	render: ({positions, onSetDestination, selected, title, ...rest}) => {
 		return (
 			<Column {...rest}>
-				<Cell component={Divider} startSection shrink>{title}</Cell>
+				<Cell component={Divider} shrink>{title}</Cell>
 				<Cell>
-					<Column>
-						<Group childComponent={Button} onSelect={onSetDestination} selectedProp="highlighted">
-							{positions ? positions.map(({description}, index) => {
-								return {
-									children: `${index + 1} - ${description}`,
-									key: `${description}-${index + 1}`,
-									small: true,
-									'data-index': index
-								};
-							}) : []}
-						</Group>
+					<Column
+						component={Group}
+						childComponent={Button}
+						onSelect={onSetDestination}
+						selectedProp="highlighted"
+						selected={selected}
+						itemProps={{small: true}}
+					>
+						{
+							positions.map(({description}, index) => `${index + 1} - ${description}`)
+						}
 					</Column>
 				</Cell>
 			</Column>
