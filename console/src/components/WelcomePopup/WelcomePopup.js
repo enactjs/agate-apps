@@ -105,6 +105,7 @@ const WelcomePopupBase = kind({
 	name: 'WelcomePopup',
 
 	propTypes: {
+		updateAppState: PropTypes.func.isRequired,
 		components: PropTypes.object,
 		index: PropTypes.number,
 		onCancelSelect: PropTypes.func,
@@ -172,6 +173,8 @@ const WelcomePopupBase = kind({
 		delete rest.onContinue;
 		delete rest.onSendVideo;
 		delete rest.onShowWelcome;
+		delete rest.setDestination; // This needs to be assigned to somewhere. Most likely, this just needs to be toggling `navigating`, since the destination is set elsewhere.
+		delete rest.updateAppState;
 		delete rest.updateUser;
 
 		return (
@@ -260,6 +263,18 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 			this.setState(({index}) => index === 1 ? {index: ++index} : null);
 		}
 
+		setDestination = ({destination}) => {
+			this.props.updateAppState((state) => {
+				state.navigation.destination = destination;
+			});
+		}
+
+		updateUser = ({selected}) => {
+			this.props.updateAppState((state) => {
+				state.userId = selected + 1;
+			});
+		}
+
 		render () {
 			const {index} = this.state;
 
@@ -271,30 +286,21 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 					onCancelSelect={this.handleCancelSelect}
 					onShowWelcome={this.handleShowWelcome}
 					selected={this.state.selected}
+					updateUser={this.updateUser}
+					setDestination={this.setDestination}
 				/>
 			);
 		}
 	};
 });
 
-const AppContextDecorator = AppContextConnect(({getUserNames, updateAppState, userId, userSettings}) => {
+const AppContextDecorator = AppContextConnect(({usersList, updateAppState, userId, userSettings}) => {
 	return {
-		components: (userSettings.components && {...userSettings.components.welcome}),
+		components: (userSettings.components && userSettings.components.welcome),
 		profileName: userSettings.name,
-		updateUser: ({selected}) => {
-			updateAppState((state) => {
-				state.userId = selected + 1;
-			});
-		},
-		onContinue: () => {
-			updateAppState((state) => {
-				if (state.navigation.autonomous && state.navigation.proposedDestination) {
-					state.navigation.destination = state.navigation.proposedDestination.coordinates;
-				}
-			});
-		},
 		userId,
-		usersList: getUserNames()
+		usersList: usersList,
+		updateAppState
 	};
 });
 
