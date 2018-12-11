@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import mapboxgl from 'mapbox-gl';
 import classnames from 'classnames';
-import {equals, compose} from 'ramda';
+import {equals} from 'ramda';
 import {Job} from '@enact/core/util';
 import Slottable from '@enact/ui/Slottable';
 import ri from '@enact/ui/resolution';
@@ -251,8 +251,6 @@ class MapCoreBase extends React.Component {
 				map: this.map,
 				orientation: location.orientation
 			});
-			
-		});
 
 			// Adds clickable targets to the map
 			this.map.on('click', 'symbols', (e) => {
