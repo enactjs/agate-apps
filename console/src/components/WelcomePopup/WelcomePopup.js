@@ -17,7 +17,6 @@ import CompactHeater from '../CompactHeater';
 import CompactMultimedia from '../CompactMultimedia';
 import CompactWeather from '../CompactWeather';
 import MapController from '../MapController';
-// import {propTypeLatLonList} from '../../data/proptypes';
 
 import steveAvatar from '../../../assets/steve.png';
 import thomasAvatar from '../../../assets/thomas.png';
@@ -110,10 +109,10 @@ const WelcomePopupBase = kind({
 		index: PropTypes.number,
 		onCancelSelect: PropTypes.func,
 		onClose: PropTypes.func,
+		onContinue: PropTypes.func,
 		onSelectUser: PropTypes.func,
 		onSendVideo: PropTypes.func,
 		onShowWelcome: PropTypes.func,
-		// positions: PropTypes.array,
 		profileName: PropTypes.string,
 		updateUser: PropTypes.func,
 		userId: PropTypes.number
@@ -271,7 +270,6 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 					onSelectUser={this.handleSelectUser}
 					onCancelSelect={this.handleCancelSelect}
 					onShowWelcome={this.handleShowWelcome}
-					// positions={positions}
 					selected={this.state.selected}
 				/>
 			);
@@ -283,7 +281,6 @@ const AppContextDecorator = AppContextConnect(({getUserNames, updateAppState, us
 	return {
 		components: (userSettings.components && {...userSettings.components.welcome}),
 		profileName: userSettings.name,
-		// proposedDestination: navigation.proposedDestination,
 		updateUser: ({selected}) => {
 			updateAppState((state) => {
 				state.userId = selected + 1;
