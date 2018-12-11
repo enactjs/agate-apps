@@ -215,7 +215,7 @@ const WelcomePopupBase = kind({
 								<MapController
 									noStartStopToggle
 									locationSelection
-									selfDrivingSelection
+									autonomousSelection
 								/>
 							</Cell>
 						</Row>

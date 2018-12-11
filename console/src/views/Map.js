@@ -17,7 +17,7 @@ const MapViewBase = kind({
 	render: ({...rest}) => {
 		return (
 			<Panel {...rest}>
-				<MapController selfDrivingSelection locationSelection />
+				<MapController autonomousSelection locationSelection />
 			</Panel>
 		);
 	}

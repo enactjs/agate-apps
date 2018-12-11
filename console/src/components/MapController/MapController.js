@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {equals} from 'ramda';
 import hoc from '@enact/core/hoc';
 import Pure from '@enact/ui/internal/Pure';
 // import classnames from 'classnames';
@@ -26,12 +25,18 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 			topLocations: PropTypes.array.isRequired,
 			updateDestination: PropTypes.func.isRequired,
 			updateNavigation: PropTypes.func.isRequired,
+			autonomousSelection: PropTypes.bool,
 			centeringDuration: PropTypes.number,
+			compact: PropTypes.bool,
 			defaultFollow: PropTypes.bool, // Should the centering position follow the current location?
 			description: PropTypes.string,
 			destination: propTypeLatLonList,
+			locationSelection: PropTypes.bool,
 			navigating: PropTypes.bool,
+			navigation: PropTypes.object,
+			noStartStopToggle: PropTypes.bool,
 			position: propTypeLatLon, // The map's centering position
+			toggleAutonomous: PropTypes.func,
 			tools: PropTypes.node, // Buttons and tools for interacting with the map. (Slottable)
 			viewLockoutDuration: PropTypes.number,
 			zoomToSpeedScaleFactor: PropTypes.number
@@ -45,57 +50,29 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 
 		constructor (props) {
 			super(props);
-			this.localinfo = {};  // A copy of queried data for quick comparisons
-
-			const destinationIndex = this.findDestinationInList(props);
 
 			this.state = {
 				carShowing: true,
 				follow: props.defaultFollow || false,
-				selfDriving: true,
-				destinationIndex
+				selfDriving: true
 			};
 		}
 
-		findDestinationInList = (props) => {
-			const {destination, topLocations} = props || this.props;
-			let matchingDestIndex;
-
-			// console.log('findDestinationInList:', {topLocations, destination});
-			topLocations.forEach((loc, index) => {
-				// console.log('comparing:', [loc.coordinates], 'and', destination);
-				if (equals([loc.coordinates], destination)) {
-					// console.log('MATCH!', index);
-					matchingDestIndex = index;
-				}
-			});
-			return matchingDestIndex;
-		}
-
 		handleSetDestination = ({selected}) => {
-			console.log('proposing new destination index:', selected, '->', this.props.topLocations[selected]);
-			// this.props.updateProposedDestination(this.props.topLocations[selected]);
+			console.log('Proposing new destination index:', selected, '->', this.props.topLocations[selected]);
 			const loc = this.props.topLocations[selected];
 			this.props.updateDestination({
 				description: loc ? loc.description : '',
-				destination: loc ? [loc.coordinates] : null,
-				navigating: false
+				destination: loc ? [loc.coordinates] : null
 			});
-			this.setState({destinationIndex: selected});
 		}
 
 		startNavigation = ({selected}) => {
-			// console.log('navigating', selected);
 			if (selected) {
 				console.log('MapController - start navigation to', this.props.topLocations, this.props.topLocations[this.state.destinationIndex], 'from index:', this.state.destinationIndex);
-				const loc = this.props.topLocations[this.state.destinationIndex];
-				if (loc && loc.coordinates) {
-					this.props.updateDestination({
-						description: loc.description,
-						destination: [loc.coordinates],
-						navigating: true
-					});
-				}
+				this.props.updateDestination({
+					navigating: true
+				});
 			} else {
 				console.log('MapController - stopping navigation');
 				this.props.updateDestination({
@@ -114,8 +91,8 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 				navigating,
 				navigation,
 				noStartStopToggle,
-				selfDrivingSelection,
-				toggleSelfDriving,
+				autonomousSelection,
+				toggleAutonomous,
 				topLocations,
 				updateDestination,
 				updateNavigation,
@@ -130,8 +107,6 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 			delete rest.zoomToSpeedScaleFactor;
 			const durationIncrements = ['day', 'hour', 'min'];
 
-			const destIndex = this.findDestinationInList();
-
 			return (
 				<Wrapped
 					{...rest}
@@ -144,13 +119,13 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 					<tools>
 						<Column className={css.toolsColumn}>
 							{
-								selfDrivingSelection &&
-								<Cell shrink className={css.columnCell}>
+								autonomousSelection &&
+								<Cell shrink={locationSelection} className={css.columnCell}>
 									<Divider>Self Driving</Divider>
 									<Row
 										component={Group}
 										childComponent={Button}
-										onSelect={toggleSelfDriving}
+										onSelect={toggleAutonomous}
 										select="radio"
 										selectedProp="highlighted"
 										selected={navigation.autonomous ? 0 : 1}
@@ -163,10 +138,10 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 								locationSelection &&
 								<Cell className={css.columnCell}>
 									<DestinationList
+										destination={destination}
 										onSetDestination={this.handleSetDestination}
 										positions={topLocations}
 										title="Top Locations"
-										selected={destIndex}
 									/>
 								</Cell>
 							}
@@ -190,12 +165,12 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 								</Cell>
 							}
 							{
-								!noStartStopToggle &&
+								!noStartStopToggle && destination &&
 								<Cell shrink className={css.columnCell}>
 									<ToggleButton
 										className={css.button}
 										small
-										selected={destination && navigating}
+										selected={destination && navigating || !navigation.autonomous}
 										onToggle={this.startNavigation}
 										toggleOnLabel="Stop Navigation"
 										toggleOffLabel="Start Navigation"
@@ -212,14 +187,13 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 
 
 const ConnectedMap = AppContextConnect(({location, userSettings, navigation, updateAppState}) => ({
-	// We should import the app-level variable for our current location then feed that in as the "start"
 	topLocations: userSettings.topLocations,
 	location,
 	navigation,
 	navigating: navigation.navigating,
 	description: navigation.description,
 	destination: navigation.destination,
-	toggleSelfDriving: () => {
+	toggleAutonomous: () => {
 		updateAppState((state) => {
 			state.navigation.autonomous = !state.navigation.autonomous;
 		});

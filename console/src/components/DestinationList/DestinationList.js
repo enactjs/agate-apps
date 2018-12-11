@@ -5,24 +5,35 @@ import Button from '@enact/agate/Button';
 import Group from '@enact/ui/Group';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {equals} from 'ramda';
+
+import {propTypeLatLonList} from '../../data/proptypes';
 
 const DestinationList = kind({
 	name: 'DestinationList',
 
 	propTypes: {
 		positions: PropTypes.array.isRequired,
+		destination: propTypeLatLonList,
 		onSetDestination: PropTypes.func,
-		selected: PropTypes.number,  // The index of the currently selected position
 		title: PropTypes.string
 	},
 
-	// computed: {
-	// 	destinations: ({onSetDestination, positions}) => positions.map((item, i) => (
-	// 		<Cell component={Button} small data-index={i} key={i} onClick={onSetDestination} shrink>
-	// 			{`${i + 1} - ${item.description}`}
-	// 		</Cell>
-	// 	))
-	// },
+	computed: {
+		selected: ({destination, positions}) => {
+			let matchingDestIndex;
+
+			// console.log('findDestinationInList:', {topLocations, destination});
+			positions.forEach((loc, index) => {
+				// console.log('comparing:', [loc.coordinates], 'and', destination);
+				if (equals([loc.coordinates], destination)) {
+					// console.log('MATCH!', index);
+					matchingDestIndex = index;
+				}
+			});
+			return matchingDestIndex;
+		}
+	},
 
 	render: ({positions, onSetDestination, selected, title, ...rest}) => {
 		return (
@@ -39,13 +50,6 @@ const DestinationList = kind({
 					>
 						{
 							positions.map(({description}, index) => `${index + 1} - ${description}`)
-							// 	return {
-							// 		children: `${index + 1} - ${description}`,
-							// 		key: `${description}-${index}`,
-							// 		small: true
-							// 		// 'data-index': index
-							// 	};
-							// })
 						}
 					</Column>
 				</Cell>
