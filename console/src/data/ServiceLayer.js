@@ -54,12 +54,16 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 				this.setDestination();
 			}
 
-			if (
-				// navigating changed to FALSE
-				prevProps.navigating !== this.props.navigating && !this.props.navigating
-			) {
-				this.stopNavigation();
-			}
+			//
+			// Temporarily disabling the navigation FALSE code due to it being unreliable.
+			// We'll need to look into this a but more soon.
+			//
+			// if (
+			// 	// navigating changed to FALSE
+			// 	prevProps.navigating !== this.props.navigating && !this.props.navigating
+			// ) {
+			// 	this.stopNavigation();
+			// }
 
 			if (prevProps.navigation.duration !== this.props.navigation.duration) {
 				this.sendNavigation();
