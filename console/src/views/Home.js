@@ -1,5 +1,6 @@
 import {Panel} from '@enact/agate/Panels';
 import kind from '@enact/core/kind';
+import ComponentOverride from '@enact/ui/ComponentOverride';
 import Repeater from '@enact/ui/Repeater';
 import {Row, Column, Cell} from '@enact/ui/Layout';
 import React from 'react';
@@ -69,31 +70,31 @@ const HomeLayouts = kind({
 		className: 'home'
 	},
 
-	render: ({arrangeable, skin, small1, small2, medium, large, layoutArrangeableEnd, ...rest}) => {
+	render: (props) => {
+		const {arrangeable, skin, small1, small2, medium, large, layoutArrangeableEnd, ...rest} = props;
 		delete rest.arrangement;
 
 		const widgetTray = (
-			<Drawer open={arrangeable} scrimType="none">
-				<header>
-					<Cell component={Divider} shrink>Additional Widgets</Cell>
+			<Drawer className={css.drawer} open={arrangeable} scrimType="none">
+				<header className={css.header}>
+					<Cell className={css.title} component={Divider} shrink>Edit Apps</Cell>
 				</header>
 				<WidgetTray>
-					{allSlotNames.filter(name => name.indexOf('tray') === 0).map(name => {
-						// generate a list of objects, which will relate to slots being created,
-						// that are defined in the `allSlotNames` array. This only creates empty
-						// slots. It's the duty of the `Home` kind to populate these with content.
-						// These slots are part of the HomeLayout collection of slots
-						const slotContent = rest[name];
-						delete rest[name];
+					{allSlotNames.filter(name => props[name]).map(name => {
+						const Component = props[name];
+						const disabled = name.indexOf('tray') !== 0;
 						return ({
+							draggable: !disabled,
 							key: name,
 							name,
-							children: slotContent
+							children: <ComponentOverride component={Component} disabled={disabled} />
 						});
 					})}
 				</WidgetTray>
-				<footer>
-					<Button small onTap={layoutArrangeableEnd}>Finish</Button>
+				<footer className={css.footer}>
+					<Row>
+						<Cell className={css} component={Button} onTap={layoutArrangeableEnd} small>Done</Cell>
+					</Row>
 				</footer>
 			</Drawer>
 		);
@@ -200,13 +201,13 @@ const Home = kind({
 	render: ({arrangeable, onCompactExpand, onSendVideo, onSelect, ...rest}) => (
 		<Panel {...rest}>
 			<HomeLayout arrangeable={arrangeable}>
-				<tray1><CompactAppList onExpand={onCompactExpand} /></tray1>
-				<tray2><CompactHvac onExpand={onCompactExpand} /></tray2>
+				<tray1><CompactAppList icon="list" onExpand={onCompactExpand} /></tray1>
+				<tray2><CompactHvac icon="temperature" onExpand={onCompactExpand} /></tray2>
 
-				<small1><CompactWeather onExpand={onCompactExpand} /></small1>
-				<small2><CompactMusic onExpand={onCompactExpand} /></small2>
-				<medium><CompactMultimedia onExpand={onCompactExpand} onSendVideo={onSendVideo} /></medium>
-				<large><CompactMap onExpand={onCompactExpand} onSelect={onSelect} /></large>
+				<small1><CompactWeather icon="climate" onExpand={onCompactExpand} /></small1>
+				<small2><CompactMusic icon="audio" onExpand={onCompactExpand} /></small2>
+				<medium><CompactMultimedia icon="resumeplay" onExpand={onCompactExpand} onSendVideo={onSendVideo} /></medium>
+				<large><CompactMap icon="compass" onExpand={onCompactExpand} onSelect={onSelect} /></large>
 			</HomeLayout>
 		</Panel>
 	)

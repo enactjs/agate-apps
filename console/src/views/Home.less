@@ -2,6 +2,7 @@
 //
 
 @import "~@enact/agate/styles/mixins.less";
+@import "~@enact/agate/styles/skin.less";
 
 .home {
 	height: 100%;
@@ -10,3 +11,37 @@
 		height: 100%;
 	}
 }
+
+.applySkins({
+	.drawer {
+		padding-top: 40px;
+
+		.header,
+		.footer {
+			text-transform: uppercase;
+		}
+
+		.header {
+			.title {
+				margin-left: (4 * @agate-divider-spacing);
+				width: 104px;
+				font-size: 24px;
+				line-height: 1.42;
+				letter-spacing: 12px;
+				color: @agate-accent;
+			}
+		}
+	}
+
+	.small1,
+	.small2,
+	.medium,
+	.large {
+		&[draggable='true'] {
+			&:after {
+				border-color: @agate-accent;
+				border-width: 2px;
+			}
+		}
+	}
+});

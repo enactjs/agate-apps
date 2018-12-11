@@ -1,7 +1,7 @@
 import {ResponsiveBox} from '@enact/agate/DropManager';
-import IconItem from '@enact/agate/IconItem';
+import LabeledIconButton from '@enact/agate/LabeledIconButton';
 import kind from '@enact/core/kind';
-import Layout, {Cell} from '@enact/ui/Layout';
+import Layout, {Cell, Row} from '@enact/ui/Layout';
 import Slottable from '@enact/ui/Slottable';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
@@ -17,7 +17,9 @@ const WidgetBase = kind({
 	propTypes: {
 		containerShape: PropTypes.object,
 		description: PropTypes.string,
+		disabled: PropTypes.bool,
 		full: PropTypes.node,
+		icon: PropTypes.string,
 		large: PropTypes.node,
 		medium: PropTypes.node,
 		noHeader: PropTypes.bool,
@@ -53,8 +55,10 @@ const WidgetBase = kind({
 		}
 	},
 
-	render: ({children, containerShape, description, onExpand, noHeader, title, view, ...rest}) => {
+	render: (props) => {
+		const {children, containerShape, disabled, icon, onExpand, noHeader, title, view, ...rest} = props;
 		delete rest.containerShape;
+		delete rest.description;
 		delete rest.full;
 		delete rest.large;
 		delete rest.medium;
@@ -63,7 +67,10 @@ const WidgetBase = kind({
 		const relativeSize = (containerShape && containerShape.size && containerShape.size.relative);
 		switch (relativeSize) {
 			case 'list': return (
-				<IconItem css={css} label={description} icon="list">{title}</IconItem>
+				<Row align="center">
+					<Cell component={LabeledIconButton} css={css} disabled={disabled} icon={icon} shrink />
+					<Cell>{title}</Cell>
+				</Row>
 			);
 			default: return (
 				<Layout {...rest} orientation="vertical" align="center center">
