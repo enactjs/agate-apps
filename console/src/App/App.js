@@ -1,17 +1,18 @@
 // External
-import kind from '@enact/core/kind';
-import hoc from '@enact/core/hoc';
-import {add} from '@enact/core/keymap';
 import {adaptEvent, forward, handle} from '@enact/core/handle';
-import {Cell, Column} from '@enact/ui/Layout';
+import {add} from '@enact/core/keymap';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
-import {ToggleButtonBase} from '@enact/agate/ToggleButton';
-import Popup from '@enact/agate/Popup';
-import DateTimePicker from '@enact/agate/DateTimePicker';
-import {TabbedPanels} from '@enact/agate/Panels';
-import React from 'react';
+import {Cell, Column} from '@enact/ui/Layout';
 import compose from 'ramda/src/compose';
+import DateTimePicker from '@enact/agate/DateTimePicker';
+import hoc from '@enact/core/hoc';
+import kind from '@enact/core/kind';
+import Popup from '@enact/agate/Popup';
+import React from 'react';
+import Skinnable from '@enact/agate/Skinnable';
+import {TabbedPanels} from '@enact/agate/Panels';
+import {ToggleButtonBase} from '@enact/agate/ToggleButton';
 
 // Data Services
 import ServiceLayer from '../data/ServiceLayer';
@@ -68,6 +69,10 @@ const AppBase = kind({
 	styles: {
 		css,
 		className: 'app'
+	},
+
+	computed: {
+		className: ({skinName, styler}) => styler.append(skinName)
 	},
 
 	render: ({
@@ -309,9 +314,10 @@ const AppDecorator = compose(
 			updateAppState((state) => {
 				let newSkin;
 				switch (state.userSettings.skin) {
+					case 'copper': newSkin = 'titanium'; break;
+					case 'electro': newSkin = 'carbon'; break;
 					case 'titanium': newSkin = 'electro'; break;
-					case 'carbon': newSkin = 'titanium'; break;
-					default: newSkin = 'carbon';
+					default: newSkin = 'copper';
 				}
 				state.userSettings.skin = newSkin;
 			});
@@ -319,7 +325,8 @@ const AppDecorator = compose(
 	})),
 	AppState,
 	ServiceLayer,
-	AgateDecorator
+	AgateDecorator,
+	Skinnable
 );
 
 const App = AppDecorator(AppBase);

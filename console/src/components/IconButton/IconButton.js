@@ -3,6 +3,7 @@ import AgateIcon from '@enact/agate/Icon';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
+import Skinnable from '@enact/agate/Skinnable';
 
 import componentCss from './IconButton.less';
 
@@ -28,7 +29,7 @@ const Icon = kind({
 	}
 });
 
-const IconButton = kind({
+const IconButtonBase = kind({
 	name: 'IconButton',
 	propTypes: {
 		css: PropTypes.object,
@@ -61,6 +62,8 @@ const IconButton = kind({
 		);
 	}
 });
+
+const IconButton = Skinnable(IconButtonBase);
 
 export default IconButton;
 export {
