@@ -172,6 +172,8 @@ const WelcomePopupBase = kind({
 		delete rest.onContinue;
 		delete rest.onSendVideo;
 		delete rest.onShowWelcome;
+		delete rest.setDestination;
+		delete rest.updateAppState;
 		delete rest.updateUser;
 
 		return (

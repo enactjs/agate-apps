@@ -154,10 +154,12 @@ const AppBase = kind({
 		...rest
 	}) => {
 		delete rest.accent;
-		delete rest.highlight;
-		delete rest.endNavigation;
 		delete rest.defaultIndex;
-		delete rest.defaultSkin;
+		delete rest.defaultShowWelcomePopup;
+		delete rest.endNavigation;
+		delete rest.highlight;
+		delete rest.showAppList
+		delete rest.updateAppState;
 
 		return (
 			<div {...rest}>
