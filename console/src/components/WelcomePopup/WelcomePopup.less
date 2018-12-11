@@ -41,12 +41,21 @@
 			.image {
 				margin-top: 90px;
 				margin-bottom: 90px;
+				border: 9px solid #594339;
 
 				&::before {
+					position: absolute;
+					content: '';
 					top: -36px;
 					left: -36px;
 					right: -36px;
 					bottom: -36px;
+					border: 3px solid #594339;
+					opacity: 0.5;
+					border-top: 0px;
+					border-left: 0px;
+					border-radius: 50%;
+					transform: rotate(calc(var(--user-index, 0) * 225deg));
 				}
 			}
 		}
@@ -56,9 +65,12 @@
 		.gridListImageItem {
 			margin-right: 30px;
 			margin-bottom: 30px;
+			height: 150px;
 			width: 150px;
 
 			.image {
+				border: 6px solid #594339;
+
 				&::before {
 					top: -27px;
 					left: -27px;
@@ -78,20 +90,8 @@
 
 		.image {
 			border-radius: 50%;
-			border: 9px solid #594339;
 			box-sizing: border-box;
 			position: relative;
-
-			&::before {
-				position: absolute;
-				content: '';
-				border: 3px solid #594339;
-				opacity: 0.5;
-				border-top: 0px;
-				border-left: 0px;
-				border-radius: 50%;
-				transform: rotate(calc(var(--user-index, 0) * 225deg));
-			}
 		}
 
 		.caption {
@@ -115,5 +115,11 @@
 		right: -3px;
 		height: 1px;
 		}
+	}
+
+	.activeName {
+		font-size: 24px;
+		letter-spacing: 12px;
+		color: #a47d66;
 	}
 }

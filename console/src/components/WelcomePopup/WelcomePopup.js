@@ -193,7 +193,7 @@ const WelcomePopupBase = kind({
 											<Cell>
 												<Column align="start center">
 													<Cell shrink>Hi</Cell>
-													<Cell shrink>{profileName}!</Cell>
+													<Cell className={css.activeName} shrink>{profileName}!</Cell>
 												</Column>
 											</Cell>
 										</Row>
