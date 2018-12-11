@@ -185,7 +185,7 @@ const WelcomePopupBase = kind({
 								<Column>
 									<Cell shrink>
 										<Row>
-											<Cell shrink>
+											<Cell className={css.activeAvatar} shrink>
 												<UserSelectionAvatar index={userId - 1} onSelectUser={onCancelSelect}>
 													{profileName}
 												</UserSelectionAvatar>
@@ -201,10 +201,10 @@ const WelcomePopupBase = kind({
 									<Cell shrink>
 										{currentTime()}
 									</Cell>
-									<Cell>
+									<Cell className={css.smallComponent}>
 										{Small1Component}
 									</Cell>
-									<Cell>
+									<Cell className={css.smallComponent}>
 										{Small2Component}
 									</Cell>
 									<Cell component={Button} onClick={handleClose} shrink>Continue</Cell>
