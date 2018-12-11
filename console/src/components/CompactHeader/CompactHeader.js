@@ -41,7 +41,7 @@ const CompactHeader = kind({
 					className={css.btn}
 					size="smallest"
 					alt="Fullscreen"
-					icon="fullscreen"
+					icon="expand"
 					onClick={onExpand}
 				/>
 			) : null}
