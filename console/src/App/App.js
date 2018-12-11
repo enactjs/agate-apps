@@ -154,8 +154,6 @@ const AppBase = kind({
 		...rest
 	}) => {
 		delete rest.accent;
-		delete rest.defaultIndex;
-		delete rest.defaultShowWelcomePopup;
 		delete rest.endNavigation;
 		delete rest.highlight;
 		delete rest.showAppList
@@ -274,7 +272,7 @@ const AppBase = kind({
 
 
 const AppDecorator = compose(
-	AppContextConnect(({appState, userSettings, updateAppState}) => ({
+	AppContextConnect(({appState, userSettings, updateAppState}, {defaultIndex}) => ({
 		accent: userSettings.colorAccent,
 		highlight: userSettings.colorHighlight,
 		index: appState.index,
