@@ -24,6 +24,8 @@ mapboxgl.accessToken = appConfig.mapApiKey;
 let startCoordinates = {lon: -122.394558, lat: 37.786600};
 // 37.786600, -122.394558
 // {lon: -121.979125, lat: 37.405189};
+
+
 //
 // Map Utilities
 //
@@ -167,7 +169,6 @@ const skinStyles = {
 class MapCoreBase extends React.Component {
 	static propTypes = {
 		updateDestination: PropTypes.func.isRequired,
-		// updateNavigating: PropTypes.func.isRequired,
 		updateNavigation: PropTypes.func.isRequired,
 		centeringDuration: PropTypes.number,
 		// colorMarker: PropTypes.string,
@@ -175,9 +176,7 @@ class MapCoreBase extends React.Component {
 		defaultFollow: PropTypes.bool, // Should the centering position follow the current location?
 		destination: propTypeLatLonList,
 		location: propTypeLatLon, // Our actual current location on the world
-		navigating: PropTypes.bool, // When changed, activates or deactivates autonomous driving
 		position: propTypeLatLon, // The map's centering position
-		// proposedDestination: propTypeLatLonList,
 		skin: PropTypes.string,
 		tools: PropTypes.node, // Buttons and tools for interacting with the map. (Slottable)
 		viewLockoutDuration: PropTypes.number,
@@ -208,13 +207,6 @@ class MapCoreBase extends React.Component {
 			this.message = 'MapBox API key is not set. The map cannot be loaded.';
 		}
 
-		// Update this to support a collection of POIs and relocate to a method that is triggered
-		// from the `actions` method.
-		//
-		// const lats = this.props.points.map(loc => loc.coordinates[0]);
-		// const lngs = this.props.points.map(loc => loc.coordinates[1]);
-		// this.bbox = [[Math.min(...lats), Math.min(...lngs)], [Math.max(...lats), Math.max(...lngs)]];
-
 		const pointsList = [];
 		const points = this.props.points.map((loc, idx) => {
 			pointsList.push(toMapbox(loc.coordinates));
@@ -226,7 +218,7 @@ class MapCoreBase extends React.Component {
 	}
 
 	componentDidMount () {
-		const {skin, location} = this.props;
+		const {destination, location, skin} = this.props;
 		const style = skinStyles[skin] || skinStyles.titanium;
 		if (location) {
 			startCoordinates = location;
@@ -266,8 +258,7 @@ class MapCoreBase extends React.Component {
 				}
 
 				this.props.updateDestination({
-					destination: [toLatLon(coordinates)],
-					navigating: false
+					destination: [toLatLon(coordinates)]
 				});
 			});
 
@@ -279,8 +270,7 @@ class MapCoreBase extends React.Component {
 			});
 
 			const actions = {};
-			if (this.props.destination instanceof Array && this.props.destination.slice(-1).lat !== 0) {
-				if (this.props.navigating) actions.startNavigating = this.props.destination;
+			if (destination instanceof Array && destination.slice(-1).lat !== 0) {
 				actions.plotRoute = this.props.destination;
 			}
 
@@ -333,26 +323,7 @@ class MapCoreBase extends React.Component {
 			// navigation destination. Technically, this does duplicate the behavior in the
 			// "Staring navigation" section, but it also captures if the destination is set after
 			// the navigating mode boolean is toggled.
-			if (this.props.destination) {
-				if (this.props.navigating) actions.startNavigating = this.props.destination;
-				actions.plotRoute = this.props.destination;
-			} else {
-				actions.removeRoute = true;
-			}
-			// console.log('Initiating navigation to a new destination:', actions.plotRoute);
-		}
-
-		// Starting navigation
-		if (this.props.navigating !== prevProps.navigating && this.props.navigating) {
-			// console.log('STARTING nav');
-			actions.startNavigating = this.props.destination;
 			actions.plotRoute = this.props.destination;
-		}
-		// Stopping navigation
-		if (this.props.navigating !== prevProps.navigating && !this.props.navigating) {
-			// console.log('STOPPING nav');
-			actions.stopNavigating = true;
-			// actions.plotRoute = [this.props.location];
 		}
 
 		if (!actions.center && !equals(prevProps.position, this.props.position)) {
@@ -371,23 +342,12 @@ class MapCoreBase extends React.Component {
 			if (action) {
 				switch (action) {
 					case 'plotRoute': {
-						console.log('Plotting route to:', actions[action]);
-						this.drawDirection([this.props.location, ...actions[action]]);
-						break;
-					}
-					case 'removeRoute': {
-						console.log('Removing plotted route layer');
-						this.removeDirection();
-						break;
-					}
-					case 'startNavigating': {
-						console.log('Starting autonomous navigation:', actions[action]);
-						this.props.updateDestination({destination: actions[action], navigating: true});
-						break;
-					}
-					case 'stopNavigating': {
-						console.log('Halting navigation');
-						this.props.updateDestination({destination: [this.props.location], navigating: false});
+						if (actions[action]) {
+							console.log('%cPlotting route to:', 'color: orange', [this.props.location, ...actions[action]]);
+							this.drawDirection([this.props.location, ...actions[action]]);
+						} else {
+							this.removeDirection();
+						}
 						break;
 					}
 					case 'positionCar': {
@@ -540,7 +500,7 @@ class MapCoreBase extends React.Component {
 	}
 
 	drawDirection = async (waypoints) => {
-		console.log('drawDirection:', waypoints);
+		// console.log('drawDirection:', waypoints);
 
 		this.setState({carShowing: true});
 		const data = await getRoute(waypoints);
@@ -646,15 +606,13 @@ class MapCoreBase extends React.Component {
 		delete rest.centeringDuration;
 		// delete rest.colorMarker;
 		delete rest.colorRouteLine;
-		delete rest.destination;
 		delete rest.defaultFollow;
+		delete rest.destination;
 		delete rest.location;
-		delete rest.navigating;
-		delete rest.position;
-		// delete rest.proposedDestination;
-		delete rest.updateDestination;
-		delete rest.skin;
 		delete rest.points;
+		delete rest.position;
+		delete rest.skin;
+		delete rest.updateDestination;
 		delete rest.updateNavigation;
 		delete rest.viewLockoutDuration;
 		delete rest.zoomToSpeedScaleFactor;
@@ -674,43 +632,11 @@ class MapCoreBase extends React.Component {
 	}
 }
 
-const ConnectedMap = AppContextConnect(({location, userSettings, navigation, updateAppState}) => ({
-	// We should import the app-level variable for our current location then feed that in as the "start"
-	skin: userSettings.skin,
-	// points: userSettings.topLocations,
-	location,
-	// destination: navigation.destination,
+const ConnectedMap = AppContextConnect(({location, userSettings}) => ({
 	// colorMarker: userSettings.colorHighlight,
 	colorRouteLine: userSettings.colorHighlight,
-	navigating: navigation.navigating,
-	// updateDestination: ({destination, navigating = false}) => {
-	// 	updateAppState((state) => {
-	// 		state.navigation.destination = destination;
-	// 		state.navigation.navigating = navigating;
-	// 	});
-	// },
-	// updateNavigating: ({navigating}) => {
-	// 	// If navigating is provided, set to that value. If not, toggle the existing state.
-	// 	updateAppState((state) => {
-	// 		if (navigating != null) {
-	// 			state.navigation.navigating = navigating;
-	// 		} else {
-	// 			state.navigation.navigating = !state.navigation.navigating;
-	// 		}
-	// 	});
-	// },
-	updateNavigation: ({duration, distance}) => {
-		updateAppState((state) => {
-			const startTime = new Date().getTime();
-			const eta = new Date(startTime + (duration * 1000)).getTime();
-
-			state.navigation.duration = duration;
-			state.navigation.startTime = startTime;
-			state.navigation.eta = eta;
-			state.navigation.distance = distance;
-			// console.log('updateNavigation:', state.navigation);
-		});
-	}
+	location,
+	skin: userSettings.skin
 }));
 
 const MapCore = ConnectedMap(Slottable({slots: ['tools']}, MapCoreBase));

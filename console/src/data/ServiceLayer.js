@@ -26,6 +26,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			setConnected: PropTypes.func.isRequired,
 			setLocation: PropTypes.func.isRequired,
 			updateDestination: PropTypes.func.isRequired,
+			autonomous: PropTypes.bool,
 			destination: propTypeLatLonList,
 			location: propTypeLatLon,
 			navigating: PropTypes.bool,
@@ -37,30 +38,27 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 			this.done = false;
 			this.comm = React.createRef();
-
-			// this.state = {
-			// 	showAppList: false
-			// };
-
-			// const tickler = setInterval(this.doTickle, 1000);
 		}
-
-		// doTickle = () => {
-		// 	// this.setState(({tickleCount}) => ({tickleCount: tickleCount + 1}));
-		// 	if (this.props.setTickle) {
-		// 		console.log('running doTickle');
-		// 		const tickleCount = this.props.tickle;
-		// 		this.props.setTickle({tickleCount: tickleCount + 1});
-		// 	}
-		// }
 
 		componentDidMount () {
 			this.initializeConnection();
 		}
 
 		componentDidUpdate (prevProps) {
-			if (!equals(prevProps.destination, this.props.destination)) {
+			if (
+				// destination changed
+				!equals(prevProps.destination, this.props.destination) ||
+				// navigating changed to TRUE
+				prevProps.navigating !== this.props.navigating && this.props.navigating
+			) {
 				this.setDestination();
+			}
+
+			if (
+				// navigating changed to FALSE
+				prevProps.navigating !== this.props.navigating && !this.props.navigating
+			) {
+				this.stopNavigation();
 			}
 
 			if (prevProps.navigation.duration !== this.props.navigation.duration) {
@@ -172,49 +170,35 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			// We may be able to load multiple previous waypoints here, if more than one was sent
 			const {x, y} = message.routing_request.waypoint.slice(-1).pop().pose;
 			const destination = [getLatLongFromSim(x, y)];
-			this.setDestination({destination, navigating: true});
+			// this.setDestination({destination, navigating: true});
+			// Save this new destination, and trigger a re-render, which will be caught in the
+			// "prop changed" pipeline and handled by setDestination below. Also, set navigating to
+			// true, since this change comes directly from the simulator, and the only way to get a
+			// destination from the simulator is if it's already "navigating".
+			if (!equals(destination, this.props.destination)) {
+				this.props.updateDestination({destination, navigating: true});
+			}
 		}
 
 		//
 		// General Event Handling
 		//
 
-		setDestination = ({destination, navigating} = {}) => {
-			// Accept external args, in case the request came from within this component,
-			// but fallback to the navigation prop (the preferred usage).
-			let destDiffersFromState;
-			if (destination == null) {
-				destination = this.props.destination;
-			} else {
-				destDiffersFromState = (!equals(destination, this.props.destination));
-				this.props.updateDestination({destination});
-			}
-			if (navigating == null) navigating = this.props.navigating;
+		setDestination = () => {
+			const {autonomous, destination, location, navigating} = this.props;
 
-			// If the destination is still null, replace the destination with our current location
-			// so we can "trick" the simulator into thinking we're already at our goal location
-			// thus stopping the self driving function.
-			// if ((!destination || destination.length === 0) && navigating) {
-			// 	destination = [this.props.location];
-			// 	destDiffersFromState = true;
-			// }
-
-			if (navigating && destDiffersFromState && destination.slice(-1).lat !== 0) {
-				this.connection.send('routingRequest', [this.props.location, ...destination]);
+			// console.log('Checking for whether to start navigating.', Boolean(navigating), Boolean(destination && destination.slice(-1).lat !== 0));
+			if (autonomous && navigating && destination && destination.slice(-1).lat !== 0) {
+				console.log('%cSending routing request:', 'color: magenta', [location, ...destination]);
+				this.connection.send('routingRequest', [location, ...destination]);
 			}
 		}
-		// setDestination = ({destination, navigating} = {}) => {
-		// 	const {navigation, location} = this.props;
 
-		// 	const destDiffersFromState = (!equals(destination, navigation.destination));
-		// 	destination = destination || navigation.destination; // Accept external args, in case the request came from within this component, but fallback to the navigation prop (the preferred usage).
-		// 	// console.log('location, dest(s):', [location, ...destination]);
-		// 	this.props.updateDestination({destination, navigating});
-
-		// 	if (navigating && destDiffersFromState && destination.slice(-1).lat !== 0) {
-		// 		this.connection.send('routingRequest', [location, ...destination]);
-		// 	}
-		// }
+		stopNavigation = () => {
+			console.log('%cStopping Navigation', 'color: magenta');
+			// Trick the simulator into stopping by telling it to navigate to where it already is.
+			this.connection.send('routingRequest', [this.props.location, this.props.location]);
+		}
 
 		sendVideo = (args) => {
 			this.comm.current.sendVideo(args);
@@ -225,19 +209,18 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		}
 
 		sendNavigation = () => {
-			// console.log('sendNavigation:', this.props.navigation);
 			this.comm.current.sendETA(this.props.navigation);
 		}
 
 		render () {
 			const {...rest} = this.props;
-			delete rest.setLocation;
-			delete rest.setConnected;
-			delete rest.updateDestination;
+			delete rest.autonomous;
 			delete rest.location;
 			delete rest.navigating;
 			delete rest.navigation;
-			// delete rest.setTickle;
+			delete rest.setConnected;
+			delete rest.setLocation;
+			delete rest.updateDestination;
 
 			return (
 				<React.Fragment>
@@ -255,16 +238,11 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 const ServiceLayer = compose(
 	AppStateConnect(({location: locationProp, navigation, updateAppState}) => ({
+		autonomous: navigation.autonomous,
 		destination: navigation.destination,
 		location: locationProp,
 		navigation,
 		navigating: navigation.navigating,
-		// tickleCount: tickleCountProp,
-		// setTickle: ({tickleCount}) => {
-		// 	updateAppState((state) => {
-		// 		state.tickleCount = tickleCount;
-		// 	});
-		// },
 		setConnected: (connected) => {
 			updateAppState((state) => {
 				if (state.connections.serviceLayer === connected) return null;
@@ -273,7 +251,6 @@ const ServiceLayer = compose(
 		},
 		setLocation: ({location}) => {
 			updateAppState((state) => {
-				// console.log('Setting location app state:', location);
 				state.location = location;
 			});
 		},
@@ -285,11 +262,6 @@ const ServiceLayer = compose(
 				}
 			});
 		}
-		// endNavigation: ({navigating}) => {
-		// 	updateAppState((state) => {
-		// 		state.navigation.navigating = navigating;
-		// 	});
-		// }
 	})),
 	ServiceLayerBase
 );

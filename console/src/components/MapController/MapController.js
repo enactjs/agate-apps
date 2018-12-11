@@ -25,6 +25,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 		static propTypes = {
 			topLocations: PropTypes.array.isRequired,
 			updateDestination: PropTypes.func.isRequired,
+			updateNavigation: PropTypes.func.isRequired,
 			centeringDuration: PropTypes.number,
 			defaultFollow: PropTypes.bool, // Should the centering position follow the current location?
 			description: PropTypes.string,
@@ -72,7 +73,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 		}
 
 		handleSetDestination = ({selected}) => {
-			console.log('proposing new destination index:', selected, this.props.topLocations[selected]);
+			console.log('proposing new destination index:', selected, '->', this.props.topLocations[selected]);
 			// this.props.updateProposedDestination(this.props.topLocations[selected]);
 			const loc = this.props.topLocations[selected];
 			this.props.updateDestination({
@@ -85,8 +86,8 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 
 		startNavigation = ({selected}) => {
 			// console.log('navigating', selected);
-			console.log(selected ? ['start navigation to', this.props.topLocations, this.props.topLocations[this.state.destinationIndex], this.state.destinationIndex] : 'stopping navigation');
 			if (selected) {
+				console.log('MapController - start navigation to', this.props.topLocations, this.props.topLocations[this.state.destinationIndex], 'from index:', this.state.destinationIndex);
 				const loc = this.props.topLocations[this.state.destinationIndex];
 				if (loc && loc.coordinates) {
 					this.props.updateDestination({
@@ -96,6 +97,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 					});
 				}
 			} else {
+				console.log('MapController - stopping navigation');
 				this.props.updateDestination({
 					destination: null,
 					navigating: false
@@ -104,7 +106,22 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 		}
 
 		render () {
-			const {topLocations, destination, description, navigating, selfDrivingSelection, locationSelection, compact, navigation, noStartStopToggle, toggleSelfDriving, updateDestination, ...rest} = this.props;
+			const {
+				compact,
+				description,
+				destination,
+				locationSelection,
+				navigating,
+				navigation,
+				noStartStopToggle,
+				selfDrivingSelection,
+				toggleSelfDriving,
+				topLocations,
+				updateDestination,
+				updateNavigation,
+				...rest
+			} = this.props;
+
 			delete rest.centeringDuration;
 			delete rest.defaultFollow;
 			delete rest.position;
@@ -122,6 +139,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 					destination={destination}
 					points={topLocations}
 					updateDestination={updateDestination}
+					updateNavigation={updateNavigation}
 				>
 					<tools>
 						<Column className={css.toolsColumn}>
@@ -216,8 +234,18 @@ const ConnectedMap = AppContextConnect(({location, userSettings, navigation, upd
 				state.navigation.navigating = navigating;
 			}
 		});
-	}
+	},
+	updateNavigation: ({duration, distance}) => {
+		updateAppState((state) => {
+			const startTime = new Date().getTime();
+			const eta = new Date(startTime + (duration * 1000)).getTime();
 
+			state.navigation.duration = duration;
+			state.navigation.startTime = startTime;
+			state.navigation.eta = eta;
+			state.navigation.distance = distance;
+		});
+	}
 }));
 
 const MapController = ConnectedMap(Pure(MapControllerHoc(MapCore)));

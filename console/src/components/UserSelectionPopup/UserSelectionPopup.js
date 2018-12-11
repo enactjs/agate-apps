@@ -3,7 +3,7 @@ import kind from '@enact/core/kind';
 import Group from '@enact/ui/Group';
 import Popup from '@enact/agate/Popup';
 import Button from '@enact/agate/Button';
-import SwitchItem from '@enact/agate/SwitchItem';
+import Item from '@enact/agate/Item';
 // import {Layout, Cell} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -65,7 +65,7 @@ const UserSelectionPopupBase = kind({
 				<title>User Selection</title>
 
 				<Group
-					childComponent={SwitchItem}
+					childComponent={Item}
 					// itemProps={{
 					// 	inline: boolean('ItemProps-Inline', Group)
 					// }}
