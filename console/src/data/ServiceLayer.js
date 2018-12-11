@@ -27,6 +27,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		static propTypes = {
 			setConnected: PropTypes.func.isRequired,
 			setLocation: PropTypes.func.isRequired,
+			updateAppState: PropTypes.func.isRequired,
 			updateDestination: PropTypes.func.isRequired,
 			autonomous: PropTypes.bool,
 			destination: propTypeLatLonList,
@@ -43,11 +44,6 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			this.maps = new Set();
 			this.location = this.props.location;
 			this.isFirstPosition = true;
-			// this.state = {
-			// 	showAppList: false
-			// };
-
-			// const tickler = setInterval(this.doTickle, 1000);
 		}
 
 		componentDidMount () {
@@ -292,13 +288,15 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 		render () {
 			const {...rest} = this.props;
-			delete rest.setLocation;
-			delete rest.setConnected;
-			delete rest.updateDestination;
+			delete rest.autonomous;
 			delete rest.location;
+			delete rest.navigating;
 			delete rest.navigation;
 			delete rest.setConnected;
+			delete rest.setConnected;
 			delete rest.setLocation;
+			delete rest.setLocation;
+			delete rest.updateAppState;
 			delete rest.updateDestination;
 
 			return (
@@ -325,17 +323,6 @@ const ServiceLayer = compose(
 		navigation,
 		navigating: navigation.navigating,
 		updateAppState
-		// tickleCount: tickleCountProp,
-		// setTickle: ({tickleCount}) => {
-		// 	updateAppState((state) => {
-		// 		state.tickleCount = tickleCount;
-		// 	});
-		// },
-		// endNavigation: ({navigating}) => {
-		// 	updateAppState((state) => {
-		// 		state.navigation.navigating = navigating;
-		// 	});
-		// }
 	})),
 	ServiceLayerBase
 );

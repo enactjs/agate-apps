@@ -105,6 +105,7 @@ const WelcomePopupBase = kind({
 	name: 'WelcomePopup',
 
 	propTypes: {
+		updateAppState: PropTypes.func.isRequired,
 		components: PropTypes.object,
 		index: PropTypes.number,
 		onCancelSelect: PropTypes.func,
@@ -172,6 +173,8 @@ const WelcomePopupBase = kind({
 		delete rest.onContinue;
 		delete rest.onSendVideo;
 		delete rest.onShowWelcome;
+		delete rest.setDestination; // This needs to be assigned to somewhere. Most likely, this just needs to be toggling `navigating`, since the destination is set elsewhere.
+		delete rest.updateAppState;
 		delete rest.updateUser;
 
 		return (

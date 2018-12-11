@@ -11,6 +11,7 @@ import DateTimePicker from '@enact/agate/DateTimePicker';
 import {TabbedPanels} from '@enact/agate/Panels';
 import React from 'react';
 import compose from 'ramda/src/compose';
+import PropTypes from 'prop-types';
 
 // Data Services
 import ServiceLayer from '../data/ServiceLayer';
@@ -63,6 +64,10 @@ const getPanelIndexOf = (panelName) => panelIndexMap.indexOf(panelName);
 
 const AppBase = kind({
 	name: 'App',
+
+	propTypes: {
+		updateAppState: PropTypes.func.isRequired
+	},
 
 	styles: {
 		css,
@@ -158,6 +163,7 @@ const AppBase = kind({
 		delete rest.endNavigation;
 		delete rest.defaultIndex;
 		delete rest.defaultSkin;
+		delete rest.updateAppState;
 
 		return (
 			<div {...rest}>
@@ -272,6 +278,7 @@ const AppBase = kind({
 
 
 const AppDecorator = compose(
+	ServiceLayer,
 	AppContextConnect(({appState, userSettings, updateAppState}) => ({
 		accent: userSettings.colorAccent,
 		highlight: userSettings.colorHighlight,
@@ -286,13 +293,13 @@ const AppDecorator = compose(
 		showWelcomePopup: appState.showWelcomePopup,
 		skin: userSettings.skin,
 		skinName: userSettings.skin,
-		updateAppState,
+		updateAppState
 	})),
-	ServiceLayer,
 	AgateDecorator
 );
 
 const App = AppDecorator(AppBase);
+
 export default App;
 export {
 	App,
