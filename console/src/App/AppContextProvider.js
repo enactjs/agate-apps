@@ -55,12 +55,7 @@ const defaultUserSettings = {
 	fontSize: 0,
 	name: '',
 	skin: 'carbon'
-	// topLocations: [
-	// 	{
-	// 		description: 'The Ocean, oops!',
-	// 		coordinates: {'lat': 0, 'lon': 0}
-	// 	}
-	// ]
+	// topLocations: []
 };
 
 class AppContextProvider extends Component {
