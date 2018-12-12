@@ -28,7 +28,29 @@
 		},
 		"fontSize": 0,
 		"name": "Laura & Steve",
-		"skin": "carbon"
+		"skin": "carbon",
+		"topLocations": [
+			{
+					"description": "Home",
+					"coordinates": {"lat": 37.790246, "lon": -122.396601}
+			},
+			{
+					"description": "Philz coffee",
+					"coordinates": {"lat": 37.789026, "lon": -122.392775}
+			},
+			{
+					"description": "School",
+					"coordinates": {"lat": 37.79395, "lon": -122.40185}
+			},
+			{
+					"description": "Work",
+					"coordinates": {"lat": 37.78353, "lon": -122.39615}
+			},
+			{
+					"description": "MOMA",
+					"coordinates": {"lat": 37.786445, "lon": -122.404202}
+			}
+		]
 	},
 	"user2": {
 		"arrangements": {
@@ -82,7 +104,29 @@
 		},
 		"fontSize": 0,
 		"name": "Thomas",
-		"skin": "titanium"
+		"skin": "titanium",
+		"topLocations": [
+			{
+					"description": "Home",
+					"coordinates": {"lat": 37.790246, "lon": -122.396601}
+			},
+			{
+					"description": "Philz coffee",
+					"coordinates": {"lat": 37.789026, "lon": -122.392775}
+			},
+			{
+					"description": "School",
+					"coordinates": {"lat": 37.79395, "lon": -122.40185}
+			},
+			{
+					"description": "Work",
+					"coordinates": {"lat": 37.78353, "lon": -122.39615}
+			},
+			{
+					"description": "MOMA",
+					"coordinates": {"lat": 37.786445, "lon": -122.404202}
+			}
+		]
 	},
 	"user3": {
 		"arrangements": {
@@ -113,6 +157,28 @@
 		"colorHighlight": "#f08c21",
 		"fontSize": 0,
 		"name": "Gary",
-		"skin": "electro"
+		"skin": "electro",
+		"topLocations": [
+			{
+					"description": "Home",
+					"coordinates": {"lat": 37.39236, "lon": -121.990382}
+			},
+			{
+					"description": "Tasty Subs & Pizza",
+					"coordinates": {"lat": 37.384965, "lon": -121.995479}
+			},
+			{
+					"description": "School",
+					"coordinates": {"lat": 37.79395, "lon": -122.40185}
+			},
+			{
+					"description": "Work",
+					"coordinates": {"lat": 37.78353, "lon": -122.39615}
+			},
+			{
+					"description": "Dishdash",
+					"coordinates": {"lat": 37.376994, "lon": -122.026600}
+			}
+		]
 	}
 }
