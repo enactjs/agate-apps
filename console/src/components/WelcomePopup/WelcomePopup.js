@@ -2,7 +2,6 @@ import Button from '@enact/agate/Button';
 import Divider from '@enact/agate/Divider';
 import FullscreenPopup from '@enact/agate/FullscreenPopup';
 import GridListImageItem from '@enact/agate/GridListImageItem';
-import {Item} from '@enact/agate/Item';
 import {Panel, Panels} from '@enact/agate/Panels';
 import Skinnable from '@enact/agate/Skinnable';
 import {handle, forProp, forward, returnsTrue} from '@enact/core/handle';
@@ -17,9 +16,7 @@ import AppContextConnect from '../../App/AppContextConnect';
 import CompactHeater from '../CompactHeater';
 import CompactMultimedia from '../CompactMultimedia';
 import CompactWeather from '../CompactWeather';
-import DestinationList from '../DestinationList';
-import MapCore from '../MapCore';
-import {propTypeLatLonList} from '../../data/proptypes';
+import MapController from '../MapController';
 
 import steveAvatar from '../../../assets/steve.png';
 import thomasAvatar from '../../../assets/thomas.png';
@@ -42,8 +39,10 @@ const getCompactComponent = ({components, key, onSendVideo}) => {
 			Component = (<CompactWeather />);
 	}
 
-	return (<Cell>{Component}</Cell>);
+	return Component;
 };
+
+const currentTime = () => new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
 const WelcomePanel = Skinnable({defaultSkin: 'carbon'}, Panel);
 
@@ -106,18 +105,16 @@ const WelcomePopupBase = kind({
 	name: 'WelcomePopup',
 
 	propTypes: {
+		updateAppState: PropTypes.func.isRequired,
 		components: PropTypes.object,
 		index: PropTypes.number,
 		onCancelSelect: PropTypes.func,
 		onClose: PropTypes.func,
+		onContinue: PropTypes.func,
 		onSelectUser: PropTypes.func,
 		onSendVideo: PropTypes.func,
-		onSetDestination: PropTypes.func,
 		onShowWelcome: PropTypes.func,
-		positions: PropTypes.array,
 		profileName: PropTypes.string,
-		proposedDestination: propTypeLatLonList,
-		setDestination: PropTypes.func,  // Incoming function from AppStateConnect
 		updateUser: PropTypes.func,
 		userId: PropTypes.number
 	},
@@ -133,12 +130,7 @@ const WelcomePopupBase = kind({
 
 	handlers: {
 		handleClose: handle(
-			(ev, {proposedDestination, setDestination}) => {
-				if (proposedDestination) {
-					setDestination({destination: proposedDestination});
-				}
-				return true;
-			},
+			forward('onContinue'),
 			forward('onClose')
 		),
 		handleTransition: handle(
@@ -169,22 +161,21 @@ const WelcomePopupBase = kind({
 		index,
 		onCancelSelect,
 		onSelectUser,
-		onSetDestination,
-		positions,
 		profileName,
-		proposedDestination,
 		small1Component: Small1Component,
 		small2Component: Small2Component,
+		userId,
 		usersList,
 		...rest
 	}) => {
 		delete rest.components;
 		delete rest.onClose;
+		delete rest.onContinue;
 		delete rest.onSendVideo;
 		delete rest.onShowWelcome;
+		delete rest.setDestination; // This needs to be assigned to somewhere. Most likely, this just needs to be toggling `navigating`, since the destination is set elsewhere.
+		delete rest.updateAppState;
 		delete rest.updateUser;
-		delete rest.setDestination;
-		delete rest.userId;
 
 		return (
 			<FullscreenPopup {...rest}>
@@ -192,31 +183,44 @@ const WelcomePopupBase = kind({
 					<UserSelectionPanel users={usersList} onSelectUser={onSelectUser} />
 					<WelcomePanel />
 					<Panel>
-						<Column>
-							<Cell size="20%">
-								<Row align="center">
-									<Cell component={Button} icon="user" onClick={onCancelSelect} shrink />
-									<Cell component={Item} spotlightDisabled>
-										Hi {profileName}!
+						<Row className={css.welcome}>
+							<Cell className={css.left} size="33%">
+								<Column>
+									<Cell shrink>
+										<Row>
+											<Cell shrink>
+												<UserSelectionAvatar index={userId - 1} onSelectUser={onCancelSelect}>
+													{profileName}
+												</UserSelectionAvatar>
+											</Cell>
+											<Cell>
+												<Column align="start center">
+													<Cell shrink>Hi</Cell>
+													<Cell shrink>{profileName}!</Cell>
+												</Column>
+											</Cell>
+										</Row>
 									</Cell>
-									<Cell component={Button} icon="arrowsmallright" onClick={handleClose} shrink />
-								</Row>
+									<Cell shrink>
+										{currentTime()}
+									</Cell>
+									<Cell>
+										{Small1Component}
+									</Cell>
+									<Cell>
+										{Small2Component}
+									</Cell>
+									<Cell component={Button} onClick={handleClose} shrink>Continue</Cell>
+								</Column>
 							</Cell>
 							<Cell>
-								<Row className={css.bottomRow}>
-									<Cell size="25%">
-										<DestinationList component={Button} onSetDestination={onSetDestination} positions={positions} title="Top Locations" />
-									</Cell>
-									<Cell component={MapCore} proposedDestination={proposedDestination} size="40%" />
-									<Cell size="35%">
-										<Column>
-											{Small1Component}
-											{Small2Component}
-										</Column>
-									</Cell>
-								</Row>
+								<MapController
+									noStartStopToggle
+									locationSelection
+									autonomousSelection
+								/>
 							</Cell>
-						</Column>
+						</Row>
 					</Panel>
 				</Panels>
 			</FullscreenPopup>
@@ -237,14 +241,6 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 			super(props);
 			this.state = {
 				index: 0,
-				positions: [
-					{lat: 37.788818, lon: -122.404568}, // LG office
-					{lat: 37.791356, lon: -122.400823}, // Blue Bottle Coffee
-					{lat: 37.788988, lon: -122.401076},
-					{lat: 37.7908574786, lon: -122.399391029},
-					{lat: 37.786116, lon: -122.402140}
-				],
-				destination: null,
 				selected: null
 			};
 		}
@@ -253,11 +249,6 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 			if (this.props.open && !nextProps.open) {
 				this.setState({index: 0});
 			}
-		}
-
-		handleSetDestination = (ev) => {
-			const index = ev.currentTarget.dataset.index;
-			this.setState(({positions}) => ({destination: [positions[index]]}));
 		}
 
 		handleSelectUser = ({selected}) => {
@@ -272,8 +263,20 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 			this.setState(({index}) => index === 1 ? {index: ++index} : null);
 		}
 
+		setDestination = ({destination}) => {
+			this.props.updateAppState((state) => {
+				state.navigation.destination = destination;
+			});
+		}
+
+		updateUser = ({selected}) => {
+			this.props.updateAppState((state) => {
+				state.userId = selected + 1;
+			});
+		}
+
 		render () {
-			const {destination, index, positions} = this.state;
+			const {index} = this.state;
 
 			return (
 				<Wrapped
@@ -281,33 +284,23 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 					index={index}
 					onSelectUser={this.handleSelectUser}
 					onCancelSelect={this.handleCancelSelect}
-					onSetDestination={this.handleSetDestination}
 					onShowWelcome={this.handleShowWelcome}
-					positions={positions}
-					proposedDestination={destination}
 					selected={this.state.selected}
+					updateUser={this.updateUser}
+					setDestination={this.setDestination}
 				/>
 			);
 		}
 	};
 });
 
-const AppContextDecorator = AppContextConnect(({getUserNames, updateAppState, userId, userSettings}) => {
+const AppContextDecorator = AppContextConnect(({usersList, updateAppState, userId, userSettings}) => {
 	return {
-		components: (userSettings.components && {...userSettings.components.welcome}),
+		components: (userSettings.components && userSettings.components.welcome),
 		profileName: userSettings.name,
-		setDestination: ({destination}) => {
-			updateAppState((state) => {
-				state.navigation.destination = destination;
-			});
-		},
-		updateUser: ({selected}) => {
-			updateAppState((state) => {
-				state.userId = selected + 1;
-			});
-		},
 		userId,
-		usersList: getUserNames()
+		usersList: usersList,
+		updateAppState
 	};
 });
 

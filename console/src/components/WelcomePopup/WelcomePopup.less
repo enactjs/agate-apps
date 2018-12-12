@@ -1,15 +1,19 @@
 // WelcomePopup.less
 //
+@guide-border-color: rgba(255, 255, 255, 0.5);
 
 .welcomePopup {
 	// suppress any transitioning for the popup
 	transition-property: none;
 
-	.bottomRow {
-		height: 100%;
 
-		> * {
-			margin: 20px 5px 0;
+	.welcome {
+		height: 100%;
+		border: 1px solid @guide-border-color;
+
+		.left {
+			border-right: 1px solid @guide-border-color;
+			margin-right: 3px;
 		}
 	}
 

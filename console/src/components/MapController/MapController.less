@@ -1,0 +1,20 @@
+.columnCell {
+	margin-top: 2em;
+
+	&:first-child {
+		margin-top: 0;
+	}
+}
+
+.button {
+	width: 100%;
+}
+
+.toolsColumn,
+.toolsColumn .columnCell {
+	pointer-events: none;
+
+	> * {
+		pointer-events: auto;
+	}
+}
