@@ -31,7 +31,7 @@ const CompactAppList = kind({
 
 	render: ({onTabChange, ...rest}) => (
 		<Widget {...rest} title="Favorite Apps" description="A selection of your favorite apps" view="applist">
-			<DropRow align="start space-around" {...rest} wrap>
+			<DropRow align="start space-around" wrap>
 				<DraggableAppIcon name="00" icon="compass">Navigation</DraggableAppIcon>
 				<DraggableAppIcon name="01" icon="audio" onKeyUp={onTabChange} onClick={onTabChange}>Audio</DraggableAppIcon>
 				<DraggableAppIcon name="02" icon="rearscreen" data-tabindex={getPanelIndexOf('multimedia')} onKeyUp={onTabChange} onClick={onTabChange}>Multimedia</DraggableAppIcon>
