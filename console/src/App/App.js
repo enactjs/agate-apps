@@ -143,66 +143,6 @@ const AppBase = kind({
 	computed: {
 		className: ({skinName, styler}) => styler.append(skinName)
 	},
-	handlers: {
-		onSelect: handle(
-			adaptEvent((ev, {updateAppState}) => {
-				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
-				updateAppState((state) => {
-					state.appState.index = state.appState.index === index ? null : index;
-				});
-				return {index};
-			}, forward('onSelect'))
-		),
-
-		onToggleUserSelectionPopup: (ev, {updateAppState}) => {
-			updateAppState((state) => {
-				state.appState.showUserSelectionPopup = !state.appState.showUserSelectionPopup;
-			});
-		},
-		onToggleDateTimePopup: (ev, {updateAppState}) => {
-			updateAppState((state) => {
-				state.appState.showDateTimePopup = !state.appState.showDateTimePopup;
-			});
-		},
-		onToggleWelcomePopup: (ev, {updateAppState}) => {
-			updateAppState((state) => {
-				state.appState.showWelcomePopup = !state.appState.showWelcomePopup;
-			});
-		},
-		onTogglePopup: (ev, {updateAppState}) => {
-			updateAppState((state) => {
-				state.appState.showPopup = !state.appState.showPopup;
-			});
-		},
-		onToggleBasicPopup: (ev, {updateAppState}) => {
-			updateAppState((state) => {
-				state.appState.showBasicPopup = !state.appState.showBasicPopup;
-			});
-		},
-		onResetAll: (ev, {updateAppState}) => {
-			updateAppState((state) => {
-				state.appState.index = 0;
-				state.appState.showWelcomePopup = true;
-				state.appState.showUserSelectionPopup = false;
-			});
-		},
-		layoutArrangeableToggle: (ev, {updateAppState}) => {
-			updateAppState((state) => {
-				state.userSettings.arrangements.arrangeable = !state.userSettings.arrangements.arrangeable;
-			});
-		},
-		updateSkin: (ev, {updateAppState}) => {
-			updateAppState((state) => {
-				let newSkin;
-				switch (state.userSettings.skin) {
-					case 'titanium': newSkin = 'electro'; break;
-					case 'carbon': newSkin = 'titanium'; break;
-					default: newSkin = 'carbon';
-				}
-				state.userSettings.skin = newSkin;
-			});
-		}
-	},
 
 	render: ({
 		index,
@@ -365,7 +305,7 @@ const AppDecorator = compose(
 	})),
 	AgateDecorator,
 	Skinnable
-)
+);
 
 const App = AppDecorator(AppBase);
 
