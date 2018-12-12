@@ -34,7 +34,7 @@ const CompactAppList = kind({
 			<DropRow align="start space-around" wrap>
 				<DraggableAppIcon name="00" icon="compass">Navigation</DraggableAppIcon>
 				<DraggableAppIcon name="01" icon="audio" onKeyUp={onTabChange} onClick={onTabChange}>Audio</DraggableAppIcon>
-				<DraggableAppIcon name="02" icon="resumeplay" data-tabindex={getPanelIndexOf('multimedia')} onKeyUp={onTabChange} onClick={onTabChange}>Multimedia</DraggableAppIcon>
+				<DraggableAppIcon name="02" icon="rearscreen" data-tabindex={getPanelIndexOf('multimedia')} onKeyUp={onTabChange} onClick={onTabChange}>Multimedia</DraggableAppIcon>
 				<DraggableAppIcon name="03" icon="gear" data-tabindex={getPanelIndexOf('settings')} onKeyUp={onTabChange} onClick={onTabChange}>Settings</DraggableAppIcon>
 			</DropRow>
 		</Widget>

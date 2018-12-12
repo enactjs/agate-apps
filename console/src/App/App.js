@@ -169,11 +169,11 @@ const AppBase = kind({
 				<TabbedPanels
 					orientation={orientation}
 					tabs={[
-						{title: 'Home', icon: 'denselist'},
+						{title: 'Home', icon: 'home'},
 						{title: 'Phone', icon: 'phone'},
-						{title: 'Climate', icon: 'temperature'},
-						{title: 'Radio', icon: 'audio'},
-						{title: 'Apps', icon: 'list'}
+						{title: 'Climate', icon: 'climate'},
+						{title: 'Radio', icon: 'radio'},
+						{title: 'Apps', icon: 'apps'}
 					]}
 					onSelect={onSelect}
 					selected={index}
