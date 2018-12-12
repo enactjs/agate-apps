@@ -60,6 +60,7 @@ const UserSelectionPopupBase = kind({
 	render: ({userId, usersList, updateUser, resetUserSettings, onResetAll, ...rest}) => {
 		delete rest.resetAll;
 		delete rest.resetPosition;
+		delete rest.updateAppState;
 		return (
 			<Popup
 				// onClose={onTogglePopup}
