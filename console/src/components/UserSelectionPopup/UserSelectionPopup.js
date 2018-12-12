@@ -49,6 +49,11 @@ const UserSelectionPopupBase = kind({
 			resetAll();
 			// This is being hard coded for now because it's the default reset for the simulator.
 			resetPosition({x:52880.8698406219, y: 4182781.1160838, z: -2.3562});
+		},
+		updateUser: (ev, {updateAppState, selected}) => {
+			updateAppState((state) => {
+				state.userId = selected + 1;
+			});
 		}
 	},
 
@@ -86,16 +91,12 @@ const UserSelectionPopupBase = kind({
 	}
 });
 
-const UserSelectionPopup = AppContextConnect(({userId, resetUserSettings, resetAll, getUserNames, updateAppState}) => ({
-	usersList: getUserNames(),
+const UserSelectionPopup = AppContextConnect(({userId, resetUserSettings, resetAll, usersList, updateAppState}) => ({
+	usersList,
 	userId,
 	resetUserSettings,
 	resetAll,
-	updateUser: ({selected}) => {
-		updateAppState((state) => {
-			state.userId = selected + 1;
-		});
-	}
+	updateAppState
 }))(UserSelectionPopupBase);
 
 
