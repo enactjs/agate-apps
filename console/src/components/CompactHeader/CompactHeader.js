@@ -35,13 +35,13 @@ const CompactHeader = kind({
 
 	render: ({children, onExpand, noExpandButton, ...rest}) => (
 		<Divider {...rest}>
-			<span className={css.title}>{children}</span>
+			{children && <span className={css.title}>{children}</span>}
 			{!noExpandButton ? (
 				<IconButton
 					className={css.btn}
 					size="smallest"
 					alt="Fullscreen"
-					icon="fullscreen"
+					icon="expand"
 					onClick={onExpand}
 				/>
 			) : null}

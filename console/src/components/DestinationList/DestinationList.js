@@ -1,38 +1,56 @@
 import Divider from '@enact/agate/Divider';
 import kind from '@enact/core/kind';
 import {Column, Cell} from '@enact/ui/Layout';
+import Button from '@enact/agate/Button';
+import Group from '@enact/ui/Group';
 import React from 'react';
 import PropTypes from 'prop-types';
+import {equals} from 'ramda';
+
+import {propTypeLatLonList} from '../../data/proptypes';
 
 const DestinationList = kind({
 	name: 'DestinationList',
 
 	propTypes: {
-		component: PropTypes.func.isRequired,
+		positions: PropTypes.array.isRequired,
+		destination: propTypeLatLonList,
 		onSetDestination: PropTypes.func,
-		positions: PropTypes.array,
 		title: PropTypes.string
 	},
 
 	computed: {
-		destinations: ({component: Component, onSetDestination, positions}) => positions.map((item, i) => (
-			<Cell component={Component} data-index={i} key={i} onClick={onSetDestination} shrink>
-				{`Destination ${i + 1}`}
-			</Cell>
-		))
+		selected: ({destination, positions}) => {
+			let matchingDestIndex;
+
+			// console.log('findDestinationInList:', {topLocations, destination});
+			positions.forEach((loc, index) => {
+				// console.log('comparing:', [loc.coordinates], 'and', destination);
+				if (equals([loc.coordinates], destination)) {
+					// console.log('MATCH!', index);
+					matchingDestIndex = index;
+				}
+			});
+			return matchingDestIndex;
+		}
 	},
 
-	render: ({destinations, title, ...rest}) => {
-		delete rest.component;
-		delete rest.onSetDestination;
-		delete rest.positions;
-
+	render: ({positions, onSetDestination, selected, title, ...rest}) => {
 		return (
 			<Column {...rest}>
-				<Cell component={Divider} startSection shrink>{title}</Cell>
+				<Cell component={Divider} shrink>{title}</Cell>
 				<Cell>
-					<Column>
-						{destinations}
+					<Column
+						component={Group}
+						childComponent={Button}
+						onSelect={onSetDestination}
+						selectedProp="highlighted"
+						selected={selected}
+						itemProps={{small: true}}
+					>
+						{
+							positions.map(({description}, index) => `${index + 1} - ${description}`)
+						}
 					</Column>
 				</Cell>
 			</Column>

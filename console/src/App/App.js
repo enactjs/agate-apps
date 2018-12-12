@@ -1,17 +1,17 @@
 // External
 import kind from '@enact/core/kind';
-import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
 import {adaptEvent, forward, handle} from '@enact/core/handle';
 import {Cell, Column} from '@enact/ui/Layout';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
-import ToggleButton from '@enact/agate/ToggleButton';
+import {ToggleButtonBase} from '@enact/agate/ToggleButton';
 import Popup from '@enact/agate/Popup';
 import DateTimePicker from '@enact/agate/DateTimePicker';
 import {TabbedPanels} from '@enact/agate/Panels';
 import React from 'react';
 import compose from 'ramda/src/compose';
+import PropTypes from 'prop-types';
 
 // Data Services
 import ServiceLayer from '../data/ServiceLayer';
@@ -34,7 +34,7 @@ import Dashboard from '../views/Dashboard';
 import Multimedia from '../views/Multimedia';
 
 // Local Components
-import AppStateConnect from './AppContextConnect';
+import AppContextConnect from './AppContextConnect';
 
 // CSS/LESS Styling
 import css from './App.less';
@@ -65,47 +65,115 @@ const getPanelIndexOf = (panelName) => panelIndexMap.indexOf(panelName);
 const AppBase = kind({
 	name: 'App',
 
+	propTypes: {
+		updateAppState: PropTypes.func.isRequired
+	},
+
 	styles: {
 		css,
 		className: 'app'
 	},
 
+	handlers: {
+		onSelect: handle(
+			adaptEvent((ev, {updateAppState}) => {
+				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
+				updateAppState((state) => {
+					state.appState.index = state.appState.index === index ? null : index;
+				});
+				return {index};
+			}, forward('onSelect'))
+		),
+
+		onToggleUserSelectionPopup: (ev, {updateAppState}) => {
+			updateAppState((state) => {
+				state.appState.showUserSelectionPopup = !state.appState.showUserSelectionPopup;
+			});
+		},
+		onToggleDateTimePopup: (ev, {updateAppState}) => {
+			updateAppState((state) => {
+				state.appState.showDateTimePopup = !state.appState.showDateTimePopup;
+			});
+		},
+		onToggleWelcomePopup: (ev, {updateAppState}) => {
+			updateAppState((state) => {
+				state.appState.showWelcomePopup = !state.appState.showWelcomePopup;
+			});
+		},
+		onTogglePopup: (ev, {updateAppState}) => {
+			updateAppState((state) => {
+				state.appState.showPopup = !state.appState.showPopup;
+			});
+		},
+		onToggleBasicPopup: (ev, {updateAppState}) => {
+			updateAppState((state) => {
+				state.appState.showBasicPopup = !state.appState.showBasicPopup;
+			});
+		},
+		onResetAll: (ev, {updateAppState}) => {
+			updateAppState((state) => {
+				state.appState.index = 0;
+				state.appState.showWelcomePopup = true;
+				state.appState.showUserSelectionPopup = false;
+			});
+		},
+		layoutArrangeableToggle: (ev, {updateAppState}) => {
+			updateAppState((state) => {
+				state.userSettings.arrangements.arrangeable = !state.userSettings.arrangements.arrangeable;
+			});
+		},
+		updateSkin: (ev, {updateAppState}) => {
+			updateAppState((state) => {
+				let newSkin;
+				switch (state.userSettings.skin) {
+					case 'titanium': newSkin = 'electro'; break;
+					case 'carbon': newSkin = 'titanium'; break;
+					default: newSkin = 'carbon';
+				}
+				state.userSettings.skin = newSkin;
+			});
+		}
+	},
+
 	render: ({
 		index,
-		onSelect,
-		updateSkin,
-		layoutArrangeableToggle,
 		layoutArrangeable,
+		layoutArrangeableToggle,
 		onResetAll,
-		onTogglePopup,
+		onSelect,
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
+		onTogglePopup,
 		onToggleUserSelectionPopup,
 		onToggleWelcomePopup,
 		orientation,
 		resetPosition,
 		sendVideo,
-		showPopup,
 		showBasicPopup,
 		showDateTimePopup,
+		showPopup,
 		showUserSelectionPopup,
 		showWelcomePopup,
 		skinName,
+		updateSkin,
 		...rest
 	}) => {
 		delete rest.accent;
-		delete rest.highlight;
 		delete rest.endNavigation;
+		delete rest.highlight;
+		delete rest.showAppList
+		delete rest.updateAppState;
+
 		return (
 			<div {...rest}>
 				<TabbedPanels
 					orientation={orientation}
 					tabs={[
-						{title: 'Home', icon: 'denselist'},
+						{title: 'Home', icon: 'home'},
 						{title: 'Phone', icon: 'phone'},
-						{title: 'Climate', icon: 'temperature'},
-						{title: 'Radio', icon: 'audio'},
-						{title: 'Apps', icon: 'list'}
+						{title: 'Climate', icon: 'climate'},
+						{title: 'Radio', icon: 'radio'},
+						{title: 'Apps', icon: 'apps'}
 					]}
 					onSelect={onSelect}
 					selected={index}
@@ -119,7 +187,7 @@ const AppBase = kind({
 							<Cell shrink>
 								<Button type="grid" icon="user" small onTap={onToggleUserSelectionPopup} />
 								<Button type="grid" icon="series" small onTap={updateSkin} />
-								<ToggleButton defaultSelected={layoutArrangeable} underline type="grid" toggleOnLabel="Finish" toggleOffLabel="Edit" small onToggle={layoutArrangeableToggle} />
+								<ToggleButtonBase selected={layoutArrangeable} underline type="grid" toggleOnLabel="Finish" toggleOffLabel="Edit" small onTap={layoutArrangeableToggle} />
 							</Cell>
 						</Column>
 					</afterTabs>
@@ -207,118 +275,25 @@ const AppBase = kind({
 	}
 });
 
-const AppState = hoc((configHoc, Wrapped) => {
-	return class extends React.Component {
-		static displayName = 'AppState';
-		constructor (props) {
-			super(props);
-			this.state = {
-				index: props.defaultIndex || 0,
-				showPopup: false,
-				showBasicPopup: false,
-				showDateTimePopup: false,
-				showUserSelectionPopup: false,
-				showAppList: false,
-				showWelcomePopup: ('defaultShowWelcomePopup' in props ? Boolean(props.defaultShowWelcomePopup) : true)
-			};
-		}
-
-		onSelect = handle(
-			adaptEvent((ev) => {
-				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
-				this.setState(state => state.index === index ? null : {index});
-				return {index};
-			}, forward('onSelect'))
-		).bind(this);
-
-		onToggleUserSelectionPopup = () => {
-			this.setState(({showUserSelectionPopup}) => ({showUserSelectionPopup: !showUserSelectionPopup}));
-		};
-
-		onTogglePopup = () => {
-			this.setState(({showPopup}) => ({showPopup: !showPopup}));
-		};
-
-		onToggleBasicPopup = () => {
-			this.setState(({showBasicPopup}) => ({showBasicPopup: !showBasicPopup}));
-		};
-
-		onToggleDateTimePopup = () => {
-			this.setState(({showDateTimePopup}) => ({showDateTimePopup: !showDateTimePopup}));
-		};
-
-		onToggleWelcomePopup = () => {
-			this.setState(({showWelcomePopup}) => ({showWelcomePopup: !showWelcomePopup}));
-		};
-
-		onResetAll = () => {
-			this.setState({index: 0, showWelcomePopup: true, showUserSelectionPopup: false});
-		};
-
-		render () {
-			const {colorAccent, colorHighlight, skin, ...rest} = this.props;
-
-			delete rest.defaultIndex;
-			delete rest.defaultSkin;
-			delete rest.defaultShowWelcomePopup;
-
-			return (
-				<Wrapped
-					{...rest}
-					accent={colorAccent}
-					highlight={colorHighlight}
-					index={this.state.index}
-					onResetAll={this.onResetAll}
-					onSelect={this.onSelect}
-					onTogglePopup={this.onTogglePopup}
-					onToggleBasicPopup={this.onToggleBasicPopup}
-					onToggleDateTimePopup={this.onToggleDateTimePopup}
-					onToggleUserSelectionPopup={this.onToggleUserSelectionPopup}
-					onToggleWelcomePopup={this.onToggleWelcomePopup}
-					orientation={(skin !== 'carbon') ? 'horizontal' : 'vertical'}
-					showPopup={this.state.showPopup}
-					showBasicPopup={this.state.showBasicPopup}
-					showDateTimePopup={this.state.showDateTimePopup}
-					showUserSelectionPopup={this.state.showUserSelectionPopup}
-					showWelcomePopup={this.state.showWelcomePopup}
-					skin={skin}
-					skinName={skin}
-				/>
-			);
-		}
-	};
-});
 
 const AppDecorator = compose(
-	AppStateConnect(({userSettings, updateAppState}) => ({
-		skin: userSettings.skin,
-		colorAccent: userSettings.colorAccent,
-		colorHighlight: userSettings.colorHighlight,
-		layoutArrangeable: userSettings.arrangements.arrangeable,
-		layoutArrangeableToggle: ({selected}) => {
-			updateAppState((state) => {
-				state.userSettings.arrangements.arrangeable = selected;
-			});
-		},
-		// endNavigation: ({navigating}) => {
-		// 	updateAppState((state) => {
-		// 		state.navigation.navigating = navigating;
-		// 	});
-		// },
-		updateSkin: () => {
-			updateAppState((state) => {
-				let newSkin;
-				switch (state.userSettings.skin) {
-					case 'titanium': newSkin = 'electro'; break;
-					case 'carbon': newSkin = 'titanium'; break;
-					default: newSkin = 'carbon';
-				}
-				state.userSettings.skin = newSkin;
-			});
-		}
-	})),
-	AppState,
 	ServiceLayer,
+	AppContextConnect(({appState, userSettings, updateAppState}) => ({
+		accent: userSettings.colorAccent,
+		highlight: userSettings.colorHighlight,
+		index: appState.index,
+		layoutArrangeable: userSettings.arrangements.arrangeable,
+		orientation: (userSettings.skin !== 'carbon') ? 'horizontal' : 'vertical',
+		showAppList: appState.showAppList,
+		showBasicPopup: appState.showBasicPopup,
+		showDateTimePopup: appState.showDateTimePopup,
+		showPopup: appState.showPopup,
+		showUserSelectionPopup: appState.showUserSelectionPopup,
+		showWelcomePopup: appState.showWelcomePopup,
+		skin: userSettings.skin,
+		skinName: userSettings.skin,
+		updateAppState
+	})),
 	AgateDecorator
 );
 

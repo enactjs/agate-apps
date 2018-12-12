@@ -56,7 +56,7 @@ const Settings = kind({
 							Settings
 						</Cell>
 						<SwitchItemCell
-							icon="user"
+							icon="display"
 							noToggle
 							data-tabindex={getPanelIndexOf('settings/display')}
 							onTap={onSelect}
@@ -64,19 +64,19 @@ const Settings = kind({
 							Display
 						</SwitchItemCell>
 						<SwitchItemCell
-							icon="ellipsis"
+							icon="datetime"
 							noToggle
 							onTap={onToggleDateTimePopup}
 						>
 							Date & Time
 						</SwitchItemCell>
 						<SwitchItemCell
-							icon="bulletlist"
+							icon="bluetooth"
 						>
 							Bluetooth
 						</SwitchItemCell>
 						<SwitchItemCell
-							icon="gear"
+							icon="wifi"
 						>
 							WiFi
 						</SwitchItemCell>

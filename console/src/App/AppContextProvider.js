@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import produce from 'immer';
-import {mergeDeepRight} from 'ramda';
+import {assocPath, mergeDeepRight, path} from 'ramda';
 
 import appConfig from '../App/configLoader';
 import userPresetsForDemo from './userPresetsForDemo';
@@ -55,6 +55,7 @@ const defaultUserSettings = {
 	fontSize: 0,
 	name: '',
 	skin: 'carbon'
+	// topLocations: []
 };
 
 class AppContextProvider extends Component {
@@ -62,8 +63,18 @@ class AppContextProvider extends Component {
 		super(props);
 		this.watchPositionId = null;  // Store the reference to the position watcher.
 		this.state = {
+			appState:{
+				index: props.defaultIndex || 0,
+				showPopup: false,
+				showBasicPopup: false,
+				showDateTimePopup: false,
+				showUserSelectionPopup: false,
+				showAppList: false,
+				showWelcomePopup: 'defaultShowWelcomePopup' in props ? Boolean(props.defaultShowWelcomePopup) : true
+			},
 			userId: 1,
 			userSettings: this.getDefaultUserSettings(props),
+			usersList: {},
 			connections: {
 				serviceLayer: false
 			},
@@ -74,17 +85,14 @@ class AppContextProvider extends Component {
 				orientation: 0
 			},
 			navigation: {
-				destination: [
-					{
-						lat: 0,
-						lon: 0
-					}
-				],
+				autonomous: true,
+				description: '',
+				destination: null,
 				distance: 0,
 				duration: 0,
 				eta: 0,
-				startTime: 0,
-				navigating: false
+				navigating: false,
+				startTime: 0
 			},
 			weather: {}
 		};
@@ -92,9 +100,15 @@ class AppContextProvider extends Component {
 
 	componentWillMount () {
 		const usersList = this.getUserNames();
+
+		this.updateAppState((state) => {
+			state.usersList = usersList;
+		});
 		// If there are no users in the list when we load for the first time, stamp some out and prepare the system.
 		if (Object.keys(usersList).length <= 0) {
 			this.resetAll();
+		} else {
+			this.updateUserSettings(['arrangements', 'arrangeable'], false);
 		}
 
 		this.setUserSettings(this.state.userId);
@@ -161,6 +175,16 @@ class AppContextProvider extends Component {
 
 	deleteUserSettings = (userId) => {
 		window.localStorage.removeItem(`user${userId}`);
+	}
+
+	updateUserSettings = (key, value) => {
+		this.getAllSavedUserIds().forEach(userKey => {
+			const settings = this.loadUserSettings(userKey);
+
+			if (path(key, settings) !== value) {
+				this.saveUserSettings(userKey, assocPath(key, value, settings));
+			}
+		});
 	}
 
 	setUserSettings = (userId = this.state.userId, userSettings) => {
