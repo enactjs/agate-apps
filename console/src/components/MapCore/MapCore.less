@@ -18,10 +18,25 @@
 
 	.tools {
 		position: absolute;
-		top: 0;
-		right: 0;
+		.position(0, 0, 0, auto);
 		z-index: 10;
-		padding-top: 0.5em;
+		padding: @agate-app-keepout;
+		width: 384px;
+
+		.button {
+			margin: 9px 0;
+			display: block;
+		}
+	}
+}
+
+// We don't want the empty tools column area to be an invisible unclickable space
+// This selector is here instead of above due to a precedence race-condition
+.tools {
+	pointer-events: none;
+
+	> * {
+		pointer-events: auto;
 	}
 }
 
