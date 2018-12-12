@@ -8,7 +8,7 @@
     "@enact/core": "^2.2.8",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
-    "query-string": "^6.1.0",
+    "query-string": "^6.2.0",
     "socket.io-client": "^2.1.1",
     "webrtc-ips": "^0.1.3"
   }
