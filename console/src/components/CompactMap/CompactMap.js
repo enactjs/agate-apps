@@ -28,13 +28,8 @@ const CompactMapBase = kind({
 					autonomousSelection
 					follow={follow}
 				>
-<<<<<<< HEAD
-					<tools>
-						<Button alt="Fullscreen" icon="expand" data-tabindex={getPanelIndexOf('map')} onSelect={onSelect} onKeyUp={onTabChange} onClick={onTabChange} />
-=======
 					{/* <tools>
 						<Button alt="Fullscreen" icon="fullscreen" data-tabindex={getPanelIndexOf('map')} onSelect={onSelect} onKeyUp={onTabChange} onClick={onTabChange} />
->>>>>>> master
 						<Button alt="Propose new destination" icon="arrowhookleft" onClick={changePosition} />
 						<Button alt="Navigate Here" icon="play" onClick={onSetDestination} />
 					</tools>*/}
