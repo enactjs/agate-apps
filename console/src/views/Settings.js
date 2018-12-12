@@ -59,14 +59,14 @@ const Settings = kind({
 							icon="display"
 							noToggle
 							data-tabindex={getPanelIndexOf('settings/display')}
-							onTap={onSelect}
+							onClick={onSelect}
 						>
 							Display
 						</SwitchItemCell>
 						<SwitchItemCell
 							icon="datetime"
 							noToggle
-							onTap={onToggleDateTimePopup}
+							onClick={onToggleDateTimePopup}
 						>
 							Date & Time
 						</SwitchItemCell>

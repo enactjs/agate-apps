@@ -185,9 +185,9 @@ const AppBase = kind({
 								<Clock />
 							</Cell>
 							<Cell shrink>
-								<Button type="grid" icon="user" small onTap={onToggleUserSelectionPopup} />
-								<Button type="grid" icon="series" small onTap={updateSkin} />
-								<ToggleButtonBase selected={layoutArrangeable} underline type="grid" toggleOnLabel="Finish" toggleOffLabel="Edit" small onTap={layoutArrangeableToggle} />
+								<Button type="grid" icon="user" small onClick={onToggleUserSelectionPopup} />
+								<Button type="grid" icon="series" small onClick={updateSkin} />
+								<ToggleButtonBase selected={layoutArrangeable} underline type="grid" toggleOnLabel="Finish" toggleOffLabel="Edit" small onClick={layoutArrangeableToggle} />
 							</Cell>
 						</Column>
 					</afterTabs>
@@ -220,7 +220,7 @@ const AppBase = kind({
 						<right>blue right content</right>
 						<bottom>
 							purple bottom content
-							<Button type="grid" icon="fullscreen" small onTap={updateSkin} />
+							<Button type="grid" icon="fullscreen" small onClick={updateSkin} />
 						</bottom>
 					</CustomLayout>
 					<Dashboard
