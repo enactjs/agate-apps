@@ -5,7 +5,7 @@
     "extends": "enact/strict"
   },
   "dependencies": {
-    "@enact/core": "^2.1.1",
+    "@enact/core": "^2.2.8",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",
     "query-string": "^6.1.0",
