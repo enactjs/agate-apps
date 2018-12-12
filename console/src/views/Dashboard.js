@@ -41,7 +41,7 @@ const DashboardBase = kind({
 	},
 
 	computed: {
-		speed: ({linearVelocity}) => (linearVelocity * 2.237) // meters per second to miles per hour. Multiply by the constant: 2.237
+		speed: ({linearVelocity}) => Math.round(linearVelocity * 2.237) // meters per second to miles per hour. Multiply by the constant: 2.237
 	},
 
 	render: ({arrangeable, arrangement, onArrange, speed, ...rest}) => {
