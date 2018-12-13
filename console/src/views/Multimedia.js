@@ -1,21 +1,21 @@
+import Button from '@enact/agate/Button';
+import {Cell, Column, Row} from '@enact/ui/Layout';
 import Divider from '@enact/agate/Divider';
-import {Panel} from '@enact/agate/Panels';
 import GridListImageItem from '@enact/agate/GridListImageItem';
-import ThumbnailItem from '@enact/agate/ThumbnailItem';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import kind from '@enact/core/kind';
-import {Cell, Column, Row} from '@enact/ui/Layout';
-import ri from '@enact/ui/resolution';
-import {VirtualGridList, VirtualList} from '@enact/ui/VirtualList';
+import {Panel} from '@enact/agate/Panels';
 import PropTypes from 'prop-types';
 import React from 'react';
+import ri from '@enact/ui/resolution';
+import ThumbnailItem from '@enact/agate/ThumbnailItem';
+import {VirtualGridList, VirtualList} from '@enact/ui/VirtualList';
 
 import appConfig from '../App/configLoader';
 import Communicator from '../../../components/Communicator';
 import ScreenSelectionPopup from '../../../components/ScreenSelectionPopup';
 
-import IconButton from '../components/IconButton';
 import CustomLayout from '../components/CustomLayout';
 
 import youtubeVideos from '../data/youtubeapi.json';
@@ -41,7 +41,7 @@ const ListItemOverlay = kind({
 
 	render: () => (
 		<Column align="center center">
-			<IconButton icon="play" size="smallest" />
+			<Button icon="play" size="tiny" type="sized" />
 		</Column>
 	)
 });

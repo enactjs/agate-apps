@@ -1,10 +1,9 @@
+import Button from '@enact/agate/Button';
 import Divider from '@enact/agate/Divider';
 import {adaptEvent, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
-
-import IconButton from '../IconButton';
 
 import css from './CompactHeader.less';
 
@@ -37,12 +36,13 @@ const CompactHeader = kind({
 		<Divider {...rest}>
 			{children && <span className={css.title}>{children}</span>}
 			{!noExpandButton ? (
-				<IconButton
-					className={css.btn}
-					size="smallest"
+				<Button
 					alt="Fullscreen"
+					className={css.btn}
 					icon="expand"
 					onClick={onExpand}
+					size="tiny"
+					type="sized"
 				/>
 			) : null}
 		</Divider>

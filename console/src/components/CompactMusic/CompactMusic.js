@@ -1,9 +1,9 @@
+import Button from '@enact/agate/Button';
 import GridListImageItem from '@enact/agate/GridListImageItem';
 import kind from '@enact/core/kind';
 import Layout from '@enact/ui/Layout';
 import React from 'react';
 
-import IconButton from '../IconButton';
 import Widget from '../Widget';
 
 import css from './CompactMusic.less';
@@ -23,9 +23,9 @@ const PlaybackControls = kind({
 				orientation="horizontal"
 				align="center center"
 			>
-				<IconButton icon="skipbackward" size="smallest" />
-				<IconButton icon="play" size="small" />
-				<IconButton icon="skipforward" size="smallest" />
+				<Button icon="skipbackward" size="tiny" type="sized" />
+				<Button icon="play" size="small" type="sized" />
+				<Button icon="skipforward" size="tiny" type="sized" />
 			</Layout>
 		);
 	}
