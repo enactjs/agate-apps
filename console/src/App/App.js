@@ -28,7 +28,7 @@ import MapView from '../views/Map';
 import Phone from '../views/Phone';
 import Radio from '../views/Radio';
 import Settings from '../views/Settings';
-import DisplaySettings from '../views/DisplaySettings';
+import ThemeSettings from '../views/ThemeSettings';
 import Weather from '../views/WeatherPanel';
 import Dashboard from '../views/Dashboard';
 import Multimedia from '../views/Multimedia';
@@ -53,7 +53,7 @@ const panelIndexMap = [
 	'applist',
 	'map',
 	'settings',
-	'settings/display',
+	'theme',
 	'weather',
 	'layoutsample',
 	'dashboard',
@@ -201,7 +201,7 @@ const AppBase = kind({
 						onSelect={onSelect}
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
-					<DisplaySettings onSelect={onSelect} />
+					<ThemeSettings onSelect={onSelect} />
 					<Weather />
 					{/* arrangement={{right: 'left', left: 'bottom'}}  defaultArrangement={{right: 'left', left: 'right'}} */}
 					<CustomLayout onArrange={console.log}>

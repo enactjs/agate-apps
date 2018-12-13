@@ -63,8 +63,8 @@ const SliderButtonItem = kind({
 
 
 
-const DisplaySettings = kind({
-	name: 'DisplaySettings',
+const ThemeSettings = kind({
+	name: 'ThemeSettings',
 
 	styles: {
 		css: componentCss,
@@ -95,7 +95,7 @@ const DisplaySettings = kind({
 							shrink
 							spacing="medium"
 						>
-								Display Settings
+								Theme
 						</Cell>
 						<Cell shrink className={css.spacedItem}>
 							<FormRow align="start space-around" alignLabel="center">
@@ -150,4 +150,4 @@ const SkinSetting = AppContextConnect(({userSettings, updateAppState}) => ({
 }))(SliderButtonItem);
 
 
-export default DisplaySettings;
+export default ThemeSettings;
