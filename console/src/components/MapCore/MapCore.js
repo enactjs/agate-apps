@@ -1,9 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import mapboxgl from 'mapbox-gl';
+import Button from '@enact/agate/Button';
 import classnames from 'classnames';
 import {equals} from 'ramda';
 import {Job} from '@enact/core/util';
+import mapboxgl from 'mapbox-gl';
+import PropTypes from 'prop-types';
+import React from 'react';
 import Slottable from '@enact/ui/Slottable';
 import ri from '@enact/ui/resolution';
 
@@ -175,6 +176,7 @@ class MapCoreBase extends React.Component {
 		centeringDuration: PropTypes.number,
 		// colorMarker: PropTypes.string,
 		colorRouteLine: PropTypes.string,
+		controlScheme: PropTypes.oneOf(['compact', 'full']), // 'compact' or 'full' (default is full)
 		defaultFollow: PropTypes.bool, // Should the centering position follow the current location?
 		destination: propTypeLatLonList,
 		location: propTypeLatLon, // Our actual current location on the world
@@ -182,20 +184,26 @@ class MapCoreBase extends React.Component {
 		skin: PropTypes.string,
 		tools: PropTypes.node, // Buttons and tools for interacting with the map. (Slottable)
 		viewLockoutDuration: PropTypes.number,
+		zoomLevel: PropTypes.number, // Sets the starting zoom level for the map
 		zoomToSpeedScaleFactor: PropTypes.number
 	}
 
 	static defaultProps = {
 		centeringDuration: 2000,
+		controlScheme: 'full',
 		viewLockoutDuration: 4000,
 		// colorMarker: '#445566',
 		colorRouteLine: '#445566',
+		zoomLevel: 12,
 		zoomToSpeedScaleFactor: 0.02
 	}
 
 	constructor (props) {
 		super(props);
 		this.localinfo = {};  // A copy of queried data for quick comparisons
+
+		// When this changes, we don't need to force a render, so we'll just save it on the instance.
+		this.zoomLevel = props.zoomLevel;
 
 		this.state = {
 			carShowing: true,
@@ -233,7 +241,7 @@ class MapCoreBase extends React.Component {
 			attributionControlboolean: false,
 			style,
 			center: toMapbox(startCoordinates),
-			zoom: 12
+			zoom: this.zoomLevel
 		});
 
 		this.map.addControl(new mapboxgl.GeolocateControl({
@@ -404,14 +412,28 @@ class MapCoreBase extends React.Component {
 	}
 
 	velocityZoom = (linearVelocity) => {
+		const zoom = this.state.follow ? this.calculateZoomLevel(linearVelocity) : this.zoomLevel;
+		console.log('zoomTo:', zoom);
+		this.zoomMap(zoom);
+	}
+
+	zoomMap = (zoomLevel) => {
+		zoomLevel = Math.min(20, Math.max(0, zoomLevel));
+		this.zoomLevel = zoomLevel;
 		if (!this.viewLockTimer) {
-			const zoom = this.state.follow ? this.calculateZoomLevel(linearVelocity) : 15;
-			console.log('zoomTo:', zoom);
-			this.map.zoomTo(zoom);
+			this.map.zoomTo(zoomLevel);
 		}
 	}
 
-	centerMap = ({center, instant = false}) => {
+	zoomIn = () => {
+		this.zoomMap(this.zoomLevel + 1);
+	}
+
+	zoomOut = () => {
+		this.zoomMap(this.zoomLevel - 1);
+	}
+
+	centerMap = ({center = this.props.location, instant = false}) => {
 		// Never center the map if we're currently in view-lock
 		if (!this.viewLockTimer) {
 			center = (center instanceof Array) ? center : toMapbox(center);
@@ -478,6 +500,8 @@ class MapCoreBase extends React.Component {
 		const bounds = getBoundsOfAll(waypoints);
 
 		this.map.fitBounds(bounds, {padding: getMapPadding()});
+		// FitBounds adjusts the zoom level. Let's grab and store that and use it for when we adjust it manually.
+		this.zoomLevel = this.map.getZoom();
 
 		// Set a time to automatically pan back to the current position.
 		if (this.viewLockTimer) this.viewLockTimer.stop();
@@ -578,7 +602,7 @@ class MapCoreBase extends React.Component {
 			});
 
 		} else {
-			// wtf was in the data object anyway??
+			// what was in the data object anyway??
 			console.log('No routes in response:', data, waypoints);
 		}
 	}
@@ -611,7 +635,7 @@ class MapCoreBase extends React.Component {
 	// <ToggleButton alt="Follow" selected={this.state.follow} underline icon="forward" onClick={this.changeFollow} />
 
 	render () {
-		const {className, tools, ...rest} = this.props;
+		const {className, controlScheme, tools, ...rest} = this.props;
 		delete rest.centeringDuration;
 		// delete rest.colorMarker;
 		delete rest.colorRouteLine;
@@ -624,12 +648,21 @@ class MapCoreBase extends React.Component {
 		delete rest.updateDestination;
 		delete rest.updateNavigation;
 		delete rest.viewLockoutDuration;
+		delete rest.zoomLevel;
 		delete rest.zoomToSpeedScaleFactor;
 
 		return (
 			<div {...rest} className={classnames(className, css.map)}>
 				{this.message ? <div className={css.message}>{this.message}</div> : null}
 				<nav className={css.tools}>
+					{/* The following buttons hide if there are any other `tools` specified, which
+						we need to do until we have a plan for how/where these buttons should be if
+						additional tools/buttons/components are provided. */}
+					{tools || controlScheme === 'compact' ? null : <div className={css.zoomControls}>
+						<Button alt="Zoom in" icon="plus" onClick={this.zoomIn} />
+						<Button alt="Zoom out" icon="minus" onClick={this.zoomOut} />
+						{/* <Button alt="Recenter map" icon="circle" onClick={this.centerMap} /> */}
+					</div>}
 					{tools}
 				</nav>
 				<div

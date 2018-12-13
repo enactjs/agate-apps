@@ -2,6 +2,7 @@
 //
 
 @import "~@enact/agate/styles/mixins.less";
+@import "~@enact/agate/styles/skin.less";
 
 .home {
 	height: 100%;
@@ -10,3 +11,54 @@
 		height: 100%;
 	}
 }
+
+.applySkins({
+	.drawer {
+		padding-top: 40px;
+ 		.header,
+		.footer {
+			text-transform: uppercase;
+		}
+ 		.header {
+			.title {
+				margin-left: (4 * @agate-divider-spacing);
+				width: 104px;
+				font-size: 24px;
+				line-height: 1.42;
+				letter-spacing: 12px;
+				color: @agate-accent;
+			}
+		}
+	}
+ 	.small1,
+	.small2,
+	.medium,
+	.large {
+		margin: 6px;
+ 		&[draggable='true'] {
+			&::after {
+				// This refers to theme colors, so we'll get them updated soon after the theme is ready
+				background-color: fade(#a47d66, 20%);
+				border-color: #a47d66;
+				border-width: 2px;
+			}
+		}
+	}
+ 	.horizontalDivider {
+		&::before {
+			content: "";
+			position: absolute;
+			// This refers to theme colors, so we'll get them updated soon after the theme is ready
+			background-image: linear-gradient(0.25turn, rgba(0,0,0,0), #a47d66, rgba(0,0,0,0));
+			left: 0;
+			right: 0;
+			height: 1px;
+		}
+	}
+ 	.verticalDivider {
+		// This refers to theme colors, so we'll get them updated soon after the theme is ready
+		background-image: linear-gradient(rgba(0,0,0,0), #a47d66, rgba(0,0,0,0));
+		height: 100%;
+		width: 1px;
+	}
+});

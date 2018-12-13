@@ -38,11 +38,11 @@ const ResponsiveTuner = ResponsiveBox(({containerShape, children, onUp, onDown, 
 	return (
 		<Layout align="center center" orientation={orientation} {...rest}>
 			{/* {(console.log({rest: rest}) ? 'test' : null)}*/}
-			<Cell shrink component={Button} onTap={onUp} icon={vertical ? 'arrowsmallup' : 'arrowsmallleft'} />
+			<Cell shrink component={Button} onClick={onUp} icon={vertical ? 'arrowsmallup' : 'arrowsmallleft'} />
 			<Cell shrink className={css.label}>
 				{children}
 			</Cell>
-			<Cell shrink component={Button} onTap={onDown} icon={vertical ? 'arrowsmalldown' : 'arrowsmallright'} />
+			<Cell shrink component={Button} onClick={onDown} icon={vertical ? 'arrowsmalldown' : 'arrowsmallright'} />
 		</Layout>
 	);
 });

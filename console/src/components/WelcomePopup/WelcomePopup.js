@@ -18,12 +18,12 @@ import CompactMultimedia from '../CompactMultimedia';
 import CompactWeather from '../CompactWeather';
 import MapController from '../MapController';
 
-import steveAvatar from '../../../assets/steve.png';
+import lauraAvatar from '../../../assets/laura.png';
 import thomasAvatar from '../../../assets/thomas.png';
 
 import css from './WelcomePopup.less';
 
-const userAvatars = [steveAvatar, thomasAvatar];
+const userAvatars = [lauraAvatar, thomasAvatar];
 
 const getCompactComponent = ({components, key, onSendVideo}) => {
 	let Component;
@@ -210,7 +210,7 @@ const WelcomePopupBase = kind({
 									<Cell className={css.smallComponent}>
 										{Small2Component}
 									</Cell>
-									<Cell component={Button} onClick={handleClose} shrink>Continue</Cell>
+									<Cell component={Button} onClick={handleClose} shrink>{"Let's Go!"}</Cell>
 								</Column>
 							</Cell>
 							<Cell>
@@ -259,6 +259,14 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 			this.setState({index: 0});
 		}
 
+		handleContinue = () => {
+			this.props.updateAppState((state) => {
+				if (state.navigation.autonomous) {
+					state.navigation.navigating = true;
+				}
+			});
+		}
+
 		handleShowWelcome = () => {
 			this.setState(({index}) => index === 1 ? {index: ++index} : null);
 		}
@@ -284,6 +292,7 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 					index={index}
 					onSelectUser={this.handleSelectUser}
 					onCancelSelect={this.handleCancelSelect}
+					onContinue={this.handleContinue}
 					onShowWelcome={this.handleShowWelcome}
 					selected={this.state.selected}
 					updateUser={this.updateUser}

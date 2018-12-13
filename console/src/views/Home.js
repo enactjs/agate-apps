@@ -73,9 +73,9 @@ const HomeLayouts = kind({
 		delete rest.arrangement;
 
 		const widgetTray = (
-			<Drawer open={arrangeable} scrimType="none">
-				<header>
-					<Cell component={Divider} shrink>Additional Widgets</Cell>
+			<Drawer className={css.drawer} open={arrangeable} scrimType="none">
+				<header className={css.header}>
+					<Cell className={css.title} component={Divider} shrink>Additional Widgets</Cell>
 				</header>
 				<WidgetTray>
 					{allSlotNames.filter(name => name.indexOf('tray') === 0).map(name => {
@@ -92,8 +92,10 @@ const HomeLayouts = kind({
 						});
 					})}
 				</WidgetTray>
-				<footer>
-					<Button small onTap={layoutArrangeableEnd}>Finish</Button>
+				<footer className={css.footer}>
+					<Row>
+						<Cell component={Button} onTap={layoutArrangeableEnd}>Done</Cell>
+					</Row>
 				</footer>
 			</Drawer>
 		);
@@ -119,9 +121,10 @@ const HomeLayouts = kind({
 									<DraggableCell className={css.medium} containerShape={{edges: {top: true, right: true}, size: {relative: 'medium'}, orientation: 'landscape'}} name="medium">{medium}</DraggableCell>
 								</Row>
 							</Cell>
-							<Cell size="50%">
+							<Cell className={css.horizontalDivider} size="50%">
 								<Row className={css.row}>
 									<DraggableCell className={css.small1} containerShape={{edges: {bottom: true}, size: {relative: 'small'}}} name="small1">{small1}</DraggableCell>
+									<Cell className={css.verticalDivider} shrink />
 									<DraggableCell className={css.small2} containerShape={{edges: {bottom: true, right: true}, size: {relative: 'small'}}} name="small2">{small2}</DraggableCell>
 								</Row>
 							</Cell>
@@ -140,10 +143,11 @@ const HomeLayouts = kind({
 							<Cell size="50%">
 								<Row className={css.row}>
 									<DraggableCell className={css.small1} containerShape={{edges: {top: true, left: true}, size: {relative: 'small'}}} name="small1">{small1}</DraggableCell>
+									<Cell className={css.verticalDivider} shrink />
 									<DraggableCell className={css.small2} containerShape={{edges: {top: true}, size: {relative: 'small'}}} name="small2">{small2}</DraggableCell>
 								</Row>
 							</Cell>
-							<Cell size="50%">
+							<Cell className={css.horizontalDivider} size="50%">
 								<Row className={css.row}>
 									<DraggableCell className={css.medium} containerShape={{edges: {bottom: true, left: true}, size: {relative: 'medium'}, orientation: 'landscape'}} name="medium">{medium}</DraggableCell>
 								</Row>
@@ -201,13 +205,13 @@ const Home = kind({
 	render: ({arrangeable, onCompactExpand, onSendVideo, ...rest}) => (
 		<Panel {...rest}>
 			<HomeLayout arrangeable={arrangeable}>
-				<tray1><CompactAppList onExpand={onCompactExpand} /></tray1>
-				<tray2><CompactHvac onExpand={onCompactExpand} /></tray2>
+				<tray1><CompactAppList icon="list" onExpand={onCompactExpand} /></tray1>
+				<tray2><CompactHvac icon="temperature" onExpand={onCompactExpand} /></tray2>
 
-				<small1><CompactWeather onExpand={onCompactExpand} /></small1>
-				<small2><CompactMusic onExpand={onCompactExpand} /></small2>
-				<medium><CompactMultimedia onExpand={onCompactExpand} onSendVideo={onSendVideo} /></medium>
-				<large><CompactMap onExpand={onCompactExpand} /></large>
+				<small1><CompactWeather icon="climate" onExpand={onCompactExpand} /></small1>
+				<small2><CompactMusic icon="audio" onExpand={onCompactExpand} /></small2>
+				<medium><CompactMultimedia icon="resumeplay" onExpand={onCompactExpand} onSendVideo={onSendVideo} /></medium>
+				<large><CompactMap icon="compass" onExpand={onCompactExpand} /></large>
 			</HomeLayout>
 		</Panel>
 	)

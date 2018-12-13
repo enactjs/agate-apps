@@ -32,9 +32,9 @@
 	],
 	"dependencies": {
 		"@enact/agate": "github:enactjs/agate#master",
-		"@enact/core": "^2.1.1",
-		"@enact/i18n": "^2.1.1",
-		"@enact/ui": "^2.1.1",
+		"@enact/core": "^2.2.8",
+		"@enact/i18n": "^2.2.8",
+		"@enact/ui": "^2.2.8",
 		"prop-types": "^15.6.2",
 		"query-string": "^6.2.0",
 		"react": "^16.6.3",
