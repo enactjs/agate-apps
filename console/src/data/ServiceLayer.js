@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 // Data Services
 import {propTypeLatLon, propTypeLatLonList} from './proptypes';
 import connect from './connector';
-import {getLatLongFromSim, radiansToDegrees} from './conversion';
+import {getLatLongFromSim, radiansToDegrees, distanceApart} from './conversion';
 import appConfig from '../App/configLoader';
 import Communicator from '../../../components/Communicator';
 
