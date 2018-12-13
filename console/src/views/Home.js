@@ -1,6 +1,5 @@
 import {Panel} from '@enact/agate/Panels';
 import kind from '@enact/core/kind';
-import ComponentOverride from '@enact/ui/ComponentOverride';
 import Repeater from '@enact/ui/Repeater';
 import {Row, Column, Cell} from '@enact/ui/Layout';
 import React from 'react';
@@ -80,20 +79,23 @@ const HomeLayouts = kind({
 					<Cell className={css.title} component={Divider} shrink>Edit Apps</Cell>
 				</header>
 				<WidgetTray>
-					{allSlotNames.filter(name => props[name]).map(name => {
-						const Component = props[name];
-						const disabled = name.indexOf('tray') !== 0;
+					{allSlotNames.filter(name => name.indexOf('tray') === 0).map(name => {
+						// generate a list of objects, which will relate to slots being created,
+						// that are defined in the `allSlotNames` array. This only creates empty
+						// slots. It's the duty of the `Home` kind to populate these with content.
+						// These slots are part of the HomeLayout collection of slots
+						const slotContent = rest[name];
+						delete rest[name];
 						return ({
-							draggable: !disabled,
 							key: name,
 							name,
-							children: <ComponentOverride component={Component} disabled={disabled} />
+							children: slotContent
 						});
 					})}
 				</WidgetTray>
 				<footer className={css.footer}>
 					<Row>
-						<Cell className={css} component={Button} onTap={layoutArrangeableEnd} small>Done</Cell>
+						<Cell component={Button} onTap={layoutArrangeableEnd}>Done</Cell>
 					</Row>
 				</footer>
 			</Drawer>
@@ -120,9 +122,10 @@ const HomeLayouts = kind({
 									<DraggableCell className={css.medium} containerShape={{edges: {top: true, right: true}, size: {relative: 'medium'}, orientation: 'landscape'}} name="medium">{medium}</DraggableCell>
 								</Row>
 							</Cell>
-							<Cell size="50%">
+							<Cell className={css.horizontalDivider} size="50%">
 								<Row className={css.row}>
 									<DraggableCell className={css.small1} containerShape={{edges: {bottom: true}, size: {relative: 'small'}}} name="small1">{small1}</DraggableCell>
+									<Cell className={css.verticalDivider} shrink />
 									<DraggableCell className={css.small2} containerShape={{edges: {bottom: true, right: true}, size: {relative: 'small'}}} name="small2">{small2}</DraggableCell>
 								</Row>
 							</Cell>
@@ -141,10 +144,11 @@ const HomeLayouts = kind({
 							<Cell size="50%">
 								<Row className={css.row}>
 									<DraggableCell className={css.small1} containerShape={{edges: {top: true, left: true}, size: {relative: 'small'}}} name="small1">{small1}</DraggableCell>
+									<Cell className={css.verticalDivider} shrink />
 									<DraggableCell className={css.small2} containerShape={{edges: {top: true}, size: {relative: 'small'}}} name="small2">{small2}</DraggableCell>
 								</Row>
 							</Cell>
-							<Cell size="50%">
+							<Cell className={css.horizontalDivider} size="50%">
 								<Row className={css.row}>
 									<DraggableCell className={css.medium} containerShape={{edges: {bottom: true, left: true}, size: {relative: 'medium'}, orientation: 'landscape'}} name="medium">{medium}</DraggableCell>
 								</Row>

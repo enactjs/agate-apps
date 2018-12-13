@@ -17,7 +17,6 @@ const WidgetBase = kind({
 	propTypes: {
 		containerShape: PropTypes.object,
 		description: PropTypes.string,
-		disabled: PropTypes.bool,
 		full: PropTypes.node,
 		icon: PropTypes.string,
 		large: PropTypes.node,
@@ -55,8 +54,7 @@ const WidgetBase = kind({
 		}
 	},
 
-	render: (props) => {
-		const {children, containerShape, disabled, icon, onExpand, noHeader, title, view, ...rest} = props;
+	render: ({children, containerShape, icon, onExpand, noHeader, title, view, ...rest}) => {
 		delete rest.containerShape;
 		delete rest.description;
 		delete rest.full;
@@ -68,7 +66,7 @@ const WidgetBase = kind({
 		switch (relativeSize) {
 			case 'list': return (
 				<Row align="center">
-					<Cell component={LabeledIconButton} css={css} disabled={disabled} icon={icon} shrink />
+					<Cell component={LabeledIconButton} css={css} icon={icon} shrink />
 					<Cell>{title}</Cell>
 				</Row>
 			);
