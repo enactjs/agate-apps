@@ -170,7 +170,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 									<ToggleButton
 										className={css.button}
 										small
-										selected={destination && navigating || !navigation.autonomous}
+										selected={destination && navigating}
 										onToggle={this.startNavigation}
 										toggleOnLabel="Stop Navigation"
 										toggleOffLabel="Start Navigation"
