@@ -286,9 +286,11 @@ const AppIndex = (Wrapped) => {
 		).bind(this);
 
 		render () {
+			const {...rest} = this.props;
+			delete rest.defaultIndex;
 			return (
 				<Wrapped
-					{...this.props}
+					{...rest}
 					index={this.state.index}
 					onSelect={this.onSelect}
 				/>
