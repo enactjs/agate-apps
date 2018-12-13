@@ -24,6 +24,7 @@ const CompactMapBase = kind({
 		return (
 			<Widget {...rest} title="Map" description="Choose a destination and navigate" noHeader>
 				<MapController
+					controlScheme="compact"
 					compact
 					autonomousSelection
 					follow={follow}
