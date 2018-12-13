@@ -18,12 +18,12 @@ import CompactMultimedia from '../CompactMultimedia';
 import CompactWeather from '../CompactWeather';
 import MapController from '../MapController';
 
-import steveAvatar from '../../../assets/steve.png';
+import lauraAvatar from '../../../assets/laura.png';
 import thomasAvatar from '../../../assets/thomas.png';
 
 import css from './WelcomePopup.less';
 
-const userAvatars = [steveAvatar, thomasAvatar];
+const userAvatars = [lauraAvatar, thomasAvatar];
 
 const getCompactComponent = ({components, key, onSendVideo}) => {
 	let Component;
