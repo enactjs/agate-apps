@@ -161,7 +161,7 @@ const AppBase = kind({
 		delete rest.accent;
 		delete rest.endNavigation;
 		delete rest.highlight;
-		delete rest.showAppList
+		delete rest.showAppList;
 		delete rest.updateAppState;
 
 		return (
