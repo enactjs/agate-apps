@@ -179,11 +179,14 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 				this.isFirstPosition = false;
 			}
 
-			if (this.maps.size > 0) {
+			// If the location is more than 0.5 meters apart, go ahead and update the location.
+			if (this.maps.size > 0 && distanceApart(this.props.location, location) > 0.5) {
 				for (let map of this.maps) {
-					if (map.updateCarLayer && map.centerMap) {
-						map.updateCarLayer({location: location});
-						map.centerMap({center: location});
+					if (map.actionManager) {
+						map.actionManager({
+							positionCar: location,
+							center: location
+						});
 					}
 				}
 			}
@@ -264,8 +267,9 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 		setLocation = ({location}) => {
 			this.props.updateAppState((state) => {
-				// console.log('Setting location app state:', location);
-				state.location = location;
+				if (distanceApart(state.location, location) > 0) {
+					state.location = location;
+				}
 			});
 		}
 

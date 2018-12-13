@@ -23,8 +23,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 
 		static propTypes = {
 			topLocations: PropTypes.array.isRequired,
-			updateDestination: PropTypes.func.isRequired,
-			updateNavigation: PropTypes.func.isRequired,
+			updateAppState: PropTypes.func.isRequired,
 			autonomousSelection: PropTypes.bool,
 			centeringDuration: PropTypes.number,
 			compact: PropTypes.bool,
@@ -36,7 +35,6 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 			navigation: PropTypes.object,
 			noStartStopToggle: PropTypes.bool,
 			position: propTypeLatLon, // The map's centering position
-			toggleAutonomous: PropTypes.func,
 			tools: PropTypes.node, // Buttons and tools for interacting with the map. (Slottable)
 			viewLockoutDuration: PropTypes.number,
 			zoomToSpeedScaleFactor: PropTypes.number
@@ -61,7 +59,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 		handleSetDestination = ({selected}) => {
 			console.log('Proposing new destination index:', selected, '->', this.props.topLocations[selected]);
 			const loc = this.props.topLocations[selected];
-			this.props.updateDestination({
+			this.updateDestination({
 				description: loc ? loc.description : '',
 				destination: loc ? [loc.coordinates] : null
 			});
@@ -70,16 +68,44 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 		startNavigation = ({selected}) => {
 			if (selected) {
 				console.log('MapController - start navigation to', this.props.topLocations, this.props.topLocations[this.state.destinationIndex], 'from index:', this.state.destinationIndex);
-				this.props.updateDestination({
+				this.updateDestination({
 					navigating: true
 				});
 			} else {
 				console.log('MapController - stopping navigation');
-				this.props.updateDestination({
+				this.updateDestination({
 					destination: null,
 					navigating: false
 				});
 			}
+		}
+
+		toggleAutonomous = () => {
+			this.props.updateAppState((state) => {
+				state.navigation.autonomous = !state.navigation.autonomous;
+			});
+		}
+		updateDestination = ({description, destination, navigating = false}) => {
+			this.props.updateAppState((state) => {
+				if (typeof destination !== 'undefined') {
+					state.navigation.description = description;
+					state.navigation.destination = destination;
+				}
+				if (navigating != null) {
+					state.navigation.navigating = navigating;
+				}
+			});
+		}
+		updateNavigation = ({duration, distance}) => {
+			this.props.updateAppState((state) => {
+				const startTime = new Date().getTime();
+				const eta = new Date(startTime + (duration * 1000)).getTime();
+
+				state.navigation.duration = duration;
+				state.navigation.startTime = startTime;
+				state.navigation.eta = eta;
+				state.navigation.distance = distance;
+			});
 		}
 
 		render () {
@@ -92,10 +118,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 				navigation,
 				noStartStopToggle,
 				autonomousSelection,
-				toggleAutonomous,
 				topLocations,
-				updateDestination,
-				updateNavigation,
 				...rest
 			} = this.props;
 
@@ -105,6 +128,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 			delete rest.updateProposedDestination;
 			delete rest.viewLockoutDuration;
 			delete rest.zoomToSpeedScaleFactor;
+			delete rest.updateAppState;
 			const durationIncrements = ['day', 'hour', 'min'];
 
 			return (
@@ -113,8 +137,8 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 					// className={classnames(className, css.map)}
 					destination={destination}
 					points={topLocations}
-					updateDestination={updateDestination}
-					updateNavigation={updateNavigation}
+					updateDestination={this.updateDestination}
+					updateNavigation={this.updateNavigation}
 				>
 					<tools>
 						<Column className={css.toolsColumn}>
@@ -125,7 +149,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 									<Row
 										component={Group}
 										childComponent={Button}
-										onSelect={toggleAutonomous}
+										onSelect={this.toggleAutonomous}
 										select="radio"
 										selectedProp="highlighted"
 										selected={navigation.autonomous ? 0 : 1}
@@ -195,33 +219,7 @@ const ConnectedMap = AppContextConnect(({location, userSettings, navigation, upd
 	navigating: navigation.navigating,
 	description: navigation.description,
 	destination: navigation.destination,
-	toggleAutonomous: () => {
-		updateAppState((state) => {
-			state.navigation.autonomous = !state.navigation.autonomous;
-		});
-	},
-	updateDestination: ({description, destination, navigating = false}) => {
-		updateAppState((state) => {
-			if (typeof destination !== 'undefined') {
-				state.navigation.description = description;
-				state.navigation.destination = destination;
-			}
-			if (navigating != null) {
-				state.navigation.navigating = navigating;
-			}
-		});
-	},
-	updateNavigation: ({duration, distance}) => {
-		updateAppState((state) => {
-			const startTime = new Date().getTime();
-			const eta = new Date(startTime + (duration * 1000)).getTime();
-
-			state.navigation.duration = duration;
-			state.navigation.startTime = startTime;
-			state.navigation.eta = eta;
-			state.navigation.distance = distance;
-		});
-	}
+	updateAppState
 }));
 
 const MapController = ConnectedMap(Pure(MapControllerHoc(MapCore)));

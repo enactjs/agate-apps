@@ -135,13 +135,40 @@ const getLatLongFromSim = (easting, northing) => {
 	};
 };
 
-const degreesToRadians = (degrees) => (degrees * (Math.PI / 180))
+const degreesToRadians = (degrees) => (degrees * (Math.PI / 180));
 
-const radiansToDegrees = (radians) => (radians * (180 / Math.PI))
+const radiansToDegrees = (radians) => (radians * (180 / Math.PI));
+
+// Distance apart returns meters
+// Function adapted from source provided at:
+// https://www.movable-type.co.uk/scripts/latlong.html
+// by Chris Veness
+const distanceApart = (loc1, loc2) => {
+	if (!loc1 || !loc2 || loc1.lat == null || loc1.lon == null || loc2.lat == null || loc2.lon == null) return null;
+
+	const metres = 6371e3;
+	const loc1LatRad = degreesToRadians(loc1.lat);
+	const loc2LatRad = degreesToRadians(loc2.lat);
+	const deltaLatRad = degreesToRadians(loc2.lat - loc1.lat);
+	const deltaLonRad = degreesToRadians(loc2.lon - loc2.lon);
+
+	const a = Math.sin(deltaLatRad / 2) * Math.sin(deltaLatRad / 2) +
+		Math.cos(loc1LatRad) * Math.cos(loc2LatRad) *
+		Math.sin(deltaLonRad / 2) * Math.sin(deltaLonRad / 2);
+	const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+	const d = metres * c;
+	return d;
+};
+
+// Range is calculated in meters
+const withinRange = (loc1, loc2, range) => (distanceApart(loc1, loc2) <= range);
 
 export {
 	getSimFromLatLong,
 	getLatLongFromSim,
 	degreesToRadians,
-	radiansToDegrees
+	radiansToDegrees,
+	distanceApart,
+	withinRange
 };
