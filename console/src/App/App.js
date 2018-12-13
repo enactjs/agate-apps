@@ -75,15 +75,6 @@ const AppBase = kind({
 	},
 
 	handlers: {
-		onSelect: handle(
-			adaptEvent((ev, {updateAppState}) => {
-				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
-				updateAppState((state) => {
-					state.appState.index = state.appState.index === index ? null : index;
-				});
-				return {index};
-			}, forward('onSelect'))
-		),
 
 		onToggleUserSelectionPopup: (ev, {updateAppState}) => {
 			updateAppState((state) => {
@@ -275,13 +266,44 @@ const AppBase = kind({
 	}
 });
 
+const AppIndex = (Wrapped) => {
+	return class extends React.Component {
+		static displayName = 'AppIndex'
+
+		constructor (props) {
+			super(props);
+			this.state = {
+				index: props.defaultIndex || 0
+			};
+		}
+
+		onSelect = handle(
+			adaptEvent((ev) => {
+				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
+				this.setState(state => state.index === index ? null : {index});
+				return {index};
+			}, forward('onSelect'))
+		).bind(this);
+
+		render () {
+			const {...rest} = this.props;
+			delete rest.defaultIndex;
+			return (
+				<Wrapped
+					{...rest}
+					index={this.state.index}
+					onSelect={this.onSelect}
+				/>
+			);
+		}
+	};
+};
 
 const AppDecorator = compose(
 	ServiceLayer,
 	AppContextConnect(({appState, userSettings, updateAppState}) => ({
 		accent: userSettings.colorAccent,
 		highlight: userSettings.colorHighlight,
-		index: appState.index,
 		layoutArrangeable: userSettings.arrangements.arrangeable,
 		orientation: (userSettings.skin !== 'carbon') ? 'horizontal' : 'vertical',
 		showAppList: appState.showAppList,
@@ -294,6 +316,7 @@ const AppDecorator = compose(
 		skinName: userSettings.skin,
 		updateAppState
 	})),
+	AppIndex,
 	AgateDecorator
 );
 
