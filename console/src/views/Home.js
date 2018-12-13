@@ -93,7 +93,7 @@ const HomeLayouts = kind({
 					})}
 				</WidgetTray>
 				<footer>
-					<Button small onTap={layoutArrangeableEnd}>Finish</Button>
+					<Button small onClick={layoutArrangeableEnd}>Finish</Button>
 				</footer>
 			</Drawer>
 		);
