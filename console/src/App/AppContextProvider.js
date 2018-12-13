@@ -64,7 +64,6 @@ class AppContextProvider extends Component {
 		this.watchPositionId = null;  // Store the reference to the position watcher.
 		this.state = {
 			appState:{
-				index: props.defaultIndex || 0,
 				showPopup: false,
 				showBasicPopup: false,
 				showDateTimePopup: false,
@@ -99,17 +98,16 @@ class AppContextProvider extends Component {
 	}
 
 	componentWillMount () {
-		const usersList = this.getUserNames();
-
-		this.updateAppState((state) => {
-			state.usersList = usersList;
-		});
 		// If there are no users in the list when we load for the first time, stamp some out and prepare the system.
-		if (Object.keys(usersList).length <= 0) {
+		if (this.getAllSavedUserIds().length <= 0) {
 			this.resetAll();
 		} else {
 			this.updateUserSettings(['arrangements', 'arrangeable'], false);
 		}
+
+		this.updateAppState((state) => {
+			state.usersList = this.getUserNames();
+		});
 
 		this.setUserSettings(this.state.userId);
 		this.setLocation();
