@@ -118,14 +118,17 @@ const AppBase = kind({
 			updateAppState((state) => {
 				let newSkin;
 				switch (state.userSettings.skin) {
-					case 'titanium':
+					case 'copper':
 						newSkin = 'electro';
 						break;
-					case 'carbon':
+					case 'titanium':
+						newSkin = 'carbon';
+						break;
+					case 'electro':
 						newSkin = 'titanium';
 						break;
 					default:
-						newSkin = 'carbon';
+						newSkin = 'copper';
 				}
 				state.userSettings.skin = newSkin;
 			});
