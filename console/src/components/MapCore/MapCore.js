@@ -202,11 +202,13 @@ class MapCoreBase extends React.Component {
 		super(props);
 		this.localinfo = {};  // A copy of queried data for quick comparisons
 
+		// When this changes, we don't need to force a render, so we'll just save it on the instance.
+		this.zoomLevel = props.zoomLevel;
+
 		this.state = {
 			carShowing: true,
 			follow: props.defaultFollow || false,
-			selfDriving: true,
-			zoomLevel: props.zoomLevel
+			selfDriving: true
 		};
 	}
 
@@ -239,7 +241,7 @@ class MapCoreBase extends React.Component {
 			attributionControlboolean: false,
 			style,
 			center: toMapbox(startCoordinates),
-			zoom: this.state.zoomLevel
+			zoom: this.zoomLevel
 		});
 
 		this.map.addControl(new mapboxgl.GeolocateControl({
@@ -410,27 +412,25 @@ class MapCoreBase extends React.Component {
 	}
 
 	velocityZoom = (linearVelocity) => {
-		const zoom = this.state.follow ? this.calculateZoomLevel(linearVelocity) : this.state.zoomLevel;
+		const zoom = this.state.follow ? this.calculateZoomLevel(linearVelocity) : this.zoomLevel;
 		console.log('zoomTo:', zoom);
 		this.zoomMap(zoom);
 	}
 
 	zoomMap = (zoomLevel) => {
 		zoomLevel = Math.min(20, Math.max(0, zoomLevel));
-		this.setState({zoomLevel});
+		this.zoomLevel = zoomLevel;
 		if (!this.viewLockTimer) {
 			this.map.zoomTo(zoomLevel);
 		}
 	}
 
 	zoomIn = () => {
-		const {zoomLevel} = this.state;
-		this.zoomMap(zoomLevel + 1);
+		this.zoomMap(this.zoomLevel + 1);
 	}
 
 	zoomOut = () => {
-		const {zoomLevel} = this.state;
-		this.zoomMap(zoomLevel - 1);
+		this.zoomMap(this.zoomLevel - 1);
 	}
 
 	centerMap = ({center = this.props.location, instant = false}) => {
@@ -500,6 +500,8 @@ class MapCoreBase extends React.Component {
 		const bounds = getBoundsOfAll(waypoints);
 
 		this.map.fitBounds(bounds, {padding: getMapPadding()});
+		// FitBounds adjusts the zoom level. Let's grab and store that and use it for when we adjust it manually.
+		this.zoomLevel = this.map.getZoom();
 
 		// Set a time to automatically pan back to the current position.
 		if (this.viewLockTimer) this.viewLockTimer.stop();
@@ -653,12 +655,14 @@ class MapCoreBase extends React.Component {
 			<div {...rest} className={classnames(className, css.map)}>
 				{this.message ? <div className={css.message}>{this.message}</div> : null}
 				<nav className={css.tools}>
-					{controlScheme === 'compact' ? null :
-					<React.Fragment>
-						<Button alt="Zoom in" icon="plus" onClick={this.zoomIn}/>
-						<Button alt="Zoom out" icon="minus" onClick={this.zoomOut}/>
-						<Button alt="Recenter map" icon="circle" onClick={this.centerMap} />
-					</React.Fragment>}
+					{/* The following buttons hide if there are any other `tools` specified, which
+						we need to do until we have a plan for how/where these buttons should be if
+						additional tools/buttons/components are provided. */}
+					{tools || controlScheme === 'compact' ? null : <div className={css.zoomControls}>
+						<Button alt="Zoom in" icon="plus" onClick={this.zoomIn} />
+						<Button alt="Zoom out" icon="minus" onClick={this.zoomOut} />
+						{/* <Button alt="Recenter map" icon="circle" onClick={this.centerMap} /> */}
+					</div>}
 					{tools}
 				</nav>
 				<div
