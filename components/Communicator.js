@@ -7,9 +7,9 @@ const handleAddVideo = handle(
 	adaptEvent(item => ({url: item.url}), forward('onPlayVideo'))
 );
 
-const handleShowAd = handle(
-	forward('onShowAd')
-);
+// const handleShowAd = handle(
+// 	forward('onShowAd')
+// );
 
 const handleShowETA = handle(
 	forward('onShowETA'),
@@ -27,11 +27,11 @@ class Communicator extends React.Component {
 		host: 'localhost:3000'
 	};
 
-	constructor () {
-		super();
+	constructor (props) {
+		super(props);
 
 		handleAddVideo.bindAs(this, 'handleAddVideo');
-		handleShowAd.bindAs(this, 'handleShowAd');
+		// handleShowAd.bindAs(this, 'handleShowAd');
 		handleShowETA.bindAs(this, 'handleShowETA');
 	}
 
@@ -57,8 +57,9 @@ class Communicator extends React.Component {
 
 		if (screenId != null) {
 			this.socket.on(`VIDEO_ADD_SCREEN/${screenId}`, this.handleAddVideo);
-			this.socket.on('SHOW_AD', this.handleShowAd);
+			// this.socket.on('SHOW_AD', this.handleShowAd);
 			this.socket.on('SHOW_ETA', this.handleShowETA);
+			console.log('Connected to', this.props.host, 'and listening for events:', `VIDEO_ADD_SCREEN/${screenId}`, 'SHOW_ETA');
 		}
 	}
 
@@ -66,6 +67,7 @@ class Communicator extends React.Component {
 		if (this.socket) {
 			if (screenId != null) {
 				this.socket.removeAllListeners(`VIDEO_ADD_SCREEN/${screenId}`);
+				this.socket.removeAllListeners('SHOW_ETA');
 			}
 
 			this.socket.close();
@@ -78,14 +80,15 @@ class Communicator extends React.Component {
 
 	sendVideo = ({screenId, video}) => {
 		const data = {
+			route: `VIDEO_ADD_SCREEN/${screenId}`,
 			type: 'youtube',
 			title: video.snippet.title,
-			url: `https://www.youtube.com/embed/${video.id}?autoplay=1`,
-			route: `VIDEO_ADD_SCREEN/${screenId}`
+			url: `https://www.youtube.com/embed/${video.id}?autoplay=1`
 		};
 
+		console.log('Sending to', this.props.host, ['SEND_DATA:', data, 'Sending VIDEO_SENT:', {id: screenId}]);
 		this.socket.emit('SEND_DATA', data);
-		this.socket.emit('VIDEO_SENT', {id: this.props.screenId});
+		this.socket.emit('VIDEO_SENT', {id: screenId});
 	};
 
 	sendETA = ({eta, duration}) => {
@@ -94,6 +97,7 @@ class Communicator extends React.Component {
 			eta,
 			duration
 		};
+		console.log('sendETA to', this.props.host, ['SEND_DATA:', data]);
 		this.socket.emit('SEND_DATA', data);
 	};
 

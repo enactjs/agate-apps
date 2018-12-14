@@ -1,10 +1,10 @@
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
 import {Cell, Column, Row} from '@enact/ui/Layout';
-import Job from '@enact/core/util/Job';
+// import Job from '@enact/core/util/Job';
 import kind from '@enact/core/kind';
 import LabeledItem from '@enact/agate/LabeledItem';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import React from 'react';
 
 import Communicator from '../../../components/Communicator';
@@ -79,32 +79,32 @@ const AppBase = kind({
 class App extends React.Component {
 
 	static propTypes = {
-		adContent: PropTypes.string,
-		showAd: PropTypes.bool
+		// adContent: PropTypes.string,
+		// showAd: PropTypes.bool
 	}
 
 	constructor (props) {
 		super(props);
 		this.state = {
-			adContent: this.props.adContent || 'Your Ad Here',
+			// adContent: this.props.adContent || 'Your Ad Here',
 			duration: null,
 			eta: null,
 			popupOpen: true,
 			screenId: 1,
-			showAd: this.props.showAd || false,
+			// showAd: this.props.showAd || false,
 			url: ''
 		};
 		// Job to control hiding ads
-		this.adTimer = new Job(this.onHideAdSpace);
+		// this.adTimer = new Job(this.onHideAdSpace);
 	}
 
-	componentWillUnmount () {
-		this.adTimer.stop();
-	}
+	// componentWillUnmount () {
+	// 	this.adTimer.stop();
+	// }
 
-	onHideAdSpace = () => {
-		this.setState({adContent: '', showAd: false});
-	};
+	// onHideAdSpace = () => {
+	// 	this.setState({adContent: '', showAd: false});
+	// };
 
 	onPlayVideo = ({url}) => {
 		this.setState({url});
@@ -120,14 +120,14 @@ class App extends React.Component {
 		this.onTogglePopup();
 	};
 
-	onShowAdSpace = ({adContent, duration}) => {
-		this.setState({adContent, showAd: true});
-		this.adTimer.startAfter(duration);
-	};
+	// onShowAdSpace = ({adContent, duration}) => {
+	// 	this.setState({adContent, showAd: true});
+	// 	this.adTimer.startAfter(duration);
+	// };
 
 	onShowETA = ({eta, duration}) => {
 		this.setState({eta, duration});
-		this.adTimer.startAfter(duration);
+		// this.adTimer.startAfter(duration);
 	};
 
 	onTogglePopup = () => {
@@ -137,10 +137,10 @@ class App extends React.Component {
 	};
 
 	render () {
-		const {adContent, duration, eta, popupOpen, showAd, url} = this.state;
+		const {duration, eta, popupOpen, showAd, url} = this.state;
 		const props = {
 			...this.props,
-			adContent,
+			// adContent,
 			duration,
 			eta,
 			popupOpen,
@@ -156,7 +156,7 @@ class App extends React.Component {
 					host={appConfig.communicationServerHost}
 					screenId={this.state.screenId}
 					onPlayVideo={this.onPlayVideo}
-					onShowAd={this.onShowAdSpace}
+					// onShowAd={this.onShowAdSpace}
 					onShowETA={this.onShowETA}
 				/>
 				<AppBase
