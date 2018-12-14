@@ -55,7 +55,6 @@ const panelIndexMap = [
 	'settings',
 	'settings/display',
 	'weather',
-	'layoutsample',
 	'dashboard',
 	'multimedia'
 ];
@@ -112,17 +111,6 @@ const AppBase = kind({
 			updateAppState((state) => {
 				state.userSettings.arrangements.arrangeable = !state.userSettings.arrangements.arrangeable;
 			});
-		},
-		updateSkin: (ev, {updateAppState}) => {
-			updateAppState((state) => {
-				let newSkin;
-				switch (state.userSettings.skin) {
-					case 'titanium': newSkin = 'electro'; break;
-					case 'carbon': newSkin = 'titanium'; break;
-					default: newSkin = 'carbon';
-				}
-				state.userSettings.skin = newSkin;
-			});
 		}
 	},
 
@@ -146,7 +134,6 @@ const AppBase = kind({
 		showUserSelectionPopup,
 		showWelcomePopup,
 		skinName,
-		updateSkin,
 		...rest
 	}) => {
 		delete rest.accent;
@@ -177,7 +164,6 @@ const AppBase = kind({
 							</Cell>
 							<Cell shrink>
 								<Button type="grid" icon="user" small onClick={onToggleUserSelectionPopup} />
-								<Button type="grid" icon="series" small onClick={updateSkin} />
 								<ToggleButtonBase selected={layoutArrangeable} underline type="grid" toggleOnLabel="Finish" toggleOffLabel="Edit" small onClick={layoutArrangeableToggle} />
 							</Cell>
 						</Column>
@@ -203,17 +189,6 @@ const AppBase = kind({
 					/>
 					<DisplaySettings onSelect={onSelect} />
 					<Weather />
-					{/* arrangement={{right: 'left', left: 'bottom'}}  defaultArrangement={{right: 'left', left: 'right'}} */}
-					<CustomLayout onArrange={console.log}>
-						{/* <top>red top content</top> */}
-						<left>yellow left content <Button>Transport Mode</Button></left>
-						green body content
-						<right>blue right content</right>
-						<bottom>
-							purple bottom content
-							<Button type="grid" icon="fullscreen" small onClick={updateSkin} />
-						</bottom>
-					</CustomLayout>
 					<Dashboard
 						arrangeable={layoutArrangeable}
 						onSelect={onSelect}
