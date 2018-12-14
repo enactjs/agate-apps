@@ -210,7 +210,7 @@ const Home = kind({
 
 				<small1><CompactWeather icon="climate" onExpand={onCompactExpand} /></small1>
 				<small2><CompactMusic icon="audio" onExpand={onCompactExpand} /></small2>
-				<medium><CompactMultimedia icon="resumeplay" onExpand={onCompactExpand} onSendVideo={onSendVideo} /></medium>
+				<medium><CompactMultimedia icon="resumeplay" onExpand={onCompactExpand} onSendVideo={onSendVideo} screenIds={[1]} /></medium>
 				<large><CompactMap icon="compass" onExpand={onCompactExpand} /></large>
 			</HomeLayout>
 		</Panel>

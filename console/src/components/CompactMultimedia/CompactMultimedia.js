@@ -11,8 +11,6 @@ import {MultimediaDecorator, ResponsiveVirtualList} from '../../views/Multimedia
 
 import css from './CompactMultimedia.less';
 
-const screenIds = [1, 2];
-
 const CompactMultimediaBase = kind({
 	name: 'CompactMultimedia',
 
@@ -46,7 +44,7 @@ const CompactMultimediaBase = kind({
 		}
 	},
 
-	render: ({containerShape, listCellSize, onClosePopup, onSelectVideo, onSendVideo, rearScreen1, showPopup, videos, ...rest}) => {
+	render: ({containerShape, listCellSize, onClosePopup, onSelectVideo, onSendVideo, rearScreen1, screenIds, showPopup, videos, ...rest}) => {
 		delete rest.adContent;
 		delete rest.showAd;
 
@@ -59,7 +57,7 @@ const CompactMultimediaBase = kind({
 					onSelect={onSendVideo}
 					open={showPopup}
 					screenIds={screenIds}
-					showAllScreens
+					showAllScreens={showPopup}
 				/>
 				<WidgetBase
 					{...rest}
