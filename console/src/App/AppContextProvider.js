@@ -72,7 +72,7 @@ class AppContextProvider extends Component {
 				showWelcomePopup: 'defaultShowWelcomePopup' in props ? Boolean(props.defaultShowWelcomePopup) : true
 			},
 			userId: 1,
-			userSettings: this.getDefaultUserSettings(props),
+			userSettings: this.getDefaultUserSettings(1, props),
 			usersList: {},
 			connections: {
 				serviceLayer: false
@@ -130,15 +130,22 @@ class AppContextProvider extends Component {
 	}
 
 	getDefaultUserSettings = (userId, props) => {
+		const userKey = `user${userId}`;
+		const demoUser = userPresetsForDemo[userKey];
+
 		props = props || this.props;  // Use the supplied props or the current props
-		const settings = Object.assign({}, defaultUserSettings);
+		const settings = Object.assign({}, demoUser ? demoUser : defaultUserSettings);
 
 		// Respect the app's defaultSkin prop
-		if (props.defaultSkin) settings.skin = props.defaultSkin;
+		if (props.defaultSkin) {
+			settings.skin = props.defaultSkin;
+		}
 
 		// The default user has no `name`, so we'll look it up in the presets, and if it's not there, we'll just use the user-key.
-		const userKey = `user${userId}`;
-		settings.name = userPresetsForDemo[userKey] ? userPresetsForDemo[userKey].name : userKey;
+		if (!demoUser) {
+			settings.name = userKey;
+		}
+
 		return settings;
 	}
 
