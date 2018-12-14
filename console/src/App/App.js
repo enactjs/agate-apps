@@ -18,7 +18,6 @@ import ServiceLayer from '../data/ServiceLayer';
 
 // Components
 import Clock from '../components/Clock';
-import CustomLayout from '../components/CustomLayout';
 import UserSelectionPopup from '../components/UserSelectionPopup';
 import WelcomePopup from '../components/WelcomePopup';
 import AppList from '../views/AppList';
@@ -28,7 +27,7 @@ import MapView from '../views/Map';
 import Phone from '../views/Phone';
 import Radio from '../views/Radio';
 import Settings from '../views/Settings';
-import DisplaySettings from '../views/DisplaySettings';
+import ThemeSettings from '../views/ThemeSettings';
 import Weather from '../views/WeatherPanel';
 import Dashboard from '../views/Dashboard';
 import Multimedia from '../views/Multimedia';
@@ -53,7 +52,7 @@ const panelIndexMap = [
 	'applist',
 	'map',
 	'settings',
-	'settings/display',
+	'settings/theme',
 	'weather',
 	'dashboard',
 	'multimedia'
@@ -187,7 +186,7 @@ const AppBase = kind({
 						onSelect={onSelect}
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
-					<DisplaySettings onSelect={onSelect} />
+					<ThemeSettings onSelect={onSelect} />
 					<Weather />
 					<Dashboard
 						arrangeable={layoutArrangeable}
