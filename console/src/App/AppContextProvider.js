@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import produce from 'immer';
-import {assocPath, mergeDeepRight, path} from 'ramda';
+import {assocPath, mergeDeepRight, omit, path} from 'ramda';
 
 import appConfig from '../App/configLoader';
 import userPresetsForDemo from './userPresetsForDemo';
@@ -167,7 +167,7 @@ class AppContextProvider extends Component {
 		const userSettings = this.loadUserSettings(userId);
 
 		// Apply a consistent (predictable) set of object keys for consumers, merging in new keys since their last visit
-		return mergeDeepRight(this.state.userSettings, userSettings);
+		return mergeDeepRight(omit(['arrangements'], this.state.userSettings), userSettings);
 	}
 
 	loadUserSettings = (userId) => {
