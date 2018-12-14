@@ -53,7 +53,7 @@ const panelIndexMap = [
 	'applist',
 	'map',
 	'settings',
-	'theme',
+	'settings/theme',
 	'weather',
 	'layoutsample',
 	'dashboard',
