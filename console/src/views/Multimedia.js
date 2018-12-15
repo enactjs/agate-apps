@@ -298,7 +298,7 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 			const {adContent, showAd, showPopup, url, videos} = this.state;
 
 			const props = {
-				...this.props, 
+				...this.props,
 				adContent,
 				onClosePopup: this.onClosePopup,
 				onSelectVideo: this.onSelectVideo,
