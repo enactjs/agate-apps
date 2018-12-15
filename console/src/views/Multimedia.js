@@ -22,8 +22,6 @@ import youtubeVideos from '../data/youtubeapi.json';
 
 import css from './Multimedia.less';
 
-const screenIds = [0, 1, 2];
-
 const IFrame = kind({
 	name: 'IFrame',
 	render: (props) => {
@@ -158,6 +156,7 @@ const MultimediaBase = kind({
 		onClosePopup: PropTypes.func,
 		onSelectVideo: PropTypes.func,
 		onSendVideo: PropTypes.func,
+		screenIds: PropTypes.array,
 		showAd: PropTypes.bool,
 		showPopup: PropTypes.bool,
 		url: PropTypes.string,
@@ -179,6 +178,7 @@ const MultimediaBase = kind({
 		onClosePopup,
 		onSelectVideo,
 		onSendVideo,
+		screenIds,
 		url,
 		videos,
 		...rest
@@ -190,7 +190,7 @@ const MultimediaBase = kind({
 					onSelect={onSendVideo}
 					open={showPopup}
 					screenIds={screenIds}
-					showAllScreens
+					showAllScreens={showPopup}
 				/>
 				<Panel {...rest}>
 					<CustomLayout
@@ -231,6 +231,7 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 		static propTypes = {
 			adContent: PropTypes.any,
 			onSendVideo: PropTypes.func,
+			screenIds: PropTypes.array,
 			showAd: PropTypes.bool
 		}
 
@@ -267,8 +268,14 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 		};
 
 		onSelectVideo = (video) => () => {
+			const {screenIds} = this.props;
 			this.selectedVideo = video;
-			this.onOpenPopup();
+
+			if (screenIds.length > 1) {
+				this.onOpenPopup();
+			} else {
+				this.onSendVideo({screenId: screenIds[0]});
+			}
 		};
 
 		onSendVideo = ({screenId}) => {
