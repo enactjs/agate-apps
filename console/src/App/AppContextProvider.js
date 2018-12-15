@@ -64,11 +64,12 @@ class AppContextProvider extends Component {
 		this.watchPositionId = null;  // Store the reference to the position watcher.
 		this.state = {
 			appState:{
-				showPopup: false,
+				showAppList: false,
 				showBasicPopup: false,
 				showDateTimePopup: false,
+				showPopup: false,
+				showProfileEdit: false,
 				showUserSelectionPopup: false,
-				showAppList: false,
 				showWelcomePopup: 'defaultShowWelcomePopup' in props ? Boolean(props.defaultShowWelcomePopup) : true
 			},
 			userId: 1,
