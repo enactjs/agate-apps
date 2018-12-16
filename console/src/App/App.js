@@ -9,6 +9,7 @@ import {ToggleButtonBase} from '@enact/agate/ToggleButton';
 import Popup from '@enact/agate/Popup';
 import DateTimePicker from '@enact/agate/DateTimePicker';
 import {TabbedPanels} from '@enact/agate/Panels';
+import Skinnable from '@enact/agate/Skinnable';
 import React from 'react';
 import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
@@ -72,8 +73,11 @@ const AppBase = kind({
 		className: 'app'
 	},
 
-	handlers: {
+	computed: {
+		className: ({skinName, styler}) => styler.append(skinName)
+	},
 
+	handlers: {
 		onToggleUserSelectionPopup: (ev, {updateAppState}) => {
 			updateAppState((state) => {
 				state.appState.showUserSelectionPopup = !state.appState.showUserSelectionPopup;
@@ -291,7 +295,8 @@ const AppDecorator = compose(
 		updateAppState
 	})),
 	AppIndex,
-	AgateDecorator
+	AgateDecorator,
+	Skinnable
 );
 
 const App = AppDecorator(AppBase);
