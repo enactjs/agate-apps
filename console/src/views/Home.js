@@ -5,7 +5,7 @@ import {Row, Column, Cell} from '@enact/ui/Layout';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Droppable, {Draggable} from '@enact/agate/DropManager';
-import Button from '@enact/agate/Button';
+import {ToggleButtonBase} from '@enact/agate/ToggleButton';
 import Divider from '@enact/agate/Divider';
 import Drawer from '@enact/agate/Drawer';
 
@@ -94,7 +94,16 @@ const HomeLayouts = kind({
 				</WidgetTray>
 				<footer className={css.footer}>
 					<Row>
-						<Cell component={Button} onTap={layoutArrangeableEnd}>Done</Cell>
+						<Cell
+							component={ToggleButtonBase}
+							onClick={layoutArrangeableEnd}
+							selected
+							small
+							toggleOffLabel="Edit Layout"
+							toggleOnLabel="Done"
+							type="grid"
+							underline
+						/>
 					</Row>
 				</footer>
 			</Drawer>
