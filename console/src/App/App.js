@@ -118,6 +118,7 @@ const AppBase = kind({
 		onToggleProfileEdit,
 		onToggleWelcomePopup,
 		orientation,
+		resetCopilot,
 		resetPosition,
 		sendVideo,
 		showBasicPopup,
@@ -199,6 +200,7 @@ const AppBase = kind({
 					onProfileEditEnd={onToggleProfileEdit}
 					onResetAll={onResetAll}
 					onResetPosition={resetPosition}
+					onResetCopilot={resetCopilot}
 					onSelect={onSelect}
 					showUserSelectionPopup={showUserSelectionPopup}
 				/>

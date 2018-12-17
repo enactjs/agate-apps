@@ -85,7 +85,7 @@ class App extends React.Component {
 
 	constructor (props) {
 		super(props);
-		this.state = {
+		this.initialState = {
 			// adContent: this.props.adContent || 'Your Ad Here',
 			duration: null,
 			eta: null,
@@ -94,6 +94,7 @@ class App extends React.Component {
 			// showAd: this.props.showAd || false,
 			url: ''
 		};
+		this.state = this.initialState;
 		// Job to control hiding ads
 		// this.adTimer = new Job(this.onHideAdSpace);
 	}
@@ -136,6 +137,10 @@ class App extends React.Component {
 		});
 	};
 
+	resetApp = () => {
+		this.setState(this.initialState);
+	}
+
 	render () {
 		const {duration, eta, popupOpen, showAd, url} = this.state;
 		const props = {
@@ -156,6 +161,7 @@ class App extends React.Component {
 					host={appConfig.communicationServerHost}
 					screenId={this.state.screenId}
 					onPlayVideo={this.onPlayVideo}
+					onReset={this.resetApp}
 					// onShowAd={this.onShowAdSpace}
 					onShowETA={this.onShowETA}
 				/>
