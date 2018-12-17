@@ -46,7 +46,7 @@ const DestinationList = kind({
 						onSelect={onSetDestination}
 						selectedProp="highlighted"
 						selected={selected}
-						itemProps={{small: true}}
+						itemProps={{style: {marginTop: '15px'}, small: true, type: 'grid'}}
 					>
 						{
 							positions.map(({description}, index) => `${index + 1} - ${description}`)

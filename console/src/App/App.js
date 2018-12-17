@@ -19,6 +19,7 @@ import ServiceLayer from '../data/ServiceLayer';
 
 // Components
 import Clock from '../components/Clock';
+import UserSelectionAvatar from '../components/WelcomePopup/UserSelectionAvatar';
 import UserSelectionPopup from '../components/UserSelectionPopup';
 import WelcomePopup from '../components/WelcomePopup';
 import AppList from '../views/AppList';
@@ -129,6 +130,7 @@ const AppBase = kind({
 		onToggleUserSelectionPopup,
 		onToggleWelcomePopup,
 		orientation,
+		profileName,
 		resetPosition,
 		sendVideo,
 		showBasicPopup,
@@ -137,6 +139,7 @@ const AppBase = kind({
 		showUserSelectionPopup,
 		showWelcomePopup,
 		skinName,
+		userId,
 		...rest
 	}) => {
 		delete rest.accent;
@@ -160,13 +163,21 @@ const AppBase = kind({
 					selected={index}
 					index={index}
 				>
+					<beforeTabs>
+						<Column align="start space-around" style={{paddingLeft: '60px'}}>
+							<Cell shrink>
+								<UserSelectionAvatar className={css.activeAvatar} index={userId - 1} onSelectUser={onToggleUserSelectionPopup}>
+									{profileName}
+								</UserSelectionAvatar>
+							</Cell>
+						</Column>
+					</beforeTabs>
 					<afterTabs>
 						<Column align="center space-around">
 							<Cell shrink>
 								<Clock />
 							</Cell>
 							<Cell shrink>
-								<Button type="grid" icon="user" small onClick={onToggleUserSelectionPopup} />
 								<ToggleButtonBase selected={layoutArrangeable} underline type="grid" toggleOnLabel="Finish" toggleOffLabel="Edit" small onClick={layoutArrangeableToggle} />
 							</Cell>
 						</Column>
@@ -279,11 +290,12 @@ const AppIndex = (Wrapped) => {
 
 const AppDecorator = compose(
 	ServiceLayer,
-	AppContextConnect(({appState, userSettings, updateAppState}) => ({
+	AppContextConnect(({appState, userSettings, updateAppState, userId}) => ({
 		accent: userSettings.colorAccent,
 		highlight: userSettings.colorHighlight,
 		layoutArrangeable: userSettings.arrangements.arrangeable,
 		orientation: (userSettings.skin !== 'carbon') ? 'horizontal' : 'vertical',
+		profileName: userSettings.name,
 		showAppList: appState.showAppList,
 		showBasicPopup: appState.showBasicPopup,
 		showDateTimePopup: appState.showDateTimePopup,
@@ -292,7 +304,8 @@ const AppDecorator = compose(
 		showWelcomePopup: appState.showWelcomePopup,
 		skin: userSettings.skin,
 		skinName: userSettings.skin,
-		updateAppState
+		updateAppState,
+		userId
 	})),
 	AppIndex,
 	AgateDecorator,

@@ -149,6 +149,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 									<Row
 										component={Group}
 										childComponent={Button}
+										itemProps={{type: 'grid'}}
 										onSelect={this.toggleAutonomous}
 										select="radio"
 										selectedProp="highlighted"
