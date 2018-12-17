@@ -537,7 +537,9 @@ class MapCoreBase extends React.Component {
 		if (data.routes && data.routes[0]) {
 			const route = data.routes[0];
 
-			this.showFullRouteOnMap(route.geometry.coordinates);
+			if (!this.props.navigating) {
+				this.showFullRouteOnMap(route.geometry.coordinates);
+			}
 
 
 			// this.showFullRouteOnMap(data.routes[0].geometry.coordinates);
@@ -674,8 +676,9 @@ class MapCoreBase extends React.Component {
 	}
 }
 
-const ConnectedMap = AppContextConnect(({location, userSettings}) => ({
+const ConnectedMap = AppContextConnect(({location, userSettings, navigation}) => ({
 	// colorMarker: userSettings.colorHighlight,
+	navigating: navigation.navigating,
 	colorRouteLine: userSettings.colorHighlight,
 	location,
 	skin: userSettings.skin

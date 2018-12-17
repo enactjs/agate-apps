@@ -239,6 +239,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					}
 				}
 			}
+			this.sendNavigation();
 		}
 
 		stopNavigation = () => {
@@ -264,11 +265,6 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 		resetPosition = (coordinates) => {
 			this.connection.send('positionReset', coordinates);
-		}
-
-		sendNavigation = () => {
-			// console.log('sendNavigation:', this.props.navigation);
-			this.comm.current.sendETA(this.props.navigation);
 		}
 
 		setConnected = (connected) => {
