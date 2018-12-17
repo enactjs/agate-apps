@@ -196,7 +196,7 @@ const AppBase = kind({
 				<ProfileDrawer
 					index={index}
 					getPanelIndexOf={getPanelIndexOf}
-					profileEditEnd={onToggleProfileEdit}
+					onProfileEditEnd={onToggleProfileEdit}
 					onResetAll={onResetAll}
 					onResetPosition={resetPosition}
 					onSelect={onSelect}

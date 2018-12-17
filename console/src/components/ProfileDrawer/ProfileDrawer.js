@@ -34,10 +34,10 @@ const ProfileDrawerBase = kind({
 		userId: PropTypes.number.isRequired,
 		css: PropTypes.object,
 		layoutArrangeable: PropTypes.bool,
+		onProfileEditEnd: PropTypes.func,
 		onResetAll: PropTypes.func,
 		onResetPosition: PropTypes.func,
 		orientation: PropTypes.string,
-		profileEditEnd: PropTypes.func,
 		showUserSelectionPopup: PropTypes.bool,
 		tabPosition: PropTypes.string,
 		tabs: PropTypes.array,
@@ -96,12 +96,12 @@ const ProfileDrawerBase = kind({
 		index,
 		layoutArrangeable,
 		layoutArrangeableToggle,
+		onProfileEditEnd,
 		onResetAll,
 		onResetPosition,
 		onSelect,
 		onToggleUserSelectionPopup,
 		orientation,
-		profileEditEnd,
 		showUserSelectionPopup,
 		tabPosition,
 		tabs,
@@ -125,7 +125,7 @@ const ProfileDrawerBase = kind({
 							<div style={{textAlign: 'center'}}>
 								<UserAvatar
 									userId={userId - 1}
-									onClick={profileEditEnd}
+									onClick={onProfileEditEnd}
 									style={{margin: (orientation === 'horizontal' ? '2em 1em' : '0.25em 1em')}}
 								>
 									{`Hi ${userName}!`}
