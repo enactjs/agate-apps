@@ -5,7 +5,6 @@ import {adaptEvent, forward, handle} from '@enact/core/handle';
 import {Cell, Column} from '@enact/ui/Layout';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
-import {ToggleButtonBase} from '@enact/agate/ToggleButton';
 import Popup from '@enact/agate/Popup';
 import DateTimePicker from '@enact/agate/DateTimePicker';
 import {TabbedPanels} from '@enact/agate/Panels';
@@ -17,8 +16,9 @@ import PropTypes from 'prop-types';
 import ServiceLayer from '../data/ServiceLayer';
 
 // Components
+import ProfileDrawer from '../components/ProfileDrawer';
+import UserAvatar from '../components/UserAvatar';
 import Clock from '../components/Clock';
-import UserSelectionPopup from '../components/UserSelectionPopup';
 import WelcomePopup from '../components/WelcomePopup';
 import AppList from '../views/AppList';
 import Home from '../views/Home';
@@ -73,10 +73,9 @@ const AppBase = kind({
 	},
 
 	handlers: {
-
-		onToggleUserSelectionPopup: (ev, {updateAppState}) => {
+		onToggleProfileEdit: (ev, {updateAppState}) => {
 			updateAppState((state) => {
-				state.appState.showUserSelectionPopup = !state.appState.showUserSelectionPopup;
+				state.appState.showProfileEdit = !state.appState.showProfileEdit;
 			});
 		},
 		onToggleDateTimePopup: (ev, {updateAppState}) => {
@@ -105,24 +104,18 @@ const AppBase = kind({
 				state.appState.showWelcomePopup = true;
 				state.appState.showUserSelectionPopup = false;
 			});
-		},
-		layoutArrangeableToggle: (ev, {updateAppState}) => {
-			updateAppState((state) => {
-				state.userSettings.arrangements.arrangeable = !state.userSettings.arrangements.arrangeable;
-			});
 		}
 	},
 
 	render: ({
 		index,
 		layoutArrangeable,
-		layoutArrangeableToggle,
 		onResetAll,
 		onSelect,
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
 		onTogglePopup,
-		onToggleUserSelectionPopup,
+		onToggleProfileEdit,
 		onToggleWelcomePopup,
 		orientation,
 		resetPosition,
@@ -133,6 +126,7 @@ const AppBase = kind({
 		showUserSelectionPopup,
 		showWelcomePopup,
 		skinName,
+		userId,
 		...rest
 	}) => {
 		delete rest.accent;
@@ -156,21 +150,26 @@ const AppBase = kind({
 					selected={index}
 					index={index}
 				>
+					<beforeTabs>
+						<div style={{textAlign: 'center'}}>
+							<UserAvatar
+								userId={userId - 1}
+								onClick={onToggleProfileEdit}
+								style={{margin: (orientation === 'horizontal' ? '2em 1em' : '0.25em 1em')}}
+							/>
+						</div>
+					</beforeTabs>
 					<afterTabs>
 						<Column align="center space-around">
-							<Cell shrink>
+							<Cell shrink style={{margin: '0.25em 1em'}}>
 								<Clock />
-							</Cell>
-							<Cell shrink>
-								<Button type="grid" icon="user" small onClick={onToggleUserSelectionPopup} />
-								<ToggleButtonBase selected={layoutArrangeable} underline type="grid" toggleOnLabel="Finish" toggleOffLabel="Edit" small onClick={layoutArrangeableToggle} />
 							</Cell>
 						</Column>
 					</afterTabs>
 					<Home
 						arrangeable={layoutArrangeable}
 						onCompactExpand={onSelect}
-						onSelect={onSelect}
+						// onSelect={onSelect}
 						onSendVideo={sendVideo}
 					/>
 					<Phone arrangeable={layoutArrangeable} />
@@ -190,15 +189,18 @@ const AppBase = kind({
 					<Weather />
 					<Dashboard
 						arrangeable={layoutArrangeable}
-						onSelect={onSelect}
+						// onSelect={onSelect}
 					/>
 					<Multimedia onSendVideo={sendVideo} screenIds={[0, 1, 2]} />
 				</TabbedPanels>
-				<UserSelectionPopup
-					onClose={onToggleUserSelectionPopup}
+				<ProfileDrawer
+					index={index}
+					getPanelIndexOf={getPanelIndexOf}
+					onProfileEditEnd={onToggleProfileEdit}
 					onResetAll={onResetAll}
-					open={showUserSelectionPopup}
-					resetPosition={resetPosition}
+					onResetPosition={resetPosition}
+					onSelect={onSelect}
+					showUserSelectionPopup={showUserSelectionPopup}
 				/>
 				<Popup
 					onClose={onToggleBasicPopup}
@@ -275,7 +277,7 @@ const AppIndex = (Wrapped) => {
 
 const AppDecorator = compose(
 	ServiceLayer,
-	AppContextConnect(({appState, userSettings, updateAppState}) => ({
+	AppContextConnect(({appState, userSettings, userId, updateAppState}) => ({
 		accent: userSettings.colorAccent,
 		highlight: userSettings.colorHighlight,
 		layoutArrangeable: userSettings.arrangements.arrangeable,
@@ -288,6 +290,7 @@ const AppDecorator = compose(
 		showWelcomePopup: appState.showWelcomePopup,
 		skin: userSettings.skin,
 		skinName: userSettings.skin,
+		userId,
 		updateAppState
 	})),
 	AppIndex,

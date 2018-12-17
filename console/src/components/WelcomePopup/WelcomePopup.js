@@ -1,7 +1,6 @@
 import Button from '@enact/agate/Button';
 import Divider from '@enact/agate/Divider';
 import FullscreenPopup from '@enact/agate/FullscreenPopup';
-import GridListImageItem from '@enact/agate/GridListImageItem';
 import {Panel, Panels} from '@enact/agate/Panels';
 import Skinnable from '@enact/agate/Skinnable';
 import {handle, forProp, forward, returnsTrue} from '@enact/core/handle';
@@ -18,12 +17,9 @@ import CompactMultimedia from '../CompactMultimedia';
 import CompactWeather from '../CompactWeather';
 import MapController from '../MapController';
 
-import lauraAvatar from '../../../assets/laura.png';
-import thomasAvatar from '../../../assets/thomas.png';
+import UserAvatar from '../UserAvatar';
 
 import css from './WelcomePopup.less';
-
-const userAvatars = [lauraAvatar, thomasAvatar];
 
 const getCompactComponent = ({components, key, onSendVideo}) => {
 	let Component;
@@ -51,34 +47,6 @@ const Arranger = {
 	leave: reverse(fadeOut)
 };
 
-const UserSelectionAvatar = kind({
-	name: 'UserSelectionAvatar',
-
-	handlers: {
-		onClick: (ev, {index, onSelectUser}) => {
-			onSelectUser({selected: index});
-		}
-	},
-
-	computed: {
-		source: ({index}) => (userAvatars[index] || 'none'),
-		style: ({style, index}) => ({
-			...style,
-			'--user-index': index
-		})
-	},
-
-	render: ({children, ...rest}) => {
-		delete rest.onSelectUser;
-		return (
-			<GridListImageItem
-				{...rest}
-				css={css}
-				caption={children}
-			/>
-		);
-	}
-});
 
 const UserSelectionPanel = kind({
 	name: 'UserSelectionPanel',
@@ -90,9 +58,9 @@ const UserSelectionPanel = kind({
 				<Row align="center space-around" className={css.bodyRow}>
 					{users.map((user, index) => (
 						<Cell shrink key={'userKey' + index}>
-							<UserSelectionAvatar index={index} onSelectUser={onSelectUser}>
+							<UserAvatar size="large" userId={index} onClick={onSelectUser}>
 								{user}
-							</UserSelectionAvatar>
+							</UserAvatar>
 						</Cell>
 					))}
 				</Row>
@@ -188,10 +156,8 @@ const WelcomePopupBase = kind({
 								<Column>
 									<Cell shrink>
 										<Row>
-											<Cell className={css.activeAvatar} shrink>
-												<UserSelectionAvatar index={userId - 1} onSelectUser={onCancelSelect}>
-													{profileName}
-												</UserSelectionAvatar>
+											<Cell className={css.avatar} shrink>
+												<UserAvatar css={css} userId={userId - 1} onClick={onCancelSelect} />
 											</Cell>
 											<Cell>
 												<Column align="start center">
