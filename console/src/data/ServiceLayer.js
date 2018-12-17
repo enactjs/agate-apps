@@ -50,7 +50,9 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			this.initializeConnection();
 			this.appStateSyncInterval = window.setInterval(() => {
 				this.setLocation({location: this.location});
-				this.redrawRoute();
+				if (this.props.destination) {
+					this.redrawRoute();
+				}
 			}, 5000);
 		}
 
