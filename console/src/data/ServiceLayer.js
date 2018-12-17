@@ -50,6 +50,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			this.initializeConnection();
 			this.appStateSyncInterval = window.setInterval(() => {
 				this.setLocation({location: this.location});
+				this.redrawRoute();
 			}, 5000);
 		}
 
@@ -225,6 +226,18 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			if (autonomous && navigating && destination && destination.slice(-1).lat !== 0) {
 				console.log('%cSending routing request:', 'color: magenta', [location, ...destination]);
 				this.connection.send('routingRequest', [location, ...destination]);
+			}
+		}
+
+		redrawRoute = () => {
+			if (this.maps.size > 0) {
+				for (let map of this.maps) {
+					if (map.actionManager) {
+						map.actionManager({
+							plotRoute: this.props.destination
+						});
+					}
+				}
 			}
 		}
 
