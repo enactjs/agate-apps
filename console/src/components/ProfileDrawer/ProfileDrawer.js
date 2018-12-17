@@ -1,12 +1,10 @@
-import Skinnable from '@enact/agate/Skinnable';
 import Drawer from '@enact/agate/Drawer';
 import {ToggleButtonBase} from '@enact/agate/ToggleButton';
 import {Cell, Column} from '@enact/ui/Layout';
 import {adaptEvent, forward, handle} from '@enact/core/handle';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
-import {TabGroupBase} from '@enact/agate/Panels/TabbedPanels';
+import TabGroup from '@enact/agate/TabGroup';
 import kind from '@enact/core/kind';
-import Slottable from '@enact/ui/Slottable';
 import PropTypes from 'prop-types';
 import React from 'react';
 import compose from 'ramda/src/compose';
@@ -16,8 +14,6 @@ import AppContextConnect from '../../App/AppContextConnect';
 import UserSelectionPopup from '../UserSelectionPopup';
 
 import componentCss from './ProfileDrawer.less';
-
-const SlottedTabGroup = Skinnable(Slottable({slots: ['afterTabs', 'beforeTabs']}, TabGroupBase));
 
 const panelIndexes = [
 	'home',
@@ -114,7 +110,7 @@ const ProfileDrawerBase = kind({
 		return (
 			<React.Fragment>
 				<Drawer {...rest} css={css} scrimType="none">
-					<SlottedTabGroup
+					<TabGroup
 						onSelect={onSelect}
 						orientation="vertical"
 						tabs={tabs}
@@ -158,7 +154,7 @@ const ProfileDrawerBase = kind({
 								/>
 							</Column>
 						</afterTabs>
-					</SlottedTabGroup>
+					</TabGroup>
 				</Drawer>
 				<UserSelectionPopup
 					onClose={onToggleUserSelectionPopup}
