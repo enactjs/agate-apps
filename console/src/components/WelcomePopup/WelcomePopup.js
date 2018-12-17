@@ -1,6 +1,7 @@
 import Button from '@enact/agate/Button';
 import Divider from '@enact/agate/Divider';
 import FullscreenPopup from '@enact/agate/FullscreenPopup';
+import GridListImageItem from '@enact/agate/GridListImageItem';
 import {Panel, Panels} from '@enact/agate/Panels';
 import Skinnable from '@enact/agate/Skinnable';
 import {handle, forProp, forward, returnsTrue} from '@enact/core/handle';
@@ -16,9 +17,13 @@ import CompactHeater from '../CompactHeater';
 import CompactMultimedia from '../CompactMultimedia';
 import CompactWeather from '../CompactWeather';
 import MapController from '../MapController';
-import UserSelectionAvatar from './UserSelectionAvatar';
+
+import lauraAvatar from '../../../assets/laura.png';
+import thomasAvatar from '../../../assets/thomas.png';
 
 import css from './WelcomePopup.less';
+
+const userAvatars = [lauraAvatar, thomasAvatar];
 
 const getCompactComponent = ({components, key, onSendVideo}) => {
 	let Component;
@@ -45,6 +50,35 @@ const Arranger = {
 	enter: reverse(fadeIn),
 	leave: reverse(fadeOut)
 };
+
+const UserSelectionAvatar = kind({
+	name: 'UserSelectionAvatar',
+
+	handlers: {
+		onClick: (ev, {index, onSelectUser}) => {
+			onSelectUser({selected: index});
+		}
+	},
+
+	computed: {
+		source: ({index}) => (userAvatars[index] || 'none'),
+		style: ({style, index}) => ({
+			...style,
+			'--user-index': index
+		})
+	},
+
+	render: ({children, ...rest}) => {
+		delete rest.onSelectUser;
+		return (
+			<GridListImageItem
+				{...rest}
+				css={css}
+				caption={children}
+			/>
+		);
+	}
+});
 
 const UserSelectionPanel = kind({
 	name: 'UserSelectionPanel',
