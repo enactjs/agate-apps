@@ -9,7 +9,7 @@ import {equals} from 'ramda';
 
 import {propTypeLatLonList} from '../../data/proptypes';
 
-import css from './DestinationList.less';
+// import css from './DestinationList.less';
 
 const DestinationList = kind({
 	name: 'DestinationList',
@@ -46,9 +46,9 @@ const DestinationList = kind({
 						component={Group}
 						childComponent={Button}
 						onSelect={onSetDestination}
-						selectedProp="highlighted"
+						selectedProp="selected"
 						selected={selected}
-						itemProps={{small: true, type: 'grid'}}
+						itemProps={{small: true}}
 					>
 						{
 							positions.map(({description}, index) => `${index + 1} - ${description}`)

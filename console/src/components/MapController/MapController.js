@@ -148,8 +148,8 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 									<Divider>Self Driving</Divider>
 									<Row
 										component={Group}
-										childComponent={Button}
-										itemProps={{css: css, type: 'grid'}}
+										childComponent={Cell}
+										itemProps={{component: Button, small: true}}
 										onSelect={this.toggleAutonomous}
 										select="radio"
 										selectedProp="selected"

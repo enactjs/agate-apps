@@ -176,7 +176,7 @@ const WelcomePopupBase = kind({
 									<Cell className={css.smallComponent}>
 										{Small2Component}
 									</Cell>
-									<Cell component={Button} type="grid" highlighted onClick={handleClose} shrink>{"Let's Go!"}</Cell>
+									<Cell component={Button} highlighted onClick={handleClose} shrink>{"Let's Go!"}</Cell>
 								</Column>
 							</Cell>
 							<Cell>
