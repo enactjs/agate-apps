@@ -52,11 +52,11 @@ const UserSelectionPopupBase = kind({
 			onResetAll();
 			resetAll();
 			// This is being hard coded for now because it's the default reset for the simulator.
-			onResetPosition({x:52880.8698406219, y: 4182781.1160838, z: -2.3562});
+			onResetPosition({x: 52880.8698406219, y: 4182781.1160838, z: -2.3562});
 			onResetCopilot();
 		},
 		onResetPosition: (ev, {onResetPosition}) => {
-			onResetPosition({x:52880.8698406219, y: 4182781.1160838, z: -2.3562});
+			onResetPosition({x: 52880.8698406219, y: 4182781.1160838, z: -2.3562});
 		},
 		updateUser: ({selected}, {updateAppState}) => {
 			updateAppState((state) => {
