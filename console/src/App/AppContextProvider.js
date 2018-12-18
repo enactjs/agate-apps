@@ -69,8 +69,8 @@ class AppContextProvider extends Component {
 				showDateTimePopup: false,
 				showPopup: false,
 				showProfileEdit: false,
-				showUserSelectionPopup: false
-				// showWelcomePopup: 'defaultShowWelcomePopup' in props ? Boolean(props.defaultShowWelcomePopup) : true
+				showUserSelectionPopup: false,
+				showWelcomePopup: 'defaultShowWelcomePopup' in props ? Boolean(props.defaultShowWelcomePopup) : true
 			},
 			userId: 1,
 			userSettings: this.getDefaultUserSettings(1, props),

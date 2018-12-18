@@ -19,7 +19,7 @@ import ServiceLayer from '../data/ServiceLayer';
 import ProfileDrawer from '../components/ProfileDrawer';
 import UserAvatar from '../components/UserAvatar';
 import Clock from '../components/Clock';
-// import WelcomePopup from '../components/WelcomePopup';
+import WelcomePopup from '../components/WelcomePopup';
 import AppList from '../views/AppList';
 import Home from '../views/Home';
 import Hvac from '../views/HVAC';
@@ -83,11 +83,11 @@ const AppBase = kind({
 				state.appState.showDateTimePopup = !state.appState.showDateTimePopup;
 			});
 		},
-		// onToggleWelcomePopup: (ev, {updateAppState}) => {
-		// 	updateAppState((state) => {
-		// 		state.appState.showWelcomePopup = !state.appState.showWelcomePopup;
-		// 	});
-		// },
+		onToggleWelcomePopup: (ev, {updateAppState}) => {
+			updateAppState((state) => {
+				state.appState.showWelcomePopup = !state.appState.showWelcomePopup;
+			});
+		},
 		onTogglePopup: (ev, {updateAppState}) => {
 			updateAppState((state) => {
 				state.appState.showPopup = !state.appState.showPopup;
@@ -102,7 +102,7 @@ const AppBase = kind({
 			onSelect({index: 0});
 			updateAppState((state) => {
 				state.userId = 1;
-				// state.appState.showWelcomePopup = true;
+				state.appState.showWelcomePopup = true;
 				state.appState.showUserSelectionPopup = false;
 				state.appState.showProfileEdit = false;
 			});
@@ -118,7 +118,7 @@ const AppBase = kind({
 		onToggleDateTimePopup,
 		onTogglePopup,
 		onToggleProfileEdit,
-		// onToggleWelcomePopup,
+		onToggleWelcomePopup,
 		orientation,
 		resetPosition,
 		sendVideo,
@@ -126,7 +126,7 @@ const AppBase = kind({
 		showDateTimePopup,
 		showPopup,
 		showUserSelectionPopup,
-		// showWelcomePopup,
+		showWelcomePopup,
 		skinName,
 		userId,
 		...rest
@@ -233,12 +233,12 @@ const AppBase = kind({
 					</title>
 					<DateTimePicker onClose={onToggleDateTimePopup} />
 				</Popup>
-				{/* <WelcomePopup
+				<WelcomePopup
 					noAnimation
 					onClose={onToggleWelcomePopup}
 					onSendVideo={sendVideo}
 					open={showWelcomePopup}
-				/> */}
+				/>
 			</div>
 		);
 	}
@@ -281,7 +281,6 @@ const AppDecorator = compose(
 	ServiceLayer,
 	AppContextConnect(({appState, userSettings, userId, updateAppState}) => ({
 		accent: userSettings.colorAccent,
-		// showWelcomePopup: appState.showWelcomePopup,
 		highlight: userSettings.colorHighlight,
 		layoutArrangeable: userSettings.arrangements.arrangeable,
 		orientation: (userSettings.skin !== 'carbon') ? 'horizontal' : 'vertical',
@@ -290,6 +289,7 @@ const AppDecorator = compose(
 		showDateTimePopup: appState.showDateTimePopup,
 		showPopup: appState.showPopup,
 		showUserSelectionPopup: appState.showUserSelectionPopup,
+		showWelcomePopup: appState.showWelcomePopup,
 		skin: userSettings.skin,
 		skinName: userSettings.skin,
 		updateAppState,
