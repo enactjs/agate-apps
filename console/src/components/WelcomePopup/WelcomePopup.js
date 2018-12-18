@@ -26,13 +26,13 @@ const getCompactComponent = ({components, key, onSendVideo}) => {
 
 	switch (components[key]) {
 		case 'multimedia':
-			Component = (<CompactMultimedia onSendVideo={onSendVideo} screenIds={[1]} />);
+			Component = (<CompactMultimedia noExpandButton onSendVideo={onSendVideo} screenIds={[1]} />);
 			break;
 		case 'heater':
-			Component = (<CompactHeater />);
+			Component = (<CompactHeater noExpandButton />);
 			break;
 		default:
-			Component = (<CompactWeather />);
+			Component = (<CompactWeather noExpandButton />);
 	}
 
 	return Component;
