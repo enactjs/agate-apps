@@ -1,17 +1,14 @@
-import kind from '@enact/core/kind';
-// import hoc from '@enact/core/hoc';
-import Group from '@enact/ui/Group';
-import Popup from '@enact/agate/Popup';
 import Button from '@enact/agate/Button';
-import Item from '@enact/agate/Item';
-// import {Layout, Cell} from '@enact/ui/Layout';
+import Group from '@enact/ui/Group';
+import kind from '@enact/core/kind';
+import Popup from '@enact/agate/Popup';
 import PropTypes from 'prop-types';
+import RadioItem from '@enact/agate/RadioItem';
 import React from 'react';
 
 import AppContextConnect from '../../App/AppContextConnect';
 
 import css from './UserSelectionPopup.less';
-
 
 const UserSelectionPopupBase = kind({
 	name: 'UserSelectionPopup',
@@ -64,19 +61,13 @@ const UserSelectionPopupBase = kind({
 		delete rest.updateAppState;
 		return (
 			<Popup
-				// onClose={onTogglePopup}
-				// open={showPopup}
 				closeButton
 				{...rest}
 			>
 				<title>User Selection</title>
 
 				<Group
-					childComponent={Item}
-					// itemProps={{
-					// 	inline: boolean('ItemProps-Inline', Group)
-					// }}
-					select="radio"
+					childComponent={RadioItem}
 					selectedProp="selected"
 					defaultSelected={userId - 1}
 					onSelect={updateUser}
