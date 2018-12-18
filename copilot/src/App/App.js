@@ -76,6 +76,17 @@ const AppBase = kind({
 	}
 });
 
+// Set the initial state, but allow for overrides
+const getInitialState = ({popupOpen = true, screenId = 1} = {}) => ({
+	// adContent: this.props.adContent || 'Your Ad Here',
+	duration: null,
+	eta: null,
+	popupOpen,
+	screenId,
+	// showAd: this.props.showAd || false,
+	url: ''
+});
+
 class App extends React.Component {
 
 	static propTypes = {
@@ -85,16 +96,7 @@ class App extends React.Component {
 
 	constructor (props) {
 		super(props);
-		this.initialState = {
-			// adContent: this.props.adContent || 'Your Ad Here',
-			duration: null,
-			eta: null,
-			popupOpen: true,
-			screenId: 1,
-			// showAd: this.props.showAd || false,
-			url: ''
-		};
-		this.state = this.initialState;
+		this.state = getInitialState();
 		// Job to control hiding ads
 		// this.adTimer = new Job(this.onHideAdSpace);
 	}
@@ -138,7 +140,8 @@ class App extends React.Component {
 	};
 
 	resetApp = () => {
-		this.setState(this.initialState);
+		// If the popup was dismissed, leave it closed during a reset. (maintain popupOpen state throguh resets)
+		this.setState(({popupOpen}) => getInitialState({popupOpen}));
 	}
 
 	render () {

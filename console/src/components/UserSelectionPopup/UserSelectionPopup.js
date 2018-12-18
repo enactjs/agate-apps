@@ -17,6 +17,9 @@ const UserSelectionPopupBase = kind({
 	name: 'UserSelectionPopup',
 
 	propTypes: {
+		onResetAll: PropTypes.func.isRequired,
+		onResetCopilot: PropTypes.func.isRequired,
+		onResetPosition: PropTypes.func.isRequired,
 		resetAll: PropTypes.func.isRequired,
 		resetPosition: PropTypes.func.isRequired,
 		resetUserSettings: PropTypes.func.isRequired,
@@ -63,9 +66,9 @@ const UserSelectionPopupBase = kind({
 	},
 
 	render: ({userId, usersList, updateUser, resetUserSettings, onResetPosition, onResetAll, ...rest}) => {
+		delete rest.onResetCopilot;
 		delete rest.resetAll;
 		delete rest.resetPosition;
-		delete rest.resetCopilot;
 		delete rest.updateAppState;
 		return (
 			<Popup
