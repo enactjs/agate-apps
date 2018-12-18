@@ -158,8 +158,10 @@ const addCarLayer = ({coordinates, iconURL, map, orientation = 0}) => {
 				}
 			};
 
-			map.addImage('car', icon);
-			map.addLayer(carLayer);
+			if (map) {
+				map.addImage('car', icon);
+				map.addLayer(carLayer);
+			}
 		});
 	}
 };
@@ -536,7 +538,7 @@ class MapCoreBase extends React.Component {
 		this.setState({carShowing: true});
 		const data = await getRoute(waypoints);
 
-		if (data.routes && data.routes[0]) {
+		if (this.map && data.routes && data.routes[0]) {
 			const route = data.routes[0];
 
 			this.showFullRouteOnMap(route.geometry.coordinates);
