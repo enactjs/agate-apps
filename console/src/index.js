@@ -26,7 +26,7 @@ if (typeof window !== 'undefined') {
 
 	appElement = (
 		<AppContextProvider
-			defaultShowWelcomePopup={args.showWelcomePopup !== 'false'}
+			// defaultShowWelcomePopup={args.showWelcomePopup !== 'false'}
 			defaultSkin={skin}
 		>
 			<App defaultIndex={index} onSelect={onSelect} />

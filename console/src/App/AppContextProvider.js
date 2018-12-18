@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import produce from 'immer';
-import {assocPath, mergeDeepRight, omit, path} from 'ramda';
+import {assocPath, equals, mergeDeepRight, omit, path} from 'ramda';
 
 import appConfig from '../App/configLoader';
 import userPresetsForDemo from './userPresetsForDemo';
@@ -69,8 +69,8 @@ class AppContextProvider extends Component {
 				showDateTimePopup: false,
 				showPopup: false,
 				showProfileEdit: false,
-				showUserSelectionPopup: false,
-				showWelcomePopup: 'defaultShowWelcomePopup' in props ? Boolean(props.defaultShowWelcomePopup) : true
+				showUserSelectionPopup: false
+				// showWelcomePopup: 'defaultShowWelcomePopup' in props ? Boolean(props.defaultShowWelcomePopup) : true
 			},
 			userId: 1,
 			userSettings: this.getDefaultUserSettings(1, props),
@@ -115,11 +115,11 @@ class AppContextProvider extends Component {
 	}
 
 	componentWillUpdate (nextProps, nextState) {
-		if (this.state.userId !== nextState.userId && this.state.userSettings === nextState.userSettings) {
+		if (this.state.userId !== nextState.userId && equals(this.state.userSettings, nextState.userSettings)) {
 			this.setUserSettings(nextState.userId);
 		}
 
-		if (this.state.userId === nextState.userId && this.state.userSettings !== nextState.userSettings) {
+		if (this.state.userId === nextState.userId && !equals(this.state.userSettings, nextState.userSettings)) {
 			if (nextState.userSettings !== this.state.userSettings) {
 				this.saveUserSettings(nextState.userId, nextState.userSettings);
 			}
