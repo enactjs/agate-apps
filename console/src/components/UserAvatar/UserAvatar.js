@@ -1,5 +1,6 @@
 import GridListImageItem from '@enact/agate/GridListImageItem';
 import kind from '@enact/core/kind';
+import {adaptEvent, forward, handle} from '@enact/core/handle';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -30,9 +31,9 @@ const UserAvatarBase = kind({
 	},
 
 	handlers: {
-		onClick: (ev, {userId, onClick}) => {
-			onClick({selected: userId});
-		}
+		onClick: handle(
+			adaptEvent((ev, {userId}) => ({selected: userId}), forward('onClick'))
+		)
 	},
 
 	computed: {
