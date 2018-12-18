@@ -151,6 +151,8 @@ const addCarLayer = ({coordinates, iconURL, map, orientation = 0}) => {
 				'layout': {
 					'icon-image': 'car',
 					'icon-size': 0.10,
+					'icon-allow-overlap': true,
+					'icon-ignore-placement': true,
 					// rotation of the car
 					'icon-rotate': orientation
 				}
@@ -364,7 +366,7 @@ class MapCoreBase extends React.Component {
 						break;
 					}
 					case 'positionCar': {
-						this.updateCarLayer({location: actions[action]});
+						window.requestAnimationFrame(() => this.updateCarLayer({location: actions[action]}));
 						break;
 					}
 					case 'center': {
