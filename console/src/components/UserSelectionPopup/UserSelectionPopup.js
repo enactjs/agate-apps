@@ -14,6 +14,9 @@ const UserSelectionPopupBase = kind({
 	name: 'UserSelectionPopup',
 
 	propTypes: {
+		onResetAll: PropTypes.func.isRequired,
+		onResetCopilot: PropTypes.func.isRequired,
+		onResetPosition: PropTypes.func.isRequired,
 		resetAll: PropTypes.func.isRequired,
 		resetPosition: PropTypes.func.isRequired,
 		resetUserSettings: PropTypes.func.isRequired,
@@ -42,11 +45,15 @@ const UserSelectionPopupBase = kind({
 	},
 
 	handlers: {
-		onResetAll: (ev, {onResetAll, resetAll, resetPosition}) => {
+		onResetAll: (ev, {onResetAll, resetAll, onResetCopilot, onResetPosition}) => {
 			onResetAll();
 			resetAll();
 			// This is being hard coded for now because it's the default reset for the simulator.
-			resetPosition({x:52880.8698406219, y: 4182781.1160838, z: -2.3562});
+			onResetPosition({x: 52880.8698406219, y: 4182781.1160838, z: -2.3562});
+			onResetCopilot();
+		},
+		onResetPosition: (ev, {onResetPosition}) => {
+			onResetPosition({x: 52880.8698406219, y: 4182781.1160838, z: -2.3562});
 		},
 		updateUser: ({selected}, {updateAppState}) => {
 			updateAppState((state) => {
@@ -55,7 +62,8 @@ const UserSelectionPopupBase = kind({
 		}
 	},
 
-	render: ({userId, usersList, updateUser, resetUserSettings, onResetAll, ...rest}) => {
+	render: ({userId, usersList, updateUser, resetUserSettings, onResetPosition, onResetAll, ...rest}) => {
+		delete rest.onResetCopilot;
 		delete rest.resetAll;
 		delete rest.resetPosition;
 		delete rest.updateAppState;
@@ -78,6 +86,7 @@ const UserSelectionPopupBase = kind({
 				<buttons>
 					<Button onClick={resetUserSettings}>Reset Current User</Button>
 					<Button onClick={onResetAll}>Start Demo</Button>
+					<Button onClick={onResetPosition}>Reset Position</Button>
 				</buttons>
 			</Popup>
 		);

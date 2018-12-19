@@ -158,8 +158,14 @@ const addCarLayer = ({coordinates, iconURL, map, orientation = 0}) => {
 				}
 			};
 
-			map.addImage('car', icon);
-			map.addLayer(carLayer);
+			// If we remove the welcome screen while in the middle of an async call it throws an error.
+			// For now we can just supress it as a warning.
+			try {
+				map.addImage('car', icon);
+				map.addLayer(carLayer);
+			} catch(err) {
+				console.warn('Map is unmounted.', error);
+			}
 		});
 	}
 };
@@ -569,7 +575,16 @@ class MapCoreBase extends React.Component {
 			// this.setState(travelInfo);
 
 			// const routeLayer = this.map.getLayer('route');
-			const direction = this.map.getSource('route');
+
+			// If we remove the welcome screen while in the middle of an async call it throws an error.
+			// For now we can just supress it as a warning.
+			let direction = null;
+			try {
+				direction = this.map.getSource('route');
+			} catch (error) {
+				console.warn('Map is unmounted', error);
+				return;
+			}
 			if (direction) {
 				// if (direction) debugger;
 				direction.setData({

@@ -112,6 +112,8 @@ class AppContextProvider extends Component {
 
 		this.setUserSettings(this.state.userId);
 		this.setLocation();
+		// hardcoded to SF for demo
+		this.setWeather(37.7876092, -122.40091);
 	}
 
 	componentWillUpdate (nextProps, nextState) {
@@ -218,6 +220,10 @@ class AppContextProvider extends Component {
 		userIds.forEach(this.deleteUserSettings);
 		this.resetUserSettings();
 		this.repopulateUsersForDemo();
+		// keep app updated with the usersList
+		this.updateAppState((state) => {
+			state.usersList = this.getUserNames();
+		});
 	}
 
 	repopulateUsersForDemo = () => {
