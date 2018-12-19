@@ -107,7 +107,7 @@ const StorybookDecorator = (story, config) => {
 		},
 		copper: {
 			accent: '#a47d66',
-			highlight: '#fff'
+			highlight: '#ffffff'
 		},
 		electro: {
 			accent: '#0359f0',

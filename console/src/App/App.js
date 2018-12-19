@@ -8,7 +8,6 @@ import Button from '@enact/agate/Button';
 import Popup from '@enact/agate/Popup';
 import DateTimePicker from '@enact/agate/DateTimePicker';
 import {TabbedPanels} from '@enact/agate/Panels';
-import Skinnable from '@enact/agate/Skinnable';
 import React from 'react';
 import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
@@ -299,8 +298,7 @@ const AppDecorator = compose(
 		userId
 	})),
 	AppIndex,
-	AgateDecorator,
-	Skinnable
+	AgateDecorator
 );
 
 const App = AppDecorator(AppBase);

@@ -35,10 +35,11 @@
 	.medium,
 	.large {
 		margin: 6px;
- 		&[draggable='true'] {
+
+ 		&[draggable="true"] {
 			&::after {
 				// This refers to theme colors, so we'll get them updated soon after the theme is ready
-				background-color: fade(#a47d66, 20%);
+				background-color: ~"hsla(var(--agate-accent-h, 0), var(--agate-accent-s, 0), var(--agate-accent-l, 0), 0.2)";
 				border-color: @agate-accent;
 				border-width: 2px;
 			}
@@ -49,7 +50,7 @@
 			content: "";
 			position: absolute;
 			// This refers to theme colors, so we'll get them updated soon after the theme is ready
-			background-image: linear-gradient(0.25turn, rgba(0,0,0,0), @agate-accent, rgba(0,0,0,0));
+			background-image: linear-gradient(to right, transparent, @agate-accent, transparent);
 			left: 0;
 			right: 0;
 			height: 1px;
@@ -57,7 +58,7 @@
 	}
  	.verticalDivider {
 		// This refers to theme colors, so we'll get them updated soon after the theme is ready
-		background-image: linear-gradient(rgba(0,0,0,0), @agate-accent, rgba(0,0,0,0));
+		background-image: linear-gradient(transparent, @agate-accent, transparent);
 		height: 100%;
 		width: 1px;
 	}
