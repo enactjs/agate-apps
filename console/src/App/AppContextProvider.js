@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import produce from 'immer';
-import {assocPath, mergeDeepRight, omit, path} from 'ramda';
+import {assocPath, equals, mergeDeepRight, omit, path} from 'ramda';
 
 import appConfig from '../App/configLoader';
 import userPresetsForDemo from './userPresetsForDemo';
@@ -112,14 +112,16 @@ class AppContextProvider extends Component {
 
 		this.setUserSettings(this.state.userId);
 		this.setLocation();
+		// hardcoded to SF for demo
+		this.setWeather(37.7876092, -122.40091);
 	}
 
 	componentWillUpdate (nextProps, nextState) {
-		if (this.state.userId !== nextState.userId && this.state.userSettings === nextState.userSettings) {
+		if (this.state.userId !== nextState.userId && equals(this.state.userSettings, nextState.userSettings)) {
 			this.setUserSettings(nextState.userId);
 		}
 
-		if (this.state.userId === nextState.userId && this.state.userSettings !== nextState.userSettings) {
+		if (this.state.userId === nextState.userId && !equals(this.state.userSettings, nextState.userSettings)) {
 			if (nextState.userSettings !== this.state.userSettings) {
 				this.saveUserSettings(nextState.userId, nextState.userSettings);
 			}
@@ -218,6 +220,10 @@ class AppContextProvider extends Component {
 		userIds.forEach(this.deleteUserSettings);
 		this.resetUserSettings();
 		this.repopulateUsersForDemo();
+		// keep app updated with the usersList
+		this.updateAppState((state) => {
+			state.usersList = this.getUserNames();
+		});
 	}
 
 	repopulateUsersForDemo = () => {

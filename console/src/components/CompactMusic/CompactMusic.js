@@ -1,9 +1,9 @@
 import GridListImageItem from '@enact/agate/GridListImageItem';
 import kind from '@enact/core/kind';
 import Layout, {Column, Cell} from '@enact/ui/Layout';
+import IconButton from '@enact/agate/IconButton';
 import React from 'react';
 
-import IconButton from '../IconButton';
 import Widget from '../Widget';
 
 import css from './CompactMusic.less';

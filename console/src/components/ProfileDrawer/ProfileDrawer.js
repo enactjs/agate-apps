@@ -95,6 +95,7 @@ const ProfileDrawerBase = kind({
 		onProfileEditEnd,
 		onResetAll,
 		onResetPosition,
+		onResetCopilot,
 		onSelect,
 		onToggleUserSelectionPopup,
 		orientation,
@@ -160,7 +161,8 @@ const ProfileDrawerBase = kind({
 					onClose={onToggleUserSelectionPopup}
 					onResetAll={onResetAll}
 					open={showUserSelectionPopup}
-					resetPosition={onResetPosition}
+					onResetPosition={onResetPosition}
+					onResetCopilot={onResetCopilot}
 				/>
 			</React.Fragment>
 		);

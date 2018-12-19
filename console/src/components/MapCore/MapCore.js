@@ -158,14 +158,21 @@ const addCarLayer = ({coordinates, iconURL, map, orientation = 0}) => {
 				}
 			};
 
-			map.addImage('car', icon);
-			map.addLayer(carLayer);
+			// If we remove the welcome screen while in the middle of an async call it throws an error.
+			// For now we can just supress it as a warning.
+			try {
+				map.addImage('car', icon);
+				map.addLayer(carLayer);
+			} catch (err) {
+				console.warn('Map is unmounted.', error);
+			}
 		});
 	}
 };
 
 const skinStyles = {
 	carbon: 'mapbox://styles/mapbox/dark-v9',
+	copper: 'mapbox://styles/mapbox/dark-v9',
 	electro: '',
 	titanium: 'mapbox://styles/mapbox/light-v9'
 };
@@ -191,11 +198,11 @@ class MapCoreBase extends React.Component {
 	}
 
 	static defaultProps = {
+		// colorMarker: '#445566',
 		centeringDuration: 2000,
+		colorRouteLine: '#445566',
 		controlScheme: 'full',
 		viewLockoutDuration: 4000,
-		// colorMarker: '#445566',
-		colorRouteLine: '#445566',
 		zoomLevel: 12,
 		zoomToSpeedScaleFactor: 0.02
 	}
@@ -297,16 +304,9 @@ class MapCoreBase extends React.Component {
 
 	componentDidUpdate (prevProps) {
 		if (this.props.skin !== prevProps.skin) {
-			const style = skinStyles[prevProps.skin] || skinStyles.titanium;
+			const style = skinStyles[this.props.skin] || skinStyles.titanium;
 			this.map.setStyle(style);
 
-			// car and route layer needs to be added everytime the map reloaded when skin changes
-			addCarLayer({
-				coordinates: this.props.location,
-				iconURL: CarPng,
-				map: this.map,
-				orientation: this.props.location.orientation
-			});
 			// make sure the map is resized after the container updates
 			setTimeout(this.map.resize.bind(this.map), 0);
 		}
@@ -569,7 +569,16 @@ class MapCoreBase extends React.Component {
 			// this.setState(travelInfo);
 
 			// const routeLayer = this.map.getLayer('route');
-			const direction = this.map.getSource('route');
+
+			// If we remove the welcome screen while in the middle of an async call it throws an error.
+			// For now we can just supress it as a warning.
+			let direction = null;
+			try {
+				direction = this.map.getSource('route');
+			} catch (error) {
+				console.warn('Map is unmounted', error);
+				return;
+			}
 			if (direction) {
 				// if (direction) debugger;
 				direction.setData({

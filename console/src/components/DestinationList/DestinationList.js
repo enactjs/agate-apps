@@ -9,6 +9,8 @@ import {equals} from 'ramda';
 
 import {propTypeLatLonList} from '../../data/proptypes';
 
+import css from './DestinationList.less';
+
 const DestinationList = kind({
 	name: 'DestinationList',
 
@@ -46,7 +48,7 @@ const DestinationList = kind({
 						onSelect={onSetDestination}
 						selectedProp="highlighted"
 						selected={selected}
-						itemProps={{small: true}}
+						itemProps={{css, small: true}}
 					>
 						{
 							positions.map(({description}, index) => `${index + 1} - ${description}`)

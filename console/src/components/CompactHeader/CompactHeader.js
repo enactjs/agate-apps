@@ -4,7 +4,7 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import IconButton from '../IconButton';
+import IconButton from '@enact/agate/IconButton';
 
 import css from './CompactHeader.less';
 
@@ -41,9 +41,10 @@ const CompactHeader = kind({
 					className={css.btn}
 					size="smallest"
 					alt="Fullscreen"
-					icon="expand"
 					onClick={onExpand}
-				/>
+				>
+					expand
+				</IconButton>
 			) : null}
 		</Divider>
 	)
