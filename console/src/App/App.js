@@ -98,11 +98,13 @@ const AppBase = kind({
 				state.appState.showBasicPopup = !state.appState.showBasicPopup;
 			});
 		},
-		onResetAll: (ev, {updateAppState}) => {
+		onResetAll: (ev, {onSelect, updateAppState}) => {
+			onSelect({index: 0});
 			updateAppState((state) => {
-				state.appState.index = 0;
+				state.userId = 1;
 				state.appState.showWelcomePopup = true;
 				state.appState.showUserSelectionPopup = false;
+				state.appState.showProfileEdit = false;
 			});
 		}
 	},
@@ -292,8 +294,8 @@ const AppDecorator = compose(
 		showWelcomePopup: appState.showWelcomePopup,
 		skin: userSettings.skin,
 		skinName: userSettings.skin,
-		userId,
-		updateAppState
+		updateAppState,
+		userId
 	})),
 	AppIndex,
 	AgateDecorator
