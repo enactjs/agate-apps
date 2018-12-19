@@ -64,11 +64,12 @@ class AppContextProvider extends Component {
 		this.watchPositionId = null;  // Store the reference to the position watcher.
 		this.state = {
 			appState:{
-				showPopup: false,
+				showAppList: false,
 				showBasicPopup: false,
 				showDateTimePopup: false,
+				showPopup: false,
+				showProfileEdit: false,
 				showUserSelectionPopup: false,
-				showAppList: false,
 				showWelcomePopup: 'defaultShowWelcomePopup' in props ? Boolean(props.defaultShowWelcomePopup) : true
 			},
 			userId: 1,
@@ -111,6 +112,8 @@ class AppContextProvider extends Component {
 
 		this.setUserSettings(this.state.userId);
 		this.setLocation();
+		// hardcoded to SF for demo
+		this.setWeather(37.7876092, -122.40091);
 	}
 
 	componentWillUpdate (nextProps, nextState) {
@@ -217,6 +220,10 @@ class AppContextProvider extends Component {
 		userIds.forEach(this.deleteUserSettings);
 		this.resetUserSettings();
 		this.repopulateUsersForDemo();
+		// keep app updated with the usersList
+		this.updateAppState((state) => {
+			state.usersList = this.getUserNames();
+		});
 	}
 
 	repopulateUsersForDemo = () => {

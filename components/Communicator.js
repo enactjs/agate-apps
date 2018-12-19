@@ -54,7 +54,9 @@ class Communicator extends React.Component {
 
 	_connect (screenId) {
 		this.socket = openSocket(`ws://${this.props.host}`);
-
+		if (this.props.onReset) {
+			this.socket.on('RESET_COPILOT', this.props.onReset);
+		}
 		if (screenId != null) {
 			this.socket.on(`VIDEO_ADD_SCREEN/${screenId}`, this.handleAddVideo);
 			// this.socket.on('SHOW_AD', this.handleShowAd);
@@ -90,6 +92,11 @@ class Communicator extends React.Component {
 		this.socket.emit('SEND_DATA', data);
 		this.socket.emit('VIDEO_SENT', {id: screenId});
 	};
+
+	resetCopilot = () => {
+		const data = {route: 'RESET_COPILOT'};
+		this.socket.emit('SEND_DATA', data);
+	}
 
 	sendETA = ({eta, duration}) => {
 		const data = {

@@ -253,6 +253,10 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			this.connection.send('positionReset', coordinates);
 		}
 
+		resetCopilot = () => {
+			this.comm.current.resetCopilot();
+		}
+
 		sendNavigation = () => {
 			// console.log('sendNavigation:', this.props.navigation);
 			this.comm.current.sendETA(this.props.navigation);
@@ -295,10 +299,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			delete rest.autonomous;
 			delete rest.location;
 			delete rest.navigating;
-			delete rest.navigation;
 			delete rest.setConnected;
-			delete rest.setConnected;
-			delete rest.setLocation;
 			delete rest.setLocation;
 			delete rest.updateAppState;
 			delete rest.updateDestination;
@@ -311,6 +312,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 							{...rest}
 							sendVideo={this.sendVideo}
 							resetPosition={this.resetPosition}
+							resetCopilot={this.resetCopilot}
 						/>
 					</ServiceLayerContext.Provider>
 				</React.Fragment>
