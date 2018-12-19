@@ -1,15 +1,15 @@
 import Button from '@enact/agate/Button';
-import Divider from '@enact/agate/Divider';
+// import Divider from '@enact/agate/Divider';
 import FullscreenPopup from '@enact/agate/FullscreenPopup';
 // import {Panel, Panels} from '@enact/agate/Panels';
 import {Panel} from '@enact/agate/Panels';
-import Skinnable from '@enact/agate/Skinnable';
+// import Skinnable from '@enact/agate/Skinnable';
 // import {handle, forProp, forward, returnsTrue} from '@enact/core/handle';
 import {handle, forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import {Column, Row, Cell} from '@enact/ui/Layout';
-import {fadeIn, fadeOut, reverse} from '@enact/ui/ViewManager/arrange';
+// import {fadeIn, fadeOut, reverse} from '@enact/ui/ViewManager/arrange';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -42,34 +42,33 @@ const getCompactComponent = ({components, key, onSendVideo}) => {
 
 const currentTime = () => new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
-const WelcomePanel = Skinnable({defaultSkin: 'carbon'}, Panel);
+// const WelcomePanel = Skinnable({defaultSkin: 'carbon'}, Panel);
 
-const Arranger = {
-	enter: reverse(fadeIn),
-	leave: reverse(fadeOut)
-};
+// const Arranger = {
+// 	enter: reverse(fadeIn),
+// 	leave: reverse(fadeOut)
+// };
 
-
-const UserSelectionPanel = kind({
-	name: 'UserSelectionPanel',
-
-	render: ({onSelectUser, users}) => {
-		return (
-			<WelcomePanel className={css.userSelectionPanel}>
-				<Divider slot="header" className={css.header}>Welcome</Divider>
-				<Row align="center space-around" className={css.bodyRow}>
-					{users.map((user, index) => (
-						<Cell shrink key={'userKey' + index}>
-							<UserAvatar size="large" userId={index} onClick={onSelectUser}>
-								{user}
-							</UserAvatar>
-						</Cell>
-					))}
-				</Row>
-			</WelcomePanel>
-		);
-	}
-});
+// const UserSelectionPanel = kind({
+// 	name: 'UserSelectionPanel',
+//
+// 	render: ({onSelectUser, users}) => {
+// 		return (
+// 			<WelcomePanel className={css.userSelectionPanel}>
+// 				<Divider slot="header" className={css.header}>Welcome</Divider>
+// 				<Row align="center space-around" className={css.bodyRow}>
+// 					{users.map((user, index) => (
+// 						<Cell shrink key={'userKey' + index}>
+// 							<UserAvatar size="large" userId={index} onClick={onSelectUser}>
+// 								{user}
+// 							</UserAvatar>
+// 						</Cell>
+// 					))}
+// 				</Row>
+// 			</WelcomePanel>
+// 		);
+// 	}
+// });
 
 const WelcomePopupBase = kind({
 	name: 'WelcomePopup',
