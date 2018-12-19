@@ -538,6 +538,7 @@ class MapCoreBase extends React.Component {
 
 	drawDirection = async (waypoints) => {
 		// console.log('drawDirection:', waypoints);
+
 		this.setState({carShowing: true});
 		const data = await getRoute(waypoints);
 
