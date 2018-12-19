@@ -23,9 +23,9 @@ const PlaybackControls = kind({
 				orientation="horizontal"
 				align="center center"
 			>
-				<Cell shrink><IconButton icon="skipbackward" size="smallest" /></Cell>
-				<Cell shrink><IconButton icon="play" size="small" /></Cell>
-				<Cell shrink><IconButton icon="skipforward" size="smallest" /></Cell>
+				<Cell shrink><IconButton size="smallest">skipbackward</IconButton></Cell>
+				<Cell shrink><IconButton size="small">play</IconButton></Cell>
+				<Cell shrink><IconButton size="smallest">skipforward</IconButton></Cell>
 			</Layout>
 		);
 	}
