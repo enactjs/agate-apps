@@ -127,58 +127,5 @@
 					"coordinates": {"lat": 37.786445, "lon": -122.404202}
 			}
 		]
-	},
-	"user3": {
-		"arrangements": {
-			"arrangeable": false,
-			"dashboard": {},
-			"home": {},
-			"hvac": {},
-			"phone": {},
-			"radio": {}
-		},
-		"climate": {
-			"acSelected": false,
-			"autoSelected": false,
-			"fanSpeed": 0,
-			"leftHeat": false,
-			"leftTemp": 0,
-			"recirculate": false,
-			"rightHeat": false,
-			"rightTemp": 0
-		},
-		"components": {
-			"welcome": {
-				"small1": "weather",
-				"small2": "multimedia"
-			}
-		},
-		"colorAccent": "#0359f0",
-		"colorHighlight": "#f08c21",
-		"fontSize": 0,
-		"name": "Gary",
-		"skin": "electro",
-		"topLocations": [
-			{
-					"description": "Home",
-					"coordinates": {"lat": 37.39236, "lon": -121.990382}
-			},
-			{
-					"description": "Tasty Subs & Pizza",
-					"coordinates": {"lat": 37.384965, "lon": -121.995479}
-			},
-			{
-					"description": "School",
-					"coordinates": {"lat": 37.79395, "lon": -122.40185}
-			},
-			{
-					"description": "Work",
-					"coordinates": {"lat": 37.78353, "lon": -122.39615}
-			},
-			{
-					"description": "Dishdash",
-					"coordinates": {"lat": 37.376994, "lon": -122.026600}
-			}
-		]
 	}
 }

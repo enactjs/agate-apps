@@ -220,6 +220,10 @@ class AppContextProvider extends Component {
 		userIds.forEach(this.deleteUserSettings);
 		this.resetUserSettings();
 		this.repopulateUsersForDemo();
+		// keep app updated with the usersList
+		this.updateAppState((state) => {
+			state.usersList = this.getUserNames();
+		});
 	}
 
 	repopulateUsersForDemo = () => {
