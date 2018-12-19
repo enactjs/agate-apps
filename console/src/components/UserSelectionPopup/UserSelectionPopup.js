@@ -76,9 +76,10 @@ const UserSelectionPopupBase = kind({
 
 				<Group
 					childComponent={RadioItem}
-					selectedProp="selected"
 					defaultSelected={userId - 1}
 					onSelect={updateUser}
+					select="radio"
+					selectedProp="selected"
 				>
 					{usersList}
 				</Group>
