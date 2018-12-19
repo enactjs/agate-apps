@@ -110,8 +110,6 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 
 		render () {
 			const {
-				compact,
-				description,
 				destination,
 				locationSelection,
 				navigating,
@@ -160,17 +158,18 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 								</Cell>
 							}
 							{
-								locationSelection &&
-								<Cell className={css.columnCell}>
-									<DestinationList
-										destination={destination}
-										onSetDestination={this.handleSetDestination}
-										positions={topLocations}
-										title="Top Locations"
-									/>
-								</Cell>
+								locationSelection ?
+									<Cell className={css.columnCell}>
+										<DestinationList
+											destination={destination}
+											onSetDestination={this.handleSetDestination}
+											positions={topLocations}
+											title="Top Locations"
+										/>
+									</Cell> :
+									<Cell className={css.columnCell} />
 							}
-							{
+							{/* {
 								compact && destination && description &&
 								<Cell shrink className={css.columnCell}>
 									<Divider>Navigating To</Divider>
@@ -181,7 +180,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 										disabled
 									>{description}</Button>
 								</Cell>
-							}
+							}*/}
 							{
 								destination &&
 								<Cell shrink className={css.columnCell}>
@@ -218,7 +217,6 @@ const ConnectedMap = AppContextConnect(({location, userSettings, navigation, upd
 	location,
 	navigation,
 	navigating: navigation.navigating,
-	description: navigation.description,
 	destination: navigation.destination,
 	updateAppState
 }));
