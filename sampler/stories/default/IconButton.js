@@ -6,7 +6,7 @@ import {action} from '@storybook/addon-actions';
 import {withInfo} from '@storybook/addon-info';
 
 import icons from './icons';
-import {boolean, select, text} from '../../src/enact-knobs';
+import {boolean, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
 IconButton.displayName = 'IconButton';
