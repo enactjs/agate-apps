@@ -71,7 +71,7 @@ const WidgetBase = kind({
 				</Row>
 			);
 			default: return (
-				<Layout {...rest} orientation="vertical" align="center center">
+				<Layout align="center center" orientation="vertical" {...rest}>
 					{!noHeader ? (
 						<Cell shrink component={CompactHeader} noExpandButton={noExpandButton} onExpand={onExpand} view={view}>
 							{title}

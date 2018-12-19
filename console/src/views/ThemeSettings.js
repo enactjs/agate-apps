@@ -108,11 +108,11 @@ const ThemeSettings = kind({
 								{skinNames}
 							</SkinSetting>
 						</Cell>
-						<Cell shrink>
+						{/* <Cell shrink>
 							<FontSizeSetting label="Text Size:">
 								{['S', 'M', 'L', 'XL']}
 							</FontSizeSetting>
-						</Cell>
+						</Cell>*/}
 					</Column>
 				</Cell>
 			</Row>
@@ -137,7 +137,7 @@ const AccentColorSetting = SaveableSettings('colorAccent')(ColorPickerItem);
 const HighlightColorSetting = SaveableSettings('colorHighlight')(ColorPickerItem);
 
 // Save the `colorAccent` user setting, read from the default prop (value), of the supplied SliderButtonItem
-const FontSizeSetting = SaveableSettings('fontSize')(SliderButtonItem);
+// const FontSizeSetting = SaveableSettings('fontSize')(SliderButtonItem);
 
 // Make and apply a custom saver that can do additional operations (look ups from a list)
 const SkinSetting = AppContextConnect(({userSettings, updateAppState}) => ({

@@ -5,7 +5,7 @@ import {Row, Cell} from '@enact/ui/Layout';
 import Picker from '@enact/agate/Picker';
 import ToggleButton from '@enact/agate/ToggleButton';
 
-import AppStateConnect from '../../App/AppContextConnect';
+// import AppStateConnect from '../../App/AppContextConnect';
 import Widget from '../Widget';
 
 import css from './CompactHVAC.less';
@@ -59,9 +59,11 @@ const CompactHvacBase = kind({
 	)
 });
 
-const CompactHvac = AppStateConnect(({weather}) => ({
-	// SUPER Safely fetch the temperature
-	temp: (weather && weather.current && weather.current.main && weather.current.main.temp)
-}))(CompactHvacBase);
+// For the purposes of the demo, we'll just have a static value for the temperature.
+//
+// const CompactHvac = AppStateConnect(({weather}) => ({
+// 	// SUPER Safely fetch the temperature
+// 	temp: (weather && weather.current && weather.current.main && weather.current.main.temp)
+// }))(CompactHvacBase);
 
-export default CompactHvac;
+export default CompactHvacBase;

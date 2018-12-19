@@ -101,8 +101,9 @@ const AppBase = kind({
 		onResetAll: (ev, {updateAppState}) => {
 			updateAppState((state) => {
 				state.appState.index = 0;
-				state.appState.showWelcomePopup = true;
+				state.appState.showProfileEdit = false;
 				state.appState.showUserSelectionPopup = false;
+				state.appState.showWelcomePopup = true;
 			});
 		}
 	},

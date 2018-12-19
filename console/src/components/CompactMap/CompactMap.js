@@ -23,18 +23,26 @@ const CompactMapBase = kind({
 	render: ({follow, ...rest}) => {
 		return (
 			<Widget {...rest} title="Map" description="Choose a destination and navigate" noHeader>
-				<MapController
-					controlScheme="compact"
-					compact
-					autonomousSelection
-					follow={follow}
-				>
-					{/* <tools>
-						<Button alt="Fullscreen" icon="fullscreen" data-tabindex={getPanelIndexOf('map')} onSelect={onSelect} onKeyUp={onTabChange} onClick={onTabChange} />
-						<Button alt="Propose new destination" icon="arrowhookleft" onClick={changePosition} />
-						<Button alt="Navigate Here" icon="play" onClick={onSetDestination} />
-					</tools>*/}
-				</MapController>
+				<small>
+					<MapController
+						controlScheme="compact"
+						follow={follow}
+					/>
+				</small>
+				<large>
+					<MapController
+						controlScheme="compact"
+						locationSelection
+						autonomousSelection
+						follow={follow}
+					>
+						{/* <tools>
+							<Button alt="Fullscreen" icon="fullscreen" data-tabindex={getPanelIndexOf('map')} onSelect={onSelect} onKeyUp={onTabChange} onClick={onTabChange} />
+							<Button alt="Propose new destination" icon="arrowhookleft" onClick={changePosition} />
+							<Button alt="Navigate Here" icon="play" onClick={onSetDestination} />
+						</tools>*/}
+					</MapController>
+				</large>
 			</Widget>
 		);
 	}
