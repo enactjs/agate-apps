@@ -39,7 +39,7 @@
 			&::after {
 				// This refers to theme colors, so we'll get them updated soon after the theme is ready
 				background-color: fade(#a47d66, 20%);
-				border-color: #a47d66;
+				border-color: @agate-accent;
 				border-width: 2px;
 			}
 		}
@@ -49,7 +49,7 @@
 			content: "";
 			position: absolute;
 			// This refers to theme colors, so we'll get them updated soon after the theme is ready
-			background-image: linear-gradient(0.25turn, rgba(0,0,0,0), #a47d66, rgba(0,0,0,0));
+			background-image: linear-gradient(0.25turn, rgba(0,0,0,0), @agate-accent, rgba(0,0,0,0));
 			left: 0;
 			right: 0;
 			height: 1px;
@@ -57,7 +57,7 @@
 	}
  	.verticalDivider {
 		// This refers to theme colors, so we'll get them updated soon after the theme is ready
-		background-image: linear-gradient(rgba(0,0,0,0), #a47d66, rgba(0,0,0,0));
+		background-image: linear-gradient(rgba(0,0,0,0), @agate-accent, rgba(0,0,0,0));
 		height: 100%;
 		width: 1px;
 	}
