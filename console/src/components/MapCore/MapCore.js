@@ -191,11 +191,11 @@ class MapCoreBase extends React.Component {
 	}
 
 	static defaultProps = {
+		// colorMarker: '#445566',
 		centeringDuration: 2000,
+		colorRouteLine: '#445566',
 		controlScheme: 'full',
 		viewLockoutDuration: 4000,
-		// colorMarker: '#445566',
-		colorRouteLine: '#445566',
 		zoomLevel: 12,
 		zoomToSpeedScaleFactor: 0.02
 	}
@@ -297,16 +297,9 @@ class MapCoreBase extends React.Component {
 
 	componentDidUpdate (prevProps) {
 		if (this.props.skin !== prevProps.skin) {
-			const style = skinStyles[prevProps.skin] || skinStyles.titanium;
+			const style = skinStyles[this.props.skin] || skinStyles.titanium;
 			this.map.setStyle(style);
 
-			// car and route layer needs to be added everytime the map reloaded when skin changes
-			addCarLayer({
-				coordinates: this.props.location,
-				iconURL: CarPng,
-				map: this.map,
-				orientation: this.props.location.orientation
-			});
 			// make sure the map is resized after the container updates
 			setTimeout(this.map.resize.bind(this.map), 0);
 		}
