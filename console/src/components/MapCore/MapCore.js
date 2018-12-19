@@ -163,7 +163,7 @@ const addCarLayer = ({coordinates, iconURL, map, orientation = 0}) => {
 			try {
 				map.addImage('car', icon);
 				map.addLayer(carLayer);
-			} catch(err) {
+			} catch (err) {
 				console.warn('Map is unmounted.', error);
 			}
 		});
@@ -172,6 +172,7 @@ const addCarLayer = ({coordinates, iconURL, map, orientation = 0}) => {
 
 const skinStyles = {
 	carbon: 'mapbox://styles/mapbox/dark-v9',
+	copper: 'mapbox://styles/mapbox/dark-v9',
 	electro: '',
 	titanium: 'mapbox://styles/mapbox/light-v9'
 };

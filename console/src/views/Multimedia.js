@@ -15,7 +15,7 @@ import appConfig from '../App/configLoader';
 import Communicator from '../../../components/Communicator';
 import ScreenSelectionPopup from '../../../components/ScreenSelectionPopup';
 
-import IconButton from '../components/IconButton';
+import IconButton from '@enact/agate/IconButton';
 import CustomLayout from '../components/CustomLayout';
 
 import youtubeVideos from '../data/youtubeapi.json';
@@ -39,7 +39,7 @@ const ListItemOverlay = kind({
 
 	render: () => (
 		<Column align="center center">
-			<IconButton icon="play" size="smallest" />
+			<IconButton size="smallest">play</IconButton>
 		</Column>
 	)
 });

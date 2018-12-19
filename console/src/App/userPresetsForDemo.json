@@ -18,8 +18,8 @@
 			"rightHeat": false,
 			"rightTemp": 0
 		},
-		"colorAccent": "#75d1f0",
-		"colorHighlight": "#259aa7",
+		"colorAccent": "#a47d66",
+		"colorHighlight": "#ffffff",
 		"components": {
 			"welcome": {
 				"small1": "heater",
@@ -28,7 +28,7 @@
 		},
 		"fontSize": 0,
 		"name": "Laura",
-		"skin": "carbon",
+		"skin": "copper",
 		"topLocations": [
 			{
 					"description": "Home",
