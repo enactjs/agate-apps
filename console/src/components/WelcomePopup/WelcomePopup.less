@@ -28,7 +28,7 @@
 				letter-spacing: 159px;
 				margin-right: -159px;
 				opacity: 0.4;
-				color: @agate-accent;
+				color: #a47d66;
 				text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
 			}
 
@@ -60,6 +60,10 @@
 						transform: rotate(calc(var(--user-index, 0) * 225deg));
 					}
 				}
+
+				.caption {
+					color: #a47d66;
+				}
 			}
 		}
 
@@ -71,7 +75,7 @@
 				width: 150px;
 
 				.image {
-					border: 6px solid #594339;
+					border: 6px solid @agate-accent;
 
 					&::before {
 						top: -27px;
