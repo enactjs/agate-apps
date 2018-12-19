@@ -18,7 +18,9 @@
 		}
 
 		&.useWelcomeBackground {
-			background: linear-gradient(to right, #0f151a 0%,#463c38 50%,#0f151a 100%);
+			// background: linear-gradient(to right, #0f151a 0%,#463c38 50%,#0f151a 100%); // original copper gradient
+			background: @agate-bg-color;
+			background-image: @agate-bg-image;
 		}
 
 		.userSelectionPanel {
@@ -68,14 +70,11 @@
 		}
 
 		.avatar {
-			.gridListImageItem {
 				margin-right: 30px;
 				margin-bottom: 30px;
-				height: 150px;
-				width: 150px;
 
 				.image {
-					border: 6px solid @agate-accent;
+					border-color: @agate-accent;
 
 					&::before {
 						top: -27px;
@@ -84,11 +83,6 @@
 						bottom: -27px;
 					}
 				}
-
-				.caption {
-					display: none;
-				}
-			}
 		}
 
 		.smallComponent {
