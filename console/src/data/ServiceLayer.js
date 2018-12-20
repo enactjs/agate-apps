@@ -284,6 +284,13 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			this.comm.current.resetCopilot();
 		}
 
+		reloadApp = () => {
+			this.comm.current.reloadApp();
+		}
+
+		handleReload = () => {
+			window.location.reload();
+		}
 
 		setConnected = (connected) => {
 			this.props.updateAppState((state) => {
@@ -331,12 +338,17 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			return (
 				<React.Fragment>
 					<ServiceLayerContext.Provider value={{getMap: this.getMap, onMapUnmount: this.onMapUnmount}}>
-						<Communicator ref={this.comm} host={appConfig.communicationServerHost} />
+						<Communicator
+							ref={this.comm}
+							onReload={this.handleReload}
+							host={appConfig.communicationServerHost}
+						/>
 						<PureWrapped
 							{...rest}
 							sendVideo={this.sendVideo}
 							resetPosition={this.resetPosition}
 							resetCopilot={this.resetCopilot}
+							reloadApp={this.reloadApp}
 						/>
 					</ServiceLayerContext.Provider>
 				</React.Fragment>

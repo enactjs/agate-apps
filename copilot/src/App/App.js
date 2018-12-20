@@ -144,6 +144,10 @@ class App extends React.Component {
 		this.setState(({popupOpen}) => getInitialState({popupOpen}));
 	}
 
+	reloadApp = () => {
+		window.location.reload();
+	}
+
 	render () {
 		const {duration, eta, popupOpen, showAd, url} = this.state;
 		const props = {
@@ -165,6 +169,7 @@ class App extends React.Component {
 					screenId={this.state.screenId}
 					onPlayVideo={this.onPlayVideo}
 					onReset={this.resetApp}
+					onReload={this.reloadApp}
 					// onShowAd={this.onShowAdSpace}
 					onShowETA={this.onShowETA}
 				/>
