@@ -273,6 +273,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			this.comm.current.resetCopilot();
 		}
 
+
 		setConnected = (connected) => {
 			this.props.updateAppState((state) => {
 				if (state.connections.serviceLayer === connected) return null;
