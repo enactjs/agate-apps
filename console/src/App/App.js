@@ -129,6 +129,7 @@ const AppBase = kind({
 		orientation,
 		resetCopilot,
 		resetPosition,
+		reloadApp,
 		sendVideo,
 		showBasicPopup,
 		showDateTimePopup,
@@ -194,6 +195,7 @@ const AppBase = kind({
 					<MapView />
 					<Settings
 						onSelect={onSelect}
+						onReloadApp={reloadApp}
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
 					<ThemeSettings onSelect={onSelect} />
