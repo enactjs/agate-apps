@@ -83,6 +83,11 @@ const AppBase = kind({
 				state.appState.showDateTimePopup = !state.appState.showDateTimePopup;
 			});
 		},
+		onToggleDestinationReachedPopup: (ev, {updateAppState}) => {
+			updateAppState((state) => {
+				state.appState.showDestinationReachedPopup = !state.appState.showDestinationReachedPopup;
+			});
+		},
 		onToggleWelcomePopup: (ev, {updateAppState}) => {
 			updateAppState((state) => {
 				state.appState.showWelcomePopup = !state.appState.showWelcomePopup;
@@ -102,9 +107,10 @@ const AppBase = kind({
 			onSelect({index: 0});
 			updateAppState((state) => {
 				state.userId = 1;
-				state.appState.showWelcomePopup = true;
-				state.appState.showUserSelectionPopup = false;
+				state.appState.showDestinationReachedPopup = false;
 				state.appState.showProfileEdit = false;
+				state.appState.showUserSelectionPopup = false;
+				state.appState.showWelcomePopup = true;
 			});
 		}
 	},
@@ -116,6 +122,7 @@ const AppBase = kind({
 		onSelect,
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
+		onToggleDestinationReachedPopup,
 		onTogglePopup,
 		onToggleProfileEdit,
 		onToggleWelcomePopup,
@@ -125,6 +132,7 @@ const AppBase = kind({
 		sendVideo,
 		showBasicPopup,
 		showDateTimePopup,
+		showDestinationReachedPopup,
 		showPopup,
 		showUserSelectionPopup,
 		showWelcomePopup,
@@ -213,6 +221,12 @@ const AppBase = kind({
 					{`Popup for ${skinName} skin`}
 				</Popup>
 				<Popup
+					onClose={onToggleDestinationReachedPopup}
+					open={showDestinationReachedPopup}
+				>
+					Destination reached!
+				</Popup>
+				<Popup
 					onClose={onTogglePopup}
 					open={showPopup}
 					closeButton
@@ -289,6 +303,7 @@ const AppDecorator = compose(
 		showAppList: appState.showAppList,
 		showBasicPopup: appState.showBasicPopup,
 		showDateTimePopup: appState.showDateTimePopup,
+		showDestinationReachedPopup: appState.showDestinationReachedPopup,
 		showPopup: appState.showPopup,
 		showUserSelectionPopup: appState.showUserSelectionPopup,
 		showWelcomePopup: appState.showWelcomePopup,

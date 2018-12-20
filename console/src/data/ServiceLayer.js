@@ -44,6 +44,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			this.maps = new Set();
 			this.location = this.props.location;
 			this.isFirstPosition = true;
+			this.destinationPopupAvailable = true;
 		}
 
 		componentDidMount () {
@@ -66,7 +67,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 			//
 			// Temporarily disabling the navigation FALSE code due to it being unreliable.
-			// We'll need to look into this a but more soon.
+			// We'll need to look into this a bit more soon.
 			//
 			// if (
 			// 	// navigating changed to FALSE
@@ -180,24 +181,20 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 		onPosition = (message) => {
 			// console.log('%conPosition', 'color: orange', message.pose);
-			const destination = this.props.destination;
-			const {x, y} = message.pose.position;
+			const {destination} = this.props;
 			const location = this.normalizePositionData(message.pose);
+			const lastDestinationWaypoint = destination && destination.slice(-1)[0];
+			const metersFromDestination = distanceApart(location, lastDestinationWaypoint);
+			const metersFromLastLocation = distanceApart(location, this.props.location);
 
-			if (!this.done && destination) {
-				let vx = message.pose.linear_velocity.x;
-				let vy = message.pose.linear_velocity.y;
-				if (
-					Math.sqrt(
-						(x - destination.x) * (x - destination.x) +
-						(y - destination.y) * (y - destination.y)
-					) < 5 &&
-					Math.sqrt(vx * vx + vy * vy) < 0.1
-				) {
-
-					this.done = true;
-					console.log('Destination Reached:', location, 'Automatic driving mode now disabled.');
-				}
+			// We're traveling at a slow 1m/s and we're less than 50 meters from our destination.
+			// We don't care, in this situation, if we're autonomously driving or not.
+			if (location.linearVelocity < 1 &&
+				metersFromDestination != null &&
+				metersFromDestination < 50
+			) {
+				console.log('Destination Reached');
+				this.destinationReached();
 			}
 
 			this.location = location;
@@ -207,7 +204,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			}
 
 			// If the location is more than 0.5 meters apart, go ahead and update the location.
-			if (this.maps.size > 0 && distanceApart(this.props.location, location) > 0.5) {
+			if (this.maps.size > 0 && metersFromLastLocation > 0.5) {
 				for (let map of this.maps) {
 					if (map.actionManager) {
 						map.actionManager({
@@ -248,10 +245,13 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		setDestination = () => {
 			const {autonomous, destination, location, navigating} = this.props;
 
+			this.destinationPopupAvailable = true; // New destination means the popup is available again.
 			// console.log('Checking for whether to start navigating.', Boolean(navigating), Boolean(destination && destination.slice(-1).lat !== 0));
 			if (autonomous && navigating && destination && destination.slice(-1).lat !== 0) {
 				console.log('%cSending routing request:', 'color: magenta', [location, ...destination]);
-				this.connection.send('routingRequest', [location, ...destination]);
+				if (this.connection) {
+					this.connection.send('routingRequest', [location, ...destination]);
+				}
 			}
 		}
 
@@ -307,6 +307,15 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					state.navigation.navigating = navigating;
 				}
 			});
+		}
+
+		destinationReached = () => {
+			if (this.destinationPopupAvailable) {
+				this.destinationPopupAvailable = false; // Only allow one popup per destination.
+				this.props.updateAppState((state) => {
+					state.appState.showDestinationReachedPopup = true;
+				});
+			}
 		}
 
 		getMap = (map) => {

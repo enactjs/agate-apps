@@ -67,6 +67,7 @@ class AppContextProvider extends Component {
 				showAppList: false,
 				showBasicPopup: false,
 				showDateTimePopup: false,
+				showDestinationReachedPopup: false,
 				showPopup: false,
 				showProfileEdit: false,
 				showUserSelectionPopup: false,
