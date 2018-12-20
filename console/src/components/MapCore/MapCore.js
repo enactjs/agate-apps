@@ -189,7 +189,6 @@ class MapCoreBase extends React.Component {
 		defaultFollow: PropTypes.bool, // Should the centering position follow the current location?
 		destination: propTypeLatLonList,
 		location: propTypeLatLon, // Our actual current location on the world
-		navigating: PropTypes.bool,
 		points: PropTypes.array,
 		position: propTypeLatLon, // The map's centering position
 		routeRedrawInterval: PropTypes.number,
@@ -670,7 +669,6 @@ class MapCoreBase extends React.Component {
 		delete rest.defaultFollow;
 		delete rest.destination;
 		delete rest.location;
-		delete rest.navigating;
 		delete rest.points;
 		delete rest.position;
 		delete rest.skin;
@@ -704,11 +702,10 @@ class MapCoreBase extends React.Component {
 	}
 }
 
-const ConnectedMap = AppContextConnect(({location, userSettings, navigation}) => ({
+const ConnectedMap = AppContextConnect(({location, userSettings}) => ({
 	// colorMarker: userSettings.colorHighlight,
 	colorRouteLine: userSettings.colorHighlight,
 	location,
-	navigating: navigation.navigating,
 	skin: userSettings.skin
 }));
 
