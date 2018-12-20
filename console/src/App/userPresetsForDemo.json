@@ -32,23 +32,23 @@
 		"topLocations": [
 			{
 					"description": "Home",
-					"coordinates": {"lat": 37.790246, "lon": -122.396601}
+					"coordinates": {"lat": 37.790416, "lon": -122.396185}
 			},
 			{
 					"description": "Philz coffee",
-					"coordinates": {"lat": 37.789026, "lon": -122.392775}
+					"coordinates": {"lat": 37.788920, "lon": -122.393154}
 			},
 			{
 					"description": "School",
-					"coordinates": {"lat": 37.79395, "lon": -122.40185}
+					"coordinates": {"lat": 37.793424, "lon": -122.401124}
 			},
 			{
 					"description": "Work",
-					"coordinates": {"lat": 37.78353, "lon": -122.39615}
+					"coordinates": {"lat": 37.783902, "lon": -122.396148}
 			},
 			{
 					"description": "MOMA",
-					"coordinates": {"lat": 37.786445, "lon": -122.404202}
+					"coordinates": {"lat": 37.785684, "lon": -122.401035}
 			}
 		]
 	},
@@ -108,23 +108,23 @@
 		"topLocations": [
 			{
 					"description": "Home",
-					"coordinates": {"lat": 37.790246, "lon": -122.396601}
+					"coordinates": {"lat": 37.790416, "lon": -122.396185}
 			},
 			{
 					"description": "Philz coffee",
-					"coordinates": {"lat": 37.789026, "lon": -122.392775}
+					"coordinates": {"lat": 37.788920, "lon": -122.393154}
 			},
 			{
 					"description": "School",
-					"coordinates": {"lat": 37.79395, "lon": -122.40185}
+					"coordinates": {"lat": 37.793318, "lon": -122.400845}
 			},
 			{
 					"description": "Work",
-					"coordinates": {"lat": 37.78353, "lon": -122.39615}
+					"coordinates": {"lat": 37.783902, "lon": -122.396148}
 			},
 			{
 					"description": "MOMA",
-					"coordinates": {"lat": 37.786445, "lon": -122.404202}
+					"coordinates": {"lat": 37.785684, "lon": -122.401035}
 			}
 		]
 	}

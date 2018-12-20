@@ -79,8 +79,8 @@ class AppContextProvider extends Component {
 				serviceLayer: false
 			},
 			location: {
-				lat: 0,
-				lon: 0,
+				lat: 37.78878,
+				lon: -122.40467,
 				linearVelocity: 0,
 				orientation: 0
 			},
