@@ -44,7 +44,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			this.maps = new Set();
 			this.location = this.props.location;
 			this.isFirstPosition = true;
-			this.destinationPopupAvailable = true;
+			this.destinationReached = false;
 		}
 
 		componentDidMount () {
@@ -187,14 +187,15 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			const metersFromDestination = distanceApart(location, lastDestinationWaypoint);
 			const metersFromLastLocation = distanceApart(location, this.props.location);
 
-			// We're traveling at a slow 1m/s and we're less than 50 meters from our destination.
+			// We're traveling at a slow 1m/s and we're less than 10 meters from our destination.
 			// We don't care, in this situation, if we're autonomously driving or not.
 			if (location.linearVelocity < 1 &&
 				metersFromDestination != null &&
-				metersFromDestination < 50
+				metersFromDestination < 10 &&
+				!this.destinationReached
 			) {
 				console.log('Destination Reached');
-				this.destinationReached();
+				this.arriveAtDestination();
 			}
 
 			this.location = location;
@@ -245,7 +246,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		setDestination = () => {
 			const {autonomous, destination, location, navigating} = this.props;
 
-			this.destinationPopupAvailable = true; // New destination means the popup is available again.
+			this.destinationReached = false; // New destination means the popup is available again.
 			// console.log('Checking for whether to start navigating.', Boolean(navigating), Boolean(destination && destination.slice(-1).lat !== 0));
 			if (autonomous && navigating && destination && destination.slice(-1).lat !== 0) {
 				console.log('%cSending routing request:', 'color: magenta', [location, ...destination]);
@@ -309,9 +310,9 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			});
 		}
 
-		destinationReached = () => {
-			if (this.destinationPopupAvailable) {
-				this.destinationPopupAvailable = false; // Only allow one popup per destination.
+		arriveAtDestination = () => {
+			if (!this.destinationReached) {
+				this.destinationReached = true; // Only allow one popup per destination.
 				this.props.updateAppState((state) => {
 					state.appState.showDestinationReachedPopup = true;
 				});

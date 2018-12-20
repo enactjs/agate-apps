@@ -359,7 +359,7 @@ class MapCoreBase extends React.Component {
 
 	componentWillUnmount () {
 		clearInterval(this.routeRedrawJob);
-		this.viewLockTimer.stop();
+		if (this.viewLockTimer) this.viewLockTimer.stop();
 		this.context.onMapUnmount(this);
 		if (this.map) this.map.remove();
 	}
