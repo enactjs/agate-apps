@@ -253,13 +253,6 @@ class MapCoreBase extends React.Component {
 			zoom: this.zoomLevel
 		});
 
-		this.map.addControl(new mapboxgl.GeolocateControl({
-			positionOptions: {
-				enableHighAccuracy: true
-			},
-			trackUserLocation: true
-		}));
-
 		this.map.on('load', () => {
 			this.map.addLayer(markerLayer);
 			addCarLayer({

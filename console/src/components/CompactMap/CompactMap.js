@@ -20,13 +20,14 @@ const CompactMapBase = kind({
 		className: 'compactMap'
 	},
 
-	render: ({follow, ...rest}) => {
+	render: ({follow, onExpand, ...rest}) => {
 		return (
 			<Widget {...rest} title="Map" description="Choose a destination and navigate" noHeader>
 				<small>
 					<MapController
 						controlScheme="compact"
 						follow={follow}
+						onExpand={onExpand}
 					/>
 				</small>
 				<large>
@@ -35,6 +36,7 @@ const CompactMapBase = kind({
 						locationSelection
 						autonomousSelection
 						follow={follow}
+						onExpand={onExpand}
 					>
 						{/* <tools>
 							<Button alt="Fullscreen" icon="fullscreen" data-tabindex={getPanelIndexOf('map')} onSelect={onSelect} onKeyUp={onTabChange} onClick={onTabChange} />
