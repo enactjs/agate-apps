@@ -39,7 +39,6 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		constructor (props) {
 			super(props);
 
-			this.done = false;
 			this.comm = React.createRef();
 			this.maps = new Set();
 			this.location = this.props.location;
