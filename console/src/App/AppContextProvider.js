@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import produce from 'immer';
-import {assocPath, mergeDeepRight, path} from 'ramda';
+import {assocPath, equals, mergeDeepRight, omit, path} from 'ramda';
 
 import appConfig from '../App/configLoader';
 import userPresetsForDemo from './userPresetsForDemo';
@@ -64,11 +64,12 @@ class AppContextProvider extends Component {
 		this.watchPositionId = null;  // Store the reference to the position watcher.
 		this.state = {
 			appState:{
-				showPopup: false,
+				showAppList: false,
 				showBasicPopup: false,
 				showDateTimePopup: false,
+				showPopup: false,
+				showProfileEdit: false,
 				showUserSelectionPopup: false,
-				showAppList: false,
 				showWelcomePopup: 'defaultShowWelcomePopup' in props ? Boolean(props.defaultShowWelcomePopup) : true
 			},
 			userId: 1,
@@ -78,8 +79,8 @@ class AppContextProvider extends Component {
 				serviceLayer: false
 			},
 			location: {
-				lat: 0,
-				lon: 0,
+				lat: 37.78878,
+				lon: -122.40467,
 				linearVelocity: 0,
 				orientation: 0
 			},
@@ -111,14 +112,16 @@ class AppContextProvider extends Component {
 
 		this.setUserSettings(this.state.userId);
 		this.setLocation();
+		// hardcoded to SF for demo
+		this.setWeather(37.7876092, -122.40091);
 	}
 
 	componentWillUpdate (nextProps, nextState) {
-		if (this.state.userId !== nextState.userId && this.state.userSettings === nextState.userSettings) {
+		if (this.state.userId !== nextState.userId && equals(this.state.userSettings, nextState.userSettings)) {
 			this.setUserSettings(nextState.userId);
 		}
 
-		if (this.state.userId === nextState.userId && this.state.userSettings !== nextState.userSettings) {
+		if (this.state.userId === nextState.userId && !equals(this.state.userSettings, nextState.userSettings)) {
 			if (nextState.userSettings !== this.state.userSettings) {
 				this.saveUserSettings(nextState.userId, nextState.userSettings);
 			}
@@ -167,7 +170,7 @@ class AppContextProvider extends Component {
 		const userSettings = this.loadUserSettings(userId);
 
 		// Apply a consistent (predictable) set of object keys for consumers, merging in new keys since their last visit
-		return mergeDeepRight(this.state.userSettings, userSettings);
+		return mergeDeepRight(omit(['arrangements'], this.state.userSettings), userSettings);
 	}
 
 	loadUserSettings = (userId) => {
@@ -217,6 +220,10 @@ class AppContextProvider extends Component {
 		userIds.forEach(this.deleteUserSettings);
 		this.resetUserSettings();
 		this.repopulateUsersForDemo();
+		// keep app updated with the usersList
+		this.updateAppState((state) => {
+			state.usersList = this.getUserNames();
+		});
 	}
 
 	repopulateUsersForDemo = () => {

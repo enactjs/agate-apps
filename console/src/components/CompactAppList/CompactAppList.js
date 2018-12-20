@@ -1,6 +1,6 @@
 import kind from '@enact/core/kind';
 import {Row} from '@enact/ui/Layout';
-import Droppable, {Draggable, ResponsiveBox} from '@enact/agate/DropManager';
+import Droppable, {ResponsiveBox} from '@enact/agate/DropManager';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -12,7 +12,6 @@ const DropReadyRow = ({...props}) => {
 	return (<Row {...props} />);
 };
 const DropRow = Droppable({slots: ['00', '01']}, DropReadyRow);
-const DraggableAppIcon = Draggable(AppIconCell);
 
 const CompactAppList = kind({
 	name: 'CompactAppList',
@@ -32,10 +31,10 @@ const CompactAppList = kind({
 	render: ({onTabChange, ...rest}) => (
 		<Widget {...rest} title="Favorite Apps" description="A selection of your favorite apps" view="applist">
 			<DropRow align="start space-around" wrap>
-				<DraggableAppIcon name="00" icon="compass">Navigation</DraggableAppIcon>
-				<DraggableAppIcon name="01" icon="audio" onKeyUp={onTabChange} onClick={onTabChange}>Audio</DraggableAppIcon>
-				<DraggableAppIcon name="02" icon="rearscreen" data-tabindex={getPanelIndexOf('multimedia')} onKeyUp={onTabChange} onClick={onTabChange}>Multimedia</DraggableAppIcon>
-				<DraggableAppIcon name="03" icon="gear" data-tabindex={getPanelIndexOf('settings')} onKeyUp={onTabChange} onClick={onTabChange}>Settings</DraggableAppIcon>
+				<AppIconCell shrink size="24%" icon="compass">Navigation</AppIconCell>
+				<AppIconCell shrink size="24%" icon="audio" onKeyUp={onTabChange} onClick={onTabChange}>Audio</AppIconCell>
+				<AppIconCell shrink size="24%" icon="rearscreen" data-tabindex={getPanelIndexOf('multimedia')} onKeyUp={onTabChange} onClick={onTabChange}>Multimedia</AppIconCell>
+				<AppIconCell shrink size="24%" icon="gear" data-tabindex={getPanelIndexOf('settings')} onKeyUp={onTabChange} onClick={onTabChange}>Settings</AppIconCell>
 			</DropRow>
 		</Widget>
 	)

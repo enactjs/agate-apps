@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Divider from '@enact/agate/Divider';
 import ToggleButton from '@enact/agate/ToggleButton';
 import kind from '@enact/core/kind';
-import {Cell, Column, Row} from '@enact/ui/Layout';
+import {Cell, Row} from '@enact/ui/Layout';
 
 import AppStateConnect from '../../App/AppContextConnect';
+import Widget from '../Widget';
 
 import css from './CompactHeater.less';
 
@@ -48,23 +48,23 @@ const CompactHeaterBase = kind({
 	render: ({leftHeat, leftStatus, onToggleLeftHeater, onToggleRightHeater, rightHeat, rightStatus, ...rest}) => {
 		delete rest.updateAppState;
 		return (
-			<div {...rest}>
-				<Column>
-					<Cell component={Divider} shrink>Heated Seats</Cell>
-					<Cell>
-						<Row align="center space-around">
-							<Cell shrink><ToggleButton icon="heatseatleft" onClick={onToggleLeftHeater} selected={leftHeat} underline /></Cell>
-							<Cell shrink><ToggleButton icon="heatseatright" onClick={onToggleRightHeater} selected={rightHeat} underline /></Cell>
-						</Row>
-					</Cell>
-					<Cell>
-						<Row align="center space-around">
-							<Cell shrink>Left: {leftStatus}</Cell>
-							<Cell shrink>Right: {rightStatus}</Cell>
-						</Row>
-					</Cell>
-				</Column>
-			</div>
+
+			<Widget {...rest} title="Heated Seats" description="Warm up the seats" view="hvac" align="stretch center">
+				{/* <Row>*/}
+				<Cell shrink>
+					<Row align="center space-around">
+						<Cell shrink><ToggleButton icon="heatseatleft" onClick={onToggleLeftHeater} selected={leftHeat} underline /></Cell>
+						<Cell shrink><ToggleButton icon="heatseatright" onClick={onToggleRightHeater} selected={rightHeat} underline /></Cell>
+					</Row>
+				</Cell>
+				<Cell shrink>
+					<Row align="center space-around">
+						<Cell shrink>Left: {leftStatus}</Cell>
+						<Cell shrink>Right: {rightStatus}</Cell>
+					</Row>
+				</Cell>
+				{/* </Row>*/}
+			</Widget>
 		);
 	}
 });

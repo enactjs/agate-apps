@@ -54,7 +54,7 @@ const WidgetBase = kind({
 		}
 	},
 
-	render: ({children, containerShape, icon, onExpand, noHeader, title, view, ...rest}) => {
+	render: ({children, containerShape, icon, onExpand, noExpandButton, noHeader, title, view, ...rest}) => {
 		delete rest.containerShape;
 		delete rest.description;
 		delete rest.full;
@@ -71,9 +71,9 @@ const WidgetBase = kind({
 				</Row>
 			);
 			default: return (
-				<Layout {...rest} orientation="vertical" align="center center">
+				<Layout align="center center" orientation="vertical" {...rest}>
 					{!noHeader ? (
-						<Cell shrink component={CompactHeader} onExpand={onExpand} view={view}>
+						<Cell shrink component={CompactHeader} noExpandButton={noExpandButton} onExpand={onExpand} view={view}>
 							{title}
 						</Cell>
 					) : null}

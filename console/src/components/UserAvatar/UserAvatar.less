@@ -1,0 +1,64 @@
+// UserAvatar.less
+//
+@import "~@enact/agate/styles/mixins.less";
+@import "~@enact/agate/styles/skin.less";
+
+.userAvatar {
+	--user-index: 0;
+	.image {
+		border-radius: 999px;
+		box-sizing: border-box;
+	}
+
+	&.medium {
+		@image-border-width: 6px;
+
+		.image {
+			width: 148px;
+			height: 148px;
+			background-clip: padding-box;
+			border: @image-border-width solid rgba(0, 0, 0, 0.1);
+			padding: ~"calc(50% * var(--agate-gridlistimageitem-aspect-ratio, 1) - " @image-border-width ~")" 0;
+		}
+	}
+
+	&.small {
+		.image{
+			width: 48px;
+			height: 48px;
+		}
+	}
+
+	&.large {
+		@image-border-width: 9px;
+
+		width: 390px;
+
+		.caption {
+			font-size: 30px;
+			letter-spacing: 30px;
+			text-indent: 30px;
+			text-transform: uppercase;
+			color: #a47d66;
+		}
+
+		.image {
+			margin-top: 90px;
+			margin-bottom: 90px;
+			border: @image-border-width solid #594339;
+			padding: ~"calc(50% * var(--agate-gridlistimageitem-aspect-ratio, 1) - " @image-border-width ~")" 0;
+
+			&::before {
+				.position(-36px);
+				position: absolute;
+				content: '';
+				border: 3px solid #594339;
+				opacity: 0.5;
+				border-top: 0px;
+				border-left: 0px;
+				border-radius: 50%;
+				transform: rotate(calc(var(--user-index, 0) * 225deg));
+			}
+		}
+	}
+}

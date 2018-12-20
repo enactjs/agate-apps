@@ -18,7 +18,7 @@ const MapViewBase = kind({
 	render: ({...rest}) => {
 		return (
 			<Panel {...rest}>
-				<MapController autonomousSelection locationSelection>
+				<MapController autonomousSelection locationSelection noExpandButton>
 					{/* <tools>
 						<Button alt="POI search" icon="search" />
 						<Button alt="Propose new destination" icon="arrowhookleft" onClick={changePosition} />

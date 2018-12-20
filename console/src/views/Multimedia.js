@@ -3,7 +3,7 @@ import {Panel} from '@enact/agate/Panels';
 import GridListImageItem from '@enact/agate/GridListImageItem';
 import ThumbnailItem from '@enact/agate/ThumbnailItem';
 import hoc from '@enact/core/hoc';
-import {Job} from '@enact/core/util';
+// import {Job} from '@enact/core/util';
 import kind from '@enact/core/kind';
 import {Cell, Column, Row} from '@enact/ui/Layout';
 import ri from '@enact/ui/resolution';
@@ -15,14 +15,12 @@ import appConfig from '../App/configLoader';
 import Communicator from '../../../components/Communicator';
 import ScreenSelectionPopup from '../../../components/ScreenSelectionPopup';
 
-import IconButton from '../components/IconButton';
+import IconButton from '@enact/agate/IconButton';
 import CustomLayout from '../components/CustomLayout';
 
 import youtubeVideos from '../data/youtubeapi.json';
 
 import css from './Multimedia.less';
-
-const screenIds = [0, 1, 2];
 
 const IFrame = kind({
 	name: 'IFrame',
@@ -41,7 +39,7 @@ const ListItemOverlay = kind({
 
 	render: () => (
 		<Column align="center center">
-			<IconButton icon="play" size="smallest" />
+			<IconButton size="smallest">play</IconButton>
 		</Column>
 	)
 });
@@ -62,19 +60,10 @@ const ResponsiveVirtualList = kind({
 		className: 'mediaList'
 	},
 	computed: {
-		direction: ({size, direction}) => {
-			if (direction !== 'auto') return direction;
-
-			if (size === 'small' || size === 'full') {
-				return 'vertical';
-			}
-
-			return 'horizontal';
-		},
 		// eslint-disable-next-line enact/display-name,enact/prop-types
 		itemRenderer: ({onSelectVideo, size, styler, videos}) => ({index, ...rest}) => {
 			const className = styler.append(css.listItem, size && css[size]);
-			if (size === 'small') {
+			if (size === 'small' || size === 'large') {
 				return (
 					<ThumbnailItem
 						{...rest}
@@ -108,6 +97,7 @@ const ResponsiveVirtualList = kind({
 		switch (size) {
 			case 'full': {
 				List = VirtualGridList;
+				// direction = direction || 'vertical';
 				spacing = ri.scale(66);
 				itemSize = {
 					minWidth: ri.scale(320),
@@ -117,27 +107,35 @@ const ResponsiveVirtualList = kind({
 			}
 			case 'large': {
 				List = VirtualList;
-				spacing = ri.scale(48);
-				itemSize = ri.scale(288);
+				// direction = direction || 'vertical';
+				spacing = ri.scale(24);
+				itemSize = ri.scale(90);
 				break;
 			}
 			case 'medium': {
-				List = VirtualList;
+				List = VirtualGridList;
+				direction = direction || 'horizontal';
 				spacing = ri.scale(24);
-				itemSize = ri.scale(144);
+				itemSize = {
+					minWidth: ri.scale(180),
+					minHeight: ri.scale(100)
+				};
 				break;
 			}
 			default: {
 				List = VirtualList;
+				// direction = direction || 'vertical';
 				spacing = ri.scale(15);
 				itemSize = ri.scale(90);
 			}
 		}
 
 		delete rest.onSelectVideo;
+		delete rest.videos;
 		return (
-			<List
+			<Cell
 				{...rest}
+				component={List}
 				direction={direction}
 				style={style}
 				spacing={spacing}
@@ -151,14 +149,15 @@ const MultimediaBase = kind({
 	name: 'Multimedia',
 
 	propTypes: {
-		adContent: PropTypes.any,
+		// adContent: PropTypes.any,
 		arrangeable: PropTypes.any,
 		arrangement: PropTypes.any,
 		onArrange: PropTypes.func,
 		onClosePopup: PropTypes.func,
 		onSelectVideo: PropTypes.func,
 		onSendVideo: PropTypes.func,
-		showAd: PropTypes.bool,
+		screenIds: PropTypes.array,
+		// showAd: PropTypes.bool,
 		showPopup: PropTypes.bool,
 		url: PropTypes.string,
 		videos: PropTypes.array
@@ -170,15 +169,16 @@ const MultimediaBase = kind({
 	},
 
 	render: ({
-		adContent,
+		// adContent,
 		arrangeable,
 		arrangement,
-		showAd,
+		// showAd,
 		showPopup,
 		onArrange,
 		onClosePopup,
 		onSelectVideo,
 		onSendVideo,
+		screenIds,
 		url,
 		videos,
 		...rest
@@ -190,7 +190,7 @@ const MultimediaBase = kind({
 					onSelect={onSendVideo}
 					open={showPopup}
 					screenIds={screenIds}
-					showAllScreens
+					showAllScreens={showPopup}
 				/>
 				<Panel {...rest}>
 					<CustomLayout
@@ -209,9 +209,9 @@ const MultimediaBase = kind({
 						</left>
 						<Row className={css.bodyRow}>
 							<IFrame allow="autoplay" className={css.iframe} src={url} />
-							{!showAd ? null : <Cell className={css.adSpace} shrink>
+							{/* {showAd ? <Cell className={css.adSpace} shrink>
 								{adContent}
-							</Cell>}
+							</Cell> : null}*/}
 						</Row>
 					</CustomLayout>
 				</Panel>
@@ -229,34 +229,35 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 		static displayName = 'MultimediaDecorator';
 
 		static propTypes = {
-			adContent: PropTypes.any,
+			// adContent: PropTypes.any,
 			onSendVideo: PropTypes.func,
-			showAd: PropTypes.bool
+			screenIds: PropTypes.array
+			// showAd: PropTypes.bool
 		}
 
 		constructor (props) {
 			super(props);
 
 			this.state = {
-				adContent: this.props.adContent || 'Your Ad Here',
+				// adContent: this.props.adContent || 'Your Ad Here',
 				screenId: 0,
-				showAd: this.props.showAd || false,
+				// showAd: this.props.showAd || false,
 				url: '',
 				videos: configHoc.videos
 			};
 			this.selectedVideo = {};
 
 			// Job to control hiding ads
-			this.adTimer = new Job(this.onHideAdSpace);
+			// this.adTimer = new Job(this.onHideAdSpace);
 		}
 
 		onClosePopup = () => {
 			this.setState({showPopup: false});
 		};
 
-		onHideAdSpace = () => {
-			this.setState({adContent: '', showAd: false});
-		};
+		// onHideAdSpace = () => {
+		// 	this.setState({adContent: '', showAd: false});
+		// };
 
 		onOpenPopup = () => {
 			this.setState({showPopup: true});
@@ -267,8 +268,14 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 		};
 
 		onSelectVideo = (video) => () => {
+			const {screenIds} = this.props;
 			this.selectedVideo = video;
-			this.onOpenPopup();
+
+			if (screenIds.length > 1) {
+				this.onOpenPopup();
+			} else {
+				this.onSendVideo({screenId: screenIds[0]});
+			}
 		};
 
 		onSendVideo = ({screenId}) => {
@@ -282,21 +289,21 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 			this.onClosePopup();
 		};
 
-		onShowAdSpace = ({adContent, duration}) => {
-			this.setState({adContent, showAd: true});
-			this.adTimer.startAfter(duration);
-		};
+		// onShowAdSpace = ({adContent, duration}) => {
+		// 	this.setState({adContent, showAd: true});
+		// 	this.adTimer.startAfter(duration);
+		// };
 
 		render () {
-			const {adContent, showAd, showPopup, url, videos} = this.state;
+			const {showPopup, url, videos} = this.state;
 
 			const props = {
 				...this.props,
-				adContent,
+				// adContent,
 				onClosePopup: this.onClosePopup,
 				onSelectVideo: this.onSelectVideo,
 				onSendVideo: this.onSendVideo,
-				showAd,
+				// showAd,
 				showPopup,
 				url,
 				videos
@@ -306,7 +313,7 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 					<Communicator
 						host={appConfig.communicationServerHost}
 						onPlayVideo={this.onPlayVideo}
-						onShowAd={this.onShowAdSpace}
+						// onShowAd={this.onShowAdSpace}
 						screenId={this.state.screenId}
 					/>
 					<Wrapped {...props} />

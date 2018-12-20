@@ -1,6 +1,4 @@
-import GridListImageItem from '@enact/agate/GridListImageItem';
 import kind from '@enact/core/kind';
-import {Cell, Column} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -11,12 +9,11 @@ import {MultimediaDecorator, ResponsiveVirtualList} from '../../views/Multimedia
 
 import css from './CompactMultimedia.less';
 
-const screenIds = [1, 2];
-
 const CompactMultimediaBase = kind({
 	name: 'CompactMultimedia',
 
 	propTypes: {
+		screenIds: PropTypes.array.isRequired,
 		adContent: PropTypes.any,
 		containerShape: PropTypes.object,
 		onClosePopup: PropTypes.func,
@@ -35,18 +32,10 @@ const CompactMultimediaBase = kind({
 	computed: {
 		className: ({containerShape: {size: {relative = 'small'}}, styler}) => {
 			return styler.append(relative && css[relative]);
-		},
-		listCellSize: ({containerShape}) => containerShape.size.relative === 'large' ? 162 : 81,
-		rearScreen1: ({videos}) => {
-			const {snippet} = videos[0];
-			return {
-				imgSrc: snippet.thumbnails.medium.url,
-				title: snippet.title
-			};
 		}
 	},
 
-	render: ({containerShape, listCellSize, onClosePopup, onSelectVideo, onSendVideo, rearScreen1, showPopup, videos, ...rest}) => {
+	render: ({containerShape, onClosePopup, onSelectVideo, onSendVideo, screenIds, showPopup, videos, ...rest}) => {
 		delete rest.adContent;
 		delete rest.showAd;
 
@@ -59,44 +48,22 @@ const CompactMultimediaBase = kind({
 					onSelect={onSendVideo}
 					open={showPopup}
 					screenIds={screenIds}
-					showAllScreens
+					showAllScreens={showPopup}
 				/>
 				<WidgetBase
 					{...rest}
 					containerShape={containerShape}
 					view="multimedia"
-					title="Rear Screen"
-					description="Watch videos or listen to music"
-					small={
-						<ResponsiveVirtualList
-							dataSize={videos.length}
-							direction="auto"
-							onSelectVideo={onSelectVideo}
-							size="small"
-							videos={videos}
-						/>
-					}
-					medium={
-						<Column align="start space-between" style={{width: '100%'}}>
-							<GridListImageItem
-								aspectRatio="16:9"
-								caption={rearScreen1.title}
-								className={css.rearScreenImage}
-								css={css}
-								source={rearScreen1.imgSrc}
-							/>
-							<Cell size={listCellSize} style={{width: '100%'}}>
-								<ResponsiveVirtualList
-									dataSize={videos.length}
-									direction="auto"
-									onSelectVideo={onSelectVideo}
-									size={size}
-									videos={videos}
-								/>
-							</Cell>
-						</Column>
-					}
-				/>
+					title="Media"
+					description="Send videos and music to the rear screen(s)"
+				>
+					<ResponsiveVirtualList
+						dataSize={videos.length}
+						onSelectVideo={onSelectVideo}
+						size={size}
+						videos={videos}
+					/>
+				</WidgetBase>
 			</React.Fragment>
 		);
 	}

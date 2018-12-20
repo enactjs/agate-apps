@@ -36,7 +36,7 @@ const ClockBase = kind({
 			let hour = date.getHours() % 12 || 12,
 				min = zeroPad(date.getMinutes()),
 				// sec = zeroPad(date.getSeconds()),
-				ampm = (date.getHours() >= 13 ? 'pm' : 'am');
+				ampm = (date.getHours() >= 12 ? 'pm' : 'am');
 
 			return `${hour}:${min} ${ampm}`;
 		}

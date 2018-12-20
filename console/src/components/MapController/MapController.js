@@ -7,6 +7,7 @@ import Group from '@enact/ui/Group';
 import {Cell, Column, Row} from '@enact/ui/Layout';
 import Button from '@enact/agate/Button';
 import Divider from '@enact/agate/Divider';
+import IconButton from '@enact/agate/IconButton';
 import ToggleButton from '@enact/agate/ToggleButton';
 
 import AppContextConnect from '../../App/AppContextConnect';
@@ -108,27 +109,33 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 			});
 		}
 
+		onExpand = () => {
+			if (this.props.onExpand) {
+				this.props.onExpand({view: 'map'});
+			}
+		}
+
 		render () {
 			const {
-				compact,
-				description,
+				autonomousSelection,
 				destination,
 				locationSelection,
 				navigating,
 				navigation,
+				noExpandButton,
 				noStartStopToggle,
-				autonomousSelection,
 				topLocations,
 				...rest
 			} = this.props;
 
 			delete rest.centeringDuration;
 			delete rest.defaultFollow;
+			delete rest.onExpand;
 			delete rest.position;
+			delete rest.updateAppState;
 			delete rest.updateProposedDestination;
 			delete rest.viewLockoutDuration;
 			delete rest.zoomToSpeedScaleFactor;
-			delete rest.updateAppState;
 			const durationIncrements = ['day', 'hour', 'min'];
 
 			return (
@@ -143,15 +150,29 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 					<tools>
 						<Column className={css.toolsColumn}>
 							{
+								noExpandButton ?
+									null :
+									(<Cell align="end" shrink>
+										<IconButton
+											size="smallest"
+											alt="Fullscreen"
+											onClick={this.onExpand}
+										>
+											expand
+										</IconButton>
+									</Cell>)
+							}
+							{
 								autonomousSelection &&
 								<Cell shrink={locationSelection} className={css.columnCell}>
 									<Divider>Self Driving</Divider>
 									<Row
 										component={Group}
 										childComponent={Button}
+										itemProps={{css: css}}
 										onSelect={this.toggleAutonomous}
 										select="radio"
-										selectedProp="highlighted"
+										selectedProp="selected"
 										selected={navigation.autonomous ? 0 : 1}
 									>
 										{['AUTO', 'MANUAL']}
@@ -159,17 +180,18 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 								</Cell>
 							}
 							{
-								locationSelection &&
-								<Cell className={css.columnCell}>
-									<DestinationList
-										destination={destination}
-										onSetDestination={this.handleSetDestination}
-										positions={topLocations}
-										title="Top Locations"
-									/>
-								</Cell>
+								locationSelection ?
+									<Cell className={css.columnCell}>
+										<DestinationList
+											destination={destination}
+											onSetDestination={this.handleSetDestination}
+											positions={topLocations}
+											title="Top Locations"
+										/>
+									</Cell> :
+									<Cell className={css.columnCell} />
 							}
-							{
+							{/* {
 								compact && destination && description &&
 								<Cell shrink className={css.columnCell}>
 									<Divider>Navigating To</Divider>
@@ -180,7 +202,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 										disabled
 									>{description}</Button>
 								</Cell>
-							}
+							}*/}
 							{
 								destination &&
 								<Cell shrink className={css.columnCell}>
@@ -217,7 +239,6 @@ const ConnectedMap = AppContextConnect(({location, userSettings, navigation, upd
 	location,
 	navigation,
 	navigating: navigation.navigating,
-	description: navigation.description,
 	destination: navigation.destination,
 	updateAppState
 }));

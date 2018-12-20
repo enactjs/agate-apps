@@ -14,8 +14,8 @@ const AppIconCell = kind({
 		publicClassNames: true
 	},
 
-	render: ({children, className, size = 180, style, ...rest}) => (
-		<Cell size={size} className={className} style={style}>
+	render: ({align, children, className, shrink, size = 180, style, ...rest}) => (
+		<Cell align={align} size={size} shrink={shrink} className={className} style={style}>
 			<LabeledIconButton {...rest}>{children}</LabeledIconButton>
 		</Cell>
 	)
