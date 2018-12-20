@@ -48,6 +48,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 		componentDidMount () {
 			this.initializeConnection();
+			// this.generateFakeLocations(); // Fake locations generator (for testing only)
 			this.appStateSyncInterval = window.setInterval(() => {
 				this.setLocation({location: this.location});
 			}, 5000);
@@ -125,6 +126,32 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		reconnect = () => {
 			console.warn('%cAttempting to reconnect with the service layer at:', 'color: orange', appConfig.servicesLayerHost);
 			this.connection.reconnect();
+		}
+
+		// The following two functions generate location coordinates to aid in testing when the
+		// simulator is not available.
+		generateFakeLocations = () => {
+			this.fakePositionIndex = 0;
+			this.fakePositionJob = setInterval(() => {
+				this.onPosition(this.fabricatePosition(this.fakePositionIndex));
+				this.fakePositionIndex++;
+			}, 1000);
+			console.log('Starting fake position generation');
+		}
+
+		fabricatePosition = (seed, maxSeed = 60) => {
+			const seedFactor = 4,
+				x = 53880.8698406219 + 499000, // Unknown as to why the reset coordinates needed an extra 499000 added.
+				y = 4182781.1160838,
+				z = -2.3562;
+			seed = seed % maxSeed;
+			return {
+				pose: {
+					position: {x: x + (seed * seedFactor), y: y + (seed * seedFactor), z},
+					heading: 0.7625,
+					linear_velocity: {x: 0, y: 0, z: 0}
+				}
+			};
 		}
 
 		// `data` takes the shape of message.pose
@@ -257,10 +284,6 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			this.comm.current.resetCopilot();
 		}
 
-		sendNavigation = () => {
-			// console.log('sendNavigation:', this.props.navigation);
-			this.comm.current.sendETA(this.props.navigation);
-		}
 
 		setConnected = (connected) => {
 			this.props.updateAppState((state) => {
@@ -299,6 +322,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			delete rest.autonomous;
 			delete rest.location;
 			delete rest.navigating;
+			delete rest.navigation;
 			delete rest.setConnected;
 			delete rest.setLocation;
 			delete rest.updateAppState;
