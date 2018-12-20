@@ -7,6 +7,7 @@ import Group from '@enact/ui/Group';
 import {Cell, Column, Row} from '@enact/ui/Layout';
 import Button from '@enact/agate/Button';
 import Divider from '@enact/agate/Divider';
+import IconButton from '@enact/agate/IconButton';
 import ToggleButton from '@enact/agate/ToggleButton';
 
 import AppContextConnect from '../../App/AppContextConnect';
@@ -108,25 +109,33 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 			});
 		}
 
+		onExpand = () => {
+			if (this.props.onExpand) {
+				this.props.onExpand({view: 'map'});
+			}
+		}
+
 		render () {
 			const {
+				autonomousSelection,
 				destination,
 				locationSelection,
 				navigating,
 				navigation,
+				noExpandButton,
 				noStartStopToggle,
-				autonomousSelection,
 				topLocations,
 				...rest
 			} = this.props;
 
 			delete rest.centeringDuration;
 			delete rest.defaultFollow;
+			delete rest.onExpand;
 			delete rest.position;
+			delete rest.updateAppState;
 			delete rest.updateProposedDestination;
 			delete rest.viewLockoutDuration;
 			delete rest.zoomToSpeedScaleFactor;
-			delete rest.updateAppState;
 			const durationIncrements = ['day', 'hour', 'min'];
 
 			return (
@@ -140,6 +149,19 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 				>
 					<tools>
 						<Column className={css.toolsColumn}>
+							{
+								noExpandButton ?
+									null :
+									(<Cell align="end" shrink>
+										<IconButton
+											size="smallest"
+											alt="Fullscreen"
+											onClick={this.onExpand}
+										>
+											expand
+										</IconButton>
+									</Cell>)
+							}
 							{
 								autonomousSelection &&
 								<Cell shrink={locationSelection} className={css.columnCell}>
