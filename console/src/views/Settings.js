@@ -42,7 +42,7 @@ const Settings = kind({
 		}
 	},
 
-	render: ({css, ipAddress, onSelect, onToggleDateTimePopup, ...rest}) => (
+	render: ({css, ipAddress, onSelect, onToggleDateTimePopup, onReloadApp, ...rest}) => (
 		<Panel {...rest}>
 			<Row className="enact-fit" align=" center">
 				<Cell size="40%">
@@ -91,6 +91,12 @@ const Settings = kind({
 							onText="armed"
 						>
 							Ejection Seat
+						</SwitchItemCell>
+						<SwitchItemCell
+							noToggle
+							onClick={onReloadApp}
+						>
+							Reload Apps
 						</SwitchItemCell>
 						<LabeledItem label={ipAddress}>IP Address</LabeledItem>
 					</Column>

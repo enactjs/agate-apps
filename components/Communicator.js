@@ -57,6 +57,11 @@ class Communicator extends React.Component {
 		if (this.props.onReset) {
 			this.socket.on('RESET_COPILOT', this.props.onReset);
 		}
+
+		if (this.props.onReload) {
+			this.socket.on('RELOAD_APP', this.props.onReload);
+		}
+
 		if (screenId != null) {
 			this.socket.on(`VIDEO_ADD_SCREEN/${screenId}`, this.handleAddVideo);
 			// this.socket.on('SHOW_AD', this.handleShowAd);
@@ -95,6 +100,11 @@ class Communicator extends React.Component {
 
 	resetCopilot = () => {
 		const data = {route: 'RESET_COPILOT'};
+		this.socket.emit('SEND_DATA', data);
+	}
+
+	reloadApp = () => {
+		const data = {route: 'RELOAD_APP'};
 		this.socket.emit('SEND_DATA', data);
 	}
 
