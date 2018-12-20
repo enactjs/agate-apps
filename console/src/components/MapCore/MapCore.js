@@ -189,7 +189,10 @@ class MapCoreBase extends React.Component {
 		defaultFollow: PropTypes.bool, // Should the centering position follow the current location?
 		destination: propTypeLatLonList,
 		location: propTypeLatLon, // Our actual current location on the world
+		navigating: PropTypes.bool,
+		points: PropTypes.array,
 		position: propTypeLatLon, // The map's centering position
+		routeRedrawInterval: PropTypes.number,
 		skin: PropTypes.string,
 		tools: PropTypes.node, // Buttons and tools for interacting with the map. (Slottable)
 		viewLockoutDuration: PropTypes.number,
@@ -198,10 +201,12 @@ class MapCoreBase extends React.Component {
 	}
 
 	static defaultProps = {
-		// colorMarker: '#445566',
 		centeringDuration: 2000,
+		// colorMarker: '#445566',
 		colorRouteLine: '#445566',
 		controlScheme: 'full',
+		points: [],
+		routeRedrawInterval: 3000,
 		viewLockoutDuration: 4000,
 		zoomLevel: 12,
 		zoomToSpeedScaleFactor: 0.02
@@ -213,6 +218,7 @@ class MapCoreBase extends React.Component {
 
 		// When this changes, we don't need to force a render, so we'll just save it on the instance.
 		this.zoomLevel = props.zoomLevel;
+		this.fullRouteShown = false;
 
 		this.state = {
 			carShowing: true,
@@ -234,6 +240,12 @@ class MapCoreBase extends React.Component {
 		this.bbox = getBoundsOfAll(pointsList);
 
 		markerLayer.source.data.features = points;
+
+		this.routeRedrawJob = setInterval(() => {
+			if (this.queuedRouteRedraw) {
+				this.actionManager({plotRoute: this.props.destination});
+			}
+		}, this.props.routeRedrawInterval);
 	}
 
 	componentDidMount () {
@@ -322,6 +334,11 @@ class MapCoreBase extends React.Component {
 		if (!equals(prevProps.location, this.props.location)) {
 			actions.center = this.props.location;
 			actions.positionCar = this.props.location;
+
+			if (this.props.destination && this.props.destination.length > 0) {
+				// We received a new location and have a destination, let's queue a new route-plot
+				this.queuedRouteRedraw = true;
+			}
 		}
 
 		// Received a new destination
@@ -331,6 +348,7 @@ class MapCoreBase extends React.Component {
 			// "Staring navigation" section, but it also captures if the destination is set after
 			// the navigating mode boolean is toggled.
 			actions.plotRoute = this.props.destination;
+			this.fullRouteShown = false;
 		}
 
 		if (!actions.center && !equals(prevProps.position, this.props.position)) {
@@ -341,6 +359,8 @@ class MapCoreBase extends React.Component {
 	}
 
 	componentWillUnmount () {
+		clearInterval(this.routeRedrawJob);
+		this.viewLockTimer.stop();
 		this.context.onMapUnmount(this);
 		if (this.map) this.map.remove();
 	}
@@ -408,7 +428,6 @@ class MapCoreBase extends React.Component {
 
 	velocityZoom = (linearVelocity) => {
 		const zoom = this.state.follow ? this.calculateZoomLevel(linearVelocity) : this.zoomLevel;
-		console.log('zoomTo:', zoom);
 		this.zoomMap(zoom);
 	}
 
@@ -416,6 +435,7 @@ class MapCoreBase extends React.Component {
 		zoomLevel = Math.min(20, Math.max(0, zoomLevel));
 		this.zoomLevel = zoomLevel;
 		if (!this.viewLockTimer) {
+			console.log('zoomTo:', zoomLevel);
 			this.map.zoomTo(zoomLevel);
 		}
 	}
@@ -532,8 +552,9 @@ class MapCoreBase extends React.Component {
 		if (data.routes && data.routes[0]) {
 			const route = data.routes[0];
 
-			if (!this.props.navigating) {
+			if (!this.fullRouteShown) {
 				this.showFullRouteOnMap(route.geometry.coordinates);
+				this.fullRouteShown = true;
 			}
 
 
@@ -607,6 +628,7 @@ class MapCoreBase extends React.Component {
 				distance: route.distance
 			});
 
+			this.queuedRouteRedraw = false;
 		} else {
 			// what was in the data object anyway??
 			console.log('No routes in response:', data, waypoints);
@@ -648,9 +670,11 @@ class MapCoreBase extends React.Component {
 		delete rest.defaultFollow;
 		delete rest.destination;
 		delete rest.location;
+		delete rest.navigating;
 		delete rest.points;
 		delete rest.position;
 		delete rest.skin;
+		delete rest.routeRedrawInterval;
 		delete rest.updateDestination;
 		delete rest.updateNavigation;
 		delete rest.viewLockoutDuration;
@@ -682,9 +706,9 @@ class MapCoreBase extends React.Component {
 
 const ConnectedMap = AppContextConnect(({location, userSettings, navigation}) => ({
 	// colorMarker: userSettings.colorHighlight,
-	navigating: navigation.navigating,
 	colorRouteLine: userSettings.colorHighlight,
 	location,
+	navigating: navigation.navigating,
 	skin: userSettings.skin
 }));
 
