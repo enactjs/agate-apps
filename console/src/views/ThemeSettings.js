@@ -16,9 +16,7 @@ import componentCss from './Settings.less';
 const skinCollection = {
 	carbon: 'Carbon',
 	copper: 'Copper',
-	'copper-day': 'Copper Day',
-	electro: 'Electro',
-	titanium: 'Titanium'
+	'copper-day': 'Copper Day'
 };
 const skinList = Object.keys(skinCollection);
 const skinNames = skinList.map((skin) => skinCollection[skin]);  // Build the names list based on the skin list array, so the indexes always match up, in case the object keys don't return in the same order.
