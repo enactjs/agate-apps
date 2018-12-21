@@ -335,7 +335,8 @@ class MapCoreBase extends React.Component {
 
 		// Received a new location
 		if (!equals(prevProps.location, this.props.location)) {
-			actions.center = this.props.location;
+			// only center during following mode
+			// actions.center = this.props.location;
 			actions.positionCar = this.props.location;
 
 			if (this.props.destination && this.props.destination.length > 0) {
