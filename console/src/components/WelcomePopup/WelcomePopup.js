@@ -186,6 +186,7 @@ const WelcomePopupBase = kind({
 								locationSelection
 								autonomousSelection
 								noExpandButton
+								noFollowButton
 							/>
 						</Cell>
 					</Row>

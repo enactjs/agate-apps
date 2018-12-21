@@ -28,9 +28,9 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 			autonomousSelection: PropTypes.bool,
 			centeringDuration: PropTypes.number,
 			compact: PropTypes.bool,
-			defaultFollow: PropTypes.bool, // Should the centering position follow the current location?
 			description: PropTypes.string,
 			destination: propTypeLatLonList,
+			follow: PropTypes.bool,
 			locationSelection: PropTypes.bool,
 			navigating: PropTypes.bool,
 			navigation: PropTypes.object,
@@ -43,6 +43,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 
 		static defaultProps = {
 			centeringDuration: 2000,
+			follow: true,
 			viewLockoutDuration: 4000,
 			zoomToSpeedScaleFactor: 0.02
 		}
@@ -52,7 +53,6 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 
 			this.state = {
 				carShowing: true,
-				follow: props.defaultFollow || false,
 				selfDriving: true
 			};
 		}
@@ -84,6 +84,11 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 		toggleAutonomous = () => {
 			this.props.updateAppState((state) => {
 				state.navigation.autonomous = !state.navigation.autonomous;
+			});
+		}
+		toggleFollow = () => {
+			this.props.updateAppState((state) => {
+				state.navigation.follow = !state.navigation.follow;
 			});
 		}
 		updateDestination = ({description, destination, navigating = false}) => {
@@ -119,17 +124,18 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 			const {
 				autonomousSelection,
 				destination,
+				follow,
 				locationSelection,
 				navigating,
 				navigation,
 				noExpandButton,
+				noFollowButton,
 				noStartStopToggle,
 				topLocations,
 				...rest
 			} = this.props;
 
 			delete rest.centeringDuration;
-			delete rest.defaultFollow;
 			delete rest.onExpand;
 			delete rest.position;
 			delete rest.updateAppState;
@@ -142,6 +148,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 				<Wrapped
 					{...rest}
 					// className={classnames(className, css.map)}
+					follow={follow}
 					destination={destination}
 					points={topLocations}
 					updateDestination={this.updateDestination}
@@ -149,10 +156,22 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 				>
 					<tools>
 						<Column className={css.toolsColumn}>
-							{
-								noExpandButton ?
-									null :
-									(<Cell align="end" shrink>
+							<Cell align="end" shrink>
+								{
+									noFollowButton ?
+										null :
+										<IconButton
+											size="smallest"
+											alt="Follow Mode"
+											selected={follow}
+											onClick={this.toggleFollow}
+										>
+											exitfullscreen
+										</IconButton>
+								}
+								{
+									noExpandButton ?
+										null :
 										<IconButton
 											size="smallest"
 											alt="Fullscreen"
@@ -160,8 +179,8 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 										>
 											expand
 										</IconButton>
-									</Cell>)
-							}
+								}
+							</Cell>
 							{
 								autonomousSelection &&
 								<Cell shrink={locationSelection} className={css.columnCell}>
@@ -235,6 +254,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 
 
 const ConnectedMap = AppContextConnect(({location, userSettings, navigation, updateAppState}) => ({
+	follow: navigation.follow,
 	topLocations: userSettings.topLocations,
 	location,
 	navigation,
