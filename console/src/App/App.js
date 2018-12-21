@@ -159,7 +159,6 @@ const AppBase = kind({
 						{title: 'Apps', icon: 'apps'}
 					]}
 					onSelect={onSelect}
-					selected={index}
 					index={index}
 				>
 					<beforeTabs>

@@ -64,6 +64,7 @@ const AgateFullscreen = AgateDecorator({overlay: false}, FullscreenBase);
 const skins = {
 	'Carbon': 'carbon',
 	'Copper': 'copper',
+	'Copper Day': 'copper-day',
 	'Electro': 'electro',
 	'Titanium': 'titanium'
 };
@@ -106,6 +107,10 @@ const StorybookDecorator = (story, config) => {
 			highlight: '#6abe0b'
 		},
 		copper: {
+			accent: '#a47d66',
+			highlight: '#ffffff'
+		},
+		'copper-day': {
 			accent: '#a47d66',
 			highlight: '#ffffff'
 		},
