@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 
 import AppContextConnect from '../App/AppContextConnect';
 import CustomLayout, {SaveLayoutArrangement} from '../components/CustomLayout';
-import CarSvg from '../components/Dashboard/svg/car.svg';
+import CarPng from '../components/Dashboard/svg/car.png';
 
 import css from './Dashboard.less';
 
@@ -77,7 +77,7 @@ const DashboardBase = kind({
 							</Cell>
 						</Column>
 						<Column>
-							<img className={css.carImage} src={CarSvg} alt="" />
+							<img className={css.carImage} src={CarPng} alt="" />
 						</Column>
 						<Column className={css.sideInfo} align="stretch space-between">
 							<Cell shrink>
