@@ -129,6 +129,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 				navigating,
 				navigation,
 				noExpandButton,
+				noFollowButton,
 				noStartStopToggle,
 				topLocations,
 				...rest
@@ -156,24 +157,29 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 					<tools>
 						<Column className={css.toolsColumn}>
 							<Cell align="end" shrink>
-								<IconButton
-									size="smallest"
-									alt="Follow Mode"
-									selected={follow}
-									onClick={this.toggleFollow}
-								>
-										exitfullscreen
-								</IconButton>
-								{noExpandButton ?
-									null : (
+								{
+									noFollowButton ?
+										null :
+										<IconButton
+											size="smallest"
+											alt="Follow Mode"
+											selected={follow}
+											onClick={this.toggleFollow}
+										>
+											exitfullscreen
+										</IconButton>
+								}
+								{
+									noExpandButton ?
+										null :
 										<IconButton
 											size="smallest"
 											alt="Fullscreen"
 											onClick={this.onExpand}
 										>
-										expand
+											expand
 										</IconButton>
-									)}
+								}
 							</Cell>
 							{
 								autonomousSelection &&
