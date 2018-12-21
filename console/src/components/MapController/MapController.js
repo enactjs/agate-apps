@@ -43,7 +43,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 
 		static defaultProps = {
 			centeringDuration: 2000,
-			follow: false,
+			follow: true,
 			viewLockoutDuration: 4000,
 			zoomToSpeedScaleFactor: 0.02
 		}

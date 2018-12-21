@@ -92,7 +92,7 @@ class AppContextProvider extends Component {
 				distance: 0,
 				duration: 0,
 				eta: 0,
-				follow: false,
+				follow: true,
 				navigating: false,
 				startTime: 0
 			},
