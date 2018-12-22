@@ -149,7 +149,16 @@ const AppBase = kind({
 				state.appState.showUserSelectionPopup = false;
 				state.appState.showWelcomePopup = true;
 			});
-		}
+		},
+		onSelect: handle(
+			forward('onSelect'),
+			(ev, {updateAppState}) => {
+				updateAppState((state) => {
+					// turn off arrangeable when switching panels.
+					state.userSettings.arrangements.arrangeable = false;
+				});
+			}
+		)
 	},
 
 	render: ({
