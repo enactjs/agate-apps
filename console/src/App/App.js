@@ -181,7 +181,7 @@ const AppBase = kind({
 					<Home
 						arrangeable={layoutArrangeable}
 						onCompactExpand={onSelect}
-						// onSelect={onSelect}
+						onSelect={onSelect}
 						onSendVideo={sendVideo}
 					/>
 					<Phone arrangeable={layoutArrangeable} />

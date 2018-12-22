@@ -211,10 +211,10 @@ const Home = kind({
 		className: 'homePanel'
 	},
 
-	render: ({arrangeable, onCompactExpand, onSendVideo, ...rest}) => (
+	render: ({arrangeable, onCompactExpand, onSendVideo, onSelect, ...rest}) => (
 		<Panel {...rest}>
 			<HomeLayout arrangeable={arrangeable}>
-				<tray1><CompactAppList icon="list" onExpand={onCompactExpand} /></tray1>
+				<tray1><CompactAppList icon="list" onExpand={onCompactExpand} onSelect={onSelect} /></tray1>
 				<tray2><CompactHvac icon="temperature" onExpand={onCompactExpand} /></tray2>
 
 				<small1><CompactWeather icon="climate" onExpand={onCompactExpand} /></small1>
