@@ -64,7 +64,6 @@ class AppContextProvider extends Component {
 		this.watchPositionId = null;  // Store the reference to the position watcher.
 		this.state = {
 			appState:{
-				nowPlaying: [],
 				showAppList: false,
 				showBasicPopup: false,
 				showDateTimePopup: false,
@@ -85,6 +84,9 @@ class AppContextProvider extends Component {
 				lon: -122.40467,
 				linearVelocity: 0,
 				orientation: 0
+			},
+			multimedia: {
+				nowPlaying: []
 			},
 			navigation: {
 				autonomous: true,
