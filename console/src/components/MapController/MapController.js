@@ -2,13 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import hoc from '@enact/core/hoc';
 import Pure from '@enact/ui/internal/Pure';
-// import classnames from 'classnames';
+import classnames from 'classnames';
 import Group from '@enact/ui/Group';
 import {Cell, Column, Row} from '@enact/ui/Layout';
 import Button from '@enact/agate/Button';
 import Divider from '@enact/agate/Divider';
 import IconButton from '@enact/agate/IconButton';
 import ToggleButton from '@enact/agate/ToggleButton';
+import Skinnable from '@enact/agate/Skinnable';
 
 import AppContextConnect from '../../App/AppContextConnect';
 import MapCore from '../MapCore';
@@ -122,6 +123,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 
 		render () {
 			const {
+				className,
 				autonomousSelection,
 				destination,
 				follow,
@@ -147,7 +149,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 			return (
 				<Wrapped
 					{...rest}
-					// className={classnames(className, css.map)}
+					className={classnames(className, css.map)}
 					follow={follow}
 					destination={destination}
 					points={topLocations}
@@ -225,8 +227,8 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 							{
 								destination &&
 								<Cell shrink className={css.columnCell}>
-									<p>{formatDuration(navigation.duration, durationIncrements)}</p>
-									<p>{(navigation.distance / 1609.344).toFixed(1)} mi - {formatTime(navigation.eta)}</p>
+									<p className={css.travelInfo}>{formatDuration(navigation.duration, durationIncrements)}</p>
+									<p className={css.travelInfo}>{(navigation.distance / 1609.344).toFixed(1)} mi - {formatTime(navigation.eta)}</p>
 								</Cell>
 							}
 							{
@@ -263,6 +265,6 @@ const ConnectedMap = AppContextConnect(({location, userSettings, navigation, upd
 	updateAppState
 }));
 
-const MapController = ConnectedMap(Pure(MapControllerHoc(MapCore)));
+const MapController = Skinnable(ConnectedMap(Pure(MapControllerHoc(MapCore))));
 
 export default MapController;
