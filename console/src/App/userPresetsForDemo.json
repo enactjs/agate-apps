@@ -3,7 +3,10 @@
 		"arrangements": {
 			"arrangeable": false,
 			"dashboard": {},
-			"home": {},
+			"home": {
+				"small1": "tray3",
+				"tray3": "small1"
+			},
 			"hvac": {},
 			"phone": {},
 			"radio": {}
