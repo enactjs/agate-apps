@@ -277,6 +277,10 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		}
 
 		sendVideo = (args) => {
+			const {screenId, video: {snippet: {thumbnails}}} = args;
+			this.props.updateAppState((state) => {
+				state.multimedia.nowPlaying[screenId] = thumbnails;
+			});
 			this.comm.current.sendVideo(args);
 		}
 

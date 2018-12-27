@@ -1,10 +1,30 @@
 @import "~@enact/agate/styles/skin.less";
 
-.columnCell {
-	margin-top: 2em;
+.map {
+	.columnCell {
+		margin-top: 2em;
 
-	&:first-child {
-		margin-top: 0;
+		&:first-child {
+			margin-top: 0;
+		}
+
+		p {
+			margin: 12px;
+		}
+
+		.heading {
+			margin-left: 12px;
+			margin-right: 12px;
+		}
+	}
+
+	.toolsColumn,
+	.toolsColumn .columnCell {
+		pointer-events: none;
+
+		> * {
+			pointer-events: auto;
+		}
 	}
 }
 
@@ -18,8 +38,6 @@
 }
 
 .button {
-	width: 100%;
-
 	.applySkins({
 		.bg {
 			border: 3px solid @agate-accent;
@@ -39,13 +57,4 @@
 			}
 		}
 	});
-}
-
-.toolsColumn,
-.toolsColumn .columnCell {
-	pointer-events: none;
-
-	> * {
-		pointer-events: auto;
-	}
 }
