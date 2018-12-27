@@ -18,10 +18,6 @@
 		}
 	}
 
-	.durationCell {
-		background-image: radial-gradient(rgba(64, 64, 64, 0.75), transparent 75%);
-	}
-
 	.toolsColumn,
 	.toolsColumn .columnCell {
 		pointer-events: none;
@@ -33,6 +29,8 @@
 
     .applySkins({
         .travelInfo {
+			background-image: radial-gradient(@agate-background-active, transparent 75%);
+
         	.number {
         		font-size: 180%;
 	            color: @agate-highlight;

@@ -228,8 +228,8 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 							}*/}
 							{
 								destination &&
-								<Cell shrink className={css.columnCell + ' ' + css.durationCell}>
-									<p className={css.travelInfo}><span className={css.time}>
+								<Cell shrink className={css.columnCell + ' ' + css.travelInfo}>
+									<p>
 										{formatDuration(navigation.duration, durationIncrements).split(' ').map(
 											// This bit of overly-complicated nonsense is to separate
 											// out the duration into numbers (wrapped in span tags)
@@ -246,8 +246,8 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 													<span className={css.number} key={'number' + index}>{str}</span>
 												)
 										)}
-									</span></p>
-									<p className={css.travelInfo}>{(navigation.distance / 1609.344).toFixed(1)} mi - {formatTime(navigation.eta)}</p>
+									</p>
+									<p>{(navigation.distance / 1609.344).toFixed(1)} mi - {formatTime(navigation.eta)}</p>
 								</Cell>
 							}
 							{
