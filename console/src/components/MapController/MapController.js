@@ -9,6 +9,7 @@ import Button from '@enact/agate/Button';
 import Divider from '@enact/agate/Divider';
 import IconButton from '@enact/agate/IconButton';
 import ToggleButton from '@enact/agate/ToggleButton';
+import Skinnable from '@enact/agate/Skinnable';
 
 import AppContextConnect from '../../App/AppContextConnect';
 import MapCore from '../MapCore';
@@ -227,8 +228,25 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 							}*/}
 							{
 								destination &&
-								<Cell shrink className={css.columnCell}>
-									<p>{formatDuration(navigation.duration, durationIncrements)}</p>
+								<Cell shrink className={css.columnCell + ' ' + css.travelInfo}>
+									<p>
+										{formatDuration(navigation.duration, durationIncrements).split(' ').map(
+											// This bit of overly-complicated nonsense is to separate
+											// out the duration into numbers (wrapped in span tags)
+											// and strings. The initial string is split on spaces and
+											// spaces are added around the strings rather than the
+											// strings and the numbers, so the numbers can be a
+											// larger font size and the spacing around them will
+											// remain constant. The format of the string coming in
+											// is always "number string number string", etc, so the
+											// spaces only on the strings should be acceptable.
+											(str, index) =>
+												(isNaN(parseInt(str)) ?
+													' ' + str + ' ' :
+													<span className={css.number} key={'number' + index}>{str}</span>
+												)
+										)}
+									</p>
 									<p>{(navigation.distance / 1609.344).toFixed(1)} mi - {formatTime(navigation.eta)}</p>
 								</Cell>
 							}
@@ -267,6 +285,6 @@ const ConnectedMap = AppContextConnect(({location, userSettings, navigation, upd
 	updateAppState
 }));
 
-const MapController = ConnectedMap(Pure(MapControllerHoc(MapCore)));
+const MapController = ConnectedMap(Pure(MapControllerHoc(Skinnable(MapCore))));
 
 export default MapController;
