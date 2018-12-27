@@ -18,7 +18,7 @@
 			"rightHeat": false,
 			"rightTemp": 0
 		},
-		"colorAccent": "#a47d66",
+		"colorAccent": "#dcb299",
 		"colorHighlight": "#ffffff",
 		"components": {
 			"welcome": {
