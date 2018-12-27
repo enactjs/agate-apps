@@ -18,6 +18,10 @@
 		}
 	}
 
+	.durationCell {
+		background-image: radial-gradient(rgba(64, 64, 64, 0.75), transparent 75%);
+	}
+
 	.toolsColumn,
 	.toolsColumn .columnCell {
 		pointer-events: none;
@@ -26,13 +30,13 @@
 			pointer-events: auto;
 		}
 	}
-}
 
-.map {
     .applySkins({
         .travelInfo {
-            text-decoration-color: blue;
-            color: @agate-highlight;
+        	.number {
+        		font-size: 180%;
+	            color: @agate-highlight;
+	        }
         }
     });
 }
