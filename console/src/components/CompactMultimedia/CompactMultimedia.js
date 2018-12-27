@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import {WidgetBase, WidgetDecorator} from '../Widget';
-
 import {ScreenSelectionPopup} from '../../../../components/ScreenSelectionPopup';
 import {MultimediaDecorator, ResponsiveVirtualList} from '../../views/Multimedia';
 

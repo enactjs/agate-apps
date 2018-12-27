@@ -11,7 +11,7 @@ import ri from '@enact/ui/resolution';
 import AppContextConnect from '../../App/AppContextConnect';
 import appConfig from '../../App/configLoader';
 import {propTypeLatLon, propTypeLatLonList} from '../../data/proptypes';
-import CarPng from '../Dashboard/svg/car.png';
+import CarPng from '../../../assets/car.png';
 import {ServiceLayerContext} from '../../data/ServiceLayer';
 
 import css from './MapCore.less';
@@ -41,6 +41,8 @@ const getBoundsOfAll = (waypoints, existingBounds) => {
 		existingBounds || new mapboxgl.LngLatBounds(waypoints[0], waypoints[0])
 	);
 };
+
+const clampZoom = (zoom) => Math.min(20, Math.max(0, zoom));
 
 const getMapPadding = () => {
 	const edgeClearance = 48;
@@ -186,8 +188,8 @@ class MapCoreBase extends React.Component {
 		// colorMarker: PropTypes.string,
 		colorRouteLine: PropTypes.string,
 		controlScheme: PropTypes.oneOf(['compact', 'full']), // 'compact' or 'full' (default is full)
-		defaultFollow: PropTypes.bool, // Should the centering position follow the current location?
 		destination: propTypeLatLonList,
+		follow: PropTypes.bool, // Should the centering position follow the current location?
 		location: propTypeLatLon, // Our actual current location on the world
 		points: PropTypes.array,
 		position: propTypeLatLon, // The map's centering position
@@ -207,7 +209,7 @@ class MapCoreBase extends React.Component {
 		points: [],
 		routeRedrawInterval: 3000,
 		viewLockoutDuration: 4000,
-		zoomLevel: 12,
+		zoomLevel: 15,
 		zoomToSpeedScaleFactor: 0.02
 	}
 
@@ -221,7 +223,6 @@ class MapCoreBase extends React.Component {
 
 		this.state = {
 			carShowing: true,
-			follow: props.defaultFollow || false,
 			selfDriving: true
 		};
 	}
@@ -326,12 +327,16 @@ class MapCoreBase extends React.Component {
 		if (this.props.location && (!prevProps.location ||
 			prevProps.location.linearVelocity !== this.props.location.linearVelocity
 		)) {
-			actions.zoom = this.props.location.linearVelocity;
+			if (this.props.follow) {
+				actions.zoom = this.props.location.linearVelocity;
+				actions.center = this.props.location;
+			}
 		}
 
 		// Received a new location
 		if (!equals(prevProps.location, this.props.location)) {
-			actions.center = this.props.location;
+			// only center during following mode
+			// actions.center = this.props.location;
 			actions.positionCar = this.props.location;
 
 			if (this.props.destination && this.props.destination.length > 0) {
@@ -378,17 +383,15 @@ class MapCoreBase extends React.Component {
 						break;
 					}
 					case 'positionCar': {
-						window.requestAnimationFrame(() => this.updateCarLayer({location: actions[action]}));
+						// window.requestAnimationFrame(() => this.updateCarLayer({location: actions[action]}));
+						this.updateCarLayer({location: actions[action]});
 						break;
 					}
 					case 'center': {
-						this.centerMap({center: actions[action]});
+						this.centerMap({center: actions[action], duration: 450});
 						break;
 					}
 					case 'zoom': {
-						// if following
-						// if (this.props.follow) {
-
 						this.velocityZoom(actions[action]);
 						break;
 					}
@@ -426,12 +429,13 @@ class MapCoreBase extends React.Component {
 	}
 
 	velocityZoom = (linearVelocity) => {
-		const zoom = this.state.follow ? this.calculateZoomLevel(linearVelocity) : this.zoomLevel;
-		this.zoomMap(zoom);
+		const zoom = this.props.follow ? this.calculateZoomLevel(linearVelocity) : this.zoomLevel;
+		// this.zoomMap(zoom);
+		this.zoomLevel = clampZoom(zoom);
 	}
 
 	zoomMap = (zoomLevel) => {
-		zoomLevel = Math.min(20, Math.max(0, zoomLevel));
+		zoomLevel = clampZoom(zoomLevel);
 		this.zoomLevel = zoomLevel;
 		if (!this.viewLockTimer) {
 			console.log('zoomTo:', zoomLevel);
@@ -447,28 +451,28 @@ class MapCoreBase extends React.Component {
 		this.zoomMap(this.zoomLevel - 1);
 	}
 
-	centerMap = ({center = this.props.location, instant = false}) => {
+	centerMap = ({center = this.props.location, instant = false, duration}) => {
 		// Never center the map if we're currently in view-lock
 		if (!this.viewLockTimer) {
 			center = (center instanceof Array) ? center : toMapbox(center);
 
 			if (instant) {
+				// console.log('jumpTo to:', center[0], center[1]);
 				this.map.jumpTo({center});
 			} else {
-				// console.log('centerMap to:', center[0], center[1], center);
-				this.map.panTo(
-					center,
-					{duration: 800, easing: linear, animation: true}
-				);
-				// this.map.flyTo(
-				// 	{
-				// 		center,
-				// 		// maxDuration: this.props.centeringDuration,
-				// 		zoom
-				// 	},
-				// 	// {duration: (instant ? 500 : 500)}
-				// 	{duration: 800, easing: linear, animation: true}
+				// console.log('panTo to:', center[0], center[1]);
+				// this.map.panTo(
+				// 	center,
+				// 	{duration: duration || 800, easing: linear, animation: true}
 				// );
+				this.map.flyTo(
+					{
+						center,
+						maxDuration: this.props.centeringDuration,
+						zoom: this.zoomLevel
+					},
+					{duration: duration || 800, easing: linear, animation: true}
+				);
 			}
 			// this.map.flyTo({center, maxDuration: (instant ? 500 : this.props.centeringDuration)});
 			this.localinfo.center = toLatLon(this.map.getCenter()); // save the current center, based on their truth rather than ours
@@ -643,12 +647,6 @@ class MapCoreBase extends React.Component {
 	// 	// this.props.updateDestination(this.points[selected]);
 	// }
 
-	changeFollow = () => {
-		this.setState(({follow}) => ({
-			follow: !follow
-		}));
-	}
-
 	setContextRef = () => {
 		this.context.getMap(this);
 	}
@@ -666,8 +664,8 @@ class MapCoreBase extends React.Component {
 		delete rest.centeringDuration;
 		// delete rest.colorMarker;
 		delete rest.colorRouteLine;
-		delete rest.defaultFollow;
 		delete rest.destination;
+		delete rest.follow;
 		delete rest.location;
 		delete rest.points;
 		delete rest.position;

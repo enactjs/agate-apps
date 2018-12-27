@@ -31,6 +31,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			updateDestination: PropTypes.func.isRequired,
 			autonomous: PropTypes.bool,
 			destination: propTypeLatLonList,
+			follow: PropTypes.bool,
 			location: propTypeLatLon,
 			navigating: PropTypes.bool,
 			navigation: PropTypes.object
@@ -203,14 +204,17 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 				this.isFirstPosition = false;
 			}
 
-			// If the location is more than 0.5 meters apart, go ahead and update the location.
-			if (this.maps.size > 0 && metersFromLastLocation > 0.5) {
+			// If the location is more than 0.01 meters apart, go ahead and update the location.
+			if (this.maps.size > 0 && metersFromLastLocation > 0.01) {
 				for (let map of this.maps) {
 					if (map.actionManager) {
-						map.actionManager({
-							positionCar: location,
-							center: location
-						});
+						const actions = {
+							positionCar: location
+						};
+						if (this.props.follow) {
+							actions.center = location;
+						}
+						map.actionManager(actions);
 					}
 				}
 			}
@@ -273,6 +277,10 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		}
 
 		sendVideo = (args) => {
+			const {screenId, video: {snippet: {thumbnails}}} = args;
+			this.props.updateAppState((state) => {
+				state.multimedia.nowPlaying[screenId] = thumbnails;
+			});
 			this.comm.current.sendVideo(args);
 		}
 
@@ -336,6 +344,8 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		render () {
 			const {...rest} = this.props;
 			delete rest.autonomous;
+			delete rest.destination;
+			delete rest.follow;
 			delete rest.location;
 			delete rest.navigating;
 			delete rest.navigation;
@@ -370,6 +380,7 @@ const ServiceLayer = compose(
 	AppStateConnect(({location: locationProp, navigation, updateAppState}) => ({
 		autonomous: navigation.autonomous,
 		destination: navigation.destination,
+		follow: navigation.follow,
 		location: locationProp,
 		navigation,
 		navigating: navigation.navigating,

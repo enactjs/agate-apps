@@ -15,6 +15,7 @@ import CompactHvac from '../components/CompactHVAC';
 import CompactMap from '../components/CompactMap';
 import CompactMultimedia from '../components/CompactMultimedia';
 import CompactMusic from '../components/CompactMusic';
+import CompactScreenMonitor from '../components/CompactScreenMonitor';
 import CompactWeather from '../components/CompactWeather';
 
 import css from './Home.less';
@@ -216,9 +217,10 @@ const Home = kind({
 			<HomeLayout arrangeable={arrangeable}>
 				<tray1><CompactAppList icon="list" onExpand={onCompactExpand} /></tray1>
 				<tray2><CompactHvac icon="temperature" onExpand={onCompactExpand} /></tray2>
+				<tray3><CompactMusic icon="audio" onExpand={onCompactExpand} /></tray3>
 
 				<small1><CompactWeather icon="climate" onExpand={onCompactExpand} /></small1>
-				<small2><CompactMusic icon="audio" onExpand={onCompactExpand} /></small2>
+				<small2><CompactScreenMonitor onExpand={onCompactExpand} /></small2>
 				<medium><CompactMultimedia icon="resumeplay" onExpand={onCompactExpand} onSendVideo={onSendVideo} screenIds={[1]} /></medium>
 				<large><CompactMap icon="compass" onExpand={onCompactExpand} /></large>
 			</HomeLayout>
