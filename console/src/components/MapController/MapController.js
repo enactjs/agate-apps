@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import hoc from '@enact/core/hoc';
 import Pure from '@enact/ui/internal/Pure';
-// import classnames from 'classnames';
+import classnames from 'classnames';
 import Group from '@enact/ui/Group';
 import {Cell, Column, Row} from '@enact/ui/Layout';
 import Button from '@enact/agate/Button';
@@ -17,6 +17,8 @@ import {propTypeLatLon, propTypeLatLonList} from '../../data/proptypes';
 import {formatDuration, formatTime} from '../../../../components/Formatter';
 
 import css from './MapController.less';
+
+const StyledButton = (props) => (<Button {...props} css={css} />);
 
 const MapControllerHoc = hoc((configHoc, Wrapped) => {
 	return class extends React.Component {
@@ -123,6 +125,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 		render () {
 			const {
 				autonomousSelection,
+				className,
 				destination,
 				follow,
 				locationSelection,
@@ -147,7 +150,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 			return (
 				<Wrapped
 					{...rest}
-					// className={classnames(className, css.map)}
+					className={classnames(className, css.map)}
 					follow={follow}
 					destination={destination}
 					points={topLocations}
@@ -184,11 +187,11 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 							{
 								autonomousSelection &&
 								<Cell shrink={locationSelection} className={css.columnCell}>
-									<Divider>Self Driving</Divider>
+									<Divider className={css.heading}>Self Driving</Divider>
 									<Row
 										component={Group}
-										childComponent={Button}
-										itemProps={{css: css}}
+										childComponent={Cell}
+										itemProps={{component: StyledButton}}
 										onSelect={this.toggleAutonomous}
 										select="radio"
 										selectedProp="selected"
@@ -231,19 +234,19 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 							}
 							{
 								!noStartStopToggle && destination &&
-								<Cell shrink className={css.columnCell}>
-									<Column>
-										<ToggleButton
-											small
-											// We want to be able to factor in the autonomous state, but
-											// perhaps that needs to happen in ServiceLayer, and not here.
-											selected={destination && navigating}
-											onToggle={this.startNavigation}
-											toggleOnLabel="Stop Navigation"
-											toggleOffLabel="Start Navigation"
-										/>
-									</Column>
-								</Cell>
+								<Cell
+									shrink
+									className={css.columnCell}
+									component={ToggleButton}
+									css={css}
+									small
+									// We want to be able to factor in the autonomous state, but
+									// perhaps that needs to happen in ServiceLayer, and not here.
+									selected={destination && navigating}
+									onToggle={this.startNavigation}
+									toggleOnLabel="Stop Navigation"
+									toggleOffLabel="Start Navigation"
+								/>
 							}
 						</Column>
 					</tools>
