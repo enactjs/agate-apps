@@ -2,16 +2,20 @@
 @import "../../styles/console-variables.less";
 
 .compactHeader {
-    .applySkins({
-        z-index: 1;
-        display: flex;
-        width: 100%;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: @agate-app-keepout * 2;
+	.applySkins({
+		z-index: 1;
+		display: flex;
+		width: 100%;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: @agate-app-keepout * 2;
 
-        .title {
-            text-transform: uppercase;
-        }
-    });
+		.title {
+			text-transform: uppercase;
+		}
+
+		.btn {
+			align-self: start;
+		}
+	});
 }
