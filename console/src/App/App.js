@@ -195,6 +195,8 @@ const AppBase = kind({
 		delete rest.showAppList;
 		delete rest.updateAppState;
 
+		const copperSkinFamily = (skinName === 'copper' || skinName === 'copper-day');
+
 		return (
 			<div {...rest}>
 				<TabbedPanels
@@ -210,33 +212,23 @@ const AppBase = kind({
 					index={index}
 				>
 					<beforeTabs>
-						{skinName === 'copper' ? (
-							<div style={{marginLeft: '2em'}}>
-								<UserAvatar
-									userId={userId - 1}
-									onClick={onToggleUserSelectionPopup}
-									style={{margin: '1em 0 0.5em 0'}}
-								/>
-								<Clock style={{textAlign: 'left'}} />
-							</div>
-						) : (
-							<div style={{textAlign: 'center', margin: '0 0.5em 0.5em 0.5em'}}>
-								<UserAvatar
-									userId={userId - 1}
-									onClick={onToggleUserSelectionPopup}
-									style={{margin: '1em'}}
-								/>
-							</div>
-						)}
+						<div className={css.beforeTabs}>
+							<UserAvatar
+								className={css.avatar}
+								userId={userId - 1}
+								onClick={onToggleUserSelectionPopup}
+							/>
+							{copperSkinFamily ? <Clock className={css.clock} /> : null}
+						</div>
 					</beforeTabs>
 					<afterTabs>
 						<Column
-							align={(skinName === 'copper' ? 'start center' : 'center space-around')}
-							style={{margin: (skinName === 'copper' ? '0 0 3em 2em' : '0.25em 1em 1em 1em')}}
+							className={css.afterTabs}
+							align={(copperSkinFamily ? 'start center' : 'center space-around')}
 						>
-							{skinName === 'copper' ? null : <Cell shrink><Clock /></Cell>}
-							<Cell shrink style={{margin: (skinName === 'copper' ? 0 : '0.25em 1em 1em 1em')}}>
-								<Row align={(skinName === 'copper' ? 'center start' : 'center space-around')}>
+							{copperSkinFamily ? null : <Cell shrink><Clock /></Cell>}
+							<Cell shrink className={css.buttons}>
+								<Row align={(copperSkinFamily ? 'center start' : 'center space-around')}>
 									<Cell shrink>
 										<PanelSwitchingIconButton
 											index={index}
