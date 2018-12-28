@@ -56,7 +56,7 @@ const Settings = kind({
 							Settings
 						</Cell>
 						<SwitchItemCell
-							icon="display"
+							icon="edit"
 							noToggle
 							data-tabindex={getPanelIndexOf('settings/theme')}
 							onClick={onSelect}
