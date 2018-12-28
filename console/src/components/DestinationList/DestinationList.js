@@ -11,6 +11,8 @@ import {propTypeLatLonList} from '../../data/proptypes';
 
 import css from './DestinationList.less';
 
+const DestinationButton = (props) => (<Button small {...props} css={css} />);
+
 const DestinationList = kind({
 	name: 'DestinationList',
 
@@ -19,6 +21,11 @@ const DestinationList = kind({
 		destination: propTypeLatLonList,
 		onSetDestination: PropTypes.func,
 		title: PropTypes.string
+	},
+
+	styles: {
+		css,
+		className: 'destinationList'
 	},
 
 	computed: {
@@ -40,15 +47,15 @@ const DestinationList = kind({
 	render: ({positions, onSetDestination, selected, title, ...rest}) => {
 		return (
 			<Column {...rest}>
-				<Cell component={Divider} shrink>{title}</Cell>
+				<Cell component={Divider} shrink className={css.heading}>{title}</Cell>
 				<Cell>
 					<Column
 						component={Group}
-						childComponent={Button}
+						childComponent={Cell}
 						onSelect={onSetDestination}
 						selectedProp="highlighted"
 						selected={selected}
-						itemProps={{css, small: true}}
+						itemProps={{component: DestinationButton, shrink: true}}
 					>
 						{
 							positions.map(({description}, index) => `${index + 1} - ${description}`)

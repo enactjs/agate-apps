@@ -2,6 +2,48 @@
 	// styles can be put here
 	// This should prevent iOS from double-tap-to-zoom but... it doesn't completely.
 	touch-action: manipulation;
+
+	// General rules
+	.beforeTabs {
+		margin: 0 0.5em 0.5em 0.5em;
+		text-align: center;
+
+		.avatar {
+			margin: 1em;
+		}
+	}
+	.afterTabs {
+		margin: 0.25em 1em 1em 1em;
+
+		.buttons {
+			margin: 0.25em 1em 1em 1em
+		}
+	}
+}
+
+// Theme-specific rules
+:global(.copper),
+:global(.copper-day) {
+	.app {
+		.beforeTabs {
+			margin-left: 2em;
+			text-align: left;
+
+			.avatar {
+				margin: 1em 0 0.5em 0;
+			}
+			.clock {
+				text-align: left;
+			}
+		}
+		.afterTabs {
+			margin: 0 0 3em 2em;
+
+			.buttons {
+				margin: 0;
+			}
+		}
+	}
 }
 
 * {

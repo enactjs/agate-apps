@@ -85,6 +85,9 @@ class AppContextProvider extends Component {
 				linearVelocity: 0,
 				orientation: 0
 			},
+			multimedia: {
+				nowPlaying: []
+			},
 			navigation: {
 				autonomous: true,
 				description: '',

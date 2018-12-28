@@ -277,6 +277,10 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		}
 
 		sendVideo = (args) => {
+			const {screenId, video: {snippet: {thumbnails}}} = args;
+			this.props.updateAppState((state) => {
+				state.multimedia.nowPlaying[screenId] = thumbnails;
+			});
 			this.comm.current.sendVideo(args);
 		}
 
@@ -340,6 +344,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		render () {
 			const {...rest} = this.props;
 			delete rest.autonomous;
+			delete rest.destination;
 			delete rest.follow;
 			delete rest.location;
 			delete rest.navigating;

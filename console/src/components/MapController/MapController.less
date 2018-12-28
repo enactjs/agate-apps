@@ -1,16 +1,45 @@
 @import "~@enact/agate/styles/skin.less";
 
-.columnCell {
-	margin-top: 2em;
+.map {
+	.columnCell {
+		margin-top: 2em;
 
-	&:first-child {
-		margin-top: 0;
+		&:first-child {
+			margin-top: 0;
+		}
+
+		p {
+			margin: 12px;
+		}
+
+		.heading {
+			margin-left: 12px;
+			margin-right: 12px;
+		}
 	}
+
+	.toolsColumn,
+	.toolsColumn .columnCell {
+		pointer-events: none;
+
+		> * {
+			pointer-events: auto;
+		}
+	}
+
+	.applySkins({
+		.travelInfo {
+			background-image: radial-gradient(@agate-background-active, transparent 75%);
+
+			.number {
+				font-size: 180%;
+				color: @agate-highlight;
+			}
+		}
+	});
 }
 
 .button {
-	width: 100%;
-
 	.applySkins({
 		.bg {
 			border: 3px solid @agate-accent;
@@ -19,24 +48,5 @@
 		.client {
 			font-size: 24px;
 		}
-
-		&.selected {
-			.bg {
-				background-color: @agate-highlight;
-			}
-
-			.client {
-				color: @agate-button-focus-color;
-			}
-		}
 	});
-}
-
-.toolsColumn,
-.toolsColumn .columnCell {
-	pointer-events: none;
-
-	> * {
-		pointer-events: auto;
-	}
 }

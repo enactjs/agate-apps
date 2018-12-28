@@ -12,18 +12,19 @@ import PropTypes from 'prop-types';
 
 import AppContextConnect from '../App/AppContextConnect';
 import CustomLayout, {SaveLayoutArrangement} from '../components/CustomLayout';
-import CarSvg from '../components/Dashboard/svg/car.svg';
+import CarPng from '../../assets/car.png';
 
 import css from './Dashboard.less';
 
 const ResponsiveLayout = ResponsiveBox(({containerShape, ...rest}) => {
 	const orientation = (containerShape.orientation === 'portrait') ? 'vertical' : 'horizontal';
+	const {right, left} = containerShape.edges;
 	let axisAlign = 'center';
-	if (containerShape.edges.top) axisAlign = 'start';
-	if (containerShape.edges.bottom) axisAlign = 'end';
+	if (left) axisAlign = 'start';
+	else if (right) axisAlign = 'end';
 
 	return (
-		<Layout align={axisAlign + ' space-around'} orientation={orientation} {...rest} />
+		<Layout align={'center ' + axisAlign} orientation={orientation} {...rest} />
 	);
 });
 
@@ -66,34 +67,42 @@ const DashboardBase = kind({
 						*/}
 					</top>
 
-					<Row align="center space-around">
-						<Column className={css.sideInfo} align="stretch space-between">
-							<Cell shrink>
-								<IconItem icon="compass" label="23.1 psi" spotlightDisabled>Tire psi</IconItem>
-							</Cell>
-							<Cell component={Divider} shrink startSection />
-							<Cell shrink>
-								<IconItem icon="compass" label="23.1 psi" spotlightDisabled>Tire psi</IconItem>
-							</Cell>
-						</Column>
-						<Column>
-							<img className={css.carImage} src={CarSvg} alt="" />
-						</Column>
-						<Column className={css.sideInfo} align="stretch space-between">
-							<Cell shrink>
-								<IconItem icon="compass" label="23.1 psi" spotlightDisabled>Tire psi</IconItem>
-							</Cell>
-							<Cell component={Divider} shrink startSection />
-							<Cell shrink>
-								<IconItem icon="compass" label="23.1 psi" spotlightDisabled>Tire psi</IconItem>
-							</Cell>
-						</Column>
+					<Row align="center center">
+						<Cell size="20%">
+							<Column className={css.sideInfo} align="stretch space-between">
+								<Cell shrink>
+									<IconItem icon="compass" label="23.1 psi" spotlightDisabled>Tire psi</IconItem>
+								</Cell>
+								<Cell component={Divider} shrink startSection />
+								<Cell shrink>
+									<IconItem icon="compass" label="23.1 psi" spotlightDisabled>Tire psi</IconItem>
+								</Cell>
+							</Column>
+						</Cell>
+						<Cell shrink>
+							<Column>
+								<Cell shrink><img className={css.carImage} src={CarPng} alt="" /></Cell>
+							</Column>
+						</Cell>
+						<Cell size="20%">
+							<Column className={css.sideInfo} align="stretch space-between">
+								<Cell shrink>
+									<IconItem icon="compass" label="23.1 psi" spotlightDisabled>Tire psi</IconItem>
+								</Cell>
+								<Cell component={Divider} shrink startSection />
+								<Cell shrink>
+									<IconItem icon="compass" label="23.1 psi" spotlightDisabled>Tire psi</IconItem>
+								</Cell>
+							</Column>
+						</Cell>
 					</Row>
 
 					<bottomLeft>
 						<ResponsiveLayout style={{height: '100%'}}>
-							<Cell component={IconItem} icon="gear" label="temp" inline spotlightDisabled>
-								<ProgressBar className={css.progressBar} progress={0.25} />
+							<Cell>
+								<IconItem icon="gear" label="temp" spotlightDisabled>
+									<ProgressBar className={css.progressBar} progress={0.25} />
+								</IconItem>
 							</Cell>
 						</ResponsiveLayout>
 					</bottomLeft>
@@ -107,8 +116,10 @@ const DashboardBase = kind({
 
 					<bottomRight>
 						<ResponsiveLayout style={{height: '100%'}}>
-							<Cell component={IconItem} icon="plug" label="fuel" spotlightDisabled>
-								<ProgressBar className={css.progressBar} progress={0.75} />
+							<Cell>
+								<IconItem icon="plug" label="fuel" spotlightDisabled>
+									<ProgressBar className={css.progressBar} progress={0.75} />
+								</IconItem>
 							</Cell>
 						</ResponsiveLayout>
 					</bottomRight>

@@ -2,9 +2,10 @@
 import kind from '@enact/core/kind';
 import {add} from '@enact/core/keymap';
 import {adaptEvent, forward, handle} from '@enact/core/handle';
-import {Cell, Column} from '@enact/ui/Layout';
+import {Cell, Column, Row} from '@enact/ui/Layout';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
+import IconButton from '@enact/agate/IconButton';
 import Popup from '@enact/agate/Popup';
 import DateTimePicker from '@enact/agate/DateTimePicker';
 import {TabbedPanels} from '@enact/agate/Panels';
@@ -16,7 +17,7 @@ import PropTypes from 'prop-types';
 import ServiceLayer from '../data/ServiceLayer';
 
 // Components
-import ProfileDrawer from '../components/ProfileDrawer';
+import UserSelectionPopup from '../components/UserSelectionPopup';
 import UserAvatar from '../components/UserAvatar';
 import Clock from '../components/Clock';
 import WelcomePopup from '../components/WelcomePopup';
@@ -60,6 +61,32 @@ const panelIndexMap = [
 // Look up a panel index by name, using the above list as the directory listing.
 const getPanelIndexOf = (panelName) => panelIndexMap.indexOf(panelName);
 
+const PanelSwitchingIconButton = kind({
+	name: 'PanelSwitchingIconButton',
+	propTypes: {
+		index: PropTypes.number,
+		onSelect: PropTypes.func,
+		view: PropTypes.string
+	},
+	defaultProps: {
+		view: 'home'
+	},
+	handlers: {
+		onSelect: handle(
+			adaptEvent((ev, {view}) => ({view}), forward('onSelect'))
+		)
+	},
+	computed: {
+		selected: ({index, view}) => (index === getPanelIndexOf(view))
+	},
+	render: ({onSelect, ...rest}) => {
+		delete rest.index;
+		return (
+			<IconButton {...rest} onClick={onSelect} />
+		);
+	}
+});
+
 const AppBase = kind({
 	name: 'App',
 
@@ -73,11 +100,16 @@ const AppBase = kind({
 	},
 
 	handlers: {
-		onToggleProfileEdit: (ev, {updateAppState}) => {
+		layoutArrangeableToggle: (ev, {updateAppState}) => {
 			updateAppState((state) => {
-				state.appState.showProfileEdit = !state.appState.showProfileEdit;
+				state.userSettings.arrangements.arrangeable = !state.userSettings.arrangements.arrangeable;
 			});
 		},
+		// onToggleProfileEdit: (ev, {updateAppState}) => {
+		// 	updateAppState((state) => {
+		// 		state.appState.showProfileEdit = !state.appState.showProfileEdit;
+		// 	});
+		// },
 		onToggleDateTimePopup: (ev, {updateAppState}) => {
 			updateAppState((state) => {
 				state.appState.showDateTimePopup = !state.appState.showDateTimePopup;
@@ -103,6 +135,11 @@ const AppBase = kind({
 				state.appState.showBasicPopup = !state.appState.showBasicPopup;
 			});
 		},
+		onToggleUserSelectionPopup: (ev, {updateAppState}) => {
+			updateAppState((state) => {
+				state.appState.showUserSelectionPopup = !state.appState.showUserSelectionPopup;
+			});
+		},
 		onResetAll: (ev, {onSelect, updateAppState}) => {
 			onSelect({index: 0});
 			updateAppState((state) => {
@@ -112,19 +149,30 @@ const AppBase = kind({
 				state.appState.showUserSelectionPopup = false;
 				state.appState.showWelcomePopup = true;
 			});
-		}
+		},
+		onSelect: handle(
+			forward('onSelect'),
+			(ev, {updateAppState}) => {
+				updateAppState((state) => {
+					// turn off arrangeable when switching panels.
+					state.userSettings.arrangements.arrangeable = false;
+				});
+			}
+		)
 	},
 
 	render: ({
 		index,
 		layoutArrangeable,
+		layoutArrangeableToggle,
 		onResetAll,
 		onSelect,
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
 		onToggleDestinationReachedPopup,
 		onTogglePopup,
-		onToggleProfileEdit,
+		// onToggleProfileEdit,
+		onToggleUserSelectionPopup,
 		onToggleWelcomePopup,
 		orientation,
 		resetCopilot,
@@ -147,6 +195,8 @@ const AppBase = kind({
 		delete rest.showAppList;
 		delete rest.updateAppState;
 
+		const copperSkinFamily = (skinName === 'copper' || skinName === 'copper-day');
+
 		return (
 			<div {...rest}>
 				<TabbedPanels
@@ -159,22 +209,44 @@ const AppBase = kind({
 						{title: 'Apps', icon: 'apps'}
 					]}
 					onSelect={onSelect}
-					selected={index}
 					index={index}
 				>
 					<beforeTabs>
-						<div style={{textAlign: 'center'}}>
+						<div className={css.beforeTabs}>
 							<UserAvatar
+								className={css.avatar}
 								userId={userId - 1}
-								onClick={onToggleProfileEdit}
-								style={{margin: (orientation === 'horizontal' ? '2em 1em' : '0.25em 1em')}}
+								onClick={onToggleUserSelectionPopup}
 							/>
+							{copperSkinFamily ? <Clock className={css.clock} /> : null}
 						</div>
 					</beforeTabs>
 					<afterTabs>
-						<Column align="center space-around">
-							<Cell shrink style={{margin: '0.25em 1em'}}>
-								<Clock />
+						<Column
+							className={css.afterTabs}
+							align={(copperSkinFamily ? 'start center' : 'center space-around')}
+						>
+							{copperSkinFamily ? null : <Cell shrink><Clock /></Cell>}
+							<Cell shrink className={css.buttons}>
+								<Row align={(copperSkinFamily ? 'center start' : 'center space-around')}>
+									<Cell shrink>
+										<PanelSwitchingIconButton
+											index={index}
+											onSelect={onSelect}
+											view="settings/theme"
+										>
+											edit
+										</PanelSwitchingIconButton>
+									</Cell>
+									<Cell shrink>
+										<IconButton
+											onClick={layoutArrangeableToggle}
+											selected={layoutArrangeable}
+										>
+											display
+										</IconButton>
+									</Cell>
+								</Row>
 							</Cell>
 						</Column>
 					</afterTabs>
@@ -206,7 +278,14 @@ const AppBase = kind({
 					/>
 					<Multimedia onSendVideo={sendVideo} screenIds={[0, 1, 2]} />
 				</TabbedPanels>
-				<ProfileDrawer
+				<UserSelectionPopup
+					onClose={onToggleUserSelectionPopup}
+					onResetAll={onResetAll}
+					open={showUserSelectionPopup}
+					onResetPosition={resetPosition}
+					onResetCopilot={resetCopilot}
+				/>
+				{/* <ProfileDrawer
 					index={index}
 					getPanelIndexOf={getPanelIndexOf}
 					onProfileEditEnd={onToggleProfileEdit}
@@ -215,7 +294,7 @@ const AppBase = kind({
 					onResetCopilot={resetCopilot}
 					onSelect={onSelect}
 					showUserSelectionPopup={showUserSelectionPopup}
-				/>
+				/>*/}
 				<Popup
 					onClose={onToggleBasicPopup}
 					open={showBasicPopup}

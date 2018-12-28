@@ -1,6 +1,5 @@
 import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
-import {Layout, Cell} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -43,10 +42,10 @@ const ClockBase = kind({
 	},
 
 	render: ({date, dayOfWeek, month, time, ...rest}) => (
-		<Layout align="center" {...rest}>
-			<Cell shrink className={css.date}>{dayOfWeek}, {month} {date.getDate()}</Cell>
-			<Cell shrink className={css.time}>{time}</Cell>
-		</Layout>
+		<div {...rest}>
+			{dayOfWeek}, {month} {date.getDate()} <wbr />
+			{time}
+		</div>
 	)
 });
 
@@ -58,7 +57,10 @@ const Tick = hoc((config, Wrapped) => {
 			this.state = {
 				date: new Date()
 			};
-			window.setInterval(this.update, 1000);
+			this.ticker = window.setInterval(this.update, 1000);
+		}
+		componentWillUnmount () {
+			window.clearInterval(this.ticker);
 		}
 		update = () => this.setState({date: new Date()})
 		render () {
