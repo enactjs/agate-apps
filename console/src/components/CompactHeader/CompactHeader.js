@@ -1,6 +1,7 @@
 import Divider from '@enact/agate/Divider';
 import {adaptEvent, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
+import {Row, Cell} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -34,19 +35,21 @@ const CompactHeader = kind({
 	},
 
 	render: ({children, onExpand, noExpandButton, ...rest}) => (
-		<Divider {...rest}>
-			{children && <span className={css.title}>{children}</span>}
+		<Row component={Divider} spacing="large" {...rest}>
+			{children && <Cell className={css.title}>{children}</Cell>}
 			{!noExpandButton ? (
-				<IconButton
-					className={css.btn}
-					size="smallest"
-					alt="Fullscreen"
-					onClick={onExpand}
-				>
-					expand
-				</IconButton>
+				<Cell shrink>
+					<IconButton
+						className={css.btn}
+						size="smallest"
+						alt="Fullscreen"
+						onClick={onExpand}
+					>
+						expand
+					</IconButton>
+				</Cell>
 			) : null}
-		</Divider>
+		</Row>
 	)
 });
 

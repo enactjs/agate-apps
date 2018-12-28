@@ -52,6 +52,7 @@ const WeatherItemBase = kind({
 
 	render: ({label, description, high, low, src, ...rest}) => {
 		delete rest.featured;
+		delete rest.status;
 
 		return (
 			<Column {...rest} align="center space-around">

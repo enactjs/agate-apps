@@ -215,14 +215,14 @@ const Home = kind({
 	render: ({arrangeable, onCompactExpand, onSendVideo, onSelect, ...rest}) => (
 		<Panel {...rest}>
 			<HomeLayout arrangeable={arrangeable}>
-				<tray1><CompactHvac icon="temperature" onExpand={onCompactExpand} /></tray1>
-				<tray2><CompactAppList icon="list" onExpand={onCompactExpand} onSelect={onSelect} /></tray2>
-				<tray3><CompactMusic icon="audio" onExpand={onCompactExpand} /></tray3>
+				<tray1><CompactHvac onExpand={onCompactExpand} /></tray1>
+				<tray2><CompactAppList onExpand={onCompactExpand} onSelect={onSelect} /></tray2>
+				<tray3><CompactMusic onExpand={onCompactExpand} /></tray3>
 
-				<small1><CompactWeather icon="climate" onExpand={onCompactExpand} /></small1>
+				<small1><CompactWeather onExpand={onCompactExpand} /></small1>
 				<small2><CompactScreenMonitor onExpand={onCompactExpand} /></small2>
-				<medium><CompactMultimedia icon="resumeplay" onExpand={onCompactExpand} onSendVideo={onSendVideo} screenIds={[1]} /></medium>
-				<large><CompactMap icon="compass" onExpand={onCompactExpand} /></large>
+				<medium><CompactMultimedia onExpand={onCompactExpand} onSendVideo={onSendVideo} screenIds={[1]} /></medium>
+				<large><CompactMap onExpand={onCompactExpand} /></large>
 			</HomeLayout>
 		</Panel>
 	)

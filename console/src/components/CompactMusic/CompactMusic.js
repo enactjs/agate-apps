@@ -1,6 +1,6 @@
 import GridListImageItem from '@enact/agate/GridListImageItem';
 import kind from '@enact/core/kind';
-import Layout, {Column, Cell} from '@enact/ui/Layout';
+import {Row, Cell} from '@enact/ui/Layout';
 import IconButton from '@enact/agate/IconButton';
 import React from 'react';
 
@@ -19,15 +19,14 @@ const PlaybackControls = kind({
 
 	render: (props) => {
 		return (
-			<Layout
+			<Row
 				{...props}
-				orientation="horizontal"
 				align="center center"
 			>
 				<Cell shrink><IconButton size="smallest">skipbackward</IconButton></Cell>
 				<Cell shrink><IconButton size="small">play</IconButton></Cell>
 				<Cell shrink><IconButton size="smallest">skipforward</IconButton></Cell>
-			</Layout>
+			</Row>
 		);
 	}
 });
@@ -42,19 +41,17 @@ const CompactMusicBase = kind({
 
 	render: (props) => {
 		return (
-			<Widget {...props} title="Listen" description="Listen to your favorite tunes" view="radio">
-				<Column align="center center">
-					<Cell shrink>
-						<GridListImageItem
-							caption="The Title"
-							className={css.album}
-							selectionOverlay={PlaybackControls}
-							selectionOverlayShowing
-							source={albumArt}
-							subCaption="The Album"
-						/>
-					</Cell>
-				</Column>
+			<Widget {...props} icon="audio" title="Listen" description="Listen to your favorite tunes" view="radio" align="center center">
+				<Cell shrink>
+					<GridListImageItem
+						caption="The Title"
+						className={css.album}
+						selectionOverlay={PlaybackControls}
+						selectionOverlayShowing
+						source={albumArt}
+						subCaption="The Album"
+					/>
+				</Cell>
 			</Widget>
 		);
 	}

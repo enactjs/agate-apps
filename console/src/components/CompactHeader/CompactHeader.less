@@ -1,17 +1,14 @@
-@import "~@enact/agate/styles/variables.less";
-@import "../../styles/console-variables.less";
+@import "~@enact/agate/styles/skin.less";
 
 .compactHeader {
-    .applySkins({
-        z-index: 1;
-        display: flex;
-        width: 100%;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: @agate-app-keepout * 2;
+	.applySkins({
+		.title {
+			line-height: 45px; // The height of the "smallest" IconButtons, so each line of text is vertically centered with the IconButton
+			text-transform: uppercase;
+		}
 
-        .title {
-            text-transform: uppercase;
-        }
-    });
+		.btn {
+			margin-right: 0;
+		}
+	});
 }

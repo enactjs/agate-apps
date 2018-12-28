@@ -1,7 +1,7 @@
 import {ResponsiveBox} from '@enact/agate/DropManager';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
 import kind from '@enact/core/kind';
-import Layout, {Cell, Row} from '@enact/ui/Layout';
+import {Cell, Row, Column} from '@enact/ui/Layout';
 import Slottable from '@enact/ui/Slottable';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
@@ -15,17 +15,23 @@ const WidgetBase = kind({
 	name: 'Widget',
 
 	propTypes: {
+		align: PropTypes.string,
 		containerShape: PropTypes.object,
 		description: PropTypes.string,
 		full: PropTypes.node,
 		icon: PropTypes.string,
 		large: PropTypes.node,
 		medium: PropTypes.node,
+		noExpandButton: PropTypes.bool,
 		noHeader: PropTypes.bool,
 		onExpand: PropTypes.func,
 		small: PropTypes.node,
 		title: PropTypes.string,
 		view: PropTypes.string
+	},
+
+	defaultProps: {
+		align: 'stretch center'
 	},
 
 	styles: {
@@ -54,7 +60,7 @@ const WidgetBase = kind({
 		}
 	},
 
-	render: ({children, containerShape, icon, onExpand, noExpandButton, noHeader, title, view, ...rest}) => {
+	render: ({align, children, containerShape, icon, onExpand, noExpandButton, noHeader, title, view, ...rest}) => {
 		delete rest.containerShape;
 		delete rest.description;
 		delete rest.full;
@@ -71,14 +77,20 @@ const WidgetBase = kind({
 				</Row>
 			);
 			default: return (
-				<Layout align="center center" orientation="vertical" {...rest}>
+				<Column {...rest}>
 					{!noHeader ? (
-						<Cell shrink component={CompactHeader} noExpandButton={noExpandButton} onExpand={onExpand} view={view}>
-							{title}
+						<Cell shrink>
+							<CompactHeader noExpandButton={noExpandButton} onExpand={onExpand} view={view}>
+								{title}
+							</CompactHeader>
 						</Cell>
 					) : null}
-					{children}
-				</Layout>
+					<Cell>
+						<Column align={align}>
+							{children}
+						</Column>
+					</Cell>
+				</Column>
 			);
 		}
 	}
