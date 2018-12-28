@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import kind from '@enact/core/kind';
+import {Cell} from '@enact/ui/Layout';
 
 import Widget from '../Widget';
 import WeatherItem from '../WeatherItem';
@@ -30,7 +31,9 @@ const CompactWeatherBase = kind({
 	render: ({status, temp, ...rest}) => {
 		return (
 			<Widget {...rest} title="Current Weather" description="Local weather information" view="weather">
-				<WeatherItem featured status={status} high={temp} />
+				<Cell>
+					<WeatherItem featured status={status} high={temp} />
+				</Cell>
 			</Widget>
 		);
 	}

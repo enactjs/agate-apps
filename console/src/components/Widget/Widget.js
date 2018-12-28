@@ -15,6 +15,7 @@ const WidgetBase = kind({
 	name: 'Widget',
 
 	propTypes: {
+		align: PropTypes.string,
 		containerShape: PropTypes.object,
 		description: PropTypes.string,
 		full: PropTypes.node,
@@ -26,6 +27,10 @@ const WidgetBase = kind({
 		small: PropTypes.node,
 		title: PropTypes.string,
 		view: PropTypes.string
+	},
+
+	defaultProps: {
+		align: 'stretch center'
 	},
 
 	styles: {
@@ -54,7 +59,7 @@ const WidgetBase = kind({
 		}
 	},
 
-	render: ({children, containerShape, icon, onExpand, noExpandButton, noHeader, title, view, ...rest}) => {
+	render: ({align, children, containerShape, icon, onExpand, noExpandButton, noHeader, title, view, ...rest}) => {
 		delete rest.containerShape;
 		delete rest.description;
 		delete rest.full;
@@ -77,9 +82,11 @@ const WidgetBase = kind({
 							{title}
 						</Cell>
 					) : null}
-					<Column align="stretch center">
-						{children}
-					</Column>
+					<Cell>
+						<Column align={align}>
+							{children}
+						</Column>
+					</Cell>
 				</Column>
 			);
 		}

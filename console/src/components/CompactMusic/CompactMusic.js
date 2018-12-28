@@ -41,18 +41,16 @@ const CompactMusicBase = kind({
 
 	render: (props) => {
 		return (
-			<Widget {...props} title="Listen" description="Listen to your favorite tunes" view="radio">
-				<Column align="center center">
-					<Cell shrink>
-						<GridListImageItem
-							caption="The Title"
-							className={css.album}
-							selectionOverlay={PlaybackControls}
-							selectionOverlayShowing
-							subCaption="The Album"
-						/>
-					</Cell>
-				</Column>
+			<Widget {...props} title="Listen" description="Listen to your favorite tunes" view="radio" align="center center">
+				<Cell shrink>
+					<GridListImageItem
+						caption="The Title"
+						className={css.album}
+						selectionOverlay={PlaybackControls}
+						selectionOverlayShowing
+						subCaption="The Album"
+					/>
+				</Cell>
 			</Widget>
 		);
 	}
