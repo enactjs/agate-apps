@@ -175,6 +175,7 @@ const AppBase = kind({
 		onToggleUserSelectionPopup,
 		onToggleWelcomePopup,
 		orientation,
+		prevIndex,
 		resetCopilot,
 		resetPosition,
 		reloadApp,
@@ -270,7 +271,7 @@ const AppBase = kind({
 						onReloadApp={reloadApp}
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
-					<ThemeSettings onSelect={onSelect} />
+					<ThemeSettings onSelect={onSelect} prevIndex={prevIndex} />
 					<Weather />
 					<Dashboard
 						arrangeable={layoutArrangeable}
@@ -356,7 +357,7 @@ const AppIndex = (Wrapped) => {
 		onSelect = handle(
 			adaptEvent((ev) => {
 				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
-				this.setState(state => state.index === index ? null : {index});
+				this.setState(state => state.index === index ? null : {prevIndex: state.index, index});
 				return {index};
 			}, forward('onSelect'))
 		).bind(this);
@@ -368,6 +369,7 @@ const AppIndex = (Wrapped) => {
 				<Wrapped
 					{...rest}
 					index={this.state.index}
+					prevIndex={this.state.prevIndex}
 					onSelect={this.onSelect}
 				/>
 			);
