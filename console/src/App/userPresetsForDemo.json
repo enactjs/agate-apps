@@ -94,8 +94,8 @@
 			"rightHeat": false,
 			"rightTemp": 0
 		},
-		"colorAccent": "#cccccc",
-		"colorHighlight": "#566af0",
+		"colorAccent": "#a47d66",
+		"colorHighlight": "#ffffff",
 		"components": {
 			"welcome": {
 				"small1": "weather",
