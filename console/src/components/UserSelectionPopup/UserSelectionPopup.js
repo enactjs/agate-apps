@@ -85,9 +85,9 @@ const UserSelectionPopupBase = kind({
 				</Group>
 
 				<buttons>
-					<Button onClick={resetUserSettings}>Reset Current User</Button>
-					<Button onClick={onResetAll}>Restart Demo</Button>
-					<Button onClick={onResetPosition}>Reset Position</Button>
+					<Button small className={css.button} onClick={resetUserSettings}>Reset Current User</Button>
+					<Button small className={css.button} onClick={onResetAll}>Restart Demo</Button>
+					<Button small className={css.button} onClick={onResetPosition}>Reset Position</Button>
 				</buttons>
 			</Popup>
 		);
