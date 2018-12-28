@@ -244,7 +244,7 @@ class MapCoreBase extends React.Component {
 	}
 
 	componentDidMount () {
-		const {destination, location, skin} = this.props;
+		const {location, skin} = this.props;
 		const style = skinStyles[skin] || skinStyles.titanium;
 		if (location) {
 			startCoordinates = location;
@@ -261,6 +261,7 @@ class MapCoreBase extends React.Component {
 		});
 
 		this.map.on('load', () => {
+			const destination = this.props.destination;
 			this.mapLoaded = true;
 			this.map.addLayer(markerLayer);
 			addCarLayer({
@@ -290,8 +291,8 @@ class MapCoreBase extends React.Component {
 			});
 
 			const actions = {};
-			if (this.props.destination instanceof Array && this.props.destination.slice(-1).lat !== 0) {
-				actions.plotRoute = this.props.destination;
+			if (destination instanceof Array && destination[destination.length - 1].lat !== 0) {
+				actions.plotRoute = destination;
 			}
 
 			// If there is stuff to do, do it!
@@ -301,7 +302,7 @@ class MapCoreBase extends React.Component {
 
 			this.routeRedrawJob = setInterval(() => {
 				if (this.queuedRouteRedraw) {
-					this.actionManager({plotRoute: this.props.destination});
+					this.actionManager({plotRoute: destination});
 				}
 			}, this.props.routeRedrawInterval);
 		});
