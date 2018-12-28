@@ -2,6 +2,7 @@ import {Cell} from '@enact/ui/Layout';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
+import compose from 'ramda/src/compose';
 
 import {WidgetBase, WidgetDecorator} from '../Widget';
 import AppStateConnect from '../../App/AppContextConnect';
@@ -42,15 +43,15 @@ const CompactScreenMonitorBase = kind({
 			return `https://www.youtube.com/embed/${videoId}`;
 		}
 	},
-	render: ({imgUrl, videoUrl, ...rest}) => {
+	render: ({containerShape, imgUrl, videoUrl, ...rest}) => {
 		delete rest.nowPlaying;
-		delete rest.containerShape;
 		delete rest.screenId;
 		delete rest.screenImage;
 
 		return (
 			<WidgetBase
 				{...rest}
+				containerShape={containerShape}
 				title="Now Playing"
 				view="multimedia"
 			>
@@ -60,13 +61,18 @@ const CompactScreenMonitorBase = kind({
 	}
 });
 
-const CompactScreenMonitor = AppStateConnect(
-	({multimedia}) => ({
+const CompactScreenMonitorDecorator = compose(
+	AppStateConnect(({multimedia}) => ({
 		nowPlaying: multimedia.nowPlaying
-	})
-)(WidgetDecorator(CompactScreenMonitorBase));
+	})),
+	WidgetDecorator
+);
+
+const CompactScreenMonitor = CompactScreenMonitorDecorator(CompactScreenMonitorBase);
 
 export default CompactScreenMonitor;
 export {
-	CompactScreenMonitor
+	CompactScreenMonitor,
+	CompactScreenMonitorBase,
+	CompactScreenMonitorDecorator
 };

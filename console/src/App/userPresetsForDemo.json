@@ -61,10 +61,12 @@
 				"top": "topLeft"
 			},
 			"home": {
-				"small1": "small2",
+				"medium": "tray1",
+				"small1": "tray3",
 				"small2": "small1",
-				"medium": "large",
-				"large": "medium"
+				"tray1": "tray2",
+				"tray2": "medium",
+				"tray3": "small2"
 			},
 			"hvac": {
 				"left": "bottom",
@@ -94,8 +96,8 @@
 			"rightHeat": false,
 			"rightTemp": 0
 		},
-		"colorAccent": "#cccccc",
-		"colorHighlight": "#566af0",
+		"colorAccent": "#a47d66",
+		"colorHighlight": "#ffffff",
 		"components": {
 			"welcome": {
 				"small1": "weather",
@@ -104,7 +106,7 @@
 		},
 		"fontSize": 0,
 		"name": "Thomas",
-		"skin": "titanium",
+		"skin": "copper-day",
 		"topLocations": [
 			{
 					"description": "Home",

@@ -344,6 +344,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		render () {
 			const {...rest} = this.props;
 			delete rest.autonomous;
+			delete rest.destination;
 			delete rest.follow;
 			delete rest.location;
 			delete rest.navigating;

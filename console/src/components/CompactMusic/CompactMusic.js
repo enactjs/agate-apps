@@ -5,6 +5,7 @@ import IconButton from '@enact/agate/IconButton';
 import React from 'react';
 
 import Widget from '../Widget';
+import albumArt from '../../../assets/music-album-art.jpg';
 
 import css from './CompactMusic.less';
 
@@ -48,6 +49,7 @@ const CompactMusicBase = kind({
 						className={css.album}
 						selectionOverlay={PlaybackControls}
 						selectionOverlayShowing
+						source={albumArt}
 						subCaption="The Album"
 					/>
 				</Cell>
