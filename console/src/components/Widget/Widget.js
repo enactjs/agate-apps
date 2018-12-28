@@ -1,7 +1,7 @@
 import {ResponsiveBox} from '@enact/agate/DropManager';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
 import kind from '@enact/core/kind';
-import Layout, {Cell, Row, Column} from '@enact/ui/Layout';
+import {Cell, Row, Column} from '@enact/ui/Layout';
 import Slottable from '@enact/ui/Slottable';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
@@ -22,6 +22,7 @@ const WidgetBase = kind({
 		icon: PropTypes.string,
 		large: PropTypes.node,
 		medium: PropTypes.node,
+		noExpandButton: PropTypes.bool,
 		noHeader: PropTypes.bool,
 		onExpand: PropTypes.func,
 		small: PropTypes.node,

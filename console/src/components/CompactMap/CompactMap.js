@@ -22,7 +22,7 @@ const CompactMapBase = kind({
 
 	render: ({follow, onExpand, ...rest}) => {
 		return (
-			<Widget {...rest} title="Map" description="Choose a destination and navigate" noHeader>
+			<Widget {...rest} icon="compass" title="Map" description="Choose a destination and navigate" noHeader>
 				<small>
 					<MapController
 						controlScheme="compact"

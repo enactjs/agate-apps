@@ -52,9 +52,10 @@ const CompactMultimediaBase = kind({
 				<WidgetBase
 					{...rest}
 					containerShape={containerShape}
-					view="multimedia"
+					icon="rearscreen"
 					title="Media"
 					description="Send videos and music to the rear screen(s)"
+					view="multimedia"
 				>
 					<ResponsiveVirtualList
 						dataSize={videos.length}

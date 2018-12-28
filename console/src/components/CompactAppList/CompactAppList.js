@@ -29,7 +29,7 @@ const CompactAppList = kind({
 	},
 
 	render: ({onTabChange, ...rest}) => (
-		<Widget {...rest} title="Favorite Apps" description="A selection of your favorite apps" view="applist">
+		<Widget {...rest} icon="apps" title="Favorite Apps" description="A selection of your favorite apps" view="applist">
 			<DropRow align="start space-around" wrap>
 				<AppIconCell
 					shrink
