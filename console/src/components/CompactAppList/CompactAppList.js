@@ -31,10 +31,45 @@ const CompactAppList = kind({
 	render: ({onTabChange, ...rest}) => (
 		<Widget {...rest} title="Favorite Apps" description="A selection of your favorite apps" view="applist">
 			<DropRow align="start space-around" wrap>
-				<AppIconCell shrink size="24%" icon="compass">Navigation</AppIconCell>
-				<AppIconCell shrink size="24%" icon="audio" onKeyUp={onTabChange} onClick={onTabChange}>Audio</AppIconCell>
-				<AppIconCell shrink size="24%" icon="rearscreen" data-tabindex={getPanelIndexOf('multimedia')} onKeyUp={onTabChange} onClick={onTabChange}>Multimedia</AppIconCell>
-				<AppIconCell shrink size="24%" icon="gear" data-tabindex={getPanelIndexOf('settings')} onKeyUp={onTabChange} onClick={onTabChange}>Settings</AppIconCell>
+				<AppIconCell
+					shrink
+					size="24%"
+					icon="compass"
+					data-tabindex={getPanelIndexOf('map')}
+					onClick={onTabChange}
+				>
+					Navigation
+				</AppIconCell>
+				<AppIconCell
+					shrink
+					size="24%"
+					icon="audio"
+					onKeyUp={onTabChange}
+					data-tabindex={getPanelIndexOf('radio')}
+					onClick={onTabChange}
+				>
+					Audio
+				</AppIconCell>
+				<AppIconCell
+					shrink
+					size="24%"
+					icon="rearscreen"
+					data-tabindex={getPanelIndexOf('multimedia')}
+					onKeyUp={onTabChange}
+					onClick={onTabChange}
+				>
+					Multimedia
+				</AppIconCell>
+				<AppIconCell
+					shrink
+					size="24%"
+					icon="gear"
+					data-tabindex={getPanelIndexOf('settings')}
+					onKeyUp={onTabChange}
+					onClick={onTabChange}
+				>
+					Settings
+				</AppIconCell>
 			</DropRow>
 		</Widget>
 	)
