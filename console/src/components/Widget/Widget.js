@@ -79,8 +79,10 @@ const WidgetBase = kind({
 			default: return (
 				<Column {...rest}>
 					{!noHeader ? (
-						<Cell shrink component={CompactHeader} noExpandButton={noExpandButton} onExpand={onExpand} view={view}>
-							{title}
+						<Cell shrink>
+							<CompactHeader noExpandButton={noExpandButton} onExpand={onExpand} view={view}>
+								{title}
+							</CompactHeader>
 						</Cell>
 					) : null}
 					<Cell>
