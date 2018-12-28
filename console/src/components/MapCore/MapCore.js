@@ -220,6 +220,7 @@ class MapCoreBase extends React.Component {
 		// When this changes, we don't need to force a render, so we'll just save it on the instance.
 		this.zoomLevel = props.zoomLevel;
 		this.fullRouteShown = false;
+		this.mapLoaded = false;
 
 		this.state = {
 			carShowing: true,
@@ -240,16 +241,10 @@ class MapCoreBase extends React.Component {
 		this.bbox = getBoundsOfAll(pointsList);
 
 		markerLayer.source.data.features = points;
-
-		this.routeRedrawJob = setInterval(() => {
-			if (this.queuedRouteRedraw) {
-				this.actionManager({plotRoute: this.props.destination});
-			}
-		}, this.props.routeRedrawInterval);
 	}
 
 	componentDidMount () {
-		const {destination, location, skin} = this.props;
+		const {location, skin} = this.props;
 		const style = skinStyles[skin] || skinStyles.titanium;
 		if (location) {
 			startCoordinates = location;
@@ -266,6 +261,8 @@ class MapCoreBase extends React.Component {
 		});
 
 		this.map.on('load', () => {
+			const destination = this.props.destination;
+			this.mapLoaded = true;
 			this.map.addLayer(markerLayer);
 			addCarLayer({
 				coordinates: toMapbox(startCoordinates),
@@ -294,14 +291,20 @@ class MapCoreBase extends React.Component {
 			});
 
 			const actions = {};
-			if (destination instanceof Array && destination.slice(-1).lat !== 0) {
-				actions.plotRoute = this.props.destination;
+			if (destination instanceof Array && destination[destination.length - 1].lat !== 0) {
+				actions.plotRoute = destination;
 			}
 
 			// If there is stuff to do, do it!
 			if (Object.keys(actions).length) {
 				this.actionManager(actions);
 			}
+
+			this.routeRedrawJob = setInterval(() => {
+				if (this.queuedRouteRedraw) {
+					this.actionManager({plotRoute: destination});
+				}
+			}, this.props.routeRedrawInterval);
 		});
 
 		this.setContextRef();
@@ -370,6 +373,11 @@ class MapCoreBase extends React.Component {
 	}
 
 	actionManager = (actions) => {
+		// guard against map actions fired from ServiceLayer before map is fully loaded
+		if (!this.mapLoaded) {
+			return;
+		}
+
 		for (const action in actions) {
 			if (action) {
 				switch (action) {
