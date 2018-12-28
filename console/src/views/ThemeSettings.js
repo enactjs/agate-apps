@@ -77,11 +77,11 @@ const ThemeSettings = kind({
 		}
 	},
 
-	render: ({css, onSelect, ...rest}) => (
+	render: ({css, onSelect, prevIndex, ...rest}) => (
 		<Panel {...rest}>
 			<Row align=" start">
 				<Cell shrink>
-					<LabeledIconButton onClick={onSelect} labelPosition="after" data-tabindex={getPanelIndexOf('settings')} icon="arrowhookleft">
+					<LabeledIconButton onClick={onSelect} labelPosition="after" data-tabindex={prevIndex != null ? prevIndex : getPanelIndexOf('settings')} icon="arrowhookleft">
 						Back
 					</LabeledIconButton>
 				</Cell>
