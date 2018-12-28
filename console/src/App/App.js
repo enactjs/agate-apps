@@ -321,6 +321,7 @@ const AppBase = kind({
 					</buttons>
 				</Popup>
 				<Popup
+					className={css.dateTimePopup}
 					onClose={onToggleDateTimePopup}
 					open={showDateTimePopup}
 					closeButton

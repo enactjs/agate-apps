@@ -1,3 +1,5 @@
+@import "~@enact/agate/styles/skin.less";
+
 .app {
 	// styles can be put here
 	// This should prevent iOS from double-tap-to-zoom but... it doesn't completely.
@@ -20,6 +22,12 @@
 		}
 	}
 }
+
+.applySkins({
+	.dateTimePopup {
+		min-width: 990px;
+	}
+});
 
 // Theme-specific rules
 :global(.copper),
