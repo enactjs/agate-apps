@@ -33,7 +33,7 @@ const CompactAppList = kind({
 			<DropRow align="start space-around" wrap>
 				<AppIconCell
 					shrink
-					size="24%"
+					size="50%"
 					icon="compass"
 					data-tabindex={getPanelIndexOf('map')}
 					onClick={onTabChange}
@@ -42,7 +42,7 @@ const CompactAppList = kind({
 				</AppIconCell>
 				<AppIconCell
 					shrink
-					size="24%"
+					size="50%"
 					icon="audio"
 					onKeyUp={onTabChange}
 					data-tabindex={getPanelIndexOf('radio')}
@@ -52,7 +52,7 @@ const CompactAppList = kind({
 				</AppIconCell>
 				<AppIconCell
 					shrink
-					size="24%"
+					size="50%"
 					icon="rearscreen"
 					data-tabindex={getPanelIndexOf('multimedia')}
 					onKeyUp={onTabChange}
@@ -62,7 +62,7 @@ const CompactAppList = kind({
 				</AppIconCell>
 				<AppIconCell
 					shrink
-					size="24%"
+					size="50%"
 					icon="gear"
 					data-tabindex={getPanelIndexOf('settings')}
 					onKeyUp={onTabChange}
