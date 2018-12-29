@@ -199,13 +199,17 @@ const MultimediaBase = kind({
 						onArrange={onArrange}
 					>
 						<left>
-							<Divider className={css.divider}>Recommended Videos</Divider>
-							<ResponsiveVirtualList
-								dataSize={videos.length}
-								onSelectVideo={onSelectVideo}
-								size="full"
-								videos={videos}
-							/>
+							<Column>
+								<Cell shrink component={Divider} className={css.divider}>Recommended Videos</Cell>
+								<Cell>
+									<ResponsiveVirtualList
+										dataSize={videos.length}
+										onSelectVideo={onSelectVideo}
+										size="full"
+										videos={videos}
+									/>
+								</Cell>
+							</Column>
 						</left>
 						<Row className={css.bodyRow}>
 							<IFrame allow="autoplay" className={css.iframe} src={url} />
