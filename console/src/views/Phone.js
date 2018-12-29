@@ -20,26 +20,18 @@ import ContactThumbnail from '../components/ContactThumbnail';
 import css from './Phone.less';
 
 const contacts = [
-	{
-		name: 'Hailey',
-		number:  '011 006 1987'
-	},
-	{
-		name: 'Tree',
-		number:  '111 111 1111'
-	},
-	{
-		name: 'React',
-		number:  '222 222 2222'
-	},
-	{
-		name: 'JavaScript',
-		number:  '333 333 3333'
-	},
-	{
-		name: 'Goo',
-		number:  '444 444 4444'
-	}
+	{name: 'Blake',    number: '535-953-3185'},
+	{name: 'Dave',     number: '659-170-1714'},
+	{name: 'Derek',    number: '326-570-2555'},
+	{name: 'Hailey',   number: '284-305-7508'},
+	{name: 'Jason',    number: '716-208-2228'},
+	{name: 'Jeremy',   number: '537-200-9353'},
+	{name: 'Lis',      number: '809-203-3125'},
+	{name: 'Lucy',     number: '473-349-4944'},
+	{name: 'Roy',      number: '339-235-4561'},
+	{name: 'Ryan',     number: '458-434-7850'},
+	{name: 'Stephen',  number: '711-677-1166'},
+	{name: 'Teck',     number: '133-427-7997'}
 ];
 
 const forwardClear = adaptEvent(
@@ -158,10 +150,12 @@ const PhoneBase = kind({
 						phoneNumber={value}
 					/>
 					<bottom>
-						<ResponsiveVirtualList
-							className={css.contactsList}
-							onContactClick={onContactClick}
-						/>
+						<div className={css.scrollableContainer}>
+							<ResponsiveVirtualList
+								className={css.contactsList}
+								onContactClick={onContactClick}
+							/>
+						</div>
 					</bottom>
 				</CustomLayout>
 			</Panel>
