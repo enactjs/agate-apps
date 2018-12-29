@@ -15,8 +15,7 @@ const ContactThumbnail = kind({
 
 	styles: {
 		css,
-		className: 'contact-thumbnail',
-		publicClassNames: ['contact-thumbnail', 'name']
+		className: 'contact-thumbnail'
 	},
 
 	handlers: {

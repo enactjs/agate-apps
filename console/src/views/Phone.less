@@ -1,8 +1,17 @@
 .phone {
-	.contactsList {
-		margin: 48px 0;
-		min-height: 96px;
-		white-space: nowrap;
+	.scrollableContainer {
+		padding: 48px 0;
+		height: 100%;
+		box-sizing: border-box;
+
+		.contactsList {
+			min-height: 96px;
+			white-space: nowrap;
+		}
+	}
+
+	.contactItem {
+		max-width: 300px;
 	}
 
 	.callButton {
