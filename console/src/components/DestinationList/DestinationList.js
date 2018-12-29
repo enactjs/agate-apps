@@ -1,6 +1,5 @@
 import Divider from '@enact/agate/Divider';
 import kind from '@enact/core/kind';
-import {Column, Cell} from '@enact/ui/Layout';
 import Button from '@enact/agate/Button';
 import Group from '@enact/ui/Group';
 import React from 'react';
@@ -46,23 +45,20 @@ const DestinationList = kind({
 
 	render: ({positions, onSetDestination, selected, title, ...rest}) => {
 		return (
-			<Column {...rest}>
-				<Cell component={Divider} shrink className={css.heading}>{title}</Cell>
-				<Cell>
-					<Column
-						component={Group}
-						childComponent={Cell}
-						onSelect={onSetDestination}
-						selectedProp="highlighted"
-						selected={selected}
-						itemProps={{component: DestinationButton, shrink: true}}
-					>
-						{
-							positions.map(({description}, index) => `${index + 1} - ${description}`)
-						}
-					</Column>
-				</Cell>
-			</Column>
+			<div {...rest}>
+				<Divider spacing="medium" className={css.heading}>{title}</Divider>
+				<Group
+					component="div"
+					childComponent={DestinationButton}
+					onSelect={onSetDestination}
+					selectedProp="highlighted"
+					selected={selected}
+				>
+					{
+						positions.map(({description}, index) => `${index + 1} - ${description}`)
+					}
+				</Group>
+			</div>
 		);
 	}
 });

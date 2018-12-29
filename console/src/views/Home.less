@@ -4,6 +4,14 @@
 @import "~@enact/agate/styles/mixins.less";
 @import "~@enact/agate/styles/skin.less";
 
+.homePanel {
+	.applySkins({
+		.body {
+			padding: 0;
+		}
+	});
+}
+
 .home {
 	height: 100%;
 
@@ -34,7 +42,6 @@
 	.small2,
 	.medium,
 	.large {
-		margin: 6px;
 
  		&[draggable="true"] {
 			&::after {
