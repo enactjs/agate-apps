@@ -53,6 +53,7 @@ const renderContact = ({onContactClick}) => ({index, key, ...rest}) => (
 		// {...console.log('contact rest:', rest) ? {rel: 'test'} : null}
 		{...rest}
 		key={'contact' + key}
+		className={css.contactItem}
 		contact={contacts[index]}
 		onSelect={onContactClick}
 	/>
