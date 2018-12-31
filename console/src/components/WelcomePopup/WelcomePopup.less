@@ -4,10 +4,18 @@
 @import "~@enact/agate/styles/skin.less";
 
 @guide-border-color: rgba(255, 255, 255, 0.5);
+@side-spacing: 84px;
+
 .welcomePopup {
 	.applySkins({
 		// suppress any transitioning for the popup
 		transition-property: none;
+
+		.panel {
+			.body {
+				padding: 0;
+			}
+		}
 
 		.welcome {
 			height: 100%;
@@ -67,13 +75,20 @@
 		// 	}
 		// }
 
-		.avatar {
-			margin-right: 30px;
-			margin-bottom: 30px;
+		.profile {
+			margin: 48px @side-spacing 48px 60px;
 
-			.image {
-				border-color: @agate-accent;
+			.avatar {
+				margin-right: 30px;
+
+				.image {
+					border-color: @agate-accent;
+				}
 			}
+		}
+
+		.time {
+			margin: 0 @side-spacing 36px;
 		}
 
 		.smallComponent {
@@ -88,6 +103,7 @@
 				left: -3px;
 				right: -3px;
 				height: 1px;
+				margin: 0 @side-spacing;
 			}
 		}
 
@@ -97,5 +113,24 @@
 			// This refers to theme colors, so we'll get them updated soon after the theme is ready
 			color: @agate-accent;
 		}
+
+		.compactMultimedia {
+			padding-left: @side-spacing;
+			padding-right: 0;
+		
+			.list {
+				margin: 10px 0;
+			}
+		}
+
+		.compactHeater {
+			padding-left: @side-spacing;
+    		padding-right: @side-spacing;
+		}
+
+		.button {
+			margin: 0 @side-spacing 96px;
+		}
+
 	});
 }

@@ -28,10 +28,10 @@ const getCompactComponent = ({components, key, onSendVideo}) => {
 
 	switch (components[key]) {
 		case 'multimedia':
-			Component = (<CompactMultimedia noExpandButton onSendVideo={onSendVideo} screenIds={[1]} />);
+			Component = (<CompactMultimedia css={css} direction="horizontal" noExpandButton onSendVideo={onSendVideo} screenIds={[1]} />);
 			break;
 		case 'heater':
-			Component = (<CompactHeater noExpandButton />);
+			Component = (<CompactHeater className={css.compactHeater} noExpandButton />);
 			break;
 		default:
 			Component = (<CompactWeather noExpandButton />);
@@ -151,11 +151,11 @@ const WelcomePopupBase = kind({
 				{/* <Panels arranger={Arranger} index={index} enteringProp="hideChildren" onTransition={handleTransition}> */}
 				{/* <UserSelectionPanel users={usersList} onSelectUser={onSelectUser} /> */}
 				{/* <WelcomePanel /> */}
-				<Panel>
+				<Panel css={css}>
 					<Row className={css.welcome}>
 						<Cell className={css.left} size="33%">
 							<Column>
-								<Cell shrink>
+								<Cell className={css.profile} shrink>
 									<Row>
 										<Cell className={css.avatar} shrink>
 											<UserAvatar css={css} userId={userId - 1} /* onClick={onCancelSelect} */ />
@@ -168,7 +168,7 @@ const WelcomePopupBase = kind({
 										</Cell>
 									</Row>
 								</Cell>
-								<Cell shrink>
+								<Cell className={css.time} shrink>
 									{currentTime()}
 								</Cell>
 								<Cell className={css.smallComponent}>
@@ -177,7 +177,7 @@ const WelcomePopupBase = kind({
 								<Cell className={css.smallComponent}>
 									{Small2Component}
 								</Cell>
-								<Cell component={Button} highlighted onClick={handleClose} shrink>{"Let's Go!"}</Cell>
+								<Cell component={Button} className={css.button} highlighted onClick={handleClose} shrink>{"Let's Go!"}</Cell>
 							</Column>
 						</Cell>
 						<Cell>

@@ -122,14 +122,21 @@ const ResponsiveVirtualList = kind({
 				};
 				break;
 			}
-			default: {
+			case 'small': {
 				List = VirtualList;
 				direction = direction || 'vertical';
 				spacing = ri.scale(12);
 				itemSize = {
-					minWidth: ri.scale(320),
-					minHeight: ri.scale(180)
+					minWidth: ri.scale(180),
+					minHeight: ri.scale(100)
 				};
+				break;
+			}
+			default: {
+				List = VirtualList;
+				// direction = direction || 'vertical';
+				spacing = ri.scale(15);
+				itemSize = ri.scale(90);
 			}
 		}
 
