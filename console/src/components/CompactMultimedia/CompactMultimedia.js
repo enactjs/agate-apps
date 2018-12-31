@@ -59,6 +59,7 @@ const CompactMultimediaBase = kind({
 				>
 					<ResponsiveVirtualList
 						dataSize={videos.length}
+						direction="horizontal"
 						onSelectVideo={onSelectVideo}
 						size={size}
 						videos={videos}
