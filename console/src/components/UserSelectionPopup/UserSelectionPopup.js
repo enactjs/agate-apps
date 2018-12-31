@@ -7,8 +7,29 @@ import RadioItem from '@enact/agate/RadioItem';
 import React from 'react';
 
 import AppContextConnect from '../../App/AppContextConnect';
+import UserAvatar from '../UserAvatar';
 
 import css from './UserSelectionPopup.less';
+
+const UserRadioItem = kind({
+	name: 'UserRadioItem',
+	computed: {
+		userAvatarClassName: ({selected}) => selected ? `${css.avatar} ${css.selected}` : css.avatar,
+		userAvatarId: ({children}) => children === 'Laura' ? 0 : 1
+	},
+	render: ({onClick, userAvatarClassName, userAvatarId, ...rest}) => {
+		return (
+			<div className={css.userRadioItem}>
+				<UserAvatar
+					className={userAvatarClassName}
+					userId={userAvatarId}
+					onClick={onClick}
+				/>
+				<RadioItem {...rest} style={{flex: '1'}} onClick={onClick} />
+			</div>
+		);
+	}
+});
 
 const UserSelectionPopupBase = kind({
 	name: 'UserSelectionPopup',
@@ -75,7 +96,7 @@ const UserSelectionPopupBase = kind({
 				<title>User Selection</title>
 
 				<Group
-					childComponent={RadioItem}
+					childComponent={UserRadioItem}
 					defaultSelected={userId - 1}
 					onSelect={updateUser}
 					select="radio"
@@ -85,9 +106,9 @@ const UserSelectionPopupBase = kind({
 				</Group>
 
 				<buttons>
-					<Button small className={css.button} onClick={resetUserSettings}>Reset Current User</Button>
-					<Button small className={css.button} onClick={onResetAll}>Restart Demo</Button>
-					<Button small className={css.button} onClick={onResetPosition}>Reset Position</Button>
+					<Button className={css.button} onClick={resetUserSettings}>Reset Current User</Button>
+					<Button className={css.button} onClick={onResetAll}>Restart Demo</Button>
+					<Button className={css.button} onClick={onResetPosition}>Reset Position</Button>
 				</buttons>
 			</Popup>
 		);
@@ -108,4 +129,3 @@ export {
 	UserSelectionPopup,
 	UserSelectionPopupBase
 };
-

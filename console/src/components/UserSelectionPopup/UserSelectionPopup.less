@@ -1,9 +1,30 @@
 // UserSelectionPopup.less
 //
+@import "~@enact/agate/styles/skin.less";
 
 .userSelectionPopup {
-	.button {
-		margin-top: 12px;
-		margin-bottom: 12px;
-	}
+	.applySkins({
+		min-width: 1170px;
+		.button {
+			margin-top: 12px;
+			margin-bottom: 12px;
+
+			height: 120px;
+		}
+	});
 }
+
+.userRadioItem {
+	display: flex;
+	padding: 12px;
+}
+
+.applySkins({
+	.avatar {
+		border-radius: 999px;
+		border: transparent 5px solid;
+		&.selected {
+			border: @agate-accent 5px solid;
+		}
+	}
+});
