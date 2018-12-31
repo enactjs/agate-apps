@@ -3,26 +3,33 @@
 
 @import "~@enact/agate/styles/skin.less";
 
-@guide-border-color: rgba(255, 255, 255, 0.5);
-@side-spacing: 84px;
-
+// @guide-border-color: rgba(255, 255, 255, 0.5);
 .welcomePopup {
+	@welcome-letter-spacing: 12px;
+
 	.applySkins({
 		// suppress any transitioning for the popup
 		transition-property: none;
 
-		.panel {
-			.body {
-				padding: 0;
-			}
+		em {
+			color: @agate-highlight;
+			font-style: normal;
+		}
+
+		.time em {
+			font-size: 150%;
+		}
+
+		.panel .body {
+			padding: 0;
 		}
 
 		.welcome {
 			height: 100%;
 
-			.left {
-				margin-right: 3px;
-			}
+			// .left {
+			// 	margin-right: 3px;
+			// }
 		}
 
 		// &.useWelcomeBackground {
@@ -75,61 +82,46 @@
 		// 	}
 		// }
 
-		.profile {
-			margin: 48px @side-spacing 48px 60px;
+		.headerCell {
+			margin: 48px 60px 0 60px;
+		}
 
-			.avatar {
-				margin-right: 30px;
+		.contentCell {
+			margin: 12px 84px;
 
-				.image {
-					border-color: @agate-accent;
-				}
+			&:last-child {
+				margin-bottom: 48px;
 			}
 		}
 
-		.time {
-			margin: 0 @side-spacing 36px;
-		}
+		.avatar {
+			margin-right: 30px;
 
-		.smallComponent {
-			margin-top: 12px;
-
-			&::before {
-				content: "";
-				position: absolute;
-				// These refer to theme colors, so we'll get them updated soon after the theme is ready
-				background-image: linear-gradient(to right, rgba(0,0,0,0), @agate-accent, rgba(0,0,0,0));
-				top: -3px;
-				left: -3px;
-				right: -3px;
-				height: 1px;
-				margin: 0 @side-spacing;
+			.image {
+				border-color: @agate-accent;
 			}
 		}
 
 		.activeName {
 			font-size: 24px;
-			letter-spacing: 12px;
+			letter-spacing: @welcome-letter-spacing;
 			// This refers to theme colors, so we'll get them updated soon after the theme is ready
 			color: @agate-accent;
 		}
 
-		.compactMultimedia {
-			padding-left: @side-spacing;
-			padding-right: 0;
-		
-			.list {
-				margin: 10px 0;
-			}
+		.divider {
+			background-image: linear-gradient(to right, transparent, @agate-accent, transparent);
+			height: 1px;
+			min-height: 1px;
 		}
 
-		.compactHeater {
-			padding-left: @side-spacing;
-    		padding-right: @side-spacing;
+		.widget {
+			padding: 0;
 		}
 
-		.button {
-			margin: 0 @side-spacing 96px;
+		.time {
+			letter-spacing: @welcome-letter-spacing;
+			text-transform: uppercase;
 		}
 
 	});

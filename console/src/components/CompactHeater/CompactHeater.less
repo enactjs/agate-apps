@@ -1,3 +1,19 @@
+@import "~@enact/agate/styles/skin.less";
+
 .compactHeater {
 	height: 100%;
+	letter-spacing: 12px;
+
+	.applySkins({
+		.status {
+			font-weight: 900;
+			width: 3em;
+			display: inline-block;
+			text-align: left;
+		}
+
+		.on {
+			color: @agate-highlight;
+		}
+	});
 }

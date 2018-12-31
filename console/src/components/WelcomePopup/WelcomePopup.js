@@ -1,5 +1,5 @@
 import Button from '@enact/agate/Button';
-// import Divider from '@enact/agate/Divider';
+import Divider from '@enact/agate/Divider';
 import FullscreenPopup from '@enact/agate/FullscreenPopup';
 // import {Panel, Panels} from '@enact/agate/Panels';
 import {Panel} from '@enact/agate/Panels';
@@ -28,19 +28,19 @@ const getCompactComponent = ({components, key, onSendVideo}) => {
 
 	switch (components[key]) {
 		case 'multimedia':
-			Component = (<CompactMultimedia css={css} direction="horizontal" noExpandButton onSendVideo={onSendVideo} screenIds={[1]} />);
+			Component = (<CompactMultimedia className={css.widget} direction="horizontal" noExpandButton onSendVideo={onSendVideo} screenIds={[1]} />);
 			break;
 		case 'heater':
-			Component = (<CompactHeater className={css.compactHeater} noExpandButton />);
+			Component = (<CompactHeater className={css.widget} noExpandButton />);
 			break;
 		default:
-			Component = (<CompactWeather noExpandButton />);
+			Component = (<CompactWeather className={css.widget} noExpandButton />);
 	}
 
 	return Component;
 };
 
-const currentTime = () => new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+// const currentTime = () => new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
 // const WelcomePanel = Skinnable({defaultSkin: 'carbon'}, Panel);
 
@@ -121,7 +121,16 @@ const WelcomePopupBase = kind({
 		// 	return users;
 		// },
 		small1Component: (props) => getCompactComponent({...props, key: 'small1'}),
-		small2Component: (props) => getCompactComponent({...props, key: 'small2'})
+		small2Component: (props) => getCompactComponent({...props, key: 'small2'}),
+		time: () => {
+			const now = new Date();
+			let h = now.getHours();
+			let m = now.getMinutes();
+			const ampm = (h >= 12 ? 'pm' : 'am');
+			if (h > 12) h -= 12;
+			if (m < 10) m = '0' + m;
+			return <React.Fragment><em>{h}:{m}</em> {ampm}</React.Fragment>;
+		}
 	},
 
 	render: ({
@@ -133,6 +142,7 @@ const WelcomePopupBase = kind({
 		profileName,
 		small1Component: Small1Component,
 		small2Component: Small2Component,
+		time,
 		userId,
 		// usersList,
 		...rest
@@ -151,33 +161,35 @@ const WelcomePopupBase = kind({
 				{/* <Panels arranger={Arranger} index={index} enteringProp="hideChildren" onTransition={handleTransition}> */}
 				{/* <UserSelectionPanel users={usersList} onSelectUser={onSelectUser} /> */}
 				{/* <WelcomePanel /> */}
-				<Panel css={css}>
+				<Panel className={css.panel} css={css}>
 					<Row className={css.welcome}>
 						<Cell className={css.left} size="33%">
 							<Column>
-								<Cell className={css.profile} shrink>
+								<Cell shrink className={css.headerCell}>
 									<Row>
 										<Cell className={css.avatar} shrink>
 											<UserAvatar css={css} userId={userId - 1} /* onClick={onCancelSelect} */ />
 										</Cell>
-										<Cell>
+										<Cell className={css.activeName}>
 											<Column align="start center">
-												<Cell shrink>Hi</Cell>
-												<Cell className={css.activeName} shrink>{profileName}!</Cell>
+												<Cell shrink>Greetings</Cell>
+												<Cell component="em" shrink>{profileName}!</Cell>
 											</Column>
 										</Cell>
 									</Row>
 								</Cell>
-								<Cell className={css.time} shrink>
-									{currentTime()}
+								<Cell shrink className={css.contentCell + ' ' + css.time}>
+									{time}
 								</Cell>
-								<Cell className={css.smallComponent}>
+								<Cell shrink className={css.contentCell + ' ' + css.divider} component={Divider} />
+								<Cell className={css.contentCell}>
 									{Small1Component}
 								</Cell>
-								<Cell className={css.smallComponent}>
+								<Cell shrink className={css.contentCell + ' ' + css.divider} component={Divider} />
+								<Cell className={css.contentCell}>
 									{Small2Component}
 								</Cell>
-								<Cell component={Button} className={css.button} highlighted onClick={handleClose} shrink>{"Let's Go!"}</Cell>
+								<Cell className={css.contentCell} component={Button} highlighted onClick={handleClose} shrink>Let&apos;s Go!</Cell>
 							</Column>
 						</Cell>
 						<Cell>

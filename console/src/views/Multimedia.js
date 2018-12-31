@@ -123,12 +123,12 @@ const ResponsiveVirtualList = kind({
 				break;
 			}
 			case 'small': {
-				List = VirtualList;
+				List = VirtualGridList;
 				direction = direction || 'vertical';
 				spacing = ri.scale(12);
 				itemSize = {
-					minWidth: ri.scale(180),
-					minHeight: ri.scale(100)
+					minWidth: ri.scale(120),
+					minHeight: ri.scale(72)
 				};
 				break;
 			}

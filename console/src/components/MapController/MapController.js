@@ -19,7 +19,10 @@ import {formatDuration, formatTime} from '../../../../components/Formatter';
 
 import css from './MapController.less';
 
-const StyledButton = (props) => (<Button {...props} css={css} />);
+const StyledButton = ({style = {}, ...rest}) => {
+	style.width = 'auto';  // Allow the buttons to properly self-size. Margins + auto-sizing confuses relatively positioned elements with 0 width and flex.
+	return <Button {...rest} style={style} css={css} />;
+};
 
 const MapControllerHoc = hoc((configHoc, Wrapped) => {
 	return class extends React.Component {
