@@ -63,7 +63,7 @@ const ResponsiveVirtualList = kind({
 		// eslint-disable-next-line enact/display-name,enact/prop-types
 		itemRenderer: ({onSelectVideo, size, styler, videos}) => ({index, ...rest}) => {
 			const className = styler.append(css.listItem, size && css[size]);
-			if (size === 'small' || size === 'large') {
+			if (size === 'large') {
 				return (
 					<ThumbnailItem
 						{...rest}
@@ -119,6 +119,16 @@ const ResponsiveVirtualList = kind({
 				itemSize = {
 					minWidth: ri.scale(180),
 					minHeight: ri.scale(100)
+				};
+				break;
+			}
+			case 'small': {
+				List = VirtualGridList;
+				direction = direction || 'vertical';
+				spacing = ri.scale(12);
+				itemSize = {
+					minWidth: ri.scale(120),
+					minHeight: ri.scale(72)
 				};
 				break;
 			}

@@ -50,7 +50,7 @@ const getMapPadding = () => {
 		top: ri.scale(edgeClearance),
 		bottom:ri.scale(edgeClearance),
 		left: ri.scale(edgeClearance),
-		right: ri.scale(384 + edgeClearance)
+		right: ri.scale(426 + 36 + edgeClearance) // Tools width + right edge padding + edgeClearance.
 	};
 };
 
