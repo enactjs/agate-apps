@@ -1,4 +1,5 @@
 import kind from '@enact/core/kind';
+import {Cell, Column} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -6,7 +7,7 @@ import {WidgetBase, WidgetDecorator} from '../Widget';
 import {ScreenSelectionPopup} from '../../../../components/ScreenSelectionPopup';
 import {MultimediaDecorator, ResponsiveVirtualList} from '../../views/Multimedia';
 
-import css from './CompactMultimedia.less';
+import componentCss from './CompactMultimedia.less';
 
 const CompactMultimediaBase = kind({
 	name: 'CompactMultimedia',
@@ -15,6 +16,8 @@ const CompactMultimediaBase = kind({
 		screenIds: PropTypes.array.isRequired,
 		adContent: PropTypes.any,
 		containerShape: PropTypes.object,
+		css: PropTypes.object,
+		direction: PropTypes.string,
 		onClosePopup: PropTypes.func,
 		onSelectVideo: PropTypes.func,
 		onSendVideo: PropTypes.func,
@@ -24,17 +27,18 @@ const CompactMultimediaBase = kind({
 	},
 
 	styles: {
-		css,
-		className: 'compactMultimedia'
+		css: componentCss,
+		className: 'compactMultimedia',
+		publicClassNames: true
 	},
 
 	computed: {
 		className: ({containerShape: {size: {relative = 'small'}}, styler}) => {
-			return styler.append(relative && css[relative]);
+			return styler.append(relative && componentCss[relative]);
 		}
 	},
 
-	render: ({containerShape, onClosePopup, onSelectVideo, onSendVideo, screenIds, showPopup, videos, ...rest}) => {
+	render: ({containerShape, css, direction, onClosePopup, onSelectVideo, onSendVideo, screenIds, showPopup, videos, ...rest}) => {
 		delete rest.adContent;
 		delete rest.showAd;
 
@@ -57,12 +61,17 @@ const CompactMultimediaBase = kind({
 					description="Send videos and music to the rear screen(s)"
 					view="multimedia"
 				>
-					<ResponsiveVirtualList
-						dataSize={videos.length}
-						onSelectVideo={onSelectVideo}
-						size={size}
-						videos={videos}
-					/>
+					<Cell className={css.list}>
+						<Column>
+							<ResponsiveVirtualList
+								dataSize={videos.length}
+								direction={direction}
+								onSelectVideo={onSelectVideo}
+								size={size}
+								videos={videos}
+							/>
+						</Column>
+					</Cell>
 				</WidgetBase>
 			</React.Fragment>
 		);

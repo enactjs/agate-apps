@@ -1,7 +1,7 @@
 import {ResponsiveBox} from '@enact/agate/DropManager';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
 import kind from '@enact/core/kind';
-import {Cell, Row, Column} from '@enact/ui/Layout';
+import Layout, {Cell, Row, Column} from '@enact/ui/Layout';
 import Slottable from '@enact/ui/Slottable';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
@@ -25,13 +25,15 @@ const WidgetBase = kind({
 		noExpandButton: PropTypes.bool,
 		noHeader: PropTypes.bool,
 		onExpand: PropTypes.func,
+		orientation: PropTypes.string,
 		small: PropTypes.node,
 		title: PropTypes.string,
 		view: PropTypes.string
 	},
 
 	defaultProps: {
-		align: 'stretch center'
+		align: 'stretch center',
+		orientation: 'vertical'
 	},
 
 	styles: {
@@ -60,7 +62,7 @@ const WidgetBase = kind({
 		}
 	},
 
-	render: ({align, children, containerShape, icon, onExpand, noExpandButton, noHeader, title, view, ...rest}) => {
+	render: ({align, children, containerShape, icon, noExpandButton, noHeader, onExpand, orientation, title, view, ...rest}) => {
 		delete rest.containerShape;
 		delete rest.description;
 		delete rest.full;
@@ -86,9 +88,9 @@ const WidgetBase = kind({
 						</Cell>
 					) : null}
 					<Cell>
-						<Column align={align}>
+						<Layout align={align} orientation={orientation}>
 							{children}
-						</Column>
+						</Layout>
 					</Cell>
 				</Column>
 			);

@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ToggleButton from '@enact/agate/ToggleButton';
+// import ToggleButton from '@enact/agate/ToggleButton';
+import LabeledIconButton from '@enact/agate/LabeledIconButton';
+import Skinnable from '@enact/agate/Skinnable';
 import kind from '@enact/core/kind';
-import {Cell, Row} from '@enact/ui/Layout';
+import {Cell} from '@enact/ui/Layout';
 
 import AppStateConnect from '../../App/AppContextConnect';
 import Widget from '../Widget';
@@ -41,31 +43,49 @@ const CompactHeaterBase = kind({
 	},
 
 	computed: {
-		leftStatus: ({leftHeat}) => leftHeat ? 'on' : 'off',
-		rightStatus: ({rightHeat}) => rightHeat ? 'on' : 'off'
+		leftStatus: ({leftHeat, styler}) => <span className={styler.join('status', {on: leftHeat})}>{leftHeat ? 'ON' : 'OFF'}</span>,
+		rightStatus: ({rightHeat, styler}) => <span className={styler.join('status', {on: rightHeat})}>{rightHeat ? 'ON' : 'OFF'}</span>
 	},
 
 	render: ({leftHeat, leftStatus, onToggleLeftHeater, onToggleRightHeater, rightHeat, rightStatus, ...rest}) => {
 		delete rest.updateAppState;
 		return (
 
-			<Widget {...rest} title="Heated Seats" description="Warm up the seats" view="hvac" align="stretch center">
-				{/* <Row>*/}
+			<Widget {...rest} title="Heated Seats" description="Warm up the seats" view="hvac" align="center space-around" orientation="horizontal">
 				<Cell shrink>
-					<Row align="center space-around">
-						<Cell shrink><ToggleButton icon="heatseatleft" onClick={onToggleLeftHeater} selected={leftHeat} underline /></Cell>
-						<Cell shrink><ToggleButton icon="heatseatright" onClick={onToggleRightHeater} selected={rightHeat} underline /></Cell>
-					</Row>
+					<LabeledIconButton
+						icon="heatseatleft"
+						onClick={onToggleLeftHeater}
+						selected={leftHeat}
+					>
+						Left: {leftStatus}
+					</LabeledIconButton>
 				</Cell>
 				<Cell shrink>
-					<Row align="center space-around">
-						<Cell shrink>Left: {leftStatus}</Cell>
-						<Cell shrink>Right: {rightStatus}</Cell>
-					</Row>
+					<LabeledIconButton
+						icon="heatseatright"
+						onClick={onToggleRightHeater}
+						selected={rightHeat}
+					>
+						Right: {rightStatus}
+					</LabeledIconButton>
 				</Cell>
-				{/* </Row>*/}
 			</Widget>
 		);
+		// {/* <Row>*/}
+		// <Cell shrink>
+		// 	<Row align="center space-around">
+		// 		<Cell shrink><ToggleButton icon="heatseatleft" onClick={onToggleLeftHeater} selected={leftHeat} underline /></Cell>
+		// 		<Cell shrink><ToggleButton icon="heatseatright" onClick={onToggleRightHeater} selected={rightHeat} underline /></Cell>
+		// 	</Row>
+		// </Cell>
+		// <Cell shrink>
+		// 	<Row align="center space-around">
+		// 		<Cell shrink>Left: {leftStatus}</Cell>
+		// 		<Cell shrink>Right: {rightStatus}</Cell>
+		// 	</Row>
+		// </Cell>
+		// {/* </Row>*/}
 	}
 });
 
@@ -73,6 +93,6 @@ const CompactHeater = AppStateConnect(({userSettings: {climate}, updateAppState}
 	leftHeat: (climate && climate.leftHeat),
 	rightHeat: (climate && climate.rightHeat),
 	updateAppState
-}))(CompactHeaterBase);
+}))(Skinnable(CompactHeaterBase));
 
 export default CompactHeater;
