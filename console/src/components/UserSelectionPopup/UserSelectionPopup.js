@@ -1,9 +1,10 @@
 import Button from '@enact/agate/Button';
 import Group from '@enact/ui/Group';
+import {Row, Cell} from '@enact/ui/Layout';
 import kind from '@enact/core/kind';
 import Popup from '@enact/agate/Popup';
 import PropTypes from 'prop-types';
-import RadioItem from '@enact/agate/RadioItem';
+import Item from '@enact/agate/Item';
 import React from 'react';
 
 import AppContextConnect from '../../App/AppContextConnect';
@@ -11,22 +12,33 @@ import UserAvatar from '../UserAvatar';
 
 import css from './UserSelectionPopup.less';
 
-const UserRadioItem = kind({
-	name: 'UserRadioItem',
-	computed: {
-		userAvatarClassName: ({selected}) => selected ? `${css.avatar} ${css.selected}` : css.avatar,
-		userAvatarId: ({children}) => children === 'Laura' ? 0 : 1
+const UserItem = kind({
+	name: 'UserItem',
+	propTypes: {
+		onClick: PropTypes.func,
+		selected: PropTypes.bool,
+		userId: PropTypes.number
 	},
-	render: ({onClick, userAvatarClassName, userAvatarId, ...rest}) => {
+	styles: {
+		css,
+		className: 'userItem'
+	},
+	computed: {
+		className: ({selected, styler}) => styler.append({selected})
+	},
+	render: ({children, userId, ...rest}) => {
+		delete rest.selected;
 		return (
-			<div className={css.userRadioItem}>
+			<Item {...rest}>
 				<UserAvatar
-					className={userAvatarClassName}
-					userId={userAvatarId}
-					onClick={onClick}
+					className={css.avatar}
+					css={css}
+					userId={userId - 1}
 				/>
-				<RadioItem {...rest} style={{flex: '1'}} onClick={onClick} />
-			</div>
+				<div className={css.content}>
+					{children}
+				</div>
+			</Item>
 		);
 	}
 });
@@ -58,8 +70,8 @@ const UserSelectionPopupBase = kind({
 	computed: {
 		usersList: ({usersList}) => {
 			const users = [];
-			for (const user in usersList) {
-				users.push(usersList[user]);
+			for (const userId in usersList) {
+				users.push({key: ('user' + userId), userId: parseInt(userId), children: usersList[userId]});
 			}
 			return users;
 		}
@@ -96,7 +108,7 @@ const UserSelectionPopupBase = kind({
 				<title>User Selection</title>
 
 				<Group
-					childComponent={UserRadioItem}
+					childComponent={UserItem}
 					defaultSelected={userId - 1}
 					onSelect={updateUser}
 					select="radio"
@@ -106,9 +118,11 @@ const UserSelectionPopupBase = kind({
 				</Group>
 
 				<buttons>
-					<Button className={css.button} onClick={resetUserSettings}>Reset Current User</Button>
-					<Button className={css.button} onClick={onResetAll}>Restart Demo</Button>
-					<Button className={css.button} onClick={onResetPosition}>Reset Position</Button>
+					<Row align="center space-around">
+						<Cell shrink component={Button} small className={css.button} onClick={resetUserSettings}>Reset Current User</Cell>
+						<Cell shrink component={Button} small className={css.button} onClick={onResetAll}>Restart Demo</Cell>
+						<Cell shrink component={Button} small className={css.button} onClick={onResetPosition}>Reset Position</Cell>
+					</Row>
 				</buttons>
 			</Popup>
 		);

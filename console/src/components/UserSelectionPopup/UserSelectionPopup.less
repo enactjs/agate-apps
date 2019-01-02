@@ -4,27 +4,33 @@
 
 .userSelectionPopup {
 	.applySkins({
-		min-width: 1170px;
 		.button {
-			margin-top: 12px;
-			margin-bottom: 12px;
-
+			margin-top: @agate-component-spacing;
+			margin-bottom: @agate-component-spacing;
 			height: 120px;
+		}
+
+		.userItem {
+			font-size: 160%;
+			padding: @agate-component-spacing;
+
+			.avatar {
+				margin-right: @agate-component-spacing;
+				vertical-align: middle;
+			}
+
+			.content {
+				margin-left: @agate-component-spacing;
+				display: inline-block;
+			}
+
+			&.selected {
+				.avatar {
+					.image {
+						border-color: @agate-accent;
+					}
+				}
+			}
 		}
 	});
 }
-
-.userRadioItem {
-	display: flex;
-	padding: 12px;
-}
-
-.applySkins({
-	.avatar {
-		border-radius: 999px;
-		border: transparent 5px solid;
-		&.selected {
-			border: @agate-accent 5px solid;
-		}
-	}
-});
