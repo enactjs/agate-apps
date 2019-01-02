@@ -17,18 +17,18 @@ import css from './Radio.less';
 
 const wrapFrequency = (frequency, factor) => {
 	// case 'tune-up':
-	// 	newStation = (frequency >= 108) ? 87.8 : (frequency * 10 + 1) / 10;
+	// 	newStation = (frequency >= 107.9) ? 88.1 : (frequency * 10 + 2) / 10;
 	// 	break;
 	// case 'tune-down':
-	// 	newStation = (frequency <= 87.8) ? 108 : (frequency * 10 - 1) / 10;
+	// 	newStation = (frequency <= 88.1) ? 107.9 : (frequency * 10 - 2) / 10;
 	// 	break;
 
-	const min = 87.8,
-		max = 108,
+	const min = 88.1,
+		max = 107.9,
 		newFrequency = ((frequency * 10 + factor) / 10);
 
-	if (newFrequency >= max) return min;
-	if (newFrequency <= min) return max;
+	if (newFrequency > max) return min;
+	if (newFrequency < min) return max;
 	return newFrequency;
 };
 
@@ -38,11 +38,11 @@ const ResponsiveTuner = ResponsiveBox(({containerShape, children, onUp, onDown, 
 	return (
 		<Layout align="center center" orientation={orientation} {...rest}>
 			{/* {(console.log({rest: rest}) ? 'test' : null)}*/}
-			<Cell shrink component={Button} onClick={onUp} icon={vertical ? 'arrowsmallup' : 'arrowsmallleft'} />
+			<Cell shrink component={Button} onClick={vertical ? onUp : onDown} icon={vertical ? 'arrowsmallup' : 'arrowsmallleft'} />
 			<Cell shrink className={css.label}>
 				{children}
 			</Cell>
-			<Cell shrink component={Button} onClick={onDown} icon={vertical ? 'arrowsmalldown' : 'arrowsmallright'} />
+			<Cell shrink component={Button} onClick={vertical ? onDown : onUp} icon={vertical ? 'arrowsmalldown' : 'arrowsmallright'} />
 		</Layout>
 	);
 });
@@ -84,8 +84,8 @@ const RadioBase = kind({
 		onPresetHold: (ev, {frequency, preset, updatePresets}) => {
 			updatePresets(frequency, preset);
 		},
-		onTuneUp: (ev, {frequency, changeFrequency}) => changeFrequency(wrapFrequency(frequency, 1)),
-		onTuneDown: (ev, {frequency, changeFrequency}) => changeFrequency(wrapFrequency(frequency, -1)),
+		onTuneUp: (ev, {frequency, changeFrequency}) => changeFrequency(wrapFrequency(frequency, 2)),
+		onTuneDown: (ev, {frequency, changeFrequency}) => changeFrequency(wrapFrequency(frequency, -2)),
 		onScanUp: (ev, {frequency, changeFrequency}) => changeFrequency(wrapFrequency(frequency, 20)),
 		onScanDown: (ev, {frequency, changeFrequency}) => changeFrequency(wrapFrequency(frequency, -20))
 		// onTune: (ev, {frequency, changeFrequency}) => {
@@ -186,7 +186,7 @@ const RadioBase = kind({
 
 const defaultConfig = {
 	band: 'FM',
-	presets: [93.1, 105.1, 88.1, 92.1, 120.1]
+	presets: [93.1, 105.1, 88.1, 92.1, 102.1]
 };
 
 const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
@@ -198,7 +198,7 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 
 			this.state = {
 				preset: 0,
-				frequency: 87.8,
+				frequency: 88.5,
 				band: configHoc.band,
 				presets: configHoc.presets
 			};
