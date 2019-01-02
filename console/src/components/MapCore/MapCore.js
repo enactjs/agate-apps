@@ -240,19 +240,8 @@ class MapCoreBase extends React.Component {
 			this.pointsList.push(toMapbox(loc.coordinates));
 			return createLocationGeoObject(idx + 1, loc);
 		});
-<<<<<<< HEAD
-		this.bbox = getBoundsOfAll(pointsList);
 
-		markerLayer.source.data.features = points;
-=======
 		this.bbox = getBoundsOfAll(this.pointsList);
-
-		this.routeRedrawJob = setInterval(() => {
-			if (this.queuedRouteRedraw) {
-				this.actionManager({plotRoute: this.props.destination});
-			}
-		}, this.props.routeRedrawInterval);
->>>>>>> Added more themed mapbox maps and themed markers.
 	}
 
 	componentDidMount () {
@@ -273,34 +262,19 @@ class MapCoreBase extends React.Component {
 		});
 
 		this.map.on('load', () => {
-<<<<<<< HEAD
 			const destination = this.props.destination;
 			this.mapLoaded = true;
-			this.map.addLayer(markerLayer);
-=======
+
 			addMarkerLayer({
 				map: this.map,
 				coordinates: this.pointsList,
 				updateDestination: this.props.updateDestination
 			});
->>>>>>> Added more themed mapbox maps and themed markers.
 			addCarLayer({
 				coordinates: toMapbox(startCoordinates),
 				iconURL: CarPng,
 				map: this.map,
 				orientation: location.orientation
-			});
-
-			// Adds clickable targets to the map
-			this.map.on('click', 'symbols', (e) => {
-				let coordinates = e.features[0].geometry.coordinates.slice();
-				while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-					coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-				}
-
-				this.props.updateDestination({
-					destination: [toLatLon(coordinates)]
-				});
 			});
 
 			this.bbox = getBoundsOfAll([toMapbox(startCoordinates)], this.bbox);
