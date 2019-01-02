@@ -105,25 +105,26 @@ const createLocationGeoObject = (index, {description, coordinates}) => ({
 	}
 });
 
-const markerLayer = {
-	'id': 'symbols',
-	'type': 'symbol',
-	'source': {
-		'type': 'geojson',
-		'data': {
-			'type': 'FeatureCollection',
-			'features': null
-		}
-	},
-	'layout': {
-		'icon-image': 'marker-15',
-		'icon-size': 3,
-		'text-field': ['format', ['to-string', ['get', 'index']], {'font-scale': 0.8}]
+const addMarkerLayer = ({map, coordinates, updateDestination}) => {
+	if (map) {
+		coordinates.forEach((coor, idx) => {
+			let markerElem = document.createElement('i');
+			markerElem.className = css.marker;
+			let markerTextElem = document.createElement('div');
+			markerTextElem.innerText = idx + 1;
+			markerTextElem.className = css.markerText;
+			markerElem.appendChild(markerTextElem);
+			new mapboxgl.Marker(markerElem)
+				.setLngLat(coor)
+				.addTo(map);
+
+			markerElem.addEventListener('click', () => {
+				updateDestination({
+					destination: [toLatLon(coor)]
+				});
+			});
+		});
 	}
-	// 'paint': {
-	// 	'icon-color': '#ff0000',
-	// 	'icon-opacity': 0.5
-	// }
 };
 
 const carLayerId = 'carPoint';
@@ -174,7 +175,8 @@ const addCarLayer = ({coordinates, iconURL, map, orientation = 0}) => {
 
 const skinStyles = {
 	carbon: 'mapbox://styles/mapbox/dark-v9',
-	copper: 'mapbox://styles/mapbox/dark-v9',
+	copper: 'mapbox://styles/haileyr/cjq7ouqypbbcs2rqvzz11ymhd',
+	'copper-day': 'mapbox://styles/mapbox/dark-v9',
 	electro: '',
 	titanium: 'mapbox://styles/mapbox/light-v9'
 };
@@ -233,14 +235,24 @@ class MapCoreBase extends React.Component {
 			this.message = 'MapBox API key is not set. The map cannot be loaded.';
 		}
 
-		const pointsList = [];
-		const points = this.props.points.map((loc, idx) => {
-			pointsList.push(toMapbox(loc.coordinates));
+		this.pointsList = [];
+		this.points = this.props.points.map((loc, idx) => {
+			this.pointsList.push(toMapbox(loc.coordinates));
 			return createLocationGeoObject(idx + 1, loc);
 		});
+<<<<<<< HEAD
 		this.bbox = getBoundsOfAll(pointsList);
 
 		markerLayer.source.data.features = points;
+=======
+		this.bbox = getBoundsOfAll(this.pointsList);
+
+		this.routeRedrawJob = setInterval(() => {
+			if (this.queuedRouteRedraw) {
+				this.actionManager({plotRoute: this.props.destination});
+			}
+		}, this.props.routeRedrawInterval);
+>>>>>>> Added more themed mapbox maps and themed markers.
 	}
 
 	componentDidMount () {
@@ -261,9 +273,17 @@ class MapCoreBase extends React.Component {
 		});
 
 		this.map.on('load', () => {
+<<<<<<< HEAD
 			const destination = this.props.destination;
 			this.mapLoaded = true;
 			this.map.addLayer(markerLayer);
+=======
+			addMarkerLayer({
+				map: this.map,
+				coordinates: this.pointsList,
+				updateDestination: this.props.updateDestination
+			});
+>>>>>>> Added more themed mapbox maps and themed markers.
 			addCarLayer({
 				coordinates: toMapbox(startCoordinates),
 				iconURL: CarPng,

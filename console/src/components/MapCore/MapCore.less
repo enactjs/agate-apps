@@ -32,6 +32,22 @@
 			text-align: end;
 		}
 	}
+
+	.applySkins({
+		.marker {
+			height: 45px;
+			width: 45px;
+			background-color: @agate-accent;
+			-webkit-mask-image: url('../Dashboard/svg/marker.svg');
+			mask-image: url('../Dashboard/svg/marker.svg');
+		}
+		.markerText {
+			color: @agate-highlight;
+			font-size: 20px;
+    		line-height: 35px;
+    		text-align: center;
+		}
+	});
 }
 
 .applySkins({
