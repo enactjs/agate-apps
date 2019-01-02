@@ -1,9 +1,36 @@
 // UserSelectionPopup.less
 //
+@import "~@enact/agate/styles/skin.less";
 
 .userSelectionPopup {
-	.button {
-		margin-top: 12px;
-		margin-bottom: 12px;
-	}
+	.applySkins({
+		.button {
+			margin-top: @agate-component-spacing;
+			margin-bottom: @agate-component-spacing;
+			height: 120px;
+		}
+
+		.userItem {
+			font-size: 160%;
+			padding: @agate-component-spacing;
+
+			.avatar {
+				margin-right: @agate-component-spacing;
+				vertical-align: middle;
+			}
+
+			.content {
+				margin-left: @agate-component-spacing;
+				display: inline-block;
+			}
+
+			&.selected {
+				.avatar {
+					.image {
+						border-color: @agate-accent;
+					}
+				}
+			}
+		}
+	});
 }
