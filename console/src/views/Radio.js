@@ -138,7 +138,7 @@ const RadioBase = kind({
 						<Row align="center space-around" wrap className={css.info}>
 							{/* Band Selector */}
 							<Cell shrink className={css.radioToggle}>
-								<ToggleButton onClick={onBandToggle} selected={band === 'AM'} small type="grid">AM</ToggleButton> |
+								<ToggleButton onClick={onBandToggle} selected={band === 'AM'} small type="grid">AM</ToggleButton>|
 								<ToggleButton onClick={onBandToggle} selected={band === 'FM'} small type="grid">FM</ToggleButton>
 							</Cell>
 							{/* Station Info */}
