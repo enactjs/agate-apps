@@ -235,12 +235,7 @@ class MapCoreBase extends React.Component {
 			this.message = 'MapBox API key is not set. The map cannot be loaded.';
 		}
 
-		this.pointsList = [];
-		this.points = this.props.points.map((loc, idx) => {
-			this.pointsList.push(toMapbox(loc.coordinates));
-			return createLocationGeoObject(idx + 1, loc);
-		});
-
+		this.pointsList = this.props.points.map(loc => toMapbox(loc.coordinates));
 		this.bbox = getBoundsOfAll(this.pointsList);
 	}
 
