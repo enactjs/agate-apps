@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 
 import AppIconCell from '../components/AppIconCell';
 import {getPanelIndexOf} from '../App';
+
 import css from './AppList.less';
 
 const AppList = kind({
