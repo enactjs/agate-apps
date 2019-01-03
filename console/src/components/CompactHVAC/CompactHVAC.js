@@ -32,8 +32,8 @@ const CompactHvacBase = kind({
 		<Widget {...rest} icon="temperature" title="A/C" description="Air conditioning and seat warmers" view="hvac">
 			{(temp >= 66 && temp <= 74) && <div>
 				<Row className={css.row} align="center space-around">
-					<Cell component={ToggleButton} size="30%" type="grid" className={css.button}>A/C</Cell>
-					<Cell component={ToggleButton} size="30%" type="grid" className={css.button}>AUTO</Cell>
+					<Cell component={ToggleButton} size="30%" type="grid" className={css.labelButton}>A/C</Cell>
+					<Cell component={ToggleButton} size="30%" type="grid" className={css.labelButton}>AUTO</Cell>
 				</Row>
 				<Row className={css.row} align="center space-around">
 					<Cell shrink><ToggleButton icon="airdown" /></Cell>
