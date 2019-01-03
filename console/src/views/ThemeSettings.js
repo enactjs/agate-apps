@@ -105,7 +105,7 @@ const ThemeSettings = kind({
 								Theme
 						</Cell>
 						<Cell shrink className={css.spacedItem}>
-							<FormRow align="start space-around" alignLabel="center">
+							<FormRow align="start space-around" alignLabel="center" className={css.formRow}>
 								<AccentColorSetting label="Accent Color">{swatchPalette}</AccentColorSetting>
 								<HighlightColorSetting label="Highlight Color">{swatchPalette}</HighlightColorSetting>
 							</FormRow>
