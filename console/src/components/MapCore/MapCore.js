@@ -176,9 +176,9 @@ const addCarLayer = ({coordinates, iconURL, map, orientation = 0}) => {
 const skinStyles = {
 	carbon: 'mapbox://styles/mapbox/dark-v9',
 	copper: 'mapbox://styles/haileyr/cjq7ouqypbbcs2rqvzz11ymhd',
-	'copper-day': 'mapbox://styles/mapbox/dark-v9',
-	electro: '',
-	titanium: 'mapbox://styles/mapbox/light-v9'
+	'copper-day': 'mapbox://styles/haileyr/cjq6alsqdb9lf2rntxvk4cxbl',
+	cobalt: 'mapbox://styles/haileyr/cjq6am8p979322rn0n7w7kaeu',
+	'cobalt-day': 'mapbox://styles/haileyr/cjq6drk0y4ddr2snybwbu9u8m'
 };
 
 class MapCoreBase extends React.Component {
