@@ -50,7 +50,13 @@ const ScreenSelectionPopupBase = kind({
 		buttons: ({showAllScreens, screenIds, onSelect}) => {
 			const screens = screenIds.map((s, index) => {
 				return (
-					<ScreenButton key={'ScreenButton' + index} screenId={s} onSelect={onSelect} />
+					<ScreenButton
+						key={'ScreenButton' + index}
+						screenId={s}
+						onSelect={onSelect}
+					>
+						{s ? 'Rear Right' : 'Front'}
+					</ScreenButton>
 				);
 			});
 
@@ -61,7 +67,7 @@ const ScreenSelectionPopupBase = kind({
 						screenId={screenIds}
 						onSelect={onSelect}
 					>
-						All Screens
+						Both
 					</ScreenButton>
 				);
 			}
