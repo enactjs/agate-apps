@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 
 import AppIconCell from '../components/AppIconCell';
 import {getPanelIndexOf} from '../App';
+import css from './AppList.less';
 
 const AppList = kind({
 	name: 'Home',
@@ -25,32 +26,37 @@ const AppList = kind({
 		onTogglePopup: PropTypes.func
 	},
 
+	styles: {
+		css,
+		className: 'appList'
+	},
+
 	render: ({onTabChange, onTogglePopup, onToggleBasicPopup, onPopupOpen, ...rest}) => (
 		<Panel {...rest}>
 			<Column align="center center">
 				<Cell shrink>
-					<Row align="start center">
+					<Row className={css.row} align="start center">
 						<AppIconCell icon="climate" data-tabindex={getPanelIndexOf('hvac')} onKeyUp={onTabChange} onClick={onTabChange}>Climate</AppIconCell>
 						<AppIconCell icon="compass" data-tabindex={getPanelIndexOf('map')} onKeyUp={onTabChange} onClick={onTabChange}>Navigation</AppIconCell>
 						<AppIconCell icon="phone" data-tabindex={getPanelIndexOf('phone')} onKeyUp={onTabChange} onClick={onTabChange}>Phone</AppIconCell>
 					</Row>
 				</Cell>
 				<Cell shrink>
-					<Row align="start center">
+					<Row className={css.row} align="start center">
 						<AppIconCell icon="radio" data-tabindex={getPanelIndexOf('radio')} onKeyUp={onTabChange} onClick={onTabChange}>Radio</AppIconCell>
 						<AppIconCell icon="rearscreen" data-tabindex={getPanelIndexOf('multimedia')} onKeyUp={onTabChange} onClick={onTabChange}>Multimedia</AppIconCell>
 						<AppIconCell icon="repeat" onKeyUp={onPopupOpen} onClick={onToggleBasicPopup}>Connect</AppIconCell>
 					</Row>
 				</Cell>
 				<Cell shrink>
-					<Row align="start center">
+					<Row className={css.row} align="start center">
 						<AppIconCell icon="dashboard" data-tabindex={getPanelIndexOf('dashboard')} onKeyUp={onTabChange} onClick={onTabChange}>Dashboard</AppIconCell>
 						<AppIconCell icon="gear" data-tabindex={getPanelIndexOf('settings')} onKeyUp={onTabChange} onClick={onTabChange}>Settings</AppIconCell>
 						<AppIconCell icon="closex" onClick={onTogglePopup}>Point of Interest</AppIconCell>
 					</Row>
 				</Cell>
 				<Cell shrink>
-					<Row align="start center">
+					<Row className={css.row} align="start center">
 						<AppIconCell icon="weather" data-tabindex={getPanelIndexOf('weather')} onKeyUp={onTabChange} onClick={onTabChange}>Weather</AppIconCell>
 					</Row>
 				</Cell>
