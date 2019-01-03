@@ -51,7 +51,7 @@ const Settings = kind({
 							className={css.header}
 							component={Divider}
 							shrink
-							spacing="small"
+							spacing="none"
 						>
 							Settings
 						</Cell>
