@@ -45,6 +45,7 @@ const CompactMusicBase = kind({
 				<Cell shrink>
 					<GridListImageItem
 						caption="The Title"
+						css={css}
 						className={css.album}
 						selectionOverlay={PlaybackControls}
 						selectionOverlayShowing
