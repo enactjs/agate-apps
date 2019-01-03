@@ -93,24 +93,24 @@ const getRoute = async (waypoints) => {
 
 // Used in generating POIs
 //
-const createLocationGeoObject = (index, {description, coordinates}) => ({
-	'type': 'Feature',
-	'properties': {
-		index,
-		description
-	},
-	'geometry': {
-		'type': 'Point',
-		coordinates: toMapbox(coordinates)
-	}
-});
+// const createLocationGeoObject = (index, {description, coordinates}) => ({
+// 	'type': 'Feature',
+// 	'properties': {
+// 		index,
+// 		description
+// 	},
+// 	'geometry': {
+// 		'type': 'Point',
+// 		coordinates: toMapbox(coordinates)
+// 	}
+// });
 
 const addMarkerLayer = ({map, coordinates, updateDestination}) => {
 	if (map) {
 		coordinates.forEach((coor, idx) => {
-			let markerElem = document.createElement('i');
+			const markerElem = document.createElement('div');
 			markerElem.className = css.marker;
-			let markerTextElem = document.createElement('div');
+			const markerTextElem = document.createElement('div');
 			markerTextElem.innerText = idx + 1;
 			markerTextElem.className = css.markerText;
 			markerElem.appendChild(markerTextElem);

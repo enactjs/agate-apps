@@ -37,15 +37,19 @@
 		.marker {
 			height: 45px;
 			width: 45px;
+			margin-top: (45px / -2);  // Keep the bottom center in a fixed location on the map (anchored)
 			background-color: @agate-accent;
 			-webkit-mask-image: url('../../../assets/marker.svg');
 			mask-image: url('../../../assets/marker.svg');
-		}
-		.markerText {
-			color: @agate-highlight;
-			font-size: 20px;
-			line-height: 35px;
-			text-align: center;
+			-webkit-mask-size: contain;
+			mask-size: contain;
+
+			.markerText {
+				color: @agate-highlight;
+				font-size: 20px;
+				line-height: 35px;
+				text-align: center;
+			}
 		}
 	});
 }
