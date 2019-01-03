@@ -191,7 +191,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 							{
 								autonomousSelection &&
 								<Cell shrink={locationSelection} className={css.columnCell}>
-									<Divider spacing="medium" className={css.heading}>Self Driving</Divider>
+									<Divider spacing="medium" className={css.heading}>Self-driving</Divider>
 									<Row
 										component={Group}
 										childComponent={Cell}
