@@ -174,6 +174,7 @@ const addCarLayer = ({coordinates, iconURL, map, orientation = 0}) => {
 
 const skinStyles = {
 	carbon: 'mapbox://styles/mapbox/dark-v9',
+	cobalt: 'mapbox://styles/mapbox/dark-v9',
 	copper: 'mapbox://styles/mapbox/dark-v9',
 	electro: '',
 	titanium: 'mapbox://styles/mapbox/light-v9'

@@ -196,7 +196,7 @@ const AppBase = kind({
 		delete rest.showAppList;
 		delete rest.updateAppState;
 
-		const copperSkinFamily = (skinName === 'copper' || skinName === 'copper-day');
+		const copperSkinFamily = (skinName === 'copper' || skinName === 'copper-day' || skinName === 'cobalt' || skinName === 'cobalt-day');
 
 		return (
 			<div {...rest}>

@@ -15,6 +15,8 @@ import componentCss from './Settings.less';
 // Skin setup area
 const skinCollection = {
 	carbon: 'Carbon',
+	cobalt: 'Cobalt',
+	'cobalt-day': 'Cobalt Day',
 	copper: 'Copper',
 	// electro: 'Electro',
 	// titanium: 'Titanium',
