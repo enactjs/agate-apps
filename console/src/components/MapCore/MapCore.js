@@ -93,37 +93,38 @@ const getRoute = async (waypoints) => {
 
 // Used in generating POIs
 //
-const createLocationGeoObject = (index, {description, coordinates}) => ({
-	'type': 'Feature',
-	'properties': {
-		index,
-		description
-	},
-	'geometry': {
-		'type': 'Point',
-		coordinates: toMapbox(coordinates)
-	}
-});
+// const createLocationGeoObject = (index, {description, coordinates}) => ({
+// 	'type': 'Feature',
+// 	'properties': {
+// 		index,
+// 		description
+// 	},
+// 	'geometry': {
+// 		'type': 'Point',
+// 		coordinates: toMapbox(coordinates)
+// 	}
+// });
 
-const markerLayer = {
-	'id': 'symbols',
-	'type': 'symbol',
-	'source': {
-		'type': 'geojson',
-		'data': {
-			'type': 'FeatureCollection',
-			'features': null
-		}
-	},
-	'layout': {
-		'icon-image': 'marker-15',
-		'icon-size': 3,
-		'text-field': ['format', ['to-string', ['get', 'index']], {'font-scale': 0.8}]
+const addMarkerLayer = ({map, coordinates, updateDestination}) => {
+	if (map) {
+		coordinates.forEach((coor, idx) => {
+			const markerElem = document.createElement('div');
+			markerElem.className = css.marker;
+			const markerTextElem = document.createElement('div');
+			markerTextElem.innerText = idx + 1;
+			markerTextElem.className = css.markerText;
+			markerElem.appendChild(markerTextElem);
+			new mapboxgl.Marker(markerElem)
+				.setLngLat(coor)
+				.addTo(map);
+
+			markerElem.addEventListener('click', () => {
+				updateDestination({
+					destination: [toLatLon(coor)]
+				});
+			});
+		});
 	}
-	// 'paint': {
-	// 	'icon-color': '#ff0000',
-	// 	'icon-opacity': 0.5
-	// }
 };
 
 const carLayerId = 'carPoint';
@@ -174,8 +175,11 @@ const addCarLayer = ({coordinates, iconURL, map, orientation = 0}) => {
 
 const skinStyles = {
 	carbon: 'mapbox://styles/mapbox/dark-v9',
-	copper: 'mapbox://styles/mapbox/dark-v9',
-	electro: '',
+	copper: 'mapbox://styles/haileyr/cjq7ouqypbbcs2rqvzz11ymhd',
+	'copper-day': 'mapbox://styles/haileyr/cjq6alsqdb9lf2rntxvk4cxbl',
+	cobalt: 'mapbox://styles/haileyr/cjq6am8p979322rn0n7w7kaeu',
+	'cobalt-day': 'mapbox://styles/haileyr/cjq6drk0y4ddr2snybwbu9u8m',
+	electro: 'mapbox://styles/haileyr/cjq6am8p979322rn0n7w7kaeu',
 	titanium: 'mapbox://styles/mapbox/light-v9'
 };
 
@@ -233,14 +237,8 @@ class MapCoreBase extends React.Component {
 			this.message = 'MapBox API key is not set. The map cannot be loaded.';
 		}
 
-		const pointsList = [];
-		const points = this.props.points.map((loc, idx) => {
-			pointsList.push(toMapbox(loc.coordinates));
-			return createLocationGeoObject(idx + 1, loc);
-		});
-		this.bbox = getBoundsOfAll(pointsList);
-
-		markerLayer.source.data.features = points;
+		this.pointsList = this.props.points.map(loc => toMapbox(loc.coordinates));
+		this.bbox = getBoundsOfAll(this.pointsList);
 	}
 
 	componentDidMount () {
@@ -263,24 +261,17 @@ class MapCoreBase extends React.Component {
 		this.map.on('load', () => {
 			const destination = this.props.destination;
 			this.mapLoaded = true;
-			this.map.addLayer(markerLayer);
+
+			addMarkerLayer({
+				map: this.map,
+				coordinates: this.pointsList,
+				updateDestination: this.props.updateDestination
+			});
 			addCarLayer({
 				coordinates: toMapbox(startCoordinates),
 				iconURL: CarPng,
 				map: this.map,
 				orientation: location.orientation
-			});
-
-			// Adds clickable targets to the map
-			this.map.on('click', 'symbols', (e) => {
-				let coordinates = e.features[0].geometry.coordinates.slice();
-				while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-					coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-				}
-
-				this.props.updateDestination({
-					destination: [toLatLon(coordinates)]
-				});
 			});
 
 			this.bbox = getBoundsOfAll([toMapbox(startCoordinates)], this.bbox);
