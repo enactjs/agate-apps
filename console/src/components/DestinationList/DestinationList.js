@@ -61,7 +61,7 @@ const DestinationList = kind({
 					selected={selected}
 				>
 					{
-						positions.map(({description}, index) => description)
+						positions.map(({description}) => description)
 					}
 				</Group>
 			</div>
