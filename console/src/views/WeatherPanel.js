@@ -53,11 +53,11 @@ const Weather = kind({
 		delete rest.weather;
 		return (
 			<Panel {...rest}>
-				<Column className="enact-fit" align="center center">
-					<Cell component={Divider} shrink spacing="small">
+				<Column align="center center">
+					<Cell component={Divider} shrink spacing="large">
 						{currentWeather.cityName} Weather
 					</Cell>
-					<Cell style={{width: '100%'}}>
+					<Cell style={{width: '100%'}} shrink>
 						<Row className={css.row} align="stretch space-around">
 							<Cell>
 								<WeatherItem
