@@ -178,7 +178,9 @@ const skinStyles = {
 	copper: 'mapbox://styles/haileyr/cjq7ouqypbbcs2rqvzz11ymhd',
 	'copper-day': 'mapbox://styles/haileyr/cjq6alsqdb9lf2rntxvk4cxbl',
 	cobalt: 'mapbox://styles/haileyr/cjq6am8p979322rn0n7w7kaeu',
-	'cobalt-day': 'mapbox://styles/haileyr/cjq6drk0y4ddr2snybwbu9u8m'
+	'cobalt-day': 'mapbox://styles/haileyr/cjq6drk0y4ddr2snybwbu9u8m',
+	electro: 'mapbox://styles/haileyr/cjq6am8p979322rn0n7w7kaeu',
+	titanium: 'mapbox://styles/mapbox/light-v9'
 };
 
 class MapCoreBase extends React.Component {
