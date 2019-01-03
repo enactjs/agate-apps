@@ -634,6 +634,9 @@ class MapCoreBase extends React.Component {
 				});
 			}
 
+			if (this.map.getLayer(carLayerId)) {
+				this.map.moveLayer(carLayerId);
+			}
 			this.props.updateNavigation({
 				duration: route.duration,
 				distance: route.distance
