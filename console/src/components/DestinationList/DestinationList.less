@@ -19,5 +19,21 @@
 		.client {
 			justify-content: flex-start;
 		}
+		.marker {
+			height: 45px;
+			width: 45px;
+			background-color: @agate-accent;
+			-webkit-mask-image: url('../../../assets/marker.svg');
+			mask-image: url('../../../assets/marker.svg');
+			-webkit-mask-size: contain;
+			mask-size: contain;
+	
+			.markerText {
+				color: @agate-highlight;
+				font-size: 20px;
+				line-height: 35px;
+				text-align: center;
+			}
+		}
 	});
 }

@@ -10,7 +10,13 @@ import {propTypeLatLonList} from '../../data/proptypes';
 
 import css from './DestinationList.less';
 
-const DestinationButton = (props) => (<Button small {...props} css={css} />);
+const DestinationButton = (props) => {
+	const {children, 'data-index': index, ...rest} = props;
+	return <Button small {...rest} css={css}>
+		<div className={css.marker}><div className={css.markerText}>{index + 1}</div></div>
+		{children}
+	</Button>;
+};
 
 const DestinationList = kind({
 	name: 'DestinationList',
@@ -55,7 +61,7 @@ const DestinationList = kind({
 					selected={selected}
 				>
 					{
-						positions.map(({description}, index) => `${index + 1} - ${description}`)
+						positions.map(({description}, index) => description)
 					}
 				</Group>
 			</div>
