@@ -173,7 +173,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 											selected={follow}
 											onClick={this.toggleFollow}
 										>
-											exitfullscreen
+											compass
 										</IconButton>
 								}
 								{
@@ -189,24 +189,24 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 								}
 							</Cell>
 							{
-								autonomousSelection &&
-								<Cell shrink={locationSelection} className={css.columnCell}>
-									<Divider spacing="medium" className={css.heading}>Self Driving</Divider>
-									<Row
-										component={Group}
-										childComponent={Cell}
-										itemProps={{component: StyledButton}}
-										onSelect={this.toggleAutonomous}
-										select="radio"
-										selectedProp="selected"
-										selected={navigation.autonomous ? 0 : 1}
-									>
-										{['AUTO', 'MANUAL']}
-									</Row>
-								</Cell>
+								autonomousSelection && !(destination && navigating) ?
+									<Cell shrink={locationSelection} className={css.columnCell}>
+										<Divider spacing="medium" className={css.heading}>Self-driving</Divider>
+										<Row
+											component={Group}
+											childComponent={Cell}
+											itemProps={{component: StyledButton}}
+											onSelect={this.toggleAutonomous}
+											select="radio"
+											selectedProp="selected"
+											selected={navigation.autonomous ? 0 : 1}
+										>
+											{['AUTO', 'MANUAL']}
+										</Row>
+									</Cell> : null
 							}
 							{
-								locationSelection ?
+								locationSelection && !(destination && navigating) ?
 									<Cell className={css.columnCell}>
 										<DestinationList
 											destination={destination}

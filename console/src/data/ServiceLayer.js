@@ -329,6 +329,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 				this.destinationReached = true; // Only allow one popup per destination.
 				this.props.updateAppState((state) => {
 					state.appState.showDestinationReachedPopup = true;
+					state.navigation.navigating = false;
 				});
 			}
 		}
