@@ -1,0 +1,28 @@
+// Marker.less
+//
+
+@import "~@enact/agate/styles/skin.less";
+
+.marker {
+	height: 45px;
+	width: 45px;
+	-webkit-mask-image: url('../../../assets/marker.svg');
+	mask-image: url('../../../assets/marker.svg');
+	-webkit-mask-size: contain;
+	mask-size: contain;
+	font-weight: normal;
+	font-size: 20px;
+	line-height: 35px;
+	text-align: center;
+
+	.applySkins({
+		background-color: @agate-accent;
+		color: @agate-highlight;
+
+		// Theme-specific colors
+		&:global(.cobalt),
+		&:global(.cobalt-day) {
+			color: @agate-white;
+		}
+	});
+}

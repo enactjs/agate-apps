@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Slottable from '@enact/ui/Slottable';
 import ri from '@enact/ui/resolution';
+// import convert from 'color-convert';
 
 import AppContextConnect from '../../App/AppContextConnect';
 import appConfig from '../../App/configLoader';
@@ -15,6 +16,7 @@ import CarPng from '../../../assets/car.png';
 import {ServiceLayerContext} from '../../data/ServiceLayer';
 
 import css from './MapCore.less';
+import markerCss from './Marker.less';
 
 const linear = (input) => input;
 
@@ -105,14 +107,14 @@ const getRoute = async (waypoints) => {
 // 	}
 // });
 
-const addMarkerLayer = ({map, coordinates, updateDestination}) => {
+const addMarkerLayer = ({map, coordinates, updateDestination, skin}) => {
 	if (map) {
 		coordinates.forEach((coor, idx) => {
 			const markerElem = document.createElement('div');
-			markerElem.className = css.marker;
+			markerElem.className = markerCss.marker + ' ' + skin;
 			const markerTextElem = document.createElement('div');
 			markerTextElem.innerText = idx + 1;
-			markerTextElem.className = css.markerText;
+			markerTextElem.className = markerCss.markerText;
 			markerElem.appendChild(markerTextElem);
 			new mapboxgl.Marker(markerElem)
 				.setLngLat(coor)
@@ -182,6 +184,8 @@ const skinStyles = {
 	electro: 'mapbox://styles/haileyr/cjq6am8p979322rn0n7w7kaeu',
 	titanium: 'mapbox://styles/mapbox/light-v9'
 };
+
+const lightSkins = ['copper-day', 'cobalt-day', 'titanium'];
 
 class MapCoreBase extends React.Component {
 	static contextType = ServiceLayerContext;
@@ -265,7 +269,8 @@ class MapCoreBase extends React.Component {
 			addMarkerLayer({
 				map: this.map,
 				coordinates: this.pointsList,
-				updateDestination: this.props.updateDestination
+				updateDestination: this.props.updateDestination,
+				skin: this.props.skin
 			});
 			addCarLayer({
 				coordinates: toMapbox(startCoordinates),
@@ -532,6 +537,18 @@ class MapCoreBase extends React.Component {
 		if (this.viewLockTimer) this.viewLockTimer = null;
 	}
 
+	getRouteLineColor = () => {
+		const {colorRouteLine, skin} = this.props;
+		// This prevents the system from drawing a white line on a white-ish map, since it's unreadable.
+		// This can be expanded in the future to check the lightness of the color and insert a new
+		// one based on that color using the color-convert library.
+		if (colorRouteLine === '#ffffff' && lightSkins.indexOf(skin) >= 0) {
+			// const colorObj = convert.hex.hsl(colorRouteLine);
+			return '#999999';
+		}
+		return colorRouteLine;
+	}
+
 	removeDirection = () => {
 		const direction = this.map.getSource('route');
 		if (direction) {
@@ -620,7 +637,7 @@ class MapCoreBase extends React.Component {
 					},
 					paint: {
 						'line-width': 5,
-						'line-color': this.props.colorRouteLine
+						'line-color': this.getRouteLineColor()
 					}
 				});
 			}

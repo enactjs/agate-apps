@@ -12,29 +12,53 @@
 		display: block;
 		margin-top: 15px;
 
-		.bg {
-			border: 3px solid @agate-accent;
-		}
-
 		.client {
 			justify-content: flex-start;
 		}
 		.marker {
 			height: 39px;
 			width: 39px;
-			background-color: @agate-accent;
-			-webkit-mask-image: url('../../../assets/marker.svg');
-			mask-image: url('../../../assets/marker.svg');
-			-webkit-mask-size: contain;
-			mask-size: contain;
 			margin-right: 1ex;
+		}
+	});
+}
 
-			.markerText {
+:global(.copper),
+:global(.copper-day) {
+	.button {
+		.applySkins({
+			.bg {
+				border: 3px solid @agate-accent;
+			}
+		});
+	}
+}
+
+.button {
+	.applySkins({
+		&:global(.cobalt),
+		&:global(.cobalt-day) {
+			.bg {
+				background-color: @agate-accent;
+			}
+
+			.client {
 				color: @agate-highlight;
-				font-size: 20px;
-				line-height: 30px;
-				text-align: center;
-				font-weight: normal;
+			}
+
+			&.selected {
+				.bg {
+					background-color: @agate-highlight;
+				}
+
+				.client {
+					color: @agate-accent;
+				}
+			}
+
+			.marker {
+				background-color: @agate-highlight;
+				color: @agate-accent;
 			}
 		}
 	});

@@ -15,6 +15,8 @@ import componentCss from './Settings.less';
 // Skin setup area
 const skinCollection = {
 	carbon: 'Carbon',
+	cobalt: 'Cobalt',
+	'cobalt-day': 'Cobalt Day',
 	copper: 'Copper',
 	// electro: 'Electro',
 	// titanium: 'Titanium',
@@ -26,8 +28,8 @@ const skinNames = skinList.map((skin) => skinCollection[skin]);  // Build the na
 const swatchPalette = [
 	'#e0b094', '#ffffff', '#a47d66', '#be064d',
 	'#9cd920', '#559616', '#75d1f0', '#259aa7',
-	'#cecacb', '#566af0', '#0359f0', '#f08c21',
-	'#f25c54', '#f42c04', '#d636d9', '#aab3cb'
+	'#fc7982', '#8c81ff', '#cecacb', '#0359f0',
+	'#f08c21', '#f42c04', '#d636d9', '#aab3cb'
 ];
 
 const FormRow = kind({

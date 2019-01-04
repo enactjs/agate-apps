@@ -215,15 +215,15 @@ class AppContextProvider extends Component {
 			.map(key => parseInt(key.replace('user', '')));
 	}
 
-	resetUserSettings = () => {
-		this.deleteUserSettings(this.state.userId);
-		this.setUserSettings(this.state.userId);
+	resetUserSettings = ({userId}) => {
+		this.deleteUserSettings(userId || this.state.userId);
+		this.setUserSettings(userId || this.state.userId);
 	}
 
 	resetAll = () => {
 		const userIds = this.getAllSavedUserIds();
 		userIds.forEach(this.deleteUserSettings);
-		this.resetUserSettings();
+		this.resetUserSettings({userId: 1});  // Relet and load user 1 so we always start the demo with user 1
 		this.repopulateUsersForDemo();
 		// keep app updated with the usersList
 		this.updateAppState((state) => {

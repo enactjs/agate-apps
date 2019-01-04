@@ -7,13 +7,14 @@ import PropTypes from 'prop-types';
 import {equals} from 'ramda';
 
 import {propTypeLatLonList} from '../../data/proptypes';
+import Marker from '../MapCore/Marker';
 
 import css from './DestinationList.less';
 
 const DestinationButton = (props) => {
 	const {children, 'data-index': index, ...rest} = props;
 	return <Button small {...rest} css={css}>
-		<div className={css.marker}><div className={css.markerText}>{index + 1}</div></div>
+		<Marker css={css}>{index + 1}</Marker>
 		{children}
 	</Button>;
 };
