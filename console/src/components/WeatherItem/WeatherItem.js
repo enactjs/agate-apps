@@ -67,12 +67,12 @@ const WeatherItemBase = kind({
 				</Cell>
 				{high ? (
 					<Cell className={css.item} shrink>
-						{high}°
+						{high}<span className={css.degree}>°F</span>
 					</Cell>
 				) : null}
 				{low ? (
 					<Cell className={css.item} shrink>
-						{low}°
+						{low}<span className={css.degree}>°F</span>
 					</Cell>
 				) : null}
 			</Column>

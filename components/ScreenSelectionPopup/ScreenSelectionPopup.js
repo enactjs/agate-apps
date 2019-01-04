@@ -4,6 +4,12 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+const screenNames = [
+	'Front',
+	'Rear Right',
+	'Rear Left'
+];
+
 const ScreenButton = kind({
 	name: 'ScreenButton',
 
@@ -50,7 +56,13 @@ const ScreenSelectionPopupBase = kind({
 		buttons: ({showAllScreens, screenIds, onSelect}) => {
 			const screens = screenIds.map((s, index) => {
 				return (
-					<ScreenButton key={'ScreenButton' + index} screenId={s} onSelect={onSelect} />
+					<ScreenButton
+						key={'ScreenButton' + index}
+						screenId={s}
+						onSelect={onSelect}
+					>
+						{screenNames[s]}
+					</ScreenButton>
 				);
 			});
 
@@ -61,7 +73,7 @@ const ScreenSelectionPopupBase = kind({
 						screenId={screenIds}
 						onSelect={onSelect}
 					>
-						All Screens
+						Both
 					</ScreenButton>
 				);
 			}

@@ -15,7 +15,7 @@ import {formatDuration, formatTime} from '../../../components/Formatter';
 import appConfig from './configLoader';
 import css from './App.less';
 
-const screenIds = [1, 2];
+const screenIds = [1];
 const durationIncrements = ['day', 'hour', 'min', 'second'];
 
 const IFrame = kind({
