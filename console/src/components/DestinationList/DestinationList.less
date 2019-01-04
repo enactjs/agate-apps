@@ -18,20 +18,7 @@
 		.marker {
 			height: 39px;
 			width: 39px;
-			background-color: @agate-accent;
-			-webkit-mask-image: url('../../../assets/marker.svg');
-			mask-image: url('../../../assets/marker.svg');
-			-webkit-mask-size: contain;
-			mask-size: contain;
 			margin-right: 1ex;
-
-			.markerText {
-				color: @agate-white;
-				font-size: 20px;
-				line-height: 30px;
-				text-align: center;
-				font-weight: normal;
-			}
 		}
 	});
 }
@@ -47,9 +34,10 @@
 	}
 }
 
-:global(.cobalt) {
-	.button {
-		.applySkins({
+.button {
+	.applySkins({
+		&:global(.cobalt),
+		&:global(.cobalt-day) {
 			.bg {
 				background-color: @agate-accent;
 			}
@@ -61,8 +49,9 @@
 			}
 
 			.marker {
-				background-color: @agate-highlight;
+				background-color: @agate-white;
+				color: @agate-highlight;
 			}
-		});
-	}
+		}
+	});
 }

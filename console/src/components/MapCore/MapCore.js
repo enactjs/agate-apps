@@ -16,6 +16,7 @@ import CarPng from '../../../assets/car.png';
 import {ServiceLayerContext} from '../../data/ServiceLayer';
 
 import css from './MapCore.less';
+import markerCss from './Marker.less';
 
 const linear = (input) => input;
 
@@ -106,14 +107,14 @@ const getRoute = async (waypoints) => {
 // 	}
 // });
 
-const addMarkerLayer = ({map, coordinates, updateDestination}) => {
+const addMarkerLayer = ({map, coordinates, updateDestination, skin}) => {
 	if (map) {
 		coordinates.forEach((coor, idx) => {
 			const markerElem = document.createElement('div');
-			markerElem.className = css.marker;
+			markerElem.className = markerCss.marker + ' ' + skin;
 			const markerTextElem = document.createElement('div');
 			markerTextElem.innerText = idx + 1;
-			markerTextElem.className = css.markerText;
+			markerTextElem.className = markerCss.markerText;
 			markerElem.appendChild(markerTextElem);
 			new mapboxgl.Marker(markerElem)
 				.setLngLat(coor)
@@ -268,7 +269,8 @@ class MapCoreBase extends React.Component {
 			addMarkerLayer({
 				map: this.map,
 				coordinates: this.pointsList,
-				updateDestination: this.props.updateDestination
+				updateDestination: this.props.updateDestination,
+				skin: this.props.skin
 			});
 			addCarLayer({
 				coordinates: toMapbox(startCoordinates),
