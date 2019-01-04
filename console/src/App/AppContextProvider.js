@@ -227,6 +227,7 @@ class AppContextProvider extends Component {
 		this.repopulateUsersForDemo();
 		// keep app updated with the usersList
 		this.updateAppState((state) => {
+			state.navigation.navigating = false;
 			state.usersList = this.getUserNames();
 		});
 	}
