@@ -96,7 +96,7 @@
 			"rightHeat": false,
 			"rightTemp": 0
 		},
-		"colorAccent": "#a47d66",
+		"colorAccent": "#fc7982",
 		"colorHighlight": "#ffffff",
 		"components": {
 			"welcome": {
@@ -106,7 +106,7 @@
 		},
 		"fontSize": 0,
 		"name": "Thomas",
-		"skin": "copper-day",
+		"skin": "cobalt",
 		"topLocations": [
 			{
 				"description": "Home",
