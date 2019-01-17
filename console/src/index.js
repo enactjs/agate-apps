@@ -21,7 +21,7 @@ if (typeof window !== 'undefined') {
 		params.index = ev.index;
 		const stringified = qs.stringify(params);
 
-		window.history.pushState(ev, '', `/?${stringified}`);
+		window.history.pushState(ev, '', `?${stringified}`);
 	};
 
 	appElement = (
