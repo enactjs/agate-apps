@@ -9,13 +9,14 @@ import {Column, Cell} from '@enact/ui/Layout';
 import {adaptEvent, forKey, forward, handle, oneOf} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
+import PopupNavigation from '@enact/agate/PopupNavigation';
 import {ResponsiveBox} from '@enact/agate/DropManager';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import CustomLayout, {SaveLayoutArrangement} from '../components/CustomLayout';
 import Dialer from '../components/Dialer';
-import CallPopup from '../components/CallPopup';
+// import CallPopup from '../components/CallPopup';
 import ContactThumbnail from '../components/ContactThumbnail';
 import css from './Phone.less';
 
@@ -140,16 +141,22 @@ const PhoneBase = kind({
 								type="grid"
 								highlighted
 							>
-								Call
+								Plus Call
 							</Button>
 						</Cell>
 					</Column>
-					<CallPopup
-						contactName=""
-						onCallEnd={onTogglePopup}
+					<PopupNavigation
 						open={showPopup}
-						phoneNumber={value}
-					/>
+						onClose={onTogglePopup}
+						basePosition={{x: 100, y: 100}}
+					>
+						<buttons>
+							<Button onClick={()=>{console.log("Test1")}}>Test1</Button>
+							<Button onClick={()=>{console.log("Test2")}}>Test2</Button>
+							<Button onClick={()=>{console.log("Test3")}}>Test3</Button>
+							<Button onClick={()=>{console.log("Test4")}}>Test4</Button>
+						</buttons>
+					</PopupNavigation>
 					<bottom>
 						<div className={css.scrollableContainer}>
 							<ResponsiveVirtualList
