@@ -148,15 +148,9 @@ const PhoneBase = kind({
 					<PopupNavigation
 						open={showPopup}
 						onClose={onTogglePopup}
-						basePosition={{x: 100, y: 100}}
-					>
-						<buttons>
-							<Button onClick={()=>{console.log("Test1")}}>Test1</Button>
-							<Button onClick={()=>{console.log("Test2")}}>Test2</Button>
-							<Button onClick={()=>{console.log("Test3")}}>Test3</Button>
-							<Button onClick={()=>{console.log("Test4")}}>Test4</Button>
-						</buttons>
-					</PopupNavigation>
+						menuStrings={['Video', 'Kakao', 'Line', 'WeChat']}
+						menuCallbacks={(a)=>{console.log(a);}} // Check the callback function
+					/>
 					<bottom>
 						<div className={css.scrollableContainer}>
 							<ResponsiveVirtualList
