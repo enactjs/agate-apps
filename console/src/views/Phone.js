@@ -148,7 +148,8 @@ const PhoneBase = kind({
 					<PopupNavigation
 						open={showPopup}
 						onClose={onTogglePopup}
-						menuStrings={['Video', 'Kakao', 'Line', 'WeChat']}
+						menuStrings={['video call', 'kakaotalk', 'line', 'facebook']}
+						// eslint-disable-next-line
 						menuCallbacks={(a)=>{console.log(a);}} // Check the callback function
 					/>
 					<bottom>
