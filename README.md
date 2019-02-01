@@ -4,7 +4,11 @@ This is a collection of several apps that interact with each other and an autono
 
 ## Parts
 
-* communication-server - *A standalone message relaying service that apps use to communicate with each other.** components - *Shared common components that each of the apps use.** console - *Main front seat interaction screen. Plays videos, choose destinations on a map, control your AC.** copilot - *Rear-seat entertainment. Receives videos chosen from the front seat and can display ETA and time until destination.** sampler - *A testing/development environment to try out each of the components separately.*
+* communication-server - *A standalone message relaying service that apps use to communicate with each other.*
+* components - *Shared common components that each of the apps use.*
+* console - *Main front seat interaction screen. Plays videos, choose destinations on a map, control your AC.*
+* copilot - *Rear-seat entertainment. Receives videos chosen from the front seat and can display ETA and time until destination.*
+* sampler - *A testing/development environment to try out each of the components separately.*
 
 ## Setup
 
@@ -21,4 +25,4 @@ There's a small setup process to get all of the parts talking to each other afte
 5. (Optional) Run `sampler` with `npm run serve` as well. It usually runs on port 8080, so may be necessary to run it before running the others (from step 2)
 
 ### Console
-The `console` app in particular has some interesting integration with our autonomous driving simulator, which you can download and set up on your own by leaning more at its website: https://www.lgsvlsimulator.com/ 
+The `console` app in particular has some interesting integration with our autonomous driving simulator, which you can download and set up on your own by leaning more at its website: https://www.lgsvlsimulator.com/
