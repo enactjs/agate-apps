@@ -3,7 +3,7 @@ import kind from '@enact/core/kind';
 import {Cell} from '@enact/ui/Layout';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
 
-import css from './AppIconCell.less';
+import css from './AppIconCell.module.less';
 
 const AppIconCell = kind({
 	name: 'AppIconCell',

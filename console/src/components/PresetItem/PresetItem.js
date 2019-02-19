@@ -9,7 +9,7 @@ import React from 'react';
 import {ItemBase} from '@enact/agate/Item';
 import {LabeledItemBase} from '@enact/agate/LabeledItem';
 
-import componentCss from './PresetItem.less';
+import componentCss from './PresetItem.module.less';
 
 const PresetItemBase = kind({
 	name: 'PresetItem',

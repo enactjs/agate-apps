@@ -15,8 +15,8 @@ import {propTypeLatLon, propTypeLatLonList} from '../../data/proptypes';
 import CarPng from '../../../assets/car.png';
 import {ServiceLayerContext} from '../../data/ServiceLayer';
 
-import css from './MapCore.less';
-import markerCss from './Marker.less';
+import css from './MapCore.module.less';
+import markerCss from './Marker.module.less';
 
 const linear = (input) => input;
 

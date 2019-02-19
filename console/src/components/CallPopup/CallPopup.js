@@ -6,7 +6,7 @@ import {Cell, Row} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import css from './CallPopup.less';
+import css from './CallPopup.module.less';
 
 const forwardSimpleEvent = type => handle(adaptEvent(() => ({type}), forward(type)));
 

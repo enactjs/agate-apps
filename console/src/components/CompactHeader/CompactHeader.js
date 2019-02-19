@@ -7,7 +7,7 @@ import React from 'react';
 
 import IconButton from '@enact/agate/IconButton';
 
-import css from './CompactHeader.less';
+import css from './CompactHeader.module.less';
 
 const CompactHeader = kind({
 	name: 'CompactHeader',

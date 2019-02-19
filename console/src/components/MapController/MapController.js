@@ -17,7 +17,7 @@ import DestinationList from '../DestinationList';
 import {propTypeLatLon, propTypeLatLonList} from '../../data/proptypes';
 import {formatDuration, formatTime} from '../../../../components/Formatter';
 
-import css from './MapController.less';
+import css from './MapController.module.less';
 
 const StyledButton = ({style = {}, ...rest}) => {
 	style.width = 'auto';  // Allow the buttons to properly self-size. Margins + auto-sizing confuses relatively positioned elements with 0 width and flex.

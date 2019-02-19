@@ -13,7 +13,7 @@ import UserAvatar from '../UserAvatar';
 import AppContextConnect from '../../App/AppContextConnect';
 import UserSelectionPopup from '../UserSelectionPopup';
 
-import componentCss from './ProfileDrawer.less';
+import componentCss from './ProfileDrawer.module.less';
 
 const panelIndexes = [
 	'home',

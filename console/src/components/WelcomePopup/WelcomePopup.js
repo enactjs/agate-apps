@@ -21,7 +21,7 @@ import MapController from '../MapController';
 
 import UserAvatar from '../UserAvatar';
 
-import css from './WelcomePopup.less';
+import css from './WelcomePopup.module.less';
 
 const getCompactComponent = ({components, key, onSendVideo}) => {
 	let Component;

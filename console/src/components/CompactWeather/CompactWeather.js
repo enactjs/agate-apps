@@ -7,7 +7,7 @@ import Widget from '../Widget';
 import WeatherItem from '../WeatherItem';
 import AppStateConnect from '../../App/AppContextConnect';
 
-import css from './CompactWeather.less';
+import css from './CompactWeather.module.less';
 
 const CompactWeatherBase = kind({
 	name: 'CompactWeather',

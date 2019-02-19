@@ -9,7 +9,7 @@ import {Cell} from '@enact/ui/Layout';
 import AppStateConnect from '../../App/AppContextConnect';
 import Widget from '../Widget';
 
-import css from './CompactHeater.less';
+import css from './CompactHeater.module.less';
 
 const CompactHeaterBase = kind({
 	name: 'CompactHeater',

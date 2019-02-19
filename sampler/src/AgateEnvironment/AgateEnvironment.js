@@ -10,7 +10,7 @@ import Divider from '@enact/agate/Divider';
 import {Panels, Panel} from '@enact/agate/Panels';
 import {select} from '../enact-knobs';
 
-import css from './AgateEnvironment.less';
+import css from './AgateEnvironment.module.less';
 
 const globalGroup = 'Global Knobs';
 

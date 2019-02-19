@@ -20,7 +20,7 @@ import CustomLayout from '../components/CustomLayout';
 
 import youtubeVideos from '../data/youtubeapi.json';
 
-import css from './Multimedia.less';
+import css from './Multimedia.module.less';
 
 const IFrame = kind({
 	name: 'IFrame',

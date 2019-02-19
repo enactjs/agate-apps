@@ -3,7 +3,7 @@ import Skinnable from '@enact/agate/Skinnable';
 // import PropTypes from 'prop-types';
 import React from 'react';
 
-import css from './Marker.less';
+import css from './Marker.module.less';
 
 const MarkerBase = kind({
 	name: 'Marker',

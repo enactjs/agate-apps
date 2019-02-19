@@ -18,7 +18,7 @@ import CompactMusic from '../components/CompactMusic';
 import CompactScreenMonitor from '../components/CompactScreenMonitor';
 import CompactWeather from '../components/CompactWeather';
 
-import css from './Home.less';
+import css from './Home.module.less';
 
 const allSlotNames = ['small1', 'small2', 'medium', 'large', 'tray1', 'tray2', 'tray3', 'tray4'];
 

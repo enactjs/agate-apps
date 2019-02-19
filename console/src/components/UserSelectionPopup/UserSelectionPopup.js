@@ -10,7 +10,7 @@ import React from 'react';
 import AppContextConnect from '../../App/AppContextConnect';
 import UserAvatar from '../UserAvatar';
 
-import css from './UserSelectionPopup.less';
+import css from './UserSelectionPopup.module.less';
 
 const UserItem = kind({
 	name: 'UserItem',

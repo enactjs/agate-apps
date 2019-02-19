@@ -9,7 +9,7 @@ import {equals} from 'ramda';
 import {propTypeLatLonList} from '../../data/proptypes';
 import Marker from '../MapCore/Marker';
 
-import css from './DestinationList.less';
+import css from './DestinationList.module.less';
 
 const DestinationButton = (props) => {
 	const {children, 'data-index': index, ...rest} = props;

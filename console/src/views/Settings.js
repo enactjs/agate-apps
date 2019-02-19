@@ -7,7 +7,7 @@ import LabeledItem from '@enact/agate/LabeledItem';
 import SwitchItem from '@enact/agate/SwitchItem';
 
 import NetworkInfo from '../../../components/NetworkInfo';
-import viewCss from './Settings.less';
+import viewCss from './Settings.module.less';
 import {getPanelIndexOf} from '../App';
 
 const SwitchItemCell =  kind({
