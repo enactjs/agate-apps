@@ -13,7 +13,7 @@ import snowy from '../../../assets/weather/snowy.png';
 import sunny from '../../../assets/weather/sunny.png';
 import thunderstorm from '../../../assets/weather/thunderstorm.png';
 
-import css from './WeatherItem.less';
+import css from './WeatherItem.module.less';
 
 const WeatherItemBase = kind({
 	name: 'WeatherItem',

@@ -7,7 +7,7 @@ import React from 'react';
 import lauraAvatar from '../../../assets/laura.png';
 import thomasAvatar from '../../../assets/thomas.png';
 
-import componentCss from './UserAvatar.less';
+import componentCss from './UserAvatar.module.less';
 
 const userAvatars = [lauraAvatar, thomasAvatar];
 

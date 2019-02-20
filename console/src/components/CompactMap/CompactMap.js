@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import MapController from '../MapController';
 import Widget from '../Widget';
 
-import css from './CompactMap.less';
+import css from './CompactMap.module.less';
 
 const CompactMapBase = kind({
 	name: 'CompactMap',

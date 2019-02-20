@@ -7,7 +7,7 @@ import {WidgetBase, WidgetDecorator} from '../Widget';
 import {ScreenSelectionPopup} from '../../../../components/ScreenSelectionPopup';
 import {MultimediaDecorator, ResponsiveVirtualList} from '../../views/Multimedia';
 
-import componentCss from './CompactMultimedia.less';
+import componentCss from './CompactMultimedia.module.less';
 
 const CompactMultimediaBase = kind({
 	name: 'CompactMultimedia',

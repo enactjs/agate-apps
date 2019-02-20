@@ -3,7 +3,7 @@ import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import css from './ContactThumbnail.less';
+import css from './ContactThumbnail.module.less';
 
 const ContactThumbnail = kind({
 	name: 'ContactThumbnail',

@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import PresetItem from '../components/PresetItem';
 import CustomLayout, {SaveLayoutArrangement} from '../components/CustomLayout';
 
-import css from './Radio.less';
+import css from './Radio.module.less';
 
 const wrapFrequency = (frequency, factor) => {
 	// case 'tune-up':

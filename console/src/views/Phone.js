@@ -17,7 +17,7 @@ import CustomLayout, {SaveLayoutArrangement} from '../components/CustomLayout';
 import Dialer from '../components/Dialer';
 import CallPopup from '../components/CallPopup';
 import ContactThumbnail from '../components/ContactThumbnail';
-import css from './Phone.less';
+import css from './Phone.module.less';
 
 const contacts = [
 	{name: 'Blake',    number: '535-953-3185'},

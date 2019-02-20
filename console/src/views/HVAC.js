@@ -11,7 +11,7 @@ import ToggleButton from '@enact/agate/ToggleButton';
 import AppContextConnect from '../App/AppContextConnect';
 import CustomLayout, {SaveLayoutArrangement} from '../components/CustomLayout';
 
-import css from './HVAC.less';
+import css from './HVAC.module.less';
 
 const speeds = ['Off', 'Low', 'Medium', 'High'];
 const temps = ['HI', '74°', '73°', '72°', '71°', '70°', '69°', '68°', '67°', '66°', 'LO'];

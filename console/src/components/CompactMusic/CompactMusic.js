@@ -7,7 +7,7 @@ import React from 'react';
 import Widget from '../Widget';
 import albumArt from '../../../assets/music-album-art.jpg';
 
-import css from './CompactMusic.less';
+import css from './CompactMusic.module.less';
 
 const PlaybackControls = kind({
 	name: 'PlaybackControls',

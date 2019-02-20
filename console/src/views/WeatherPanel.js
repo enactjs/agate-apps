@@ -3,7 +3,7 @@ import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
 import {Row, Cell, Column} from '@enact/ui/Layout';
 import Divider from '@enact/agate/Divider';
-import viewCSS from './WeatherPanel.less';
+import viewCSS from './WeatherPanel.module.less';
 import WeatherItem from '../components/WeatherItem';
 import AppStateConnect from '../App/AppContextConnect';
 

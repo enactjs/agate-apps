@@ -10,7 +10,7 @@ import {getPanelIndexOf} from '../App';
 import AppContextConnect from '../App/AppContextConnect';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
 
-import componentCss from './Settings.less';
+import componentCss from './Settings.module.less';
 
 // Skin setup area
 const skinCollection = {

@@ -13,7 +13,7 @@ import NetworkInfo from '../../../components/NetworkInfo';
 import {formatDuration, formatTime} from '../../../components/Formatter';
 
 import appConfig from './configLoader';
-import css from './App.less';
+import css from './App.module.less';
 
 const screenIds = [1];
 const durationIncrements = ['day', 'hour', 'min', 'second'];

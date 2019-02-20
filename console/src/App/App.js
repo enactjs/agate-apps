@@ -37,7 +37,7 @@ import Multimedia from '../views/Multimedia';
 import AppContextConnect from './AppContextConnect';
 
 // CSS/LESS Styling
-import css from './App.less';
+import css from './App.module.less';
 
 
 add('backspace', 8);

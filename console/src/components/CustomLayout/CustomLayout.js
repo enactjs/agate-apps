@@ -6,7 +6,7 @@ import React from 'react';
 
 import AppContextConnect from '../../App/AppContextConnect';
 
-import css from './CustomLayout.less';
+import css from './CustomLayout.module.less';
 
 const allSlotNames = ['bottom', 'bottomLeft', 'bottomRight', 'children', 'top', 'topLeft', 'topRight', 'left', 'right'];
 

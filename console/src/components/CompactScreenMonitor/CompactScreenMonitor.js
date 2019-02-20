@@ -7,7 +7,7 @@ import compose from 'ramda/src/compose';
 import {WidgetBase, WidgetDecorator} from '../Widget';
 import AppStateConnect from '../../App/AppContextConnect';
 
-import css from './CompactScreenMonitor.less';
+import css from './CompactScreenMonitor.module.less';
 
 const CompactScreenMonitorBase = kind({
 	name: 'CompactScreenMonitor',

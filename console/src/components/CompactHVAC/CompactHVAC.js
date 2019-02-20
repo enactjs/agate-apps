@@ -8,7 +8,7 @@ import ToggleButton from '@enact/agate/ToggleButton';
 // import AppStateConnect from '../../App/AppContextConnect';
 import Widget from '../Widget';
 
-import css from './CompactHVAC.less';
+import css from './CompactHVAC.module.less';
 
 const temps = ['HI', '74°', '73°', '72°', '71°', '70°', '69°', '68°', '67°', '66°', 'LO'];
 

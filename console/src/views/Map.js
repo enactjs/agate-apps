@@ -5,7 +5,7 @@ import React from 'react';
 
 import MapController from '../components/MapController';
 
-import css from './Map.less';
+import css from './Map.module.less';
 
 const MapViewBase = kind({
 	name: 'MapView',

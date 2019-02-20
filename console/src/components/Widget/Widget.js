@@ -9,7 +9,7 @@ import React from 'react';
 
 import CompactHeader from '../CompactHeader';
 
-import css from './Widget.less';
+import css from './Widget.module.less';
 
 const WidgetBase = kind({
 	name: 'Widget',

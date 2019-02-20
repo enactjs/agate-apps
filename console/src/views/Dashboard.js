@@ -14,7 +14,7 @@ import AppContextConnect from '../App/AppContextConnect';
 import CustomLayout, {SaveLayoutArrangement} from '../components/CustomLayout';
 import CarPng from '../../assets/car.png';
 
-import css from './Dashboard.less';
+import css from './Dashboard.module.less';
 
 const ResponsiveLayout = ResponsiveBox(({containerShape, ...rest}) => {
 	const orientation = (containerShape.orientation === 'portrait') ? 'vertical' : 'horizontal';
