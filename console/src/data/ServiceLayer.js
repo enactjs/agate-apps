@@ -25,10 +25,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		static displayName = 'ServiceLayer';
 
 		static propTypes = {
-			setConnected: PropTypes.func.isRequired,
-			setLocation: PropTypes.func.isRequired,
 			updateAppState: PropTypes.func.isRequired,
-			updateDestination: PropTypes.func.isRequired,
 			autonomous: PropTypes.bool,
 			destination: propTypeLatLonList,
 			follow: PropTypes.bool,
@@ -350,10 +347,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			delete rest.location;
 			delete rest.navigating;
 			delete rest.navigation;
-			delete rest.setConnected;
-			delete rest.setLocation;
 			delete rest.updateAppState;
-			delete rest.updateDestination;
 
 			return (
 				<React.Fragment>
