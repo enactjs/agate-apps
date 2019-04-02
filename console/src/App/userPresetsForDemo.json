@@ -31,23 +31,23 @@
 		"skin": "copper",
 		"topLocations": [
 			{
-				"description": "Home",
+				"description": "집",
 				"coordinates": {"lat": 37.78877, "lon": -122.39647}
 			},
 			{
-				"description": "Philz Coffee",
+				"description": "스타벅스",
 				"coordinates": {"lat": 37.78895, "lon": -122.3931}
 			},
 			{
-				"description": "School",
+				"description": "학교",
 				"coordinates": {"lat": 37.793424, "lon": -122.401124}
 			},
 			{
-				"description": "Work",
+				"description": "회사",
 				"coordinates": {"lat": 37.783902, "lon": -122.396148}
 			},
 			{
-				"description": "MOMA",
+				"description": "미술관",
 				"coordinates": {"lat": 37.785684, "lon": -122.401035}
 			}
 		]
@@ -109,23 +109,23 @@
 		"skin": "cobalt",
 		"topLocations": [
 			{
-				"description": "Home",
+				"description": "집",
 				"coordinates": {"lat": 37.78877, "lon": -122.39647}
 			},
 			{
-				"description": "Philz Coffee",
+				"description": "스타벅스",
 				"coordinates": {"lat": 37.78895, "lon": -122.3931}
 			},
 			{
-				"description": "School",
+				"description": "학교",
 				"coordinates": {"lat": 37.793318, "lon": -122.400845}
 			},
 			{
-				"description": "Work",
+				"description": "회사",
 				"coordinates": {"lat": 37.783902, "lon": -122.396148}
 			},
 			{
-				"description": "MOMA",
+				"description": "미술관",
 				"coordinates": {"lat": 37.785684, "lon": -122.401035}
 			}
 		]

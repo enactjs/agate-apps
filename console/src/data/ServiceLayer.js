@@ -45,8 +45,8 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		}
 
 		componentDidMount () {
-			this.initializeConnection();
-			// this.generateFakeLocations(); // Fake locations generator (for testing only)
+			// this.initializeConnection();
+			this.generateFakeLocations(); // Fake locations generator (for testing only)
 			this.appStateSyncInterval = window.setInterval(() => {
 				this.setLocation({location: this.location});
 			}, 5000);
@@ -143,6 +143,9 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 				y = 4182781.1160838,
 				z = -2.3562;
 			seed = seed % maxSeed;
+			// console.log("===================================");
+			// console.log({x: x + (seed * seedFactor), y: y + (seed * seedFactor), z});
+			// console.log("===================================");
 			return {
 				pose: {
 					position: {x: x + (seed * seedFactor), y: y + (seed * seedFactor), z},

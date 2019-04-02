@@ -12,6 +12,7 @@ import {TabbedPanels} from '@enact/agate/Panels';
 import React from 'react';
 import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
+import LS2Request from '@enact/webos/LS2Request';
 
 // Data Services
 import ServiceLayer from '../data/ServiceLayer';
@@ -35,6 +36,8 @@ import Multimedia from '../views/Multimedia';
 
 // Local Components
 import AppContextConnect from './AppContextConnect';
+import userPresetsForDemo from './userPresetsForDemo';
+import userResponse from './userResponse';
 
 // CSS/LESS Styling
 import css from './App.module.less';
@@ -377,6 +380,84 @@ const AppIndex = (Wrapped) => {
 	};
 };
 
+const VoiceDecorator = (Wrapped) => {
+	return class extends React.Component {
+		static displayName = 'VoiceDecorator'
+
+		constructor (props) {
+			super(props);
+			console.log(props);
+			// this.state = {
+			// 	index: props.defaultIndex || 0
+			// };
+			this.setAIResponse();
+		}
+
+		setAIResponse = () => {
+			if (typeof window !== 'undefined' && window.PalmServiceBridge) {
+				new LS2Request().send({
+					service: 'luna://com.webos.service.ai.voice',
+					method: 'getResponse',
+					parameters: {
+						subscribe: true
+					},
+					onSuccess: (res) => {
+						if (res && res.response && res.response.onAsrResult) {
+							console.log("::::::::::: getResponse :::::::");
+							const result = JSON.parse(res.response.onAsrResult[0].result);
+							this.checkAIResponse(result['speechList'][0]);
+						}
+					}
+				});
+			}
+		}
+
+		checkAIResponse = (res) => {
+			const
+				{userId} = this.props,
+				userPresetsKeys = Object.keys(userPresetsForDemo),
+				locations = userPresetsForDemo[userPresetsKeys[userId - 1]].topLocations;
+
+			for (let i = 0; i < locations.length; i++) {
+				for (const command in userResponse) {
+					for (let j = 0; j < userResponse[command].length; j++) {
+						if ((res.indexOf(locations[i].description) !== -1) && (res.indexOf(userResponse[command][j]) !== -1)) {
+							console.log("MATCH AI RESPONSE");
+							console.log(command, locations[i].description);
+							this.showMapView(locations[i].coordinates);
+						}
+					}
+				}
+			}
+			console.log("res: " + res);
+		}
+
+		showMapView = (coordinates) => {
+			const {onSelect} = this.props;
+			onSelect({index: 0});
+			setTimeout(() => {
+				onSelect({view: 'map'});
+				this.updateDestination(coordinates);
+			}, 1000);
+		}
+
+		updateDestination = (coordinates) => {
+			this.props.updateAppState((state) => {
+				state.navigation.destination = [coordinates];
+				state.navigation.navigating = true;
+			});
+		}
+
+		render () {
+			return (
+				<Wrapped
+					{...this.props}
+				/>
+			);
+		}
+	};
+};
+
 const AppDecorator = compose(
 	ServiceLayer,
 	AppContextConnect(({appState, userSettings, userId, updateAppState}) => ({
@@ -397,6 +478,7 @@ const AppDecorator = compose(
 		userId
 	})),
 	AppIndex,
+	VoiceDecorator,
 	AgateDecorator
 );
 
