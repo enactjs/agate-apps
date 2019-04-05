@@ -403,7 +403,6 @@ const VoiceDecorator = (Wrapped) => {
 					},
 					onSuccess: (res) => {
 						if (res && res.response && res.response.onAsrResult) {
-							console.log("::::::::::: getResponse :::::::");
 							const result = JSON.parse(res.response.onAsrResult[0].result);
 							this.checkAIResponse(result['speechList'][0]);
 						}
@@ -433,8 +432,14 @@ const VoiceDecorator = (Wrapped) => {
 		}
 
 		showMapView = (coordinates) => {
-			const {onSelect} = this.props;
-			onSelect({index: 0});
+			const {index, onSelect} = this.props;
+			if (index !== 0) {
+				onSelect({index: 0});
+			}
+			this.props.updateAppState((state) => {
+				state.navigation.destination = null;
+				state.navigation.navigating = false;
+			});
 			setTimeout(() => {
 				onSelect({view: 'map'});
 				this.updateDestination(coordinates);
@@ -451,6 +456,7 @@ const VoiceDecorator = (Wrapped) => {
 		render () {
 			return (
 				<Wrapped
+
 					{...this.props}
 				/>
 			);

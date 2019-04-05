@@ -1,4 +1,5 @@
 import Divider from '@enact/agate/Divider';
+import Image from '@enact/agate/Image';
 import Item from '@enact/agate/Item';
 import IconItem from '@enact/agate/IconItem';
 import {ResponsiveBox} from '@enact/agate/DropManager';
@@ -81,7 +82,7 @@ const DashboardBase = kind({
 						</Cell>
 						<Cell shrink>
 							<Column>
-								<Cell shrink><img className={css.carImage} src={CarPng} alt="" /></Cell>
+								<Cell component={Image} className={css.carImage} shrink src={CarPng} alt="" />
 							</Column>
 						</Cell>
 						<Cell size="20%">

@@ -12,7 +12,6 @@ import ri from '@enact/ui/resolution';
 import AppContextConnect from '../../App/AppContextConnect';
 import appConfig from '../../App/configLoader';
 import {propTypeLatLon, propTypeLatLonList} from '../../data/proptypes';
-import CarPng from '../../../assets/car.png';
 import {ServiceLayerContext} from '../../data/ServiceLayer';
 
 import css from './MapCore.module.less';
@@ -44,7 +43,7 @@ const getBoundsOfAll = (waypoints, existingBounds) => {
 	);
 };
 
-const clampZoom = (zoom) => Math.min(20, Math.max(0, zoom));
+const clampZoom = (zoom) => Math.min(20, Math.max(17, zoom));
 
 const getMapPadding = () => {
 	const edgeClearance = 48;
@@ -88,10 +87,33 @@ const getRoute = async (waypoints) => {
 		radiuses: [100, ...Array(waypointParts.length - 1).fill(100)],
 		access_token: mapboxgl.accessToken // eslint-disable-line camelcase
 	});
-	// console.log('qs:', qs);
 	const response = await window.fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${waypointString}?${qs}`);
 	return await response.json();
 };
+
+//
+// Search
+//
+const searchPlace = async (place) => {
+	let placeKorea = '';
+	switch (place) {
+		case '은행':
+			placeKorea = 'bank';
+			break;
+		case '공원':
+			placeKorea = 'park';
+			break;
+		default:
+			break;
+	}
+	const qs = buildQueryString({
+		limit: 3,
+		// bbox: '-122.40998957784011,37.777832424497916,-122.38823835999938,37.794518531500074',
+		access_token: mapboxgl.accessToken, // eslint-disable-line camelcase
+	});
+	const response = await window.fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${placeKorea}.json?${qs}`);
+	return await response.json();
+}
 
 // Used in generating POIs
 //
@@ -119,6 +141,7 @@ const addMarkerLayer = ({map, coordinates, updateDestination, skin}) => {
 			new mapboxgl.Marker(markerElem)
 				.setLngLat(coor)
 				.addTo(map);
+
 
 			markerElem.addEventListener('click', () => {
 				updateDestination({
@@ -234,6 +257,10 @@ class MapCoreBase extends React.Component {
 			carShowing: true,
 			selfDriving: true
 		};
+
+		console.log("@@@@@@@@@@@@@@@@");
+		console.log(props);
+		console.log("@@@@@@@@@@@@@@@@");
 	}
 
 	componentWillMount () {
@@ -266,6 +293,19 @@ class MapCoreBase extends React.Component {
 			const destination = this.props.destination;
 			this.mapLoaded = true;
 
+			console.log("#########");
+			// const aaa = async () => {
+			addMarkerLayer({
+				map: this.map,
+				coordinates: [[-122.39949, 37.79882], [-122.4942, 37.79876], [-122.401155, 37.793455]],
+				updateDestination: this.props.updateDestination,
+				skin: 'titanium'
+			});
+			// };
+			// aaa();
+			// const aaa = searchPlace('병원');
+			// console.log(aaa.json());
+			console.log("#########");
 			addMarkerLayer({
 				map: this.map,
 				coordinates: this.pointsList,
@@ -274,7 +314,7 @@ class MapCoreBase extends React.Component {
 			});
 			addCarLayer({
 				coordinates: toMapbox(startCoordinates),
-				iconURL: CarPng,
+				iconURL: 'http://10.178.85.67/baekwoo.jung/agate-apps/console/assets/car.png',
 				map: this.map,
 				orientation: location.orientation
 			});
@@ -442,7 +482,6 @@ class MapCoreBase extends React.Component {
 		zoomLevel = clampZoom(zoomLevel);
 		this.zoomLevel = zoomLevel;
 		if (!this.viewLockTimer) {
-			console.log('zoomTo:', zoomLevel);
 			this.map.zoomTo(zoomLevel);
 		}
 	}
@@ -690,6 +729,7 @@ class MapCoreBase extends React.Component {
 		delete rest.position;
 		delete rest.skin;
 		delete rest.routeRedrawInterval;
+		delete rest.updateAppState;
 		delete rest.updateDestination;
 		delete rest.updateNavigation;
 		delete rest.viewLockoutDuration;
@@ -719,11 +759,12 @@ class MapCoreBase extends React.Component {
 	}
 }
 
-const ConnectedMap = AppContextConnect(({location, userSettings}) => ({
+const ConnectedMap = AppContextConnect(({location, userSettings, updateAppState}) => ({
 	// colorMarker: userSettings.colorHighlight,
 	colorRouteLine: userSettings.colorHighlight,
 	location,
-	skin: userSettings.skin
+	skin: userSettings.skin,
+	updateAppState
 }));
 
 const MapCore = ConnectedMap(Slottable({slots: ['tools']}, MapCoreBase));
