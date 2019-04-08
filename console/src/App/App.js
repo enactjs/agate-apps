@@ -12,7 +12,6 @@ import {TabbedPanels} from '@enact/agate/Panels';
 import React from 'react';
 import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
-import LS2Request from '@enact/webos/LS2Request';
 
 // Data Services
 import ServiceLayer from '../data/ServiceLayer';
@@ -36,8 +35,6 @@ import Multimedia from '../views/Multimedia';
 
 // Local Components
 import AppContextConnect from './AppContextConnect';
-import userPresetsForDemo from './userPresetsForDemo';
-import userResponse from './userResponse';
 
 // CSS/LESS Styling
 import css from './App.module.less';
@@ -148,6 +145,8 @@ const AppBase = kind({
 			updateAppState((state) => {
 				state.userId = 1;
 				state.appState.showDestinationReachedPopup = false;
+				state.appState.showSpeechRecognitionFailedPopup = false;
+				state.appState.showSpeechRecognitionSucceededPopup = false;
 				state.appState.showProfileEdit = false;
 				state.appState.showUserSelectionPopup = false;
 				state.appState.showWelcomePopup = true;
@@ -186,6 +185,8 @@ const AppBase = kind({
 		showBasicPopup,
 		showDateTimePopup,
 		showDestinationReachedPopup,
+		showSpeechRecognitionFailedPopup,
+		showSpeechRecognitionSucceededPopup,
 		showPopup,
 		showUserSelectionPopup,
 		showWelcomePopup,
@@ -312,6 +313,16 @@ const AppBase = kind({
 					Destination reached!
 				</Popup>
 				<Popup
+					open={showSpeechRecognitionFailedPopup}
+				>
+					This feature is not yet supported. Please tell me again.
+				</Popup>
+				<Popup
+					open={showSpeechRecognitionSucceededPopup}
+				>
+					Recognized. Start the guidance.
+				</Popup>
+				<Popup
 					onClose={onTogglePopup}
 					open={showPopup}
 					closeButton
@@ -380,55 +391,35 @@ const AppIndex = (Wrapped) => {
 	};
 };
 
-const VoiceDecorator = (Wrapped) => {
+const Demo = (Wrapped) => {
 	return class extends React.Component {
-		static displayName = 'VoiceDecorator'
+		static displayName = 'Demo'
 
-		constructor (props) {
-			super(props);
-			console.log(props);
-			// this.state = {
-			// 	index: props.defaultIndex || 0
-			// };
-			this.setAIResponse();
-		}
-
-		setAIResponse = () => {
-			if (typeof window !== 'undefined' && window.PalmServiceBridge) {
-				new LS2Request().send({
-					service: 'luna://com.webos.service.ai.voice',
-					method: 'getResponse',
-					parameters: {
-						subscribe: true
-					},
-					onSuccess: (res) => {
-						if (res && res.response && res.response.onAsrResult) {
-							const result = JSON.parse(res.response.onAsrResult[0].result);
-							this.checkAIResponse(result['speechList'][0]);
-						}
-					}
-				});
-			}
-		}
-
-		checkAIResponse = (res) => {
-			const
-				{userId} = this.props,
-				userPresetsKeys = Object.keys(userPresetsForDemo),
-				locations = userPresetsForDemo[userPresetsKeys[userId - 1]].topLocations;
-
-			for (let i = 0; i < locations.length; i++) {
-				for (const command in userResponse) {
-					for (let j = 0; j < userResponse[command].length; j++) {
-						if ((res.indexOf(locations[i].description) !== -1) && (res.indexOf(userResponse[command][j]) !== -1)) {
-							console.log("MATCH AI RESPONSE");
-							console.log(command, locations[i].description);
-							this.showMapView(locations[i].coordinates);
-						}
-					}
+		componentDidUpdate (prevProps) {
+			if (!(prevProps.voiceResult === this.props.voiceResult) && this.props.voiceResult) {
+				if (this.props.voiceResult.action === "goto") {
+					this.showMapView(this.props.voiceResult.coordinates);
 				}
+				this.props.updateAppState((state) => {
+					state.appState.showSpeechRecognitionSucceededPopup = true;
+				});
+				setTimeout(() => {
+					this.props.updateAppState((state) => {
+						state.appState.showSpeechRecognitionSucceededPopup = false;
+					});
+				}, 2000);
 			}
-			console.log("res: " + res);
+			// FIXME
+			// if ((prevProps.voiceResultIndex !== this.props.voiceResultIndex) && !this.props.voiceResult) {
+			// 	this.props.updateAppState((state) => {
+			// 		state.appState.showSpeechRecognitionFailedPopup = true;
+			// 	});
+			// 	setTimeout(() => {
+			// 		this.props.updateAppState((state) => {
+			// 			state.appState.showSpeechRecognitionFailedPopup = false;
+			// 		});
+			// 	}, 2000);
+			// }
 		}
 
 		showMapView = (coordinates) => {
@@ -454,10 +445,11 @@ const VoiceDecorator = (Wrapped) => {
 		}
 
 		render () {
+			const {...rest} = this.props;
+			delete rest.voiceResult;
 			return (
 				<Wrapped
-
-					{...this.props}
+					{...rest}
 				/>
 			);
 		}
@@ -466,7 +458,7 @@ const VoiceDecorator = (Wrapped) => {
 
 const AppDecorator = compose(
 	ServiceLayer,
-	AppContextConnect(({appState, userSettings, userId, updateAppState}) => ({
+	AppContextConnect(({appState, userSettings, userId, updateAppState, voiceResult}) => ({
 		accent: userSettings.colorAccent,
 		highlight: userSettings.colorHighlight,
 		layoutArrangeable: userSettings.arrangements.arrangeable,
@@ -475,16 +467,19 @@ const AppDecorator = compose(
 		showBasicPopup: appState.showBasicPopup,
 		showDateTimePopup: appState.showDateTimePopup,
 		showDestinationReachedPopup: appState.showDestinationReachedPopup,
+		showSpeechRecognitionFailedPopup: appState.showSpeechRecognitionFailedPopup,
+		showSpeechRecognitionSucceededPopup: appState.showSpeechRecognitionSucceededPopup,
 		showPopup: appState.showPopup,
 		showUserSelectionPopup: appState.showUserSelectionPopup,
 		showWelcomePopup: appState.showWelcomePopup,
 		skin: userSettings.skin,
 		skinName: userSettings.skin,
 		updateAppState,
-		userId
+		userId,
+		voiceResult
 	})),
 	AppIndex,
-	VoiceDecorator,
+	Demo,
 	AgateDecorator
 );
 

@@ -45,8 +45,8 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		}
 
 		componentDidMount () {
-			this.initializeConnection();
-			// this.generateFakeLocations(); // Fake locations generator (for testing only)
+			// this.initializeConnection();
+			this.generateFakeLocations(); // Fake locations generator (for testing only)
 			this.appStateSyncInterval = window.setInterval(() => {
 				this.setLocation({location: this.location});
 			}, 5000);
@@ -142,6 +142,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 				x = 53880.8698406219 + 499000, // Unknown as to why the reset coordinates needed an extra 499000 added.
 				y = 4182781.1160838,
 				z = -2.3562;
+				console.log("# MOVE # " + seed + ", x: " + x + ", y: " + y + ", z: " + z);
 			seed = seed % maxSeed;
 			// console.log("===================================");
 			// console.log({x: x + (seed * seedFactor), y: y + (seed * seedFactor), z});
@@ -180,7 +181,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		//
 
 		onPosition = (message) => {
-			// console.log('%conPosition', 'color: orange', message.pose);
+			console.log('%conPosition', 'color: orange', message.pose);
 			const {destination} = this.props;
 			const location = this.normalizePositionData(message.pose);
 			const lastDestinationWaypoint = destination && destination.slice(-1)[0];

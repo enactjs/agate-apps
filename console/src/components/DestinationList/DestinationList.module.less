@@ -61,5 +61,29 @@
 				color: @agate-accent;
 			}
 		}
+		&:global(.titanium) {
+			.bg {
+				background-color: @agate-accent;
+			}
+
+			.client {
+				color: @agate-highlight;
+			}
+
+			&.selected {
+				.bg {
+					background-color: @agate-highlight;
+				}
+
+				.client {
+					color: @agate-accent;
+				}
+			}
+
+			.marker {
+				background-color: #6abe0b;
+				color: @agate-accent;
+			}
+		}
 	});
 }

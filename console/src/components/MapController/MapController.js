@@ -29,6 +29,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 		static displayName = 'MapControllerHoc';
 
 		static propTypes = {
+			searchData: PropTypes.any,
 			topLocations: PropTypes.array.isRequired,
 			updateAppState: PropTypes.func.isRequired,
 			autonomousSelection: PropTypes.bool,
@@ -139,9 +140,11 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 				noFollowButton,
 				noStartStopToggle,
 				topLocations,
+				searchData,
 				...rest
 			} = this.props;
 
+			delete rest.searchData;
 			delete rest.centeringDuration;
 			delete rest.onExpand;
 			delete rest.position;
@@ -206,13 +209,13 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 									</Cell> : null
 							}
 							{
-								locationSelection && !(destination && navigating) ?
+								locationSelection ?
 									<Cell className={css.columnCell}>
 										<DestinationList
-											destination={destination}
+											destination={searchData ? searchData.coordinates : destination}
 											onSetDestination={this.handleSetDestination}
-											positions={topLocations}
-											title="Top Locations"
+											positions={searchData ? searchData.texts : topLocations}
+											title={searchData ? "Search Results" : "Top Locations"}
 										/>
 									</Cell> :
 									<Cell className={css.columnCell} />
@@ -278,7 +281,8 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 });
 
 
-const ConnectedMap = AppContextConnect(({location, userSettings, navigation, updateAppState}) => ({
+const ConnectedMap = AppContextConnect(({location, userSettings, navigation, searchData, updateAppState}) => ({
+	searchData,
 	follow: navigation.follow,
 	topLocations: userSettings.topLocations,
 	location,

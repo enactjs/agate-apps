@@ -91,30 +91,6 @@ const getRoute = async (waypoints) => {
 	return await response.json();
 };
 
-//
-// Search
-//
-const searchPlace = async (place) => {
-	let placeKorea = '';
-	switch (place) {
-		case '은행':
-			placeKorea = 'bank';
-			break;
-		case '공원':
-			placeKorea = 'park';
-			break;
-		default:
-			break;
-	}
-	const qs = buildQueryString({
-		limit: 3,
-		// bbox: '-122.40998957784011,37.777832424497916,-122.38823835999938,37.794518531500074',
-		access_token: mapboxgl.accessToken, // eslint-disable-line camelcase
-	});
-	const response = await window.fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${placeKorea}.json?${qs}`);
-	return await response.json();
-}
-
 // Used in generating POIs
 //
 // const createLocationGeoObject = (index, {description, coordinates}) => ({
@@ -131,6 +107,7 @@ const searchPlace = async (place) => {
 
 const addMarkerLayer = ({map, coordinates, updateDestination, skin}) => {
 	if (map) {
+		const markerArray = [];
 		coordinates.forEach((coor, idx) => {
 			const markerElem = document.createElement('div');
 			markerElem.className = markerCss.marker + ' ' + skin;
@@ -138,9 +115,9 @@ const addMarkerLayer = ({map, coordinates, updateDestination, skin}) => {
 			markerTextElem.innerText = idx + 1;
 			markerTextElem.className = markerCss.markerText;
 			markerElem.appendChild(markerTextElem);
-			new mapboxgl.Marker(markerElem)
+			markerArray.push(new mapboxgl.Marker(markerElem)
 				.setLngLat(coor)
-				.addTo(map);
+				.addTo(map));
 
 
 			markerElem.addEventListener('click', () => {
@@ -149,6 +126,7 @@ const addMarkerLayer = ({map, coordinates, updateDestination, skin}) => {
 				});
 			});
 		});
+		return markerArray;
 	}
 };
 
@@ -255,12 +233,9 @@ class MapCoreBase extends React.Component {
 
 		this.state = {
 			carShowing: true,
-			selfDriving: true
+			selfDriving: true,
+			searchResults: null
 		};
-
-		console.log("@@@@@@@@@@@@@@@@");
-		console.log(props);
-		console.log("@@@@@@@@@@@@@@@@");
 	}
 
 	componentWillMount () {
@@ -292,20 +267,6 @@ class MapCoreBase extends React.Component {
 		this.map.on('load', () => {
 			const destination = this.props.destination;
 			this.mapLoaded = true;
-
-			console.log("#########");
-			// const aaa = async () => {
-			addMarkerLayer({
-				map: this.map,
-				coordinates: [[-122.39949, 37.79882], [-122.4942, 37.79876], [-122.401155, 37.793455]],
-				updateDestination: this.props.updateDestination,
-				skin: 'titanium'
-			});
-			// };
-			// aaa();
-			// const aaa = searchPlace('병원');
-			// console.log(aaa.json());
-			console.log("#########");
 			addMarkerLayer({
 				map: this.map,
 				coordinates: this.pointsList,
@@ -399,6 +360,42 @@ class MapCoreBase extends React.Component {
 		}
 
 		this.actionManager(actions);
+
+		if (!(prevProps.voiceResult === this.props.voiceResult) && this.props.voiceResult) {
+			if (this.props.voiceResult.action === "search") {
+				this.searchPlace(this.props.voiceResult.description);
+			}
+		}
+	}
+
+	componentWillUpdate () {
+		const {searchResults} = this.state;
+		if (searchResults && searchResults.features) {
+			const searchResultObject = {coordinates: [], texts: []};
+			for (let i = 0; i < searchResults.features.length; i++) {
+				searchResultObject.coordinates.push(searchResults.features[i].center);
+				searchResultObject.texts.push({description: searchResults.features[i].text});
+			}
+			const markerArray = addMarkerLayer({
+				map: this.map,
+				coordinates: searchResultObject.coordinates,
+				updateDestination: this.props.updateDestination,
+				skin: 'titanium'
+			});
+			this.setState({searchResults: null});
+			this.props.updateAppState((state) => {
+				state.searchData = searchResultObject;
+			});
+
+			setTimeout(() => {
+				for (let i = 0; i < markerArray.length; i++) {
+					markerArray[i].remove();
+				}
+				this.props.updateAppState((state) => {
+					state.searchData = null;
+				});
+			}, 6000);
+		}
 	}
 
 	componentWillUnmount () {
@@ -422,7 +419,7 @@ class MapCoreBase extends React.Component {
 							console.log('%cPlotting route to:', 'color: orange', [this.props.location, ...actions[action]]);
 							this.drawDirection([this.props.location, ...actions[action]]);
 						} else {
-							this.removeDirection();
+							// this.removeDirection();
 						}
 						break;
 					}
@@ -601,6 +598,36 @@ class MapCoreBase extends React.Component {
 		}
 	}
 
+	//
+	// Search
+	//
+	searchPlace = (place) => {
+		// This is a temporary code.
+		// Since CIM recognizes only Korean voice, it is forced to translate into English.
+		let placeKorea = '';
+		switch (place) {
+			case '카페':
+				placeKorea = 'cafe';
+				break;
+			case '마켓':
+				placeKorea = 'market';
+				break;
+			case '공원':
+				placeKorea = 'park';
+				break;
+			default:
+				break;
+		}
+		const qs = buildQueryString({
+			limit: 3,
+			bbox: '-122.40998957784011,37.777832424497916,-122.38823835999938,37.794518531500074',
+			access_token: mapboxgl.accessToken, // eslint-disable-line camelcase
+		});
+		window.fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${placeKorea}.json?${qs}`)
+		.then(response => response.json())
+		.then(data => this.setState({searchResults: data}));
+	}
+
 	drawDirection = async (waypoints) => {
 		// console.log('drawDirection:', waypoints);
 
@@ -733,6 +760,7 @@ class MapCoreBase extends React.Component {
 		delete rest.updateDestination;
 		delete rest.updateNavigation;
 		delete rest.viewLockoutDuration;
+		delete rest.voiceResult;
 		delete rest.zoomLevel;
 		delete rest.zoomToSpeedScaleFactor;
 
@@ -759,12 +787,13 @@ class MapCoreBase extends React.Component {
 	}
 }
 
-const ConnectedMap = AppContextConnect(({location, userSettings, updateAppState}) => ({
+const ConnectedMap = AppContextConnect(({location, userSettings, updateAppState, voiceResult}) => ({
 	// colorMarker: userSettings.colorHighlight,
 	colorRouteLine: userSettings.colorHighlight,
 	location,
 	skin: userSettings.skin,
-	updateAppState
+	updateAppState,
+	voiceResult
 }));
 
 const MapCore = ConnectedMap(Slottable({slots: ['tools']}, MapCoreBase));

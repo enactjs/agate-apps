@@ -1,9 +1,14 @@
 import React, {Component} from 'react';
 import produce from 'immer';
 import {assocPath, equals, mergeDeepRight, omit, path} from 'ramda';
+// AI Decorator
+import hoc from '@enact/core/hoc';
+import LS2Request from '@enact/webos/LS2Request';
 
 import appConfig from '../App/configLoader';
+// AI Decorator
 import userPresetsForDemo from './userPresetsForDemo';
+import userResponse from './userResponse';
 
 const Context = React.createContext();
 
@@ -58,7 +63,7 @@ const defaultUserSettings = {
 	// topLocations: []
 };
 
-class AppContextProvider extends Component {
+class AppContextProviderBase extends Component {
 	constructor (props) {
 		super(props);
 		this.watchPositionId = null;  // Store the reference to the position watcher.
@@ -68,6 +73,8 @@ class AppContextProvider extends Component {
 				showBasicPopup: false,
 				showDateTimePopup: false,
 				showDestinationReachedPopup: false,
+				showSpeechRecognitionFailedPopup: false,
+				showSpeechRecognitionSucceededPopup: false,
 				showPopup: false,
 				showProfileEdit: false,
 				showUserSelectionPopup: false,
@@ -99,6 +106,8 @@ class AppContextProvider extends Component {
 				navigating: false,
 				startTime: 0
 			},
+			voiceResult: null,
+			searchData: null,
 			weather: {}
 		};
 	}
@@ -130,6 +139,14 @@ class AppContextProvider extends Component {
 			if (nextState.userSettings !== this.state.userSettings) {
 				this.saveUserSettings(nextState.userId, nextState.userSettings);
 			}
+		}
+	}
+
+	componentWillReceiveProps (nextProps) {
+		if (!(this.props.voiceResult === nextProps.voiceResult)) {
+			this.setState({voiceResult: nextProps.voiceResult});
+			console.log("******************************");
+			console.log(nextProps.voiceResult);
 		}
 	}
 
@@ -320,6 +337,114 @@ class PureFragment extends React.PureComponent {
 		);
 	}
 }
+
+const voiceDecoratorDefaultConfig = {
+	service: 'DeepThinQ'
+};
+
+// The role of this function is a similar NLP server.
+// result: {action: ACTION, coordinates: {x: X, y: Y}, description: 'Description'}
+const getIntent = (res) => {
+	const
+		userPresetsKeys = Object.keys(userPresetsForDemo),
+		locations = userPresetsForDemo[userPresetsKeys[0]].topLocations,
+		locationsFake = ['카페', '마켓', '공원']; // cafe, market, park
+
+	for (const command in userResponse) {
+		for (let i = 0; i < userResponse[command].length; i++) {
+			for (let j = 0; j < locations.length; j++) {
+				if ((res.indexOf(locations[j].description) !== -1) && (res.indexOf(userResponse[command][i]) !== -1)) {
+					return {
+						action: command,
+						coordinates: locations[j].coordinates,
+						description: locations[j].description
+					};
+				}
+			}
+			for (let k = 0; k < locationsFake.length; k++) {
+				if ((res.indexOf(locationsFake[k]) !== -1) && (res.indexOf(userResponse[command][i]) !== -1)) {
+					return {
+						action: command,
+						description: locationsFake[k]
+					};
+				}
+			}
+		}
+	}
+	return null;
+}
+
+const VoiceDecorator = hoc(voiceDecoratorDefaultConfig, (config, Wrapped) => {
+	const {service} = config;
+
+	const Decorator = class extends React.Component {
+		static displayName = 'VoiceDecorator';
+
+		constructor (props) {
+			super(props);
+			this.state = {
+				response: null
+			};
+
+			switch (service) {
+				case "DeepThinQ":
+					this.setDeepThinQ();
+					break;
+				default:
+					break;
+			}
+
+			// fake input
+			let i = 0, tempString = ['호이호이', '집으로 가자', '미술관으로 안내해줘', '주변에 카페 알려줘', '주변에', '주변에 마켓 알려줘']; // '미술관으로 데려다 줘', '안내해줘',
+			setInterval(() => {
+				if (i < tempString.length) {
+					console.log("#########################################################" + i);
+					this.setState({
+						response: getIntent(tempString[i++])
+					});
+				} else {
+					i = 0;
+				}
+			}, 8000);
+		}
+
+		componentWillUnmount () {
+			// remove LS2Request
+		}
+
+		setDeepThinQ = () => {
+			if (typeof window !== 'undefined' && window.PalmServiceBridge) {
+				new LS2Request().send({
+					service: 'luna://com.webos.service.ai.voice',
+					method: 'getResponse',
+					parameters: {subscribe: true},
+					onSuccess: (res) => {
+						if (res && res.response && res.response.onAsrResult) {
+							const response = JSON.parse(res.response.onAsrResult[0].result['speechList'][0]);
+							this.setState({
+								response: getIntent(response)
+							});
+						}
+					}
+				});
+			}
+		}
+
+		render () {
+			const {response} = this.state;
+			return (
+				<Wrapped
+					voiceResult={response}
+					{...this.props}
+				/>
+			);
+		}
+	}
+
+	return Decorator;
+});
+
+const AppContextProvider = VoiceDecorator({service: 'DeepThinQ'}, AppContextProviderBase);
 
 export default AppContextProvider;
 export {AppContextProvider, Context as AppContext};
