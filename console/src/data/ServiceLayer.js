@@ -45,8 +45,8 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		}
 
 		componentDidMount () {
-			// this.initializeConnection();
-			this.generateFakeLocations(); // Fake locations generator (for testing only)
+			this.initializeConnection();
+			// this.generateFakeLocations(); // Fake locations generator (for testing only)
 			this.appStateSyncInterval = window.setInterval(() => {
 				this.setLocation({location: this.location});
 			}, 5000);

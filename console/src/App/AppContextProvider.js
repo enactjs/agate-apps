@@ -395,17 +395,17 @@ const VoiceDecorator = hoc(voiceDecoratorDefaultConfig, (config, Wrapped) => {
 			}
 
 			// fake input
-			let i = 0, tempString = ['호이호이', '집으로 가자', '미술관으로 안내해줘', '주변에 카페 알려줘', '주변에', '주변에 마켓 알려줘']; // '미술관으로 데려다 줘', '안내해줘',
-			setInterval(() => {
-				if (i < tempString.length) {
-					console.log("#########################################################" + i);
-					this.setState({
-						response: getIntent(tempString[i++])
-					});
-				} else {
-					i = 0;
-				}
-			}, 8000);
+			// let i = 0, tempString = ['호이호이', '집으로 가자', '미술관으로 안내해줘', '주변에 카페 알려줘', '주변에', '주변에 마켓 알려줘']; // '미술관으로 데려다 줘', '안내해줘',
+			// setInterval(() => {
+			// 	if (i < tempString.length) {
+			// 		console.log("#########################################################" + i);
+			// 		this.setState({
+			// 			response: getIntent(tempString[i++])
+			// 		});
+			// 	} else {
+			// 		i = 0;
+			// 	}
+			// }, 8000);
 		}
 
 		componentWillUnmount () {
