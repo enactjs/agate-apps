@@ -348,7 +348,7 @@ const getIntent = (res) => {
 	const
 		userPresetsKeys = Object.keys(userPresetsForDemo),
 		locations = userPresetsForDemo[userPresetsKeys[0]].topLocations,
-		locationsFake = ['카페', '마켓', '공원']; // cafe, market, park
+		locationsFake = ['카페', '마켓', '공원', '주유소', '주차장']; // cafe, market, park, shell, parking
 
 	for (const command in userResponse) {
 		for (let i = 0; i < userResponse[command].length; i++) {

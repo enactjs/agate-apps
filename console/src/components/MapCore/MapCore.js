@@ -377,7 +377,7 @@ class MapCoreBase extends React.Component {
 				searchResultObject.coordinates.push(searchResults.features[i].center);
 				searchResultObject.texts.push({description: searchResults.features[i].text});
 			}
-			this.zoomMap(13);
+			this.zoomMap(15);
 			const markerArray = addMarkerLayer({
 				map: this.map,
 				coordinates: searchResultObject.coordinates,
@@ -518,7 +518,7 @@ class MapCoreBase extends React.Component {
 					{
 						center,
 						maxDuration: this.props.centeringDuration,
-						zoom: this.zoomLevel > 15 ? 13 : this.zoomLevel
+						zoom: this.zoomLevel > 15 ? 15 : this.zoomLevel
 					},
 					{duration: duration || 800, easing: linear, animation: true}
 				);
