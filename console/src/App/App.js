@@ -400,14 +400,15 @@ const Demo = (Wrapped) => {
 				if (this.props.voiceResult.action === "goto") {
 					this.showMapView(this.props.voiceResult.coordinates);
 				}
-				this.props.updateAppState((state) => {
-					state.appState.showSpeechRecognitionSucceededPopup = true;
-				});
-				setTimeout(() => {
-					this.props.updateAppState((state) => {
-						state.appState.showSpeechRecognitionSucceededPopup = false;
-					});
-				}, 2000);
+				// FIXME
+				// this.props.updateAppState((state) => {
+				// 	state.appState.showSpeechRecognitionSucceededPopup = true;
+				// });
+				// setTimeout(() => {
+				// 	this.props.updateAppState((state) => {
+				// 		state.appState.showSpeechRecognitionSucceededPopup = false;
+				// 	});
+				// }, 2000);
 			}
 			// FIXME
 			// if ((prevProps.voiceResultIndex !== this.props.voiceResultIndex) && !this.props.voiceResult) {

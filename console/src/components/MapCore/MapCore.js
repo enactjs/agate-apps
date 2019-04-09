@@ -328,6 +328,7 @@ class MapCoreBase extends React.Component {
 			prevProps.location.linearVelocity !== this.props.location.linearVelocity
 		)) {
 			if (this.props.follow) {
+				console.log("componentDidUpdate - this.props.follow : " + this.props.location.linearVelocity);
 				actions.zoom = this.props.location.linearVelocity;
 				actions.center = this.props.location;
 			}
@@ -368,7 +369,7 @@ class MapCoreBase extends React.Component {
 		}
 	}
 
-	componentWillUpdate () {
+	componentWillReceiveProps () { // componentWillUpdate
 		const {searchResults} = this.state;
 		if (searchResults && searchResults.features) {
 			const searchResultObject = {coordinates: [], texts: []};
@@ -376,6 +377,7 @@ class MapCoreBase extends React.Component {
 				searchResultObject.coordinates.push(searchResults.features[i].center);
 				searchResultObject.texts.push({description: searchResults.features[i].text});
 			}
+			this.zoomMap(13);
 			const markerArray = addMarkerLayer({
 				map: this.map,
 				coordinates: searchResultObject.coordinates,
@@ -394,7 +396,7 @@ class MapCoreBase extends React.Component {
 				this.props.updateAppState((state) => {
 					state.searchData = null;
 				});
-			}, 6000);
+			}, 10000);
 		}
 	}
 
@@ -433,7 +435,7 @@ class MapCoreBase extends React.Component {
 						break;
 					}
 					case 'zoom': {
-						this.velocityZoom(actions[action]);
+						// this.velocityZoom(actions[action]);
 						break;
 					}
 				}
@@ -447,6 +449,7 @@ class MapCoreBase extends React.Component {
 		// reported bounds for a given zoom level. It may need to be refined after further use.
 		const calcLatLngDimension = (z) => 333.27 / Math.pow(2, z - 1);
 		const zoom = this.map.getZoom();
+		console.log("##### panPercent this.map.getZoom(); ##### : " + zoom);
 		const dim = calcLatLngDimension(zoom);
 		const center = this.map.getCenter();
 		const newCenter = {
@@ -470,12 +473,15 @@ class MapCoreBase extends React.Component {
 	}
 
 	velocityZoom = (linearVelocity) => {
+		console.log("##### velocityZoom ######");
 		const zoom = this.props.follow ? this.calculateZoomLevel(linearVelocity) : this.zoomLevel;
 		// this.zoomMap(zoom);
 		this.zoomLevel = clampZoom(zoom);
 	}
 
 	zoomMap = (zoomLevel) => {
+		console.log("##### zoomMap ######");
+		console.log(zoomLevel);
 		zoomLevel = clampZoom(zoomLevel);
 		this.zoomLevel = zoomLevel;
 		if (!this.viewLockTimer) {
@@ -484,10 +490,12 @@ class MapCoreBase extends React.Component {
 	}
 
 	zoomIn = () => {
+		console.log("zoomIn");
 		this.zoomMap(this.zoomLevel + 1);
 	}
 
 	zoomOut = () => {
+		console.log("zoomOut");
 		this.zoomMap(this.zoomLevel - 1);
 	}
 
@@ -505,11 +513,12 @@ class MapCoreBase extends React.Component {
 				// 	center,
 				// 	{duration: duration || 800, easing: linear, animation: true}
 				// );
+				console.log("CenterMap - map.flyTo: " + this.zoomLevel);
 				this.map.flyTo(
 					{
 						center,
 						maxDuration: this.props.centeringDuration,
-						zoom: this.zoomLevel
+						zoom: this.zoomLevel > 15 ? 13 : this.zoomLevel
 					},
 					{duration: duration || 800, easing: linear, animation: true}
 				);
@@ -560,6 +569,7 @@ class MapCoreBase extends React.Component {
 		this.map.fitBounds(bounds, {padding: getMapPadding()});
 		// FitBounds adjusts the zoom level. Let's grab and store that and use it for when we adjust it manually.
 		this.zoomLevel = this.map.getZoom();
+		console.log("showFullRouteOnMap : " + this.zoomLevel);
 
 		// Set a time to automatically pan back to the current position.
 		if (this.viewLockTimer) this.viewLockTimer.stop();
@@ -615,8 +625,14 @@ class MapCoreBase extends React.Component {
 			case '공원':
 				placeKorea = 'park';
 				break;
-			default:
+			case '주유소':
+				placeKorea = 'shell';
 				break;
+			case '주차장':
+				placeKorea = 'parking';
+				break;
+			default:
+				return;
 		}
 		const qs = buildQueryString({
 			limit: 3,

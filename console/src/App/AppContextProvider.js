@@ -420,9 +420,9 @@ const VoiceDecorator = hoc(voiceDecoratorDefaultConfig, (config, Wrapped) => {
 					parameters: {subscribe: true},
 					onSuccess: (res) => {
 						if (res && res.response && res.response.onAsrResult) {
-							const response = JSON.parse(res.response.onAsrResult[0].result['speechList'][0]);
+							const response = JSON.parse(res.response.onAsrResult[0].result);
 							this.setState({
-								response: getIntent(response)
+								response: getIntent(response['speechList'][0])
 							});
 						}
 					}
