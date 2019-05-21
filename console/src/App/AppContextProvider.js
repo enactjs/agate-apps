@@ -415,16 +415,26 @@ const VoiceDecorator = hoc(voiceDecoratorDefaultConfig, (config, Wrapped) => {
 		setDeepThinQ = () => {
 			if (typeof window !== 'undefined' && window.PalmServiceBridge) {
 				new LS2Request().send({
-					service: 'luna://com.webos.service.ai.voice',
-					method: 'getResponse',
-					parameters: {subscribe: true},
+					service: 'luna://com.webos.service.contextintentmgr',
+					method: 'getDataFromWorkflow',
+					parameters: {
+						key: "2866c2ed.d54ede_fbc6d1d3.9b6f",
+						subscribe: true
+					},
 					onSuccess: (res) => {
-						if (res && res.response && res.response.onAsrResult) {
-							const response = JSON.parse(res.response.onAsrResult[0].result);
-							this.setState({
-								response: getIntent(response['speechList'][0])
-							});
-						}
+						console.log("########### onSuccess ###########");
+						console.log(res);
+						console.log("#################################");
+					},
+					onFailure: (res) => {
+						console.log("########### onFailure ###########");
+						console.log(res);
+						console.log("#################################");
+					},
+					onComplete: (res) => {
+						console.log("########### onComplete ##########");
+						console.log(res);
+						console.log("#################################");
 					}
 				});
 			}
