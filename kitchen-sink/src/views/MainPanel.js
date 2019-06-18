@@ -1,3 +1,4 @@
+import {Row, Cell} from '@enact/ui/Layout';
 import Button from '@enact/agate/Button';
 import ColorPicker from '@enact/agate/ColorPicker';
 import DateTimePicker from '@enact/agate/DateTimePicker';
@@ -21,20 +22,6 @@ import kind from '@enact/core/kind';
 import {Panel} from '@enact/moonstone/Panels';
 import React from 'react';
 
-const style = {
-	colorPickerContainer: {
-		display: 'inline-block',
-		position: 'relative',
-		width: '400px'
-	},
-	flexBox: {
-		display: 'flex'
-	},
-	flexItem: {
-		flex: '1'
-	}
-};
-
 const MainPanel = kind({
 	name: 'MainPanel',
 
@@ -43,29 +30,34 @@ const MainPanel = kind({
 			<Divider spacing="normal" startSection>
 				Agate kitchen sink
 			</Divider>
-			<Button>Click me</Button>
-			<IconButton type="standard">home</IconButton>
-			<ToggleButton underline type="standard" toggleOffLabel="Off" toggleOnLabel="On" />
-			<Input placeholder="Input text here" />
-			<LabeledIcon inline icon="temperature">Hello LabeledIcon</LabeledIcon>
-			<LabeledIconButton inline icon="compass">Hello LabeledIconButton</LabeledIconButton>
-			<div style={style.colorPickerContainer}>
-				<ColorPicker direction="right" defaultValue="#3467af">
-					{['green',
-					'yellow',
-					'orange',
-					'red',
-					'black',
-					'gray',
-					'white',
-					'maroon']}
-				</ColorPicker>
-			</div>
-			<div style={style.flexBox}>
-				<div style={style.flexItem}>
-					<RadioItem icon="music">
-						Sound
-					</RadioItem>
+			<Row align="center space-around">
+				<Cell shrink>
+					<Button>Click me</Button>
+					<IconButton type="standard">home</IconButton>
+					<ToggleButton underline type="standard" toggleOffLabel="Off" toggleOnLabel="On" />
+				</Cell>
+				<Cell shrink>
+					<Input placeholder="Input text here" />
+				</Cell>
+				<Cell shrink>
+					<ColorPicker direction="right" value="#3467af">
+						{['green',
+						'yellow',
+						'orange',
+						'red',
+						'black',
+						'gray',
+						'white',
+						'maroon']}
+					</ColorPicker>
+				</Cell>
+				<Cell shrink>
+					<LabeledIcon inline icon="temperature">Hello LabeledIcon</LabeledIcon>
+					<LabeledIconButton inline icon="compass">Hello LabeledIconButton</LabeledIconButton>
+				</Cell>
+			</Row>
+			<Row>
+				<Cell>
 					<Slider
 						max={100}
 						min={0}
@@ -80,41 +72,43 @@ const MainPanel = kind({
 						orientation="horizontal"
 						step={1}
 					/>
-				</div>
-				<div style={style.flexItem}>
-					<DateTimePicker />
-				</div>
-			</div>
-			<div style={style.flexBox}>
-				<Divider style={style.flexItem}>
-					<IconItem label="Label" icon="compass">
-						Hello IconItem
-					</IconItem>
-					<Item>
-						Hello Item
-					</Item>
-					<SwitchItem defaultSelected icon="music">
-						Sound
-					</SwitchItem>
 					<SliderButton>
 						{['Light',
 						'Medium',
 						'Dark']}
 					</SliderButton>
-				</Divider>
-				<Divider style={style.flexItem}>
+				</Cell>
+				<Cell>
+					<Picker>{['LO', 'MD' , 'HI']}</Picker>
+				</Cell>
+			</Row>
+			<Row>
+				<Cell>
+					<Item>
+						Hello Item
+					</Item>
 					<LabeledItem label="Label" titleIcon="expand">
 						Hello LabeledItem
 					</LabeledItem>
-					<Picker>{['LO', 'MD' , 'HI']}</Picker>
-				</Divider>
-			</div>
-			<Divider>
-				<ProgressBar
-					rientation="horizontal"
-					progress={0.4}
-				/>
-			</Divider>
+					<IconItem label="Label" icon="compass">
+						Hello IconItem
+					</IconItem>
+					<RadioItem icon="music">
+						Sound
+					</RadioItem>
+					<SwitchItem defaultSelected icon="music">
+						Sound
+					</SwitchItem>
+				</Cell>
+				<Cell>
+					<DateTimePicker />
+				</Cell>
+			</Row>
+			<Divider>ProgressBar</Divider>
+			<ProgressBar
+				rientation="horizontal"
+				progress={0.4}
+			/>
 		</Panel>
 	)
 });
