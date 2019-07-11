@@ -13,6 +13,7 @@ import React from 'react';
 import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
 
+import LS2Request from '@enact/webos/LS2Request';
 // Data Services
 import ServiceLayer from '../data/ServiceLayer';
 
@@ -395,32 +396,39 @@ const Demo = (Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'Demo'
 
+		constructor (props) {
+			super(props);
+			this.state = {
+				user: null
+			};
+		}
+
 		componentDidUpdate (prevProps) {
+			if (!(prevProps.faceResult === this.props.faceResult) && this.props.faceResult) {
+				if (this.props.faceResult.total > 0) {
+					if (this.props.faceResult.male && this.props.faceResult.male.count) {
+						const user = this.props.faceResult.male.count ? 2 : 1;
+						if (user !== this.state.user) {
+							const ServiceBridge = window.webOSServiceBridge;
+							var bridge = new ServiceBridge();
+							bridge.onservicecallback = function (msg) { var response = JSON.parse(msg); console.log(response.returnValue);};
+							bridge.call("luna://com.webos.notification/createToast", '{"message": "Face Recognized", "noaction": false}');
+							bridge.cancel();
+							this.props.updateAppState((state) => {
+								state.userId = user;
+							});
+							this.setState({
+								user: user
+							});
+						}
+					}
+				}
+			}
 			if (!(prevProps.voiceResult === this.props.voiceResult) && this.props.voiceResult) {
 				if (this.props.voiceResult.action === "goto") {
 					this.showMapView(this.props.voiceResult.coordinates);
 				}
-				// FIXME
-				// this.props.updateAppState((state) => {
-				// 	state.appState.showSpeechRecognitionSucceededPopup = true;
-				// });
-				// setTimeout(() => {
-				// 	this.props.updateAppState((state) => {
-				// 		state.appState.showSpeechRecognitionSucceededPopup = false;
-				// 	});
-				// }, 2000);
 			}
-			// FIXME
-			// if ((prevProps.voiceResultIndex !== this.props.voiceResultIndex) && !this.props.voiceResult) {
-			// 	this.props.updateAppState((state) => {
-			// 		state.appState.showSpeechRecognitionFailedPopup = true;
-			// 	});
-			// 	setTimeout(() => {
-			// 		this.props.updateAppState((state) => {
-			// 			state.appState.showSpeechRecognitionFailedPopup = false;
-			// 		});
-			// 	}, 2000);
-			// }
 		}
 
 		showMapView = (coordinates) => {
@@ -447,7 +455,10 @@ const Demo = (Wrapped) => {
 
 		render () {
 			const {...rest} = this.props;
+
 			delete rest.voiceResult;
+			delete rest.faceResult;
+
 			return (
 				<Wrapped
 					{...rest}
@@ -459,7 +470,7 @@ const Demo = (Wrapped) => {
 
 const AppDecorator = compose(
 	ServiceLayer,
-	AppContextConnect(({appState, userSettings, userId, updateAppState, voiceResult}) => ({
+	AppContextConnect(({appState, userSettings, userId, updateAppState, voiceResult, faceResult}) => ({
 		accent: userSettings.colorAccent,
 		highlight: userSettings.colorHighlight,
 		layoutArrangeable: userSettings.arrangements.arrangeable,
@@ -477,7 +488,8 @@ const AppDecorator = compose(
 		skinName: userSettings.skin,
 		updateAppState,
 		userId,
-		voiceResult
+		voiceResult,
+		faceResult
 	})),
 	AppIndex,
 	Demo,

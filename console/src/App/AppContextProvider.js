@@ -107,6 +107,7 @@ class AppContextProviderBase extends Component {
 				startTime: 0
 			},
 			voiceResult: null,
+			faceResult: null,
 			searchData: null,
 			weather: {}
 		};
@@ -145,8 +146,8 @@ class AppContextProviderBase extends Component {
 	componentWillReceiveProps (nextProps) {
 		if (!(this.props.voiceResult === nextProps.voiceResult)) {
 			this.setState({voiceResult: nextProps.voiceResult});
-			console.log("******************************");
-			console.log(nextProps.voiceResult);
+		} else if (!(this.props.faceResult === nextProps.faceResult)) {
+			this.setState({faceResult: nextProps.faceResult});
 		}
 	}
 
@@ -383,7 +384,8 @@ const VoiceDecorator = hoc(voiceDecoratorDefaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.state = {
-				response: null
+				faceResponse: null,
+				voiceResponse: null
 			};
 
 			switch (service) {
@@ -422,29 +424,28 @@ const VoiceDecorator = hoc(voiceDecoratorDefaultConfig, (config, Wrapped) => {
 						subscribe: true
 					},
 					onSuccess: (res) => {
-						console.log("########### onSuccess ###########");
-						console.log(res);
-						console.log("#################################");
-					},
-					onFailure: (res) => {
-						console.log("########### onFailure ###########");
-						console.log(res);
-						console.log("#################################");
-					},
-					onComplete: (res) => {
-						console.log("########### onComplete ##########");
-						console.log(res);
-						console.log("#################################");
+						console.log(JSON.stringify(res));
+						if (res.result.data.payload.voice) {
+							this.setState({voiceResponse: getIntent(res.result.data.payload.voice)})
+						}
+						if (res.result.data.payload.gesture) {
+							this.setState({gestureResponse: res.result.data.payload.gesture})
+						}
+						if (res.result.data.payload.face) {
+							this.setState({faceResponse: res.result.data.payload.face})
+						}
 					}
 				});
 			}
 		}
 
 		render () {
-			const {response} = this.state;
+			const {faceResponse, gestureResponse, voiceResponse} = this.state;
 			return (
 				<Wrapped
-					voiceResult={response}
+					faceResult={faceResponse}
+					gestureResult={gestureResponse}
+					voiceResult={voiceResponse}
 					{...this.props}
 				/>
 			);

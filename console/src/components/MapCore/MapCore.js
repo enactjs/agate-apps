@@ -367,6 +367,14 @@ class MapCoreBase extends React.Component {
 				this.searchPlace(this.props.voiceResult.description);
 			}
 		}
+
+		if (!(prevProps.gestureResult === this.props.gestureResult) && this.props.gestureResult) {
+			if (this.props.response.type === 'palm_fist') {
+				this.zoomIn();
+			} else if (this.props.response.type === 'fist_palm') {
+				this.zoomOut();
+			}
+		}
 	}
 
 	componentWillReceiveProps () { // componentWillUpdate
@@ -803,9 +811,10 @@ class MapCoreBase extends React.Component {
 	}
 }
 
-const ConnectedMap = AppContextConnect(({location, userSettings, updateAppState, voiceResult}) => ({
+const ConnectedMap = AppContextConnect(({location, userSettings, updateAppState, gestureResult, voiceResult}) => ({
 	// colorMarker: userSettings.colorHighlight,
 	colorRouteLine: userSettings.colorHighlight,
+	gestureResult,
 	location,
 	skin: userSettings.skin,
 	updateAppState,
