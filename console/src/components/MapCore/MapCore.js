@@ -775,6 +775,7 @@ class MapCoreBase extends React.Component {
 		delete rest.colorRouteLine;
 		delete rest.destination;
 		delete rest.follow;
+		delete rest.gestureResult;
 		delete rest.location;
 		delete rest.points;
 		delete rest.position;

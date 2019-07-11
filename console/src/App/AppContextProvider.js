@@ -106,8 +106,9 @@ class AppContextProviderBase extends Component {
 				navigating: false,
 				startTime: 0
 			},
-			voiceResult: null,
 			faceResult: null,
+			gestureResult: null,
+			voiceResult: null,
 			searchData: null,
 			weather: {}
 		};
@@ -144,10 +145,12 @@ class AppContextProviderBase extends Component {
 	}
 
 	componentWillReceiveProps (nextProps) {
-		if (!(this.props.voiceResult === nextProps.voiceResult)) {
-			this.setState({voiceResult: nextProps.voiceResult});
-		} else if (!(this.props.faceResult === nextProps.faceResult)) {
+		if (!(this.props.faceResult === nextProps.faceResult)) {
 			this.setState({faceResult: nextProps.faceResult});
+		} else if (!(this.props.gestureResult === nextProps.gestureResult)) {
+			this.setState({gestureResult: nextProps.gestureResult});
+		} else if (!(this.props.voiceResult === nextProps.voiceResult)) {
+			this.setState({voiceResult: nextProps.voiceResult});
 		}
 	}
 
