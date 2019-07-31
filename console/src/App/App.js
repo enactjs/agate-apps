@@ -146,8 +146,6 @@ const AppBase = kind({
 			updateAppState((state) => {
 				state.userId = 1;
 				state.appState.showDestinationReachedPopup = false;
-				state.appState.showSpeechRecognitionFailedPopup = false;
-				state.appState.showSpeechRecognitionSucceededPopup = false;
 				state.appState.showProfileEdit = false;
 				state.appState.showUserSelectionPopup = false;
 				state.appState.showWelcomePopup = true;
@@ -186,8 +184,6 @@ const AppBase = kind({
 		showBasicPopup,
 		showDateTimePopup,
 		showDestinationReachedPopup,
-		showSpeechRecognitionFailedPopup,
-		showSpeechRecognitionSucceededPopup,
 		showPopup,
 		showUserSelectionPopup,
 		showWelcomePopup,
@@ -312,16 +308,6 @@ const AppBase = kind({
 					open={showDestinationReachedPopup}
 				>
 					Destination reached!
-				</Popup>
-				<Popup
-					open={showSpeechRecognitionFailedPopup}
-				>
-					This feature is not yet supported. Please tell me again.
-				</Popup>
-				<Popup
-					open={showSpeechRecognitionSucceededPopup}
-				>
-					Recognized. Start the guidance.
 				</Popup>
 				<Popup
 					onClose={onTogglePopup}
@@ -470,7 +456,7 @@ const Demo = (Wrapped) => {
 
 const AppDecorator = compose(
 	ServiceLayer,
-	AppContextConnect(({appState, userSettings, userId, updateAppState, voiceResult, faceResult}) => ({
+	AppContextConnect(({appState, userSettings, userId, updateAppState, faceResult, gestureResult, voiceResult}) => ({
 		accent: userSettings.colorAccent,
 		highlight: userSettings.colorHighlight,
 		layoutArrangeable: userSettings.arrangements.arrangeable,
@@ -479,8 +465,6 @@ const AppDecorator = compose(
 		showBasicPopup: appState.showBasicPopup,
 		showDateTimePopup: appState.showDateTimePopup,
 		showDestinationReachedPopup: appState.showDestinationReachedPopup,
-		showSpeechRecognitionFailedPopup: appState.showSpeechRecognitionFailedPopup,
-		showSpeechRecognitionSucceededPopup: appState.showSpeechRecognitionSucceededPopup,
 		showPopup: appState.showPopup,
 		showUserSelectionPopup: appState.showUserSelectionPopup,
 		showWelcomePopup: appState.showWelcomePopup,
@@ -488,8 +472,9 @@ const AppDecorator = compose(
 		skinName: userSettings.skin,
 		updateAppState,
 		userId,
-		voiceResult,
-		faceResult
+		faceResult,
+		gestureResult,
+		voiceResult
 	})),
 	AppIndex,
 	Demo,

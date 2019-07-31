@@ -73,8 +73,6 @@ class AppContextProviderBase extends Component {
 				showBasicPopup: false,
 				showDateTimePopup: false,
 				showDestinationReachedPopup: false,
-				showSpeechRecognitionFailedPopup: false,
-				showSpeechRecognitionSucceededPopup: false,
 				showPopup: false,
 				showProfileEdit: false,
 				showUserSelectionPopup: false,

@@ -460,7 +460,6 @@ class MapCoreBase extends React.Component {
 		// reported bounds for a given zoom level. It may need to be refined after further use.
 		const calcLatLngDimension = (z) => 333.27 / Math.pow(2, z - 1);
 		const zoom = this.map.getZoom();
-		console.log("##### panPercent this.map.getZoom(); ##### : " + zoom);
 		const dim = calcLatLngDimension(zoom);
 		const center = this.map.getCenter();
 		const newCenter = {
@@ -484,15 +483,12 @@ class MapCoreBase extends React.Component {
 	}
 
 	velocityZoom = (linearVelocity) => {
-		console.log("##### velocityZoom ######");
 		const zoom = this.props.follow ? this.calculateZoomLevel(linearVelocity) : this.zoomLevel;
 		// this.zoomMap(zoom);
 		this.zoomLevel = clampZoom(zoom);
 	}
 
 	zoomMap = (zoomLevel) => {
-		console.log("##### zoomMap ######");
-		console.log(zoomLevel);
 		zoomLevel = clampZoom(zoomLevel);
 		this.zoomLevel = zoomLevel;
 		if (!this.viewLockTimer) {
@@ -501,12 +497,10 @@ class MapCoreBase extends React.Component {
 	}
 
 	zoomIn = () => {
-		console.log("zoomIn");
 		this.zoomMap(this.zoomLevel + 1);
 	}
 
 	zoomOut = () => {
-		console.log("zoomOut");
 		this.zoomMap(this.zoomLevel - 1);
 	}
 
@@ -524,7 +518,6 @@ class MapCoreBase extends React.Component {
 				// 	center,
 				// 	{duration: duration || 800, easing: linear, animation: true}
 				// );
-				console.log("CenterMap - map.flyTo: " + this.zoomLevel);
 				this.map.flyTo(
 					{
 						center,
@@ -580,7 +573,6 @@ class MapCoreBase extends React.Component {
 		this.map.fitBounds(bounds, {padding: getMapPadding()});
 		// FitBounds adjusts the zoom level. Let's grab and store that and use it for when we adjust it manually.
 		this.zoomLevel = this.map.getZoom();
-		console.log("showFullRouteOnMap : " + this.zoomLevel);
 
 		// Set a time to automatically pan back to the current position.
 		if (this.viewLockTimer) this.viewLockTimer.stop();
