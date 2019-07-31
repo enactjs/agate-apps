@@ -352,7 +352,7 @@ const getIntent = (res) => {
 	const
 		userPresetsKeys = Object.keys(userPresetsForDemo),
 		locations = userPresetsForDemo[userPresetsKeys[0]].topLocations,
-		locationsFake = ['카페', '마켓', '공원', '주유소', '주차장']; // cafe, market, park, shell, parking
+		locationsFake = ['Cafe', 'Market', 'Park', 'Shell', 'Parking'];
 
 	for (const command in userResponse) {
 		for (let i = 0; i < userResponse[command].length; i++) {
@@ -395,6 +395,9 @@ const VoiceDecorator = hoc(voiceDecoratorDefaultConfig, (config, Wrapped) => {
 				case "DeepThinQ":
 					this.setDeepThinQ();
 					break;
+				case "GoogleAssistant":
+					this.setGoogleAssistant();
+					break;
 				default:
 					break;
 			}
@@ -413,12 +416,9 @@ const VoiceDecorator = hoc(voiceDecoratorDefaultConfig, (config, Wrapped) => {
 			// }, 8000);
 		}
 
-		componentWillUnmount () {
-			// remove LS2Request
-		}
-
 		setDeepThinQ = () => {
 			if (typeof window !== 'undefined' && window.PalmServiceBridge) {
+				console.log("SET DEEPTHINQ SERVICE");
 				new LS2Request().send({
 					service: 'luna://com.webos.service.contextintentmgr',
 					method: 'getDataFromWorkflow',
@@ -429,13 +429,34 @@ const VoiceDecorator = hoc(voiceDecoratorDefaultConfig, (config, Wrapped) => {
 					onSuccess: (res) => {
 						console.log(JSON.stringify(res));
 						if (res.result.data.payload.voice) {
-							this.setState({voiceResponse: getIntent(res.result.data.payload.voice)})
+							this.setState({voiceResponse: getIntent(res.result.data.payload.voice.entity.storeName)})
 						}
 						if (res.result.data.payload.gesture) {
 							this.setState({gestureResponse: res.result.data.payload.gesture})
 						}
 						if (res.result.data.payload.face) {
 							this.setState({faceResponse: res.result.data.payload.face})
+						}
+					}
+				});
+			}
+		}
+
+		setGoogleAssistant = () => {
+			if (typeof window !== 'undefined' && window.PalmServiceBridge) {
+				console.log("SET GOOGLE ASSISTANT SERVICE");
+				new LS2Request().send({
+					service: 'luna://com.webos.service.contextintentmgr',
+					method: 'getDataFromWorkflow',
+					parameters: {
+						key: "2866c2ed.d54ede_fbc6d1d3.9b6f",
+						subscribe: true
+					},
+					onSuccess: (res) => {
+						console.log(JSON.stringify(res));
+						if (res.result.data.payload.voice) {
+							const entity = res.result.data.payload.voice.entity;
+							this.setState({voiceResponse: getIntent(`${entity.ttsResponse} ${entity.storeName}`)})
 						}
 					}
 				});
@@ -458,7 +479,7 @@ const VoiceDecorator = hoc(voiceDecoratorDefaultConfig, (config, Wrapped) => {
 	return Decorator;
 });
 
-const AppContextProvider = VoiceDecorator({service: 'DeepThinQ'}, AppContextProviderBase);
+const AppContextProvider = VoiceDecorator({service: 'GoogleAssistant'}, AppContextProviderBase);
 
 export default AppContextProvider;
 export {AppContextProvider, Context as AppContext};

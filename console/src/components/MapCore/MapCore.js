@@ -365,6 +365,9 @@ class MapCoreBase extends React.Component {
 		if (!(prevProps.voiceResult === this.props.voiceResult) && this.props.voiceResult) {
 			if (this.props.voiceResult.action === "search") {
 				this.searchPlace(this.props.voiceResult.description);
+				window.setTimeout(() => {
+					this.forceUpdate();
+				}, 1000);
 			}
 		}
 
@@ -404,7 +407,7 @@ class MapCoreBase extends React.Component {
 				this.props.updateAppState((state) => {
 					state.searchData = null;
 				});
-			}, 10000);
+			}, 5000);
 		}
 	}
 
@@ -624,19 +627,19 @@ class MapCoreBase extends React.Component {
 		// Since CIM recognizes only Korean voice, it is forced to translate into English.
 		let placeKorea = '';
 		switch (place) {
-			case '카페':
+			case 'Cafe':
 				placeKorea = 'cafe';
 				break;
-			case '마켓':
+			case 'Market':
 				placeKorea = 'market';
 				break;
-			case '공원':
+			case 'Park':
 				placeKorea = 'park';
 				break;
-			case '주유소':
+			case 'Shell':
 				placeKorea = 'shell';
 				break;
-			case '주차장':
+			case 'Parking':
 				placeKorea = 'parking';
 				break;
 			default:

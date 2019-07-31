@@ -31,23 +31,23 @@
 		"skin": "copper",
 		"topLocations": [
 			{
-				"description": "집",
+				"description": "Home",
 				"coordinates": {"lat": 37.78877, "lon": -122.39647}
 			},
 			{
-				"description": "스타벅스",
+				"description": "Starbucks",
 				"coordinates": {"lat": 37.78895, "lon": -122.3931}
 			},
 			{
-				"description": "학교",
+				"description": "School",
 				"coordinates": {"lat": 37.793424, "lon": -122.401124}
 			},
 			{
-				"description": "회사",
+				"description": "Company",
 				"coordinates": {"lat": 37.783902, "lon": -122.396148}
 			},
 			{
-				"description": "미술관",
+				"description": "Art Gallery",
 				"coordinates": {"lat": 37.785684, "lon": -122.401035}
 			}
 		]
@@ -109,23 +109,23 @@
 		"skin": "cobalt",
 		"topLocations": [
 			{
-				"description": "집",
+				"description": "Home",
 				"coordinates": {"lat": 37.78877, "lon": -122.39647}
 			},
 			{
-				"description": "스타벅스",
+				"description": "Starbucks",
 				"coordinates": {"lat": 37.78895, "lon": -122.3931}
 			},
 			{
-				"description": "학교",
-				"coordinates": {"lat": 37.793318, "lon": -122.400845}
+				"description": "School",
+				"coordinates": {"lat": 37.793424, "lon": -122.401124}
 			},
 			{
-				"description": "회사",
+				"description": "Company",
 				"coordinates": {"lat": 37.783902, "lon": -122.396148}
 			},
 			{
-				"description": "미술관",
+				"description": "Art Gallery",
 				"coordinates": {"lat": 37.785684, "lon": -122.401035}
 			}
 		]
