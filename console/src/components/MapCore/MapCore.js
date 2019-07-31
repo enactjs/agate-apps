@@ -623,34 +623,12 @@ class MapCoreBase extends React.Component {
 	// Search
 	//
 	searchPlace = (place) => {
-		// This is a temporary code.
-		// Since CIM recognizes only Korean voice, it is forced to translate into English.
-		let placeKorea = '';
-		switch (place) {
-			case 'Cafe':
-				placeKorea = 'cafe';
-				break;
-			case 'Market':
-				placeKorea = 'market';
-				break;
-			case 'Park':
-				placeKorea = 'park';
-				break;
-			case 'Shell':
-				placeKorea = 'shell';
-				break;
-			case 'Parking':
-				placeKorea = 'parking';
-				break;
-			default:
-				return;
-		}
 		const qs = buildQueryString({
 			limit: 3,
 			bbox: '-122.40998957784011,37.777832424497916,-122.38823835999938,37.794518531500074',
 			access_token: mapboxgl.accessToken, // eslint-disable-line camelcase
 		});
-		window.fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${placeKorea}.json?${qs}`)
+		window.fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${place.toLowerCase()}.json?${qs}`)
 		.then(response => response.json())
 		.then(data => this.setState({searchResults: data}));
 	}

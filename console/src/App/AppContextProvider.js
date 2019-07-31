@@ -342,7 +342,7 @@ class PureFragment extends React.PureComponent {
 	}
 }
 
-const voiceDecoratorDefaultConfig = {
+const aiDecoratorDefaultConfig = {
 	service: 'DeepThinQ'
 };
 
@@ -378,47 +378,21 @@ const getIntent = (res) => {
 	return null;
 }
 
-const VoiceDecorator = hoc(voiceDecoratorDefaultConfig, (config, Wrapped) => {
+const AIDecorator = hoc(aiDecoratorDefaultConfig, (config, Wrapped) => {
 	const {service} = config;
 
 	const Decorator = class extends React.Component {
-		static displayName = 'VoiceDecorator';
+		static displayName = 'AIDecorator';
 
 		constructor (props) {
 			super(props);
 			this.state = {
-				faceResponse: null,
-				voiceResponse: null
+				faceResult: null,
+				gestureResult: null,
+				voiceResult: null
 			};
 
-			switch (service) {
-				case "DeepThinQ":
-					this.setDeepThinQ();
-					break;
-				case "GoogleAssistant":
-					this.setGoogleAssistant();
-					break;
-				default:
-					break;
-			}
-
-			// fake input
-			// let i = 0, tempString = ['호이호이', '집으로 가자', '미술관으로 안내해줘', '주변에 카페 알려줘', '주변에', '주변에 마켓 알려줘']; // '미술관으로 데려다 줘', '안내해줘',
-			// setInterval(() => {
-			// 	if (i < tempString.length) {
-			// 		console.log("#########################################################" + i);
-			// 		this.setState({
-			// 			response: getIntent(tempString[i++])
-			// 		});
-			// 	} else {
-			// 		i = 0;
-			// 	}
-			// }, 8000);
-		}
-
-		setDeepThinQ = () => {
-			if (typeof window !== 'undefined' && window.PalmServiceBridge) {
-				console.log("SET DEEPTHINQ SERVICE");
+			if (typeof window !== 'undefined' && window.webOSServiceBridge) {
 				new LS2Request().send({
 					service: 'luna://com.webos.service.contextintentmgr',
 					method: 'getDataFromWorkflow',
@@ -427,49 +401,37 @@ const VoiceDecorator = hoc(voiceDecoratorDefaultConfig, (config, Wrapped) => {
 						subscribe: true
 					},
 					onSuccess: (res) => {
-						console.log(JSON.stringify(res));
-						if (res.result.data.payload.voice) {
-							this.setState({voiceResponse: getIntent(res.result.data.payload.voice.entity.storeName)})
+						switch (service) {
+							case "DeepThinQ":
+								if (res.result.data.payload.voice) {
+									this.setState({voiceResult: getIntent(res.result.data.payload.voice.entity.storeName)})
+								}
+								if (res.result.data.payload.gesture) {
+									this.setState({gestureResult: res.result.data.payload.gesture})
+								}
+								if (res.result.data.payload.face) {
+									this.setState({faceResult: res.result.data.payload.face})
+								}
+								break;
+							case "GoogleAssistant":
+								if (res.result.data.payload.voice) {
+									const entity = res.result.data.payload.voice.entity;
+									this.setState({voiceResult: getIntent(`${entity.ttsResponse} ${entity.storeName}`)})
+								}
+								break;
+							default:
+								break;
 						}
-						if (res.result.data.payload.gesture) {
-							this.setState({gestureResponse: res.result.data.payload.gesture})
-						}
-						if (res.result.data.payload.face) {
-							this.setState({faceResponse: res.result.data.payload.face})
-						}
-					}
-				});
-			}
-		}
-
-		setGoogleAssistant = () => {
-			if (typeof window !== 'undefined' && window.PalmServiceBridge) {
-				console.log("SET GOOGLE ASSISTANT SERVICE");
-				new LS2Request().send({
-					service: 'luna://com.webos.service.contextintentmgr',
-					method: 'getDataFromWorkflow',
-					parameters: {
-						key: "2866c2ed.d54ede_fbc6d1d3.9b6f",
-						subscribe: true
-					},
-					onSuccess: (res) => {
-						console.log(JSON.stringify(res));
-						if (res.result.data.payload.voice) {
-							const entity = res.result.data.payload.voice.entity;
-							this.setState({voiceResponse: getIntent(`${entity.ttsResponse} ${entity.storeName}`)})
-						}
+						
 					}
 				});
 			}
 		}
 
 		render () {
-			const {faceResponse, gestureResponse, voiceResponse} = this.state;
 			return (
 				<Wrapped
-					faceResult={faceResponse}
-					gestureResult={gestureResponse}
-					voiceResult={voiceResponse}
+					{...this.state}
 					{...this.props}
 				/>
 			);
@@ -479,7 +441,7 @@ const VoiceDecorator = hoc(voiceDecoratorDefaultConfig, (config, Wrapped) => {
 	return Decorator;
 });
 
-const AppContextProvider = VoiceDecorator({service: 'GoogleAssistant'}, AppContextProviderBase);
+const AppContextProvider = AIDecorator({service: 'GoogleAssistant'}, AppContextProviderBase);
 
 export default AppContextProvider;
 export {AppContextProvider, Context as AppContext};
