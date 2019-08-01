@@ -87,6 +87,7 @@ const getRoute = async (waypoints) => {
 		radiuses: [100, ...Array(waypointParts.length - 1).fill(100)],
 		access_token: mapboxgl.accessToken // eslint-disable-line camelcase
 	});
+	// console.log('qs:', qs);
 	const response = await window.fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${waypointString}?${qs}`);
 	return await response.json();
 };
@@ -118,7 +119,6 @@ const addMarkerLayer = ({map, coordinates, updateDestination, skin}) => {
 			markerArray.push(new mapboxgl.Marker(markerElem)
 				.setLngLat(coor)
 				.addTo(map));
-
 
 			markerElem.addEventListener('click', () => {
 				updateDestination({
@@ -328,7 +328,6 @@ class MapCoreBase extends React.Component {
 			prevProps.location.linearVelocity !== this.props.location.linearVelocity
 		)) {
 			if (this.props.follow) {
-				console.log("componentDidUpdate - this.props.follow : " + this.props.location.linearVelocity);
 				actions.zoom = this.props.location.linearVelocity;
 				actions.center = this.props.location;
 			}
@@ -615,9 +614,12 @@ class MapCoreBase extends React.Component {
 	// Search
 	//
 	searchPlace = (place) => {
+		const {location} = this.props;
 		const qs = buildQueryString({
 			limit: 3,
-			bbox: '-122.40998957784011,37.777832424497916,-122.38823835999938,37.794518531500074',
+			// If you want to use test data instead of car position.
+			// bbox: '-122.40998957784011,37.777832424497916,-122.38823835999938,37.794518531500074',
+			bbox: `${location.lon - 0.00531957784011},${location.lat - 0.010947575502084},${location.lon + 0.01643164000062},${location.lat + 0.005738531500074}`,
 			access_token: mapboxgl.accessToken, // eslint-disable-line camelcase
 		});
 		window.fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${place.toLowerCase()}.json?${qs}`)

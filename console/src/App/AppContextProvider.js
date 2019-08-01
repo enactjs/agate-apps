@@ -420,7 +420,6 @@ const AIDecorator = hoc(aiDecoratorDefaultConfig, (config, Wrapped) => {
 							default:
 								break;
 						}
-						
 					}
 				});
 			}

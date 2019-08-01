@@ -13,7 +13,6 @@ import React from 'react';
 import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
 
-import LS2Request from '@enact/webos/LS2Request';
 // Data Services
 import ServiceLayer from '../data/ServiceLayer';
 
@@ -396,8 +395,8 @@ const Demo = (Wrapped) => {
 						const user = this.props.faceResult.male.count ? 2 : 1;
 						if (user !== this.state.user) {
 							const ServiceBridge = window.webOSServiceBridge;
-							var bridge = new ServiceBridge();
-							bridge.onservicecallback = function (msg) { var response = JSON.parse(msg); console.log(response.returnValue);};
+							let bridge = new ServiceBridge();
+							bridge.onservicecallback = function (msg) { let response = JSON.parse(msg); console.log(response.returnValue);};
 							bridge.call("luna://com.webos.notification/createToast", '{"message": "Face Recognized", "noaction": false}');
 							bridge.cancel();
 							this.props.updateAppState((state) => {
