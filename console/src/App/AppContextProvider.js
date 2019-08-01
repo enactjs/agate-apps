@@ -350,7 +350,7 @@ const getIntent = (res) => {
 	const
 		userPresetsKeys = Object.keys(userPresetsForDemo),
 		locations = userPresetsForDemo[userPresetsKeys[0]].topLocations,
-		locationsFake = ['Cafe', 'Market', 'Park', 'Shell', 'Parking'];
+		findLocationArray = ['Cafe', 'Market', 'Parking', 'Shell', 'Park'];
 
 	for (const command in userResponse) {
 		for (let i = 0; i < userResponse[command].length; i++) {
@@ -363,11 +363,11 @@ const getIntent = (res) => {
 					};
 				}
 			}
-			for (let k = 0; k < locationsFake.length; k++) {
-				if ((res.indexOf(locationsFake[k]) !== -1) && (res.indexOf(userResponse[command][i]) !== -1)) {
+			for (let k = 0; k < findLocationArray.length; k++) {
+				if ((res.indexOf(findLocationArray[k]) !== -1) && (res.indexOf(userResponse[command][i]) !== -1)) {
 					return {
 						action: command,
-						description: locationsFake[k]
+						description: findLocationArray[k]
 					};
 				}
 			}

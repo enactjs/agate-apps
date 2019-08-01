@@ -441,8 +441,9 @@ const Demo = (Wrapped) => {
 		render () {
 			const {...rest} = this.props;
 
-			delete rest.voiceResult;
 			delete rest.faceResult;
+			delete rest.gestureResult;
+			delete rest.voiceResult;
 
 			return (
 				<Wrapped

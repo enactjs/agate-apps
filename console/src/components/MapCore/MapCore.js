@@ -43,7 +43,7 @@ const getBoundsOfAll = (waypoints, existingBounds) => {
 	);
 };
 
-const clampZoom = (zoom) => Math.min(20, Math.max(17, zoom));
+const clampZoom = (zoom) => Math.min(20, Math.max(0, zoom));
 
 const getMapPadding = () => {
 	const edgeClearance = 48;
@@ -379,7 +379,7 @@ class MapCoreBase extends React.Component {
 		}
 	}
 
-	componentWillReceiveProps () { // componentWillUpdate
+	componentWillUpdate () { // componentWillUpdate
 		const {searchResults} = this.state;
 		if (searchResults && searchResults.features) {
 			const searchResultObject = {coordinates: [], texts: []};
@@ -387,7 +387,7 @@ class MapCoreBase extends React.Component {
 				searchResultObject.coordinates.push(searchResults.features[i].center);
 				searchResultObject.texts.push({description: searchResults.features[i].text});
 			}
-			this.zoomMap(15);
+			this.zoomMap(14.8021200832);
 			const markerArray = addMarkerLayer({
 				map: this.map,
 				coordinates: searchResultObject.coordinates,
@@ -406,7 +406,7 @@ class MapCoreBase extends React.Component {
 				this.props.updateAppState((state) => {
 					state.searchData = null;
 				});
-			}, 5000);
+			}, 6000);
 		}
 	}
 
