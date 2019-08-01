@@ -379,7 +379,8 @@ class MapCoreBase extends React.Component {
 		}
 	}
 
-	componentWillUpdate () { // componentWillUpdate
+	componentWillUpdate () {
+		// Draw the results for the Find function on the map
 		const {searchResults} = this.state;
 		if (searchResults && searchResults.features) {
 			const searchResultObject = {coordinates: [], texts: []};
@@ -399,6 +400,7 @@ class MapCoreBase extends React.Component {
 				state.searchData = searchResultObject;
 			});
 
+			// Delete the search results after a period of time
 			setTimeout(() => {
 				for (let i = 0; i < markerArray.length; i++) {
 					markerArray[i].remove();
@@ -611,7 +613,7 @@ class MapCoreBase extends React.Component {
 	}
 
 	//
-	// Search
+	// Functions to search places in mapbox
 	//
 	searchPlace = (place) => {
 		const {location} = this.props;

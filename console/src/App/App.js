@@ -377,6 +377,9 @@ const AppIndex = (Wrapped) => {
 	};
 };
 
+/*
+ * HoC for demo scenarios
+ */
 const Demo = (Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'Demo'
@@ -389,6 +392,7 @@ const Demo = (Wrapped) => {
 		}
 
 		componentDidUpdate (prevProps) {
+			// Display toast when a face is recognized
 			if (!(prevProps.faceResult === this.props.faceResult) && this.props.faceResult) {
 				if (this.props.faceResult.total > 0) {
 					if (this.props.faceResult.male && this.props.faceResult.male.count) {
@@ -409,6 +413,8 @@ const Demo = (Wrapped) => {
 					}
 				}
 			}
+
+			// Display map view when a voice is recognized
 			if (!(prevProps.voiceResult === this.props.voiceResult) && this.props.voiceResult) {
 				if (this.props.voiceResult.action === "goto") {
 					this.showMapView(this.props.voiceResult.coordinates);
