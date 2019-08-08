@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+        <title>Music</title>
+	</head>
+	<script>
+		document.addEventListener('webOSRelaunch', (data) => {
+			if (data && data.detail) {
+				var audio = document.getElementById("audio");
+				audio.src = "./mp3/" + data.detail.index + ".mp3";
+				audio.load();
+				audio.play();
+			}
+		});
+	</script>
+	<body style="background: transparent;">
+		<audio id="audio" autoplay style="transform: translate(2000px);">
+            <source src="" type="audio/mpeg" >
+        </audio>
+	</body>
+</html>
