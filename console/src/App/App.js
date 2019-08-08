@@ -384,13 +384,6 @@ const AppIndex = (Wrapped) => {
 					parameters: {
 						index: index,
 						subscribe: false
-					},
-					onSuccess: (res) => {
-						if (res.hasOwnProperty('userId')) {
-							this.updateAppState((state) => {
-								state.userId = res.userId;
-							});
-						}
 					}
 				});
 				this.setState(state => state.index === index ? null : {prevIndex: state.index, index});
