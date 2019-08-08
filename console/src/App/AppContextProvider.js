@@ -1,3 +1,4 @@
+import LS2Request from '@enact/webos/LS2Request';
 import React, {Component} from 'react';
 import produce from 'immer';
 import {assocPath, equals, mergeDeepRight, omit, path} from 'ramda';
@@ -101,6 +102,31 @@ class AppContextProvider extends Component {
 			},
 			weather: {}
 		};
+
+		// Use case: Luna API
+		new LS2Request().send({
+			service: 'luna://com.webos.service.user', // Dummy Luna API
+			method: 'getUser',
+			parameters: {
+				subscribe: true
+			},
+			onSuccess: (res) => {
+				if (res.hasOwnProperty('userId')) {
+					this.updateAppState((state) => {
+						state.userId = res.userId;
+					});
+				}
+			}
+		});
+
+		// Use case: webOSRelaunch Event
+		document.addEventListener('webOSRelaunch', (data) => {
+			if (data.hasOwnProperty('userId')) {
+				this.updateAppState((state) => {
+					state.userId = data.userId;
+				});
+			}
+		});
 	}
 
 	componentWillMount () {

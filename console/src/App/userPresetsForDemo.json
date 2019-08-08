@@ -110,23 +110,23 @@
 		"topLocations": [
 			{
 				"description": "Home",
-				"coordinates": {"lat": 37.78877, "lon": -122.39647}
+				"coordinates": {"lat": 37.78744, "lon": -122.40070}
 			},
 			{
-				"description": "Philz Coffee",
-				"coordinates": {"lat": 37.78895, "lon": -122.3931}
+				"description": "Museum",
+				"coordinates": {"lat": 37.78584, "lon": -122.40090}
 			},
 			{
-				"description": "School",
-				"coordinates": {"lat": 37.793318, "lon": -122.400845}
+				"description": "Cafe",
+				"coordinates": {"lat": 37.77510, "lon": -122.40098}
 			},
 			{
 				"description": "Work",
-				"coordinates": {"lat": 37.783902, "lon": -122.396148}
+				"coordinates": {"lat": 37.77784, "lon": -122.40681}
 			},
 			{
-				"description": "MOMA",
-				"coordinates": {"lat": 37.785684, "lon": -122.401035}
+				"description": "University",
+				"coordinates": {"lat": 37.789036, "lon": -122.398791}
 			}
 		]
 	}

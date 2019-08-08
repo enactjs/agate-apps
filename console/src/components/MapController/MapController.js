@@ -63,6 +63,15 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 			};
 		}
 
+		shouldComponentUpdate (nextProps) {
+			if (this.props.userId !== nextProps.userId) {
+				this.startNavigation({selected: false});
+				return false;
+			} else {
+				return true;
+			}
+		}
+
 		handleSetDestination = ({selected}) => {
 			console.log('Proposing new destination index:', selected, '->', this.props.topLocations[selected]);
 			const loc = this.props.topLocations[selected];
@@ -139,6 +148,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 				noFollowButton,
 				noStartStopToggle,
 				topLocations,
+				userId,
 				...rest
 			} = this.props;
 
@@ -157,6 +167,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 					className={classnames(className, css.map)}
 					follow={follow}
 					destination={destination}
+					key={userId}
 					points={topLocations}
 					updateDestination={this.updateDestination}
 					updateNavigation={this.updateNavigation}
@@ -278,14 +289,15 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 });
 
 
-const ConnectedMap = AppContextConnect(({location, userSettings, navigation, updateAppState}) => ({
+const ConnectedMap = AppContextConnect(({location, userId, userSettings, navigation, updateAppState}) => ({
 	follow: navigation.follow,
 	topLocations: userSettings.topLocations,
 	location,
 	navigation,
 	navigating: navigation.navigating,
 	destination: navigation.destination,
-	updateAppState
+	updateAppState,
+	userId
 }));
 
 const MapController = ConnectedMap(Pure(MapControllerHoc(Skinnable(MapCore))));
