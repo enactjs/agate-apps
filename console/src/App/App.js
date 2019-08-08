@@ -12,6 +12,7 @@ import {TabbedPanels} from '@enact/agate/Panels';
 import React from 'react';
 import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
+import LS2Request from '@enact/webos/LS2Request';
 
 // Data Services
 import ServiceLayer from '../data/ServiceLayer';
@@ -135,6 +136,11 @@ const AppBase = kind({
 				state.appState.showBasicPopup = !state.appState.showBasicPopup;
 			});
 		},
+		onToggleMessagePopup: (ev, {updateAppState}) => {
+			updateAppState((state) => {
+				state.appState.showMessagePopup = !state.appState.showMessagePopup;
+			});
+		},
 		onToggleUserSelectionPopup: (ev, {updateAppState}) => {
 			updateAppState((state) => {
 				state.appState.showUserSelectionPopup = !state.appState.showUserSelectionPopup;
@@ -170,6 +176,7 @@ const AppBase = kind({
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
 		onToggleDestinationReachedPopup,
+		onToggleMessagePopup,
 		onTogglePopup,
 		// onToggleProfileEdit,
 		onToggleUserSelectionPopup,
@@ -183,6 +190,8 @@ const AppBase = kind({
 		showBasicPopup,
 		showDateTimePopup,
 		showDestinationReachedPopup,
+		showMessagePopup,
+		showMessagePopupContents,
 		showPopup,
 		showUserSelectionPopup,
 		showWelcomePopup,
@@ -338,6 +347,17 @@ const AppBase = kind({
 					onSendVideo={sendVideo}
 					open={showWelcomePopup}
 				/>
+				<Popup
+					className={css.messagePopup}
+					onClose={onToggleMessagePopup}
+					open={showMessagePopup}
+				>
+					{
+						showMessagePopupContents.split('\n').map(line => {
+							return (<span>{line}<br/></span>)
+						})
+					}
+				</Popup>
 			</div>
 		);
 	}
@@ -357,6 +377,22 @@ const AppIndex = (Wrapped) => {
 		onSelect = handle(
 			adaptEvent((ev) => {
 				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
+				// Send a Luna API when menu changed
+				new LS2Request().send({
+					service: 'luna://com.webos.service.menu', // Dummy Luna API
+					method: 'change',
+					parameters: {
+						index: index,
+						subscribe: false
+					},
+					onSuccess: (res) => {
+						if (res.hasOwnProperty('userId')) {
+							this.updateAppState((state) => {
+								state.userId = res.userId;
+							});
+						}
+					}
+				});
 				this.setState(state => state.index === index ? null : {prevIndex: state.index, index});
 				return {index};
 			}, forward('onSelect'))
@@ -388,6 +424,8 @@ const AppDecorator = compose(
 		showBasicPopup: appState.showBasicPopup,
 		showDateTimePopup: appState.showDateTimePopup,
 		showDestinationReachedPopup: appState.showDestinationReachedPopup,
+		showMessagePopup: appState.showMessagePopup,
+		showMessagePopupContents: appState.showMessagePopupContents,
 		showPopup: appState.showPopup,
 		showUserSelectionPopup: appState.showUserSelectionPopup,
 		showWelcomePopup: appState.showWelcomePopup,

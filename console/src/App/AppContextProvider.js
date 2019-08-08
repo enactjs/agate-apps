@@ -69,6 +69,8 @@ class AppContextProvider extends Component {
 				showBasicPopup: false,
 				showDateTimePopup: false,
 				showDestinationReachedPopup: false,
+				showMessagePopup: false,
+				showMessagePopupContents: '',
 				showPopup: false,
 				showProfileEdit: false,
 				showUserSelectionPopup: false,
@@ -103,6 +105,7 @@ class AppContextProvider extends Component {
 			weather: {}
 		};
 
+		// User change scenario
 		// Use case: Luna API
 		new LS2Request().send({
 			service: 'luna://com.webos.service.user', // Dummy Luna API
@@ -127,6 +130,61 @@ class AppContextProvider extends Component {
 				});
 			}
 		});
+
+		// Popup scenario
+		// Use case: Luna API
+		new LS2Request().send({
+			service: 'luna://com.webos.service.message', // Dummy Luna API
+			method: 'getContents',
+			parameters: {
+				subscribe: true
+			},
+			onSuccess: (res) => {
+				if (res.hasOwnProperty('message')) {
+					this.updateAppState((state) => {
+						state.appState.showMessagePopup = true;
+						// If you want to use <br /> tag, please include "\n" in string
+						state.appState.showMessagePopupContents = res.message;
+					});
+					setTimeout(() => {
+						this.updateAppState((state) => {
+							state.appState.showMessagePopup = false;
+							state.appState.showMessagePopupContents = '';
+						});
+					}, 3000);
+				}
+			}
+		});
+
+		// Use case: webOSRelaunch Event
+		document.addEventListener('webOSRelaunch', (data) => {
+			if (data.hasOwnProperty('message')) {
+				this.updateAppState((state) => {
+					state.appState.showMessagePopup = true;
+					state.appState.showMessagePopupContents = data.message;
+				});
+				setTimeout(() => {
+					this.updateAppState((state) => {
+						state.appState.showMessagePopup = false;
+						state.appState.showMessagePopupContents = '';
+					});
+				}, 3000);
+			}
+		});
+
+		// Sample of message popup
+		// setInterval(() => {
+		// 	this.updateAppState((state) => {
+		// 		state.appState.showMessagePopup = true;
+		// 		state.appState.showMessagePopupContents = "TEST\nTEST";
+		// 	});
+		// 	setTimeout(() => {
+		// 		this.updateAppState((state) => {
+		// 			state.appState.showMessagePopup = false;
+		// 			state.appState.showMessagePopupContents = '';
+		// 		});
+		// 	}, 3000);
+		// }, 5000);
 	}
 
 	componentWillMount () {
