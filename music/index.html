@@ -1,24 +1,34 @@
 <!doctype html>
 <html>
 	<head>
-		<meta charset="UTF-8">
-		<meta http-equiv="x-ua-compatible" content="ie=edge">
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
         <title>Music</title>
 	</head>
 	<script>
 		document.addEventListener('webOSRelaunch', (data) => {
 			if (data && data.detail) {
+				// Mp3 files download https://freepd.com
+				// This music is all licensed CC0 1.0 Universal Public Domain Dedication.
 				var audio = document.getElementById("audio");
-				audio.src = "./mp3/" + data.detail.index + ".mp3";
+				var source = document.getElementById('audioSource');
+				source.src = "./mp3/" + data.detail.index + ".mp3";
+				audio.loop = true;
+				audio.autoplay = true;
 				audio.load();
 				audio.play();
+			}
+			if (typeof window === 'object' && window.PalmSystem) {
+				window.PalmSystem.setWindowProperty('needFocus', 'false');
+				window.PalmSystem.setInputRegion(
+					[
+						{'x': 0, 'y': 0, 'width': 0, 'height': 0}
+					]
+				);
 			}
 		});
 	</script>
 	<body style="background: transparent;">
-		<audio id="audio" autoplay style="transform: translate(2000px);">
-            <source src="" type="audio/mpeg" >
+		<audio id="audio" style="position: absolute; left: -300px;">
+            <source id="audioSource" src="" type="audio/mpeg" >
         </audio>
 	</body>
 </html>

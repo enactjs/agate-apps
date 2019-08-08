@@ -15,5 +15,7 @@
 	"enableBackgroundRun": true,
 	"defaultWindowType": "floating",
 	"useUnlimitedMediaPolicy": true,
+	"noSplashOnLaunch": true,
+	"handlesRelaunch": true,
 	"transparent": true
 }
