@@ -9,6 +9,7 @@ import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import LS2Request from '@enact/webos/LS2Request';
 
 import PresetItem from '../components/PresetItem';
 import CustomLayout, {SaveLayoutArrangement} from '../components/CustomLayout';
@@ -47,16 +48,24 @@ const ResponsiveTuner = ResponsiveBox(({containerShape, children, onUp, onDown, 
 	);
 });
 
+const stationNames = [
+	"Eye of Forgiveness",
+	"Forest Frolic Loop",
+	"City Sunshine",
+	"Funshine",
+	"Inspiration"
+];
+
 const RadioBase = kind({
 	name: 'Radio',
 
 	propTypes: {
-		band: PropTypes.string,
-		changeBand: PropTypes.func,
+		status: PropTypes.string,
+		changeStatus: PropTypes.func,
 		changeFrequency: PropTypes.func,
 		changePreset: PropTypes.func,
 		frequency: PropTypes.number,
-		onBandToggle: PropTypes.func,
+		onStatusToggle: PropTypes.func,
 		onPresetClick: PropTypes.func,
 		onPresetDown: PropTypes.func,
 		onPresetHold: PropTypes.func,
@@ -71,9 +80,9 @@ const RadioBase = kind({
 	},
 
 	handlers: {
-		onBandToggle: (ev, {changeBand}) => {
-			const band = ev.currentTarget.innerText.trim();
-			changeBand(band);
+		onStatusToggle: (ev, {changeStatus}) => {
+			const status = ev.currentTarget.innerText.trim();
+			changeStatus(status);
 		},
 		onPresetClick: (ev, {changeFrequency, presets}) => {
 			changeFrequency(presets[ev.presetIndex]);
@@ -111,12 +120,14 @@ const RadioBase = kind({
 		// }
 	},
 
-	render: ({arrangeable, arrangement, onArrange, band, frequency, onBandToggle, onPresetClick, onPresetDown, onPresetHold, onTuneUp, onTuneDown, onScanUp, onScanDown, presets, ...rest}) => {
-		delete rest.changeBand;
+	render: ({arrangeable, arrangement, onArrange, status, frequency, onStatusToggle, onPresetClick, onPresetDown, onPresetHold, onTuneUp, onTuneDown, onScanUp, onScanDown, presets, ...rest}) => {
+		delete rest.changeStatus;
 		delete rest.changePreset;
 		delete rest.changeFrequency;
 		delete rest.preset;
 		delete rest.updatePresets;
+
+		const stationName = (status === 'ON') && stationNames[presets.indexOf(frequency)] || "";
 
 		return (
 			<Panel {...rest}>
@@ -136,14 +147,14 @@ const RadioBase = kind({
 					<top>
 						{/* Radio TextInfo */}
 						<Row align="center space-around" wrap className={css.info}>
-							{/* Band Selector */}
+							{/* Status Selector */}
 							<Cell shrink className={css.radioToggle}>
-								<ToggleButton onClick={onBandToggle} selected={band === 'AM'} small type="grid">AM</ToggleButton>|
-								<ToggleButton onClick={onBandToggle} selected={band === 'FM'} small type="grid">FM</ToggleButton>
+								<ToggleButton onClick={onStatusToggle} selected={status === 'OFF'} small type="grid">OFF</ToggleButton>|
+								<ToggleButton onClick={onStatusToggle} selected={status === 'ON'} small type="grid">ON</ToggleButton>
 							</Cell>
 							{/* Station Info */}
 							<Cell shrink className={css.title}>
-								<LabeledItemBase label="Artist - Song">{frequency} MHZ</LabeledItemBase>
+								<LabeledItemBase label={stationName}>{frequency} MHZ</LabeledItemBase>
 							</Cell>
 						</Row>
 					</top>
@@ -185,8 +196,8 @@ const RadioBase = kind({
 });
 
 const defaultConfig = {
-	band: 'FM',
-	presets: [93.1, 105.1, 88.1, 92.1, 102.1]
+	status: 'OFF',
+	presets: [88.1, 92.1, 93.1, 105.1, 102.1]
 };
 
 const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
@@ -199,13 +210,30 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 			this.state = {
 				preset: 0,
 				frequency: 88.5,
-				band: configHoc.band,
+				status: configHoc.status,
 				presets: configHoc.presets
 			};
 		}
 
-		changeBand = (band) => {
-			this.setState({band});
+		changePlayStatus = ({status = this.state.status, frequency = this.state.frequency}) => {
+			const {presets} = this.state;
+
+			new LS2Request().send({
+				service: 'luna://com.webos.applicationManager',
+				method: 'launch',
+				parameters: {
+					id: "music",
+					params: {
+						index: (status === "ON") ? presets.indexOf(frequency) : -1
+					},
+					subscribe: false
+				}
+			});
+		}
+
+		changeStatus = (status) => {
+			this.setState({status});
+			this.changePlayStatus({status});
 		}
 
 		changePreset = (preset) => {
@@ -214,6 +242,7 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 
 		changeFrequency = (frequency) => {
 			this.setState({frequency});
+			this.changePlayStatus({frequency});
 		}
 
 		updatePresets = (frequency, index) => {
@@ -234,12 +263,12 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 			return (
 				<Wrapped
 					{...this.props}
-					changeBand={this.changeBand}
+					changeStatus={this.changeStatus}
 					changePreset={this.changePreset}
 					changeFrequency={this.changeFrequency}
 					preset={this.state.preset}
 					frequency={this.state.frequency}
-					band={this.state.band}
+					status={this.state.status}
 					presets={this.state.presets}
 					updatePresets={this.updatePresets}
 				/>

@@ -353,8 +353,8 @@ const AppBase = kind({
 					open={showMessagePopup}
 				>
 					{
-						showMessagePopupContents.split('\n').map(line => {
-							return (<span>{line}<br/></span>)
+						showMessagePopupContents.split('\n').map((line, i) => {
+							return (<span key={i}>{line}<br/></span>)
 						})
 					}
 				</Popup>
