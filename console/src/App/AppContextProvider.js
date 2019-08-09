@@ -124,7 +124,7 @@ class AppContextProvider extends Component {
 
 		// Use case: webOSRelaunch Event
 		document.addEventListener('webOSRelaunch', (data) => {
-			if (data.hasOwnProperty('userId')) {
+			if (data.hasOwnProperty('userId')) { // Dummy property
 				this.updateAppState((state) => {
 					state.userId = data.userId;
 				});
@@ -158,7 +158,7 @@ class AppContextProvider extends Component {
 
 		// Use case: webOSRelaunch Event
 		document.addEventListener('webOSRelaunch', (data) => {
-			if (data.hasOwnProperty('message')) {
+			if (data.hasOwnProperty('message')) { // Dummy property
 				this.updateAppState((state) => {
 					state.appState.showMessagePopup = true;
 					state.appState.showMessagePopupContents = data.message;
@@ -185,6 +185,15 @@ class AppContextProvider extends Component {
 		// 		});
 		// 	}, 3000);
 		// }, 5000);
+
+		// Radio scenario
+		new LS2Request().send({
+			service: 'luna://com.webos.applicationManager',
+			method: 'launch',
+			parameters: {
+				subscribe: false
+			}
+		});
 	}
 
 	componentWillMount () {
