@@ -184,13 +184,14 @@ class AppContextProvider extends Component {
 		// 			state.appState.showMessagePopupContents = '';
 		// 		});
 		// 	}, 3000);
-		// }, 5000);
+		// }, 15000);
 
 		// Radio scenario
 		new LS2Request().send({
 			service: 'luna://com.webos.applicationManager',
 			method: 'launch',
 			parameters: {
+				id: "music",
 				subscribe: false
 			}
 		});
