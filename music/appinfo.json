@@ -1,6 +1,6 @@
 {
 	"id": "music",
-	"version": "1.0.1",
+	"version": "1.0.0",
 	"vendor": "LGE-SWP",
 	"type": "web",
 	"main": "index.html",

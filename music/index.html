@@ -4,18 +4,7 @@
         <title>Music</title>
 	</head>
 	<script>
-		document.addEventListener('webOSRelaunch', (data) => {
-			if (data && data.detail) {
-				// Mp3 files download https://freepd.com
-				// This music is all licensed CC0 1.0 Universal Public Domain Dedication.
-				var audio = document.getElementById("audio"),
-					source = document.getElementById('audioSource');
-				source.src = "./mp3/" + data.detail.index + ".mp3";
-				audio.loop = true;
-				audio.autoplay = true;
-				audio.load();
-				audio.play();
-			}
+		function setWindowProperty () {
 			if (typeof window === 'object' && window.PalmSystem) {
 				window.PalmSystem.setWindowProperty('needFocus', 'false');
 				window.PalmSystem.setInputRegion(
@@ -24,6 +13,28 @@
 					]
 				);
 			}
+		}
+		setWindowProperty();
+		document.addEventListener('webOSRelaunch', (data) => {
+			if (data && data.detail) {
+				// Mp3 files download https://freepd.com
+				// This music is all licensed CC0 1.0 Universal Public Domain Dedication.
+				var audio = document.getElementById("audio"),
+					source = document.getElementById('audioSource');
+
+				if (data.detail.index !== -1) {
+					source.src = "./mp3/" + data.detail.index + ".mp3";
+					audio.loop = true;
+					audio.autoplay = true;
+					audio.load();
+					audio.play();
+				} else {
+					source.src = "";
+					audio.pause();
+					audio.currentTime = 0;
+				}
+			}
+			setWindowProperty();
 		});
 	</script>
 	<body style="background: transparent;">
