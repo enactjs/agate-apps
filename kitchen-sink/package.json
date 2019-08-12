@@ -30,7 +30,7 @@
 		"dist/*"
 	],
 	"dependencies": {
-		"@enact/agate": "github:enactjs/agate#master",
+		"@enact/agate": "github:enactjs/agate#1.0.0-alpha.0",
 		"@enact/core": "^2.0.0",
 		"@enact/i18n": "^2.0.0",
 		"@enact/moonstone": "^2.0.0",
