@@ -2,7 +2,6 @@ import ColorPicker from '@enact/agate/ColorPicker';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {text, select} from '../../src/enact-knobs';
 
@@ -15,9 +14,7 @@ const prop = {
 storiesOf('Agate', module)
 	.add(
 		'ColorPicker',
-		withInfo({
-			text: 'The basic ColorPicker'
-		})(() => (
+		() => (
 			<ColorPicker
 				direction={select('direction', prop.direction, ColorPicker, 'right')}
 				defaultValue={text('defaultValue', ColorPicker, '#3467af')}
@@ -25,5 +22,8 @@ storiesOf('Agate', module)
 			>
 				{prop.colors}
 			</ColorPicker>
-		))
+		),
+		{
+			text: 'The basic ColorPicker'
+		}
 	);

@@ -2,7 +2,6 @@ import Popup from '@enact/agate/Popup';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -12,9 +11,7 @@ const Config = mergeComponentMetadata('Popup', Popup);
 storiesOf('Agate', module)
 	.add(
 		'Popup',
-		withInfo({
-			text: 'Basic usage of Popup'
-		})(() => (
+		() => (
 			<div>
 				<Popup
 					closeButton={boolean('closeButton', Config)}
@@ -32,5 +29,8 @@ storiesOf('Agate', module)
 				</Popup>
 				Use KNOBS to interact with Popup.
 			</div>
-		))
+		),
+		{
+			text: 'Basic usage of Popup'
+		}
 	);

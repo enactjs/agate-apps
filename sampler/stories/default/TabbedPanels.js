@@ -5,7 +5,6 @@ import {Panel, TabbedPanels} from '@enact/agate/Panels';
 import React from 'react';
 import {action} from '@storybook/addon-actions';
 import {storiesOf} from '@storybook/react';
-import {withInfo} from '@storybook/addon-info';
 
 import {select} from '../../src/enact-knobs';
 
@@ -14,9 +13,7 @@ TabbedPanels.displayName = 'TabbedPanels';
 storiesOf('Agate', module)
 	.add(
 		'TabbedPanels',
-		withInfo({
-			text: 'The basic TabbedPanels'
-		})(() => (
+		() => (
 			<TabbedPanels
 				onClick={action('onClick')}
 				index={Number(select('index', ['0', '1', '2', '3'], TabbedPanels, '0'))}
@@ -61,5 +58,8 @@ storiesOf('Agate', module)
 					</div>
 				</Panel>
 			</TabbedPanels>
-		))
+		),
+		{
+			text: 'The basic TabbedPanels'
+		}
 	);

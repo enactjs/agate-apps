@@ -3,7 +3,6 @@ import UiButton from '@enact/ui/Button';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import icons from './icons';
 import {boolean, select} from '../../src/enact-knobs';
@@ -22,9 +21,7 @@ const prop = {
 storiesOf('Agate', module)
 	.add(
 		'IconButton',
-		withInfo({
-			text: 'The basic IconButton'
-		})(() => (
+		() => (
 			<IconButton
 				onClick={action('onClick')}
 				disabled={boolean('disabled', Config)}
@@ -36,5 +33,8 @@ storiesOf('Agate', module)
 			>
 				{select('children', prop.icons, Config, 'home')}
 			</IconButton>
-		))
+		),
+		{
+			text: 'The basic IconButton'
+		}
 	);

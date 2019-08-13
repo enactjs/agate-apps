@@ -1,7 +1,6 @@
 import SwitchItem from '@enact/agate/SwitchItem';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select, text} from '../../src/enact-knobs';
 import iconNames from './icons';
@@ -14,9 +13,7 @@ SwitchItem.displayName = 'SwitchItem';
 storiesOf('Agate', module)
 	.add(
 		'SwitchItem',
-		withInfo({
-			text: 'The basic SwitchItem'
-		})(() => (
+		() => (
 			<div>
 				<SwitchItem
 					defaultSelected={boolean('defaultSelected', Config, true)}
@@ -25,5 +22,8 @@ storiesOf('Agate', module)
 					{text('children', 'Sound')}
 				</SwitchItem>
 			</div>
-		))
+		),
+		{
+			text: 'The basic SwitchItem'
+		}
 	);

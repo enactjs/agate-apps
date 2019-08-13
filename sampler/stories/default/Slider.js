@@ -2,7 +2,6 @@ import Slider, {SliderBase} from '@enact/agate/Slider';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, number, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -13,9 +12,7 @@ const Config = mergeComponentMetadata('Slider', SliderBase, Slider);
 storiesOf('Agate', module)
 	.add(
 		'Slider',
-		withInfo({
-			text: 'The basic Slider'
-		})(() => (
+		() => (
 			<Slider
 				activateOnFocus={boolean('activateOnFocus', Config)}
 				active={boolean('active', Config)}
@@ -29,5 +26,8 @@ storiesOf('Agate', module)
 				orientation={select('orientation', ['horizontal', 'vertical'], Config, 'horizontal')}
 				step={number('step', Config)}
 			/>
-		))
+		),
+		{
+			text: 'The basic Slider'
+		}
 	);

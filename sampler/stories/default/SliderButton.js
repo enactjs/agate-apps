@@ -3,7 +3,6 @@ import {icons} from '@enact/agate/Icon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {boolean, select} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
@@ -31,14 +30,15 @@ const prop = {
 storiesOf('Agate', module)
 	.add(
 		'SliderButton',
-		withInfo({
-			text: 'The basic SliderButton'
-		})(() => (
+		() => (
 			<SliderButton
 				onChange={action('onChange')}
 				disabled={boolean('disabled', Config)}
 			>
 				{prop[select('options', [3, 5], Config, '3')]}
 			</SliderButton>
-		))
+		),
+		{
+			text: 'The basic SliderButton'
+		}
 	);

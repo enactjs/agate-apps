@@ -2,7 +2,6 @@ import IncrementSlider, {IncrementSliderBase} from '@enact/agate/IncrementSlider
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {decrementIcons, incrementIcons} from './icons';
 import {boolean, number, select} from '../../src/enact-knobs';
@@ -14,9 +13,7 @@ const Config = mergeComponentMetadata('IncrementSlider', IncrementSliderBase, In
 storiesOf('Agate', module)
 	.add(
 		'IncrementSlider',
-		withInfo({
-			text: 'The basic IncrementSlider'
-		})(() => (
+		() => (
 			<IncrementSlider
 				active={boolean('active', Config)}
 				decrementIcon={select('decrementIcon', decrementIcons, Config)}
@@ -33,5 +30,8 @@ storiesOf('Agate', module)
 				orientation={select('orientation', ['horizontal', 'vertical'], Config, 'horizontal')}
 				step={number('step', Config)}
 			/>
-		))
+		),
+		{
+			text: 'The basic IncrementSlider'
+		}
 	);
