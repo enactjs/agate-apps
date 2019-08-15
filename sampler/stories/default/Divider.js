@@ -2,7 +2,6 @@ import Divider, {DividerBase} from '@enact/agate/Divider';
 
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {withInfo} from '@storybook/addon-info';
 
 import icons from './icons';
 import {boolean, select, text} from '../../src/enact-knobs';
@@ -19,9 +18,7 @@ const prop = {
 storiesOf('Agate', module)
 	.add(
 		'Divider',
-		withInfo({
-			text: 'The basic Divider'
-		})(() => (
+		() => (
 			<Divider
 				icon={select('icon', prop.icons, Config)}
 				startSection={boolean('startSection', Config)}
@@ -29,5 +26,8 @@ storiesOf('Agate', module)
 			>
 				{text('children', Divider, 'Divider Text')}
 			</Divider>
-		))
+		),
+		{
+			text: 'The basic Divider'
+		}
 	);

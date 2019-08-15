@@ -1,6 +1,6 @@
 {
-	"id": "com.webos.app.enactsampler",
-	"version": "1.0.0-alpha.2",
+	"id": "com.webos.app.agatesampler",
+	"version": "1.0.0-alpha.0",
 	"vendor": "LGE-SVL",
 	"type": "web",
 	"main": "index.html",
@@ -13,6 +13,7 @@
 	"visible": true,
 	"uiRevision": 2,
 	"useNativeScroll": true,
+	"disableBackHistoryAPI": true,
 	"class": {
 		"hidden": false
 	},

@@ -1,7 +1,6 @@
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {withInfo} from '@storybook/addon-info';
 import {LabeledIconBase as UiLabeledIconBase, LabeledIcon as UiLabeledIcon} from '@enact/ui/LabeledIcon';
 
 import iconNames from './icons';
@@ -14,9 +13,7 @@ Config.displayName = 'LabeledIconButton';
 storiesOf('Agate', module)
 	.add(
 		'LabeledIconButton',
-		withInfo({
-			text: 'Basic usage of LabeledIconButton'
-		})(() => (
+		() => (
 			<LabeledIconButton
 				disabled={boolean('disabled', Config)}
 				icon={select('icon', ['', ...iconNames], Config, 'temperature')}
@@ -27,5 +24,8 @@ storiesOf('Agate', module)
 			>
 				{text('children', Config, 'Hello LabeledIconButton')}
 			</LabeledIconButton>
-		))
+		),
+		{
+			text: 'Basic usage of LabeledIconButton'
+		}
 	);

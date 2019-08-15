@@ -2,7 +2,6 @@ import DateTimePicker from '@enact/agate/DateTimePicker';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
-import {withInfo} from '@storybook/addon-info';
 
 import {mergeComponentMetadata, removeProps} from '../../src/utils';
 
@@ -14,13 +13,14 @@ DateTimePicker.displayName = 'DateTimePicker';
 storiesOf('Agate', module)
 	.add(
 		'DateTimePicker',
-		withInfo({
-			text: 'The basic DateTimePicker'
-		})(() => (
+		() => (
 			<DateTimePicker
 				onChange={action('onChange')}
 				onClose={action('onClose')}
 				onSave={action('onSave')}
 			/>
-		))
+		),
+		{
+			text: 'The basic DateTimePicker'
+		}
 	);
