@@ -62,7 +62,7 @@ storiesOf('Agate', module)
 					<Spinner
 						blockClickOn={select('blockClickOn', [null, 'container', 'screen'], Config)}
 						centered={boolean('centered', Config)}
-						color={select('color', ['dark', 'light'], 'light')}
+						color={select('color', ['dark', 'light'], Config, 'light')}
 						scrim={boolean('scrim', Config)}
 						size={select('size', [null, 'medium', 'small'], Config)}
 						transparent={boolean('transparent', Config)}
