@@ -15,8 +15,8 @@ http.createServer(function (req, res) {
     const ext = path.parse(pathname).ext;
     // maps file extention to MIME typere
     const map = {
-    '.png': 'image/png',
-    '.svg': 'image/svg+xml'
+        '.png': 'image/png',
+        '.svg': 'image/svg+xml'
     };
 
     fs.exists(pathname, function (exist) {
