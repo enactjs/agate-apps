@@ -379,11 +379,13 @@ const AppIndex = (Wrapped) => {
 				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
 				// Send a Luna API when menu changed
 				new LS2Request().send({
-					service: 'luna://com.webos.service.menu', // Dummy Luna API
-					method: 'change',
+					service: 'luna://com.webos.service.mcvpclient', // Dummy Luna API
+					method: 'sendTelemetry',
 					parameters: {
-						index: index,
-						subscribe: false
+						key: 'featureStart',
+						value: {
+							menu: panelIndexMap[index]
+						}
 					}
 				});
 				this.setState(state => state.index === index ? null : {prevIndex: state.index, index});

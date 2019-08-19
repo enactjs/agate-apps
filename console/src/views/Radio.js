@@ -11,6 +11,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import LS2Request from '@enact/webos/LS2Request';
 
+import AppContextConnect from '../App/AppContextConnect';
 import PresetItem from '../components/PresetItem';
 import CustomLayout, {SaveLayoutArrangement} from '../components/CustomLayout';
 
@@ -95,8 +96,14 @@ const RadioBase = kind({
 		},
 		onTuneUp: (ev, {frequency, changeFrequency}) => changeFrequency(wrapFrequency(frequency, 2)),
 		onTuneDown: (ev, {frequency, changeFrequency}) => changeFrequency(wrapFrequency(frequency, -2)),
-		onScanUp: (ev, {frequency, changeFrequency}) => changeFrequency(wrapFrequency(frequency, 20)),
-		onScanDown: (ev, {frequency, changeFrequency}) => changeFrequency(wrapFrequency(frequency, -20))
+		onScanUp: (ev, {changeFrequency, changePreset, preset, presets}) => {
+			changePreset(preset === presets.length - 1 ? 0 : preset + 1);
+			changeFrequency(presets[preset === presets.length - 1 ? 0 : preset + 1]);
+		},
+		onScanDown: (ev, {changeFrequency, changePreset, preset, presets}) => {
+			changePreset(preset === 0 ? presets.length - 1 : preset - 1);
+			changeFrequency(presets[preset === 0 ? presets.length - 1 : preset - 1]);
+		}
 		// onTune: (ev, {frequency, changeFrequency}) => {
 		// 	const action = ev.currentTarget.getAttribute('action');
 		// 	let newFrequency;
@@ -196,8 +203,9 @@ const RadioBase = kind({
 });
 
 const defaultConfig = {
-	status: 'OFF',
-	presets: [88.1, 92.1, 93.1, 105.1, 102.1]
+	preset: 0,
+	presets: [88.1, 92.1, 93.1, 105.1, 102.1],
+	status: 'OFF'
 };
 
 const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
@@ -206,18 +214,20 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 
 		constructor (props) {
 			super(props);
-
+			const {frequency, preset, presets, status} = props.radioConfig;
 			this.state = {
-				preset: 0,
-				frequency: 88.5,
-				status: configHoc.status,
-				presets: configHoc.presets
+				frequency: frequency || 88.1,
+				preset: preset || configHoc.preset,
+				presets: presets || configHoc.presets,
+				status: status || configHoc.status
 			};
 		}
 
-		changePlayStatus = ({status = this.state.status, frequency = this.state.frequency}) => {
+		changePlayStatus = ({frequency = this.state.frequency, preset = this.state.preset, status = this.state.status}) => {
 			const {presets} = this.state;
-
+			this.props.updateAppState((state) => {
+				state.radioConfig = {frequency, preset, presets, status};
+			});
 			new LS2Request().send({
 				service: 'luna://com.webos.applicationManager',
 				method: 'launch',
@@ -237,7 +247,9 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 		}
 
 		changePreset = (preset) => {
-			this.setState({preset});
+			this.setState({preset}, () => {
+				this.changePlayStatus({preset});
+			});
 		}
 
 		changeFrequency = (frequency) => {
@@ -254,15 +266,19 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 						return presetStation;
 					}
 				});
-
 				return {presets: updatedPresets};
 			});
 		}
 
 		render () {
+			const {...rest} = this.props;
+
+			delete rest.radioConfig;
+			delete rest.updateAppState;
+
 			return (
 				<Wrapped
-					{...this.props}
+					{...rest}
 					changeStatus={this.changeStatus}
 					changePreset={this.changePreset}
 					changeFrequency={this.changeFrequency}
@@ -277,7 +293,10 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 	};
 });
 
-const Radio = SaveLayoutArrangement('radio')(RadioDecorator(RadioBase));
+const Radio = AppContextConnect(({radioConfig, updateAppState}) => ({
+	radioConfig,
+	updateAppState
+}))(SaveLayoutArrangement('radio')(RadioDecorator(RadioBase)));
 
 export default Radio;
 export {

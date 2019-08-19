@@ -32,7 +32,7 @@
 		"dist/*"
 	],
 	"dependencies": {
-		"@enact/agate": "github:enactjs/agate#master",
+		"@enact/agate": "github:enactjs/agate#265625424d75da53bbf2d3692912ef619596f9d0",
 		"@enact/core": "^2.2.8",
 		"@enact/i18n": "^2.2.8",
 		"@enact/spotlight": "^2.2.8",

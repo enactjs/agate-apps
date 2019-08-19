@@ -12,7 +12,6 @@ import ri from '@enact/ui/resolution';
 import AppContextConnect from '../../App/AppContextConnect';
 import appConfig from '../../App/configLoader';
 import {propTypeLatLon, propTypeLatLonList} from '../../data/proptypes';
-import CarPng from '../../../assets/car.png';
 import {ServiceLayerContext} from '../../data/ServiceLayer';
 
 import css from './MapCore.module.less';
@@ -274,7 +273,7 @@ class MapCoreBase extends React.Component {
 			});
 			addCarLayer({
 				coordinates: toMapbox(startCoordinates),
-				iconURL: CarPng,
+				iconURL: 'http://127.0.0.1:9000/car-white.png',
 				map: this.map,
 				orientation: location.orientation
 			});
