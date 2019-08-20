@@ -65,6 +65,7 @@ storiesOf('Agate', module)
 						color={select('color', ['dark', 'light'], Config, 'light')}
 						scrim={boolean('scrim', Config)}
 						size={select('size', [null, 'medium', 'small'], Config)}
+						type={select('type', ['loading', 'searching'], Config, 'searching')}
 						transparent={boolean('transparent', Config)}
 					/>
 				</div>
