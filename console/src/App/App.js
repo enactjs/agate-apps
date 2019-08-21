@@ -13,6 +13,8 @@ import React from 'react';
 import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
 import LS2Request from '@enact/webos/LS2Request';
+import {ResolutionDecorator} from '@enact/ui/resolution';
+import demoVideo from '../../assets/demo.mp4';
 
 // Data Services
 import ServiceLayer from '../data/ServiceLayer';
@@ -87,6 +89,8 @@ const PanelSwitchingIconButton = kind({
 		);
 	}
 });
+
+const appSize = {width: '64.5%'};
 
 const AppBase = kind({
 	name: 'App',
@@ -265,29 +269,36 @@ const AppBase = kind({
 						onCompactExpand={onSelect}
 						onSelect={onSelect}
 						onSendVideo={sendVideo}
+						style={appSize}
 					/>
-					<Phone arrangeable={layoutArrangeable} />
-					<Hvac arrangeable={layoutArrangeable} />
-					<Radio arrangeable={layoutArrangeable} />
+					<Phone arrangeable={layoutArrangeable} style={appSize} />
+					<Hvac arrangeable={layoutArrangeable} style={appSize} />
+					<Radio arrangeable={layoutArrangeable} style={appSize} />
 					<AppList
 						onSelect={onSelect}
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}
+						style={appSize}
 					/>
-					<MapView />
+					<MapView style={appSize} />
 					<Settings
 						onSelect={onSelect}
 						onReloadApp={reloadApp}
 						onToggleDateTimePopup={onToggleDateTimePopup}
+						style={appSize}
 					/>
-					<ThemeSettings onSelect={onSelect} prevIndex={prevIndex} />
-					<Weather />
+					<ThemeSettings onSelect={onSelect} prevIndex={prevIndex} style={appSize} />
+					<Weather style={appSize} />
 					<Dashboard
 						arrangeable={layoutArrangeable}
+						style={appSize}
 						// onSelect={onSelect}
 					/>
-					<Multimedia onSendVideo={sendVideo} screenIds={[0, 1]} />
+					<Multimedia onSendVideo={sendVideo} screenIds={[0, 1]} style={appSize} />
 				</TabbedPanels>
+				<video width={'33.3%'} height="1080" controls loop="loop" autoPlay="autoPlay" style={{float: 'right'}}>
+					<source src={demoVideo} type="video/mp4" />
+				</video>
 				<UserSelectionPopup
 					onClose={onToggleUserSelectionPopup}
 					onResetAll={onResetAll}
@@ -433,7 +444,9 @@ const AppDecorator = compose(
 	AgateDecorator
 );
 
-const App = AppDecorator(AppBase);
+const App = ResolutionDecorator({screenTypes: [
+	{name: 'IAA', pxPerRem: 24, width: 5760, height: 1080, aspectRatioName: 'IAA', base: true}
+]}, AppDecorator(AppBase));
 
 export default App;
 export {
