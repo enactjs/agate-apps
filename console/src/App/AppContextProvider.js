@@ -158,7 +158,7 @@ class AppContextProvider extends Component {
 						this.updateAppState((state) => {
 							state.appState.showMessagePopup = false;
 						});
-					}, 3000);
+					}, res.hasOwnProperty('displayTime') ? res.displayTime : 3000);
 				}
 			}
 		});

@@ -13,8 +13,6 @@ import React from 'react';
 import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
 import LS2Request from '@enact/webos/LS2Request';
-import {ResolutionDecorator} from '@enact/ui/resolution';
-import demoVideo from '../../assets/demo.mp4';
 
 // Data Services
 import ServiceLayer from '../data/ServiceLayer';
@@ -89,8 +87,6 @@ const PanelSwitchingIconButton = kind({
 		);
 	}
 });
-
-const appSize = {width: '64.5%'};
 
 const AppBase = kind({
 	name: 'App',
@@ -269,36 +265,29 @@ const AppBase = kind({
 						onCompactExpand={onSelect}
 						onSelect={onSelect}
 						onSendVideo={sendVideo}
-						style={appSize}
 					/>
-					<Phone arrangeable={layoutArrangeable} style={appSize} />
-					<Hvac arrangeable={layoutArrangeable} style={appSize} />
-					<Radio arrangeable={layoutArrangeable} style={appSize} />
+					<Phone arrangeable={layoutArrangeable} />
+					<Hvac arrangeable={layoutArrangeable} />
+					<Radio arrangeable={layoutArrangeable} />
 					<AppList
 						onSelect={onSelect}
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}
-						style={appSize}
 					/>
-					<MapView style={appSize} />
+					<MapView />
 					<Settings
 						onSelect={onSelect}
 						onReloadApp={reloadApp}
 						onToggleDateTimePopup={onToggleDateTimePopup}
-						style={appSize}
 					/>
-					<ThemeSettings onSelect={onSelect} prevIndex={prevIndex} style={appSize} />
-					<Weather style={appSize} />
+					<ThemeSettings onSelect={onSelect} prevIndex={prevIndex} />
+					<Weather />
 					<Dashboard
 						arrangeable={layoutArrangeable}
-						style={appSize}
 						// onSelect={onSelect}
 					/>
-					<Multimedia onSendVideo={sendVideo} screenIds={[0, 1]} style={appSize} />
+					<Multimedia onSendVideo={sendVideo} screenIds={[0, 1]} />
 				</TabbedPanels>
-				<video width={'33.3%'} height="1080" controls loop="loop" autoPlay="autoPlay" style={{float: 'right'}}>
-					<source src={demoVideo} type="video/mp4" />
-				</video>
 				<UserSelectionPopup
 					onClose={onToggleUserSelectionPopup}
 					onResetAll={onResetAll}
@@ -383,22 +372,80 @@ const AppIndex = (Wrapped) => {
 			this.state = {
 				index: props.defaultIndex || 0
 			};
+
+			this.appStartTime = new Date();
+			new LS2Request().send({
+				service: 'luna://com.webos.service.mcvpclient', // Dummy Luna API
+				method: 'sendTelemetry',
+				parameters: {
+					AppInstanceId: 'console',
+					AppName: 'console',
+					FeatureName: 'App',
+					Status: 'Started',
+					Duration: 0,
+					AppStartTime: this.appStartTime.toISOString(),
+					Time: this.appStartTime.toISOString()
+				}
+			});
+
+			this.lunaIntervalId = null;
+		}
+
+		componentWillUnmount () {
+			const date = new Date();
+			new LS2Request().send({
+				service: 'luna://com.webos.service.mcvpclient', // Dummy Luna API
+				method: 'sendTelemetry',
+				parameters: {
+					AppInstanceId: 'console',
+					AppName: 'console',
+					FeatureName: 'App',
+					Status: 'Stopped',
+					Duration: (date - this.appStartTime) / 1000,
+					AppStartTime: this.appStartTime.toISOString(),
+					Time: date.toISOString()
+				}
+			});
 		}
 
 		onSelect = handle(
 			adaptEvent((ev) => {
 				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
 				// Send a Luna API when menu changed
-				new LS2Request().send({
-					service: 'luna://com.webos.service.mcvpclient', // Dummy Luna API
-					method: 'sendTelemetry',
-					parameters: {
-						key: 'featureStart',
-						value: {
-							menu: panelIndexMap[index]
+
+				if (this.lunaIntervalId) {
+					clearInterval(this.lunaIntervalId);
+					const date = new Date();
+					new LS2Request().send({
+						service: 'luna://com.webos.service.mcvpclient', // Dummy Luna API
+						method: 'sendTelemetry',
+						parameters: {
+							AppInstanceId: 'console',
+							AppName: 'console',
+							FeatureName: panelIndexMap[index],
+							Status: 'Running',
+							Duration: (date - this.appStartTime) / 1000,
+							AppStartTime: this.appStartTime.toISOString(),
+							Time: date.toISOString()
 						}
-					}
-				});
+					});
+				}
+				this.lunaIntervalId = setInterval(() => {
+					const date = new Date();
+					new LS2Request().send({
+						service: 'luna://com.webos.service.mcvpclient', // Dummy Luna API
+						method: 'sendTelemetry',
+						parameters: {
+							AppInstanceId: 'console',
+							AppName: 'console',
+							FeatureName: panelIndexMap[index],
+							Status: 'Running',
+							Duration: (date - this.appStartTime) / 1000,
+							AppStartTime: this.appStartTime.toISOString(),
+							Time: date.toISOString()
+						}
+					});
+				}, 5000);
 				this.setState(state => state.index === index ? null : {prevIndex: state.index, index});
 				return {index};
 			}, forward('onSelect'))
@@ -444,9 +491,7 @@ const AppDecorator = compose(
 	AgateDecorator
 );
 
-const App = ResolutionDecorator({screenTypes: [
-	{name: 'IAA', pxPerRem: 24, width: 5760, height: 1080, aspectRatioName: 'IAA', base: true}
-]}, AppDecorator(AppBase));
+const App = AppDecorator(AppBase);
 
 export default App;
 export {
