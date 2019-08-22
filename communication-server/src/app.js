@@ -7,8 +7,8 @@ const io = require('socket.io')(http);
 // const adInterval = 300000; // 5 m
 // const adTimers = {};
 
-http.listen(3000, () => {
-	console.log('listening on *:3000');
+http.listen(3303, () => {
+	console.log('listening on *:3303');
 });
 
 io.on('connection', socket => {

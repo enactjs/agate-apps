@@ -24,8 +24,10 @@
 
 				if (data.detail.index !== -1) {
 					source.src = "./mp3/" + data.detail.index + ".mp3";
-					audio.loop = true;
-					audio.autoplay = true;
+					audio.addEventListener('ended', function() {
+						this.currentTime = 0;
+						this.play();
+					}, false);
 					audio.load();
 					audio.play();
 				} else {
@@ -38,7 +40,7 @@
 		});
 	</script>
 	<body style="background: transparent;">
-		<audio id="audio" autoplay loop style="position: absolute; left: -300px;">
+		<audio id="audio" style="position: absolute; left: -300px;">
 			<source id="audioSource" src="" type="audio/mpeg" >
 		</audio>
 	</body>

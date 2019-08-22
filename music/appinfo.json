@@ -17,5 +17,6 @@
 	"useUnlimitedMediaPolicy": true,
 	"noSplashOnLaunch": true,
 	"handlesRelaunch": true,
-	"transparent": true
+	"transparent": true,
+	"spinnerOnLaunch": false
 }

@@ -16,6 +16,8 @@ if (typeof window !== 'undefined') {
 	const index = parseInt(args.index || 0);
 	const skin = args.skin;
 
+	window.devicePixelRatio = 0.6;
+
 	const onSelect = (ev) => {
 		const params = qs.parse(window.location.search);
 		params.index = ev.index;

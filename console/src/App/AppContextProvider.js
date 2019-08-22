@@ -102,73 +102,64 @@ class AppContextProvider extends Component {
 				navigating: false,
 				startTime: 0
 			},
+			radioConfig: {
+				frequency: null,
+				preset: null,
+				presets: null,
+				status: null
+			},
 			weather: {}
 		};
 
 		// User change scenario
 		// Use case: Luna API
 		new LS2Request().send({
-			service: 'luna://com.webos.service.user', // Dummy Luna API
-			method: 'getUser',
+			service: 'luna://com.webos.service.bluetooth2/le',
+			method: 'startScan',
 			parameters: {
+				serviceUuid: {
+					uuid: 'aaaaffe3-aaaa-1000-8000-00805f9b34fc'
+				},
 				subscribe: true
 			},
 			onSuccess: (res) => {
-				if (res.hasOwnProperty('userId')) {
-					this.updateAppState((state) => {
-						state.userId = res.userId;
-					});
+				console.log("============= Bluetooth res =============");
+				console.log(res);
+				console.log("=========================================");
+				if (res.hasOwnProperty('name') && res.hasOwnProperty('rssi')) {
+					if (res.rssi > -55) {
+						this.updateAppState((state) => {
+							state.userId = res.name === 'Laura' ? 0 : 1;
+						});
+					}
 				}
-			}
-		});
-
-		// Use case: webOSRelaunch Event
-		document.addEventListener('webOSRelaunch', (data) => {
-			if (data.hasOwnProperty('userId')) { // Dummy property
-				this.updateAppState((state) => {
-					state.userId = data.userId;
-				});
 			}
 		});
 
 		// Popup scenario
 		// Use case: Luna API
 		new LS2Request().send({
-			service: 'luna://com.webos.service.message', // Dummy Luna API
-			method: 'getContents',
+			service: 'luna://com.webos.service.mcvpclient', // Dummy Luna API
+			method: 'receiveCommand',
 			parameters: {
 				subscribe: true
 			},
 			onSuccess: (res) => {
-				if (res.hasOwnProperty('message')) {
+				console.log("============= receiveCommand res =============");
+				console.log(res);
+				console.log("==============================================");
+				if (res.hasOwnProperty('command')) {
 					this.updateAppState((state) => {
 						state.appState.showMessagePopup = true;
 						// If you want to use <br /> tag, please include "\n" in string
-						state.appState.showMessagePopupContents = res.message;
+						state.appState.showMessagePopupContents = res.command;
 					});
 					setTimeout(() => {
 						this.updateAppState((state) => {
 							state.appState.showMessagePopup = false;
-							state.appState.showMessagePopupContents = '';
 						});
 					}, 3000);
 				}
-			}
-		});
-
-		// Use case: webOSRelaunch Event
-		document.addEventListener('webOSRelaunch', (data) => {
-			if (data.hasOwnProperty('message')) { // Dummy property
-				this.updateAppState((state) => {
-					state.appState.showMessagePopup = true;
-					state.appState.showMessagePopupContents = data.message;
-				});
-				setTimeout(() => {
-					this.updateAppState((state) => {
-						state.appState.showMessagePopup = false;
-						state.appState.showMessagePopupContents = '';
-					});
-				}, 3000);
 			}
 		});
 
@@ -181,7 +172,6 @@ class AppContextProvider extends Component {
 		// 	setTimeout(() => {
 		// 		this.updateAppState((state) => {
 		// 			state.appState.showMessagePopup = false;
-		// 			state.appState.showMessagePopupContents = '';
 		// 		});
 		// 	}, 3000);
 		// }, 15000);

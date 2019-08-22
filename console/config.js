@@ -16,5 +16,5 @@ export default {
 	// A "host" is the combination of the hostname (like localhost) and a port number.
 	// Most likely, this will be running on the same machine as this console app, but not mandatory.
 	// Ex: localhost:3000
-	communicationServerHost: '127.0.0.1:3000'
+	communicationServerHost: '127.0.0.1:3303'
 };
