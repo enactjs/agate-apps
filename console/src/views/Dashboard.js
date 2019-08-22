@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 
 import AppContextConnect from '../App/AppContextConnect';
 import CustomLayout, {SaveLayoutArrangement} from '../components/CustomLayout';
-import CarPng from '../../assets/car-white.png';
+import CarPng from '../../assets/car.png';
 
 import css from './Dashboard.module.less';
 
