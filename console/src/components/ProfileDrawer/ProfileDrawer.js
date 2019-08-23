@@ -143,16 +143,18 @@ const ProfileDrawerBase = kind({
 								<Cell
 									style={{margin: '0.25em 1em 1em'}}
 									align="stretch"
-									component={ToggleButtonBase}
-									onClick={layoutArrangeableToggle}
-									selected={layoutArrangeable}
-									shrink
-									small
-									toggleOffLabel="Edit Layout"
-									toggleOnLabel="Done"
-									type="grid"
-									underline
-								/>
+								>
+									<ToggleButtonBase
+										onClick={layoutArrangeableToggle}
+										selected={layoutArrangeable}
+										shrink
+										size="small"
+										toggleOffLabel="Edit Layout"
+										toggleOnLabel="Done"
+										type="grid"
+										underline
+									/>
+								</Cell>
 							</Column>
 						</afterTabs>
 					</TabGroup>

@@ -24,7 +24,7 @@ storiesOf('Agate', module)
 				invalid={boolean('invalid', Config)}
 				invalidMessage={text('invalidMessage', Config)}
 				placeholder={text('placeholder', Config, 'Input text here')}
-				small={boolean('small', Config)}
+				size={select('size', ['small', 'large'], Config)}
 				type={text('type', Config)}
 				defaultValue=""
 			/>

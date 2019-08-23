@@ -15,10 +15,9 @@ storiesOf('Agate', module)
 		() => (
 			<ProgressBar
 				disabled={boolean('disabled', Config)}
-				focused={boolean('focused', Config)}
-				small={boolean('small', Config)}
 				orientation={select('orientation', ['horizontal', 'vertical'], Config)}
 				progress={number('progress', Config, {range: true, min: 0, max: 1, step: 0.01}, 0.4)}
+				size={select('size', ['small', 'large'], Config)}
 			/>
 		),
 		{

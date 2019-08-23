@@ -223,7 +223,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 									<Divider>Navigating To</Divider>
 									<Button
 										className={css.button}
-										small
+										size="small"
 										highlighted
 										disabled
 									>{description}</Button>
@@ -258,16 +258,18 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 								<Cell
 									shrink
 									className={css.columnCell}
-									component={ToggleButton}
-									css={css}
-									small
-									// We want to be able to factor in the autonomous state, but
-									// perhaps that needs to happen in ServiceLayer, and not here.
-									selected={destination && navigating}
-									onToggle={this.startNavigation}
-									toggleOnLabel="Stop Navigation"
-									toggleOffLabel="Start Navigation"
-								/>
+								>
+									<ToggleButton
+										css={css}
+										size="small"
+										// We want to be able to factor in the autonomous state, but
+										// perhaps that needs to happen in ServiceLayer, and not here.
+										selected={destination && navigating}
+										onToggle={this.startNavigation}
+										toggleOnLabel="Stop Navigation"
+										toggleOffLabel="Start Navigation"
+									/>
+								</Cell>
 							}
 						</Column>
 					</tools>
