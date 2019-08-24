@@ -21,19 +21,19 @@ storiesOf('Agate', module)
 				orientation={select('orientation', ['vertical', 'horizontal'], TabbedPanels, 'vertical')}
 				tabPosition={select('tabPosition', ['before', 'after'], TabbedPanels, 'before')}
 				tabs={[
-					{title: 'Button', icon: 'fullscreen'},
+					{title: 'Button', icon: 'home'},
 					{title: 'IconItem', icon: 'aircirculation'},
 					{title: 'LabeledIconButton', icon: 'temperature'}
 				]}
 			>
 				<beforeTabs>
-					<Button small type="grid" icon="arrowhookleft" />
+					<Button size="small" type="grid" icon="arrowlargeleft" />
 				</beforeTabs>
 				<afterTabs>
-					<Button small type="grid" icon="arrowhookright" />
+					<Button size="small" type="grid" icon="arrowlargeright" />
 				</afterTabs>
 				<Panel>
-					<Button icon="fullscreen">Click me!</Button>
+					<Button icon="home">Click me!</Button>
 				</Panel>
 				<Panel>
 					<IconItem
