@@ -126,12 +126,32 @@ class AppContextProvider extends Component {
 				console.log("============= Bluetooth res =============");
 				console.log(res);
 				console.log("=========================================");
-				if (res.hasOwnProperty('name') && res.hasOwnProperty('rssi')) {
-					if (res.rssi > -55) {
-						this.updateAppState((state) => {
-							state.userId = res.name === 'Laura' ? 0 : 1;
-						});
+				let
+					maxRssi = -100,
+					maxIndex = -1;
+
+				for (let i = 0; i < res.devices.length; i++) {
+					if (maxRssi < res.devices[i].rssi) {
+						maxRssi = res.devices[i].rssi;
+						maxIndex = i;
 					}
+				}
+				console.log("maxRssi: " + maxRssi + ", maxIndex: " + maxIndex);
+				console.log("name: " + res.devices[maxIndex].name);
+
+				switch (res.devices[maxIndex].name) {
+					case 'A':
+						this.updateAppState((state) => {
+							state.userId = 1;
+						});
+						break;
+					case 'B':
+						this.updateAppState((state) => {
+							state.userId = 2;
+						});
+						break;
+					default:
+						break;
 				}
 			}
 		});
@@ -158,23 +178,10 @@ class AppContextProvider extends Component {
 						this.updateAppState((state) => {
 							state.appState.showMessagePopup = false;
 						});
-					}, 3000);
+					}, res.hasOwnProperty('displayTime') ? res.displayTime : 3000);
 				}
 			}
 		});
-
-		// Sample of message popup
-		// setInterval(() => {
-		// 	this.updateAppState((state) => {
-		// 		state.appState.showMessagePopup = true;
-		// 		state.appState.showMessagePopupContents = "TEST\nTEST";
-		// 	});
-		// 	setTimeout(() => {
-		// 		this.updateAppState((state) => {
-		// 			state.appState.showMessagePopup = false;
-		// 		});
-		// 	}, 3000);
-		// }, 15000);
 
 		// Radio scenario
 		new LS2Request().send({

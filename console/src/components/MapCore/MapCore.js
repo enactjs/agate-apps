@@ -273,7 +273,7 @@ class MapCoreBase extends React.Component {
 			});
 			addCarLayer({
 				coordinates: toMapbox(startCoordinates),
-				iconURL: 'http://127.0.0.1:9000/car-white.png',
+				iconURL: 'http://127.0.0.1:9000/car.png',
 				map: this.map,
 				orientation: location.orientation
 			});
