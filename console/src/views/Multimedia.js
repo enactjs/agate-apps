@@ -11,7 +11,7 @@ import {VirtualGridList, VirtualList} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import appConfig from '../App/configLoader';
+// import appConfig from '../App/configLoader';
 import Communicator from '../../../components/Communicator';
 import ScreenSelectionPopup from '../../../components/ScreenSelectionPopup';
 

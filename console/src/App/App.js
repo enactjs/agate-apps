@@ -445,7 +445,7 @@ const AppIndex = (Wrapped) => {
 				});
 
 				this.lunaIntervalId = setInterval(() => {
-					const date = new Date();
+					const intervalDate = new Date();
 					new LS2Request().send({
 						service: 'luna://com.webos.service.mcvpclient', // Dummy Luna API
 						method: 'sendTelemetry',
@@ -454,9 +454,9 @@ const AppIndex = (Wrapped) => {
 							AppName: 'console',
 							FeatureName: panelIndexMap[index],
 							Status: 'Running',
-							Duration: (date - this.props.appStartTime) / 1000,
+							Duration: (intervalDate - this.props.appStartTime) / 1000,
 							AppStartTime: this.props.appStartTime.toISOString(),
-							Time: date.toISOString()
+							Time: intervalDate.toISOString()
 						}
 					});
 				}, 5000);

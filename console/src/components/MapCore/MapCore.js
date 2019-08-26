@@ -10,7 +10,7 @@ import ri from '@enact/ui/resolution';
 // import convert from 'color-convert';
 
 import AppContextConnect from '../../App/AppContextConnect';
-import appConfig from '../../App/configLoader';
+// import appConfig from '../../App/configLoader';
 import {propTypeLatLon, propTypeLatLonList} from '../../data/proptypes';
 import {ServiceLayerContext} from '../../data/ServiceLayer';
 
