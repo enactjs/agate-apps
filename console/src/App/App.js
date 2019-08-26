@@ -373,13 +373,38 @@ const AppIndex = (Wrapped) => {
 				index: props.defaultIndex || 0
 			};
 			this.lunaIntervalId = null;
+			this.selectedMenu = -1;
 
 			new LS2Request().send({
-				service: 'luna://com.webos.service.mcvpclient', // Dummy Luna API
+				service: 'luna://com.webos.service.mcvpclient',
 				method: 'sendTelemetry',
 				parameters: {
 					AppInstanceId: 'console',
 					AppName: 'console',
+					FeatureName: 'App',
+					Status: 'Started',
+					Duration: 0,
+					AppStartTime: this.props.appStartTime.toISOString(),
+					Time: this.props.appStartTime.toISOString()
+				}
+			});
+
+			// Radio scenario
+			new LS2Request().send({
+				service: 'luna://com.webos.applicationManager',
+				method: 'launch',
+				parameters: {
+					id: "music",
+					subscribe: false
+				}
+			});
+
+			new LS2Request().send({
+				service: 'luna://com.webos.service.mcvpclient',
+				method: 'sendTelemetry',
+				parameters: {
+					AppInstanceId: 'radio',
+					AppName: 'radio',
 					FeatureName: 'App',
 					Status: 'Started',
 					Duration: 0,
@@ -392,7 +417,7 @@ const AppIndex = (Wrapped) => {
 		componentWillUnmount () {
 			const date = new Date();
 			new LS2Request().send({
-				service: 'luna://com.webos.service.mcvpclient', // Dummy Luna API
+				service: 'luna://com.webos.service.mcvpclient',
 				method: 'sendTelemetry',
 				parameters: {
 					AppInstanceId: 'console',
@@ -406,11 +431,11 @@ const AppIndex = (Wrapped) => {
 			});
 
 			new LS2Request().send({
-				service: 'luna://com.webos.service.mcvpclient', // Dummy Luna API
+				service: 'luna://com.webos.service.mcvpclient',
 				method: 'sendTelemetry',
 				parameters: {
-					AppInstanceId: 'music',
-					AppName: 'music',
+					AppInstanceId: 'radio',
+					AppName: 'radio',
 					FeatureName: 'App',
 					Status: 'Stopped',
 					Duration: (date - this.props.appStartTime) / 1000,
@@ -424,42 +449,46 @@ const AppIndex = (Wrapped) => {
 			adaptEvent((ev) => {
 				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
 
-				// Send a Luna API when menu changed
-				if (this.lunaIntervalId) {
-					clearInterval(this.lunaIntervalId);
-				}
-
-				const date = new Date();
-				new LS2Request().send({
-					service: 'luna://com.webos.service.mcvpclient', // Dummy Luna API
-					method: 'sendTelemetry',
-					parameters: {
-						AppInstanceId: 'console',
-						AppName: 'console',
-						FeatureName: panelIndexMap[index],
-						Status: 'Running',
-						Duration: (date - this.props.appStartTime) / 1000,
-						AppStartTime: this.props.appStartTime.toISOString(),
-						Time: date.toISOString()
+				if (this.selectedMenu !== index ) {
+					this.selectedMenu = index;
+					// Send a Luna API when menu changed
+					if (this.lunaIntervalId) {
+						clearInterval(this.lunaIntervalId);
 					}
-				});
 
-				this.lunaIntervalId = setInterval(() => {
-					const intervalDate = new Date();
+					const date = new Date();
 					new LS2Request().send({
-						service: 'luna://com.webos.service.mcvpclient', // Dummy Luna API
+						service: 'luna://com.webos.service.mcvpclient',
 						method: 'sendTelemetry',
 						parameters: {
 							AppInstanceId: 'console',
 							AppName: 'console',
 							FeatureName: panelIndexMap[index],
 							Status: 'Running',
-							Duration: (intervalDate - this.props.appStartTime) / 1000,
+							Duration: (date - this.props.appStartTime) / 1000,
 							AppStartTime: this.props.appStartTime.toISOString(),
-							Time: intervalDate.toISOString()
+							Time: date.toISOString()
 						}
 					});
-				}, 5000);
+
+					// Send the current output of the console app every 5 seconds
+					this.lunaIntervalId = setInterval(() => {
+						const intervalDate = new Date();
+						new LS2Request().send({
+							service: 'luna://com.webos.service.mcvpclient',
+							method: 'sendTelemetry',
+							parameters: {
+								AppInstanceId: 'console',
+								AppName: 'console',
+								FeatureName: panelIndexMap[index],
+								Status: 'Running',
+								Duration: (intervalDate - this.props.appStartTime) / 1000,
+								AppStartTime: this.props.appStartTime.toISOString(),
+								Time: intervalDate.toISOString()
+							}
+						});
+					}, 5000);
+				}
 				this.setState(state => state.index === index ? null : {prevIndex: state.index, index});
 				return {index};
 			}, forward('onSelect'))

@@ -233,7 +233,7 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 
 			const
 				musicIndex = presets.indexOf(frequency),
-				musicName = musicIndex > -1 ? stationNames[musicIndex] : '';
+				musicName = musicIndex > -1 ? stationNames[musicIndex] : 'No Signal';
 
 			new LS2Request().send({
 				service: 'luna://com.webos.applicationManager',
@@ -254,11 +254,11 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 
 			const date = new Date();
 			new LS2Request().send({
-				service: 'luna://com.webos.service.mcvpclient', // Dummy Luna API
+				service: 'luna://com.webos.service.mcvpclient',
 				method: 'sendTelemetry',
 				parameters: {
-					AppInstanceId: 'music',
-					AppName: 'music',
+					AppInstanceId: 'radio',
+					AppName: 'radio',
 					FeatureName: musicName,
 					Status: 'Running',
 					Duration: (date - this.props.appStartTime) / 1000,
@@ -267,14 +267,15 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 				}
 			});
 
+			// Send the current radio name of the music app every 5 seconds
 			this.lunaIntervalId = setInterval(() => {
 				const intervalDate = new Date();
 				new LS2Request().send({
-					service: 'luna://com.webos.service.mcvpclient', // Dummy Luna API
+					service: 'luna://com.webos.service.mcvpclient',
 					method: 'sendTelemetry',
 					parameters: {
-						AppInstanceId: 'music',
-						AppName: 'music',
+						AppInstanceId: 'radio',
+						AppName: 'radio',
 						FeatureName: musicName,
 						Status: 'Running',
 						Duration: (intervalDate - this.props.appStartTime) / 1000,

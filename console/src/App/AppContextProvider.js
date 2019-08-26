@@ -131,36 +131,41 @@ class AppContextProvider extends Component {
 						console.log(res);
 						console.log("=========================================");
 						let
-							maxRssiLaura = window.getRssiLaura(),
-							maxRssiThomas = window.getRssiThomas();
+							boundaryRssiLaura = window.getRssiLaura(),
+							boundaryRssiThomas = window.getRssiThomas(),
+							noRecognition = true;
 
 						for (let i = 0; i < res.devices.length; i++) {
 							const device = res.devices[i];
-							if (device.name === 'L' && maxRssiLaura < device.rssi) {
-								maxRssiLaura = device.rssi;
-							} else if (device.name === 'T' && maxRssiThomas < device.rssi) {
-								maxRssiThomas = device.rssi;
+							if (device.name === 'L' && boundaryRssiLaura < device.rssi) {
+								boundaryRssiLaura = device.rssi;
+								noRecognition = false;
+							} else if (device.name === 'T' && boundaryRssiThomas < device.rssi) {
+								boundaryRssiThomas = device.rssi;
+								noRecognition = false;
 							}
 						}
-						console.log("maxRssiLaura: " + maxRssiLaura + ", maxRssiThomas: " + maxRssiThomas);
+						console.log("boundaryRssiLaura: " + boundaryRssiLaura + ", boundaryRssiThomas: " + boundaryRssiThomas);
 
-						this.updateAppState((state) => {
-							state.userId = maxRssiLaura >= maxRssiThomas ? 1 : 2;
-						});
+						if (!noRecognition) {
+							this.updateAppState((state) => {
+								state.userId = boundaryRssiLaura >= boundaryRssiThomas ? 1 : 2;
+							});
 
-						new LS2Request().send({
-							service: 'luna://com.webos.service.mcvpclient',
-							method: 'sendTelemetry',
-							parameters: {
-								AppInstanceId: 'console',
-								AppName: 'console',
-								FeatureName: 'user/change',
-								Status: 'Running',
-								Duration: 0,
-								AppStartTime: this.state.appState.appStartTime.toISOString(),
-								Time: new Date().toISOString()
-							}
-						});
+							new LS2Request().send({
+								service: 'luna://com.webos.service.mcvpclient',
+								method: 'sendTelemetry',
+								parameters: {
+									AppInstanceId: 'console',
+									AppName: 'console',
+									FeatureName: 'user/change',
+									Status: 'Running',
+									Duration: 0,
+									AppStartTime: this.state.appState.appStartTime.toISOString(),
+									Time: new Date().toISOString()
+								}
+							});
+						}
 
 						disconnectBluetooth = false;
 					},
@@ -205,30 +210,6 @@ class AppContextProvider extends Component {
 						});
 					}, res.hasOwnProperty('displayTime') ? res.displayTime : 3000);
 				}
-			}
-		});
-
-		// Radio scenario
-		new LS2Request().send({
-			service: 'luna://com.webos.applicationManager',
-			method: 'launch',
-			parameters: {
-				id: "music",
-				subscribe: false
-			}
-		});
-
-		new LS2Request().send({
-			service: 'luna://com.webos.service.mcvpclient',
-			method: 'sendTelemetry',
-			parameters: {
-				AppInstanceId: 'music',
-				AppName: 'music',
-				FeatureName: 'Muted',
-				Status: 'Started',
-				Duration: 0,
-				AppStartTime: this.state.appState.appStartTime.toISOString(),
-				Time: this.state.appState.appStartTime.toISOString()
 			}
 		});
 	}
