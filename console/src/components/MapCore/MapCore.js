@@ -19,10 +19,10 @@ import markerCss from './Marker.module.less';
 
 const linear = (input) => input;
 
-if (!appConfig.mapApiKey) {
+if (!window.getMapApiKey()) {
 	Error('Please set `mapApiKey` key in your `config.js` file to your own Mapbox API key.');
 }
-mapboxgl.accessToken = appConfig.mapApiKey;
+mapboxgl.accessToken = window.getMapApiKey();
 
 let startCoordinates = {lon: -122.394558, lat: 37.786600};
 // 37.786600, -122.394558

@@ -372,8 +372,8 @@ const AppIndex = (Wrapped) => {
 			this.state = {
 				index: props.defaultIndex || 0
 			};
+			this.lunaIntervalId = null;
 
-			this.appStartTime = new Date();
 			new LS2Request().send({
 				service: 'luna://com.webos.service.mcvpclient', // Dummy Luna API
 				method: 'sendTelemetry',
@@ -383,12 +383,10 @@ const AppIndex = (Wrapped) => {
 					FeatureName: 'App',
 					Status: 'Started',
 					Duration: 0,
-					AppStartTime: this.appStartTime.toISOString(),
-					Time: this.appStartTime.toISOString()
+					AppStartTime: this.props.appStartTime.toISOString(),
+					Time: this.props.appStartTime.toISOString()
 				}
 			});
-
-			this.lunaIntervalId = null;
 		}
 
 		componentWillUnmount () {
@@ -401,8 +399,22 @@ const AppIndex = (Wrapped) => {
 					AppName: 'console',
 					FeatureName: 'App',
 					Status: 'Stopped',
-					Duration: (date - this.appStartTime) / 1000,
-					AppStartTime: this.appStartTime.toISOString(),
+					Duration: (date - this.props.appStartTime) / 1000,
+					AppStartTime: this.props.appStartTime.toISOString(),
+					Time: date.toISOString()
+				}
+			});
+
+			new LS2Request().send({
+				service: 'luna://com.webos.service.mcvpclient', // Dummy Luna API
+				method: 'sendTelemetry',
+				parameters: {
+					AppInstanceId: 'music',
+					AppName: 'music',
+					FeatureName: 'App',
+					Status: 'Stopped',
+					Duration: (date - this.props.appStartTime) / 1000,
+					AppStartTime: this.props.appStartTime.toISOString(),
 					Time: date.toISOString()
 				}
 			});
@@ -411,25 +423,27 @@ const AppIndex = (Wrapped) => {
 		onSelect = handle(
 			adaptEvent((ev) => {
 				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
-				// Send a Luna API when menu changed
 
+				// Send a Luna API when menu changed
 				if (this.lunaIntervalId) {
 					clearInterval(this.lunaIntervalId);
-					const date = new Date();
-					new LS2Request().send({
-						service: 'luna://com.webos.service.mcvpclient', // Dummy Luna API
-						method: 'sendTelemetry',
-						parameters: {
-							AppInstanceId: 'console',
-							AppName: 'console',
-							FeatureName: panelIndexMap[index],
-							Status: 'Running',
-							Duration: (date - this.appStartTime) / 1000,
-							AppStartTime: this.appStartTime.toISOString(),
-							Time: date.toISOString()
-						}
-					});
 				}
+
+				const date = new Date();
+				new LS2Request().send({
+					service: 'luna://com.webos.service.mcvpclient', // Dummy Luna API
+					method: 'sendTelemetry',
+					parameters: {
+						AppInstanceId: 'console',
+						AppName: 'console',
+						FeatureName: panelIndexMap[index],
+						Status: 'Running',
+						Duration: (date - this.props.appStartTime) / 1000,
+						AppStartTime: this.props.appStartTime.toISOString(),
+						Time: date.toISOString()
+					}
+				});
+
 				this.lunaIntervalId = setInterval(() => {
 					const date = new Date();
 					new LS2Request().send({
@@ -440,8 +454,8 @@ const AppIndex = (Wrapped) => {
 							AppName: 'console',
 							FeatureName: panelIndexMap[index],
 							Status: 'Running',
-							Duration: (date - this.appStartTime) / 1000,
-							AppStartTime: this.appStartTime.toISOString(),
+							Duration: (date - this.props.appStartTime) / 1000,
+							AppStartTime: this.props.appStartTime.toISOString(),
 							Time: date.toISOString()
 						}
 					});
@@ -470,6 +484,7 @@ const AppDecorator = compose(
 	ServiceLayer,
 	AppContextConnect(({appState, userSettings, userId, updateAppState}) => ({
 		accent: userSettings.colorAccent,
+		appStartTime: appState.appStartTime,
 		highlight: userSettings.colorHighlight,
 		layoutArrangeable: userSettings.arrangements.arrangeable,
 		orientation: (userSettings.skin !== 'carbon') ? 'horizontal' : 'vertical',

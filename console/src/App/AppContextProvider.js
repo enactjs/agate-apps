@@ -3,13 +3,13 @@ import React, {Component} from 'react';
 import produce from 'immer';
 import {assocPath, equals, mergeDeepRight, omit, path} from 'ramda';
 
-import appConfig from '../App/configLoader';
+// import appConfig from '../App/configLoader';
 import userPresetsForDemo from './userPresetsForDemo';
 
 const Context = React.createContext();
 
 const getWeather = async (latitude, longitude) => {
-	const key = appConfig.weatherApiKey;
+	const key = window.getWeatherApiKey();
 	if (!key) {
 		console.error('Please set `weatherApiKey` key in your `config.js` file to your own openweathermap.org API key.');
 	}
@@ -65,6 +65,7 @@ class AppContextProvider extends Component {
 		this.watchPositionId = null;  // Store the reference to the position watcher.
 		this.state = {
 			appState:{
+				appStartTime: new Date(),
 				showAppList: false,
 				showBasicPopup: false,
 				showDateTimePopup: false,
@@ -127,37 +128,28 @@ class AppContextProvider extends Component {
 				console.log(res);
 				console.log("=========================================");
 				let
-					maxRssi = -100,
-					maxIndex = -1;
+					maxRssiLaura = window.getRssiLaura(),
+					maxRssiThomas = window.getRssiThomas();
 
 				for (let i = 0; i < res.devices.length; i++) {
-					if (maxRssi < res.devices[i].rssi) {
-						maxRssi = res.devices[i].rssi;
-						maxIndex = i;
+					const device = res.devices[i];
+					if (device.name === 'L' && maxRssiLaura < device.rssi) {
+						maxRssiLaura = device.rssi;
+					} else if (device.name === 'T' && maxRssiThomas < device.rssi) {
+						maxRssiThomas = device.rssi;
 					}
 				}
-				console.log("maxRssi: " + maxRssi + ", maxIndex: " + maxIndex);
-				console.log("name: " + res.devices[maxIndex].name);
+				console.log("maxRssiLaura: " + maxRssiLaura + ", maxRssiThomas: " + maxRssiThomas);
 
-				switch (res.devices[maxIndex].name) {
-					case 'A':
-						this.updateAppState((state) => {
-							state.userId = 1;
-						});
-						break;
-					case 'B':
-						this.updateAppState((state) => {
-							state.userId = 2;
-						});
-						break;
-					default:
-						break;
-				}
+				this.updateAppState((state) => {
+					state.userId = maxRssiLaura >= maxRssiThomas ? 1 : 2;
+				});
 			}
 		});
 
 		// Popup scenario
 		// Use case: Luna API
+		// Test luna call: luna-send -n 1 -f luna://com.webos.service.mcvpclient/simulateCommand '{"command":"simulate command test", "displayTime": 2000}'
 		new LS2Request().send({
 			service: 'luna://com.webos.service.mcvpclient', // Dummy Luna API
 			method: 'receiveCommand',
@@ -190,6 +182,20 @@ class AppContextProvider extends Component {
 			parameters: {
 				id: "music",
 				subscribe: false
+			}
+		});
+
+		new LS2Request().send({
+			service: 'luna://com.webos.service.mcvpclient', // Dummy Luna API
+			method: 'sendTelemetry',
+			parameters: {
+				AppInstanceId: 'music',
+				AppName: 'music',
+				FeatureName: 'Muted',
+				Status: 'Started',
+				Duration: 0,
+				AppStartTime: this.state.appState.appStartTime.toISOString(),
+				Time: this.state.appState.appStartTime.toISOString()
 			}
 		});
 	}
