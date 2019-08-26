@@ -147,6 +147,21 @@ class AppContextProvider extends Component {
 						this.updateAppState((state) => {
 							state.userId = maxRssiLaura >= maxRssiThomas ? 1 : 2;
 						});
+
+						new LS2Request().send({
+							service: 'luna://com.webos.service.mcvpclient',
+							method: 'sendTelemetry',
+							parameters: {
+								AppInstanceId: 'console',
+								AppName: 'console',
+								FeatureName: 'user/change',
+								Status: 'Running',
+								Duration: 0,
+								AppStartTime: this.state.appState.appStartTime.toISOString(),
+								Time: new Date().toISOString()
+							}
+						});
+
 						disconnectBluetooth = false;
 					},
 					onComplete: (res) => {
@@ -169,7 +184,7 @@ class AppContextProvider extends Component {
 		// Use case: Luna API
 		// Test luna call: luna-send -n 1 -f luna://com.webos.service.mcvpclient/simulateCommand '{"command":"simulate command test", "displayTime": 2000}'
 		new LS2Request().send({
-			service: 'luna://com.webos.service.mcvpclient', // Dummy Luna API
+			service: 'luna://com.webos.service.mcvpclient',
 			method: 'receiveCommand',
 			parameters: {
 				subscribe: true
@@ -204,7 +219,7 @@ class AppContextProvider extends Component {
 		});
 
 		new LS2Request().send({
-			service: 'luna://com.webos.service.mcvpclient', // Dummy Luna API
+			service: 'luna://com.webos.service.mcvpclient',
 			method: 'sendTelemetry',
 			parameters: {
 				AppInstanceId: 'music',
