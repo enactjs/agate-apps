@@ -114,38 +114,56 @@ class AppContextProvider extends Component {
 
 		// User change scenario
 		// Use case: Luna API
-		new LS2Request().send({
-			service: 'luna://com.webos.service.bluetooth2/le',
-			method: 'startScan',
-			parameters: {
-				serviceUuid: {
-					uuid: 'aaaaffe3-aaaa-1000-8000-00805f9b34fc'
-				},
-				subscribe: true
-			},
-			onSuccess: (res) => {
-				console.log("============= Bluetooth res =============");
-				console.log(res);
-				console.log("=========================================");
-				let
-					maxRssiLaura = window.getRssiLaura(),
-					maxRssiThomas = window.getRssiThomas();
+		let disconnectBluetooth = true;
+		setInterval(() => {
+			if (disconnectBluetooth) {
+				new LS2Request().send({
+					service: 'luna://com.webos.service.bluetooth2/le',
+					method: 'startScan',
+					parameters: {
+						serviceUuid: {
+							uuid: 'aaaaffe3-aaaa-1000-8000-00805f9b34fc'
+						},
+						subscribe: true
+					},
+					onSuccess: (res) => {
+						console.log("============= Bluetooth res =============");
+						console.log(res);
+						console.log("=========================================");
+						let
+							maxRssiLaura = window.getRssiLaura(),
+							maxRssiThomas = window.getRssiThomas();
 
-				for (let i = 0; i < res.devices.length; i++) {
-					const device = res.devices[i];
-					if (device.name === 'L' && maxRssiLaura < device.rssi) {
-						maxRssiLaura = device.rssi;
-					} else if (device.name === 'T' && maxRssiThomas < device.rssi) {
-						maxRssiThomas = device.rssi;
+						for (let i = 0; i < res.devices.length; i++) {
+							const device = res.devices[i];
+							if (device.name === 'L' && maxRssiLaura < device.rssi) {
+								maxRssiLaura = device.rssi;
+							} else if (device.name === 'T' && maxRssiThomas < device.rssi) {
+								maxRssiThomas = device.rssi;
+							}
+						}
+						console.log("maxRssiLaura: " + maxRssiLaura + ", maxRssiThomas: " + maxRssiThomas);
+
+						this.updateAppState((state) => {
+							state.userId = maxRssiLaura >= maxRssiThomas ? 1 : 2;
+						});
+						disconnectBluetooth = false;
+					},
+					onComplete: (res) => {
+						console.log("============= Bluetooth Complete res =============");
+						console.log(res);
+						console.log("=========================================");
+						disconnectBluetooth = true;
+					},
+					onFailure: (res) => {
+						console.log("============= Bluetooth Error res =============");
+						console.log(res);
+						console.log("=========================================");
+						disconnectBluetooth = true;
 					}
-				}
-				console.log("maxRssiLaura: " + maxRssiLaura + ", maxRssiThomas: " + maxRssiThomas);
-
-				this.updateAppState((state) => {
-					state.userId = maxRssiLaura >= maxRssiThomas ? 1 : 2;
 				});
 			}
-		});
+		}, 5000);
 
 		// Popup scenario
 		// Use case: Luna API
