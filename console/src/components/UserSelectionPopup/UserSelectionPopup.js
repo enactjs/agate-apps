@@ -116,15 +116,9 @@ const UserSelectionPopupBase = kind({
 
 				<buttons>
 					<Row align="center space-around">
-						<Cell shrink>
-							<Button className={css.button} size="small" onClick={resetUserSettings}>Reset Current User</Button>
-						</Cell>
-						<Cell shrink>
-							<Button className={css.button} size="small" onClick={onResetAll}>Restart Demo</Button>
-						</Cell>
-						<Cell shrink>
-							<Button className={css.button} size="small" onClick={onResetPosition}>Reset Position</Button>
-						</Cell>
+						<Cell shrink component={Button} small className={css.button} onClick={resetUserSettings}>Reset Current User</Cell>
+						<Cell shrink component={Button} small className={css.button} onClick={onResetAll}>Restart Demo</Cell>
+						<Cell shrink component={Button} small className={css.button} onClick={onResetPosition}>Reset Position</Cell>
 					</Row>
 				</buttons>
 			</Popup>

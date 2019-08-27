@@ -13,7 +13,7 @@ import css from './DestinationList.module.less';
 
 const DestinationButton = (props) => {
 	const {children, 'data-index': index, ...rest} = props;
-	return <Button size="small" {...rest} css={css}>
+	return <Button small {...rest} css={css}>
 		<Marker css={css}>{index + 1}</Marker>
 		{children}
 	</Button>;
