@@ -24,6 +24,7 @@ storiesOf('Agate', module)
 		() => (
 			<IconButton
 				onClick={action('onClick')}
+				backgroundOpacity={select('backgroundOpacity', ['', 'transparent'], Config, '')}
 				disabled={boolean('disabled', Config)}
 				highlighted={boolean('highlighted', Config)}
 				selected={boolean('selected', Config)}
