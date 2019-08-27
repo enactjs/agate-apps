@@ -162,7 +162,7 @@ const HvacBase = kind({
 	)
 });
 
-const Hvac = AppContextConnect(({userSettings: {climate}, updateAppState}) => ({
+const Hvac = AppContextConnect(({sendTelemetry, userSettings: {climate}, updateAppState}) => ({
 	// props
 	acSelected: climate.acSelected,
 	autoSelected: climate.autoSelected,
@@ -178,6 +178,16 @@ const Hvac = AppContextConnect(({userSettings: {climate}, updateAppState}) => ({
 			const {userSettings: {climate: {acSelected}}} = state;
 			state.userSettings.climate.acSelected = !acSelected;
 		});
+		const time = new Date();
+		time.setSeconds(time.getSeconds() - 1);
+		sendTelemetry({
+			appInstanceId: 'hvac',
+			appName: 'hvac',
+			featureName: 'AC change',
+			status: 'Running',
+			appStartTime: time,
+			intervalFlag: false
+		});
 	},
 	onToggleAuto: () => {
 		updateAppState((state) => {
@@ -186,11 +196,31 @@ const Hvac = AppContextConnect(({userSettings: {climate}, updateAppState}) => ({
 			state.userSettings.climate.acSelected = !autoSelected ? true : acSelected;
 			state.userSettings.climate.autoSelected = !autoSelected;
 		});
+		const time = new Date();
+		time.setSeconds(time.getSeconds() - 1);
+		sendTelemetry({
+			appInstanceId: 'hvac',
+			appName: 'hvac',
+			featureName: 'Auto change',
+			status: 'Running',
+			appStartTime: time,
+			intervalFlag: false
+		});
 	},
 	onToggleRecirculation: () => {
 		updateAppState((state) => {
 			const {userSettings: {climate: {recirculate}}} = state;
 			state.userSettings.climate.recirculate = !recirculate;
+		});
+		const time = new Date();
+		time.setSeconds(time.getSeconds() - 1);
+		sendTelemetry({
+			appInstanceId: 'hvac',
+			appName: 'hvac',
+			featureName: 'Recirculation change',
+			status: 'Running',
+			appStartTime: time,
+			intervalFlag: false
 		});
 	},
 	onToggleLeftHeater: () => {
@@ -198,16 +228,46 @@ const Hvac = AppContextConnect(({userSettings: {climate}, updateAppState}) => ({
 			const heat = state.userSettings.climate.leftHeat;
 			state.userSettings.climate.leftHeat = !heat;
 		});
+		const time = new Date();
+		time.setSeconds(time.getSeconds() - 1);
+		sendTelemetry({
+			appInstanceId: 'hvac',
+			appName: 'hvac',
+			featureName: 'Heater change',
+			status: 'Running',
+			appStartTime: time,
+			intervalFlag: false
+		});
 	},
 	onToggleRightHeater: () => {
 		updateAppState((state) => {
 			const heat = state.userSettings.climate.rightHeat;
 			state.userSettings.climate.rightHeat = !heat;
 		});
+		const time = new Date();
+		time.setSeconds(time.getSeconds() - 1);
+		sendTelemetry({
+			appInstanceId: 'hvac',
+			appName: 'hvac',
+			featureName: 'Heater change',
+			status: 'Running',
+			appStartTime: time,
+			intervalFlag: false
+		});
 	},
 	onUpdateFanSpeed: ({value}) => {
 		updateAppState((state) => {
 			state.userSettings.climate.fanSpeed = value;
+		});
+		const time = new Date();
+		time.setSeconds(time.getSeconds() - 1);
+		sendTelemetry({
+			appInstanceId: 'hvac',
+			appName: 'hvac',
+			featureName: 'Fan change',
+			status: 'Running',
+			appStartTime: time,
+			intervalFlag: false
 		});
 		return true;
 	},
@@ -215,10 +275,30 @@ const Hvac = AppContextConnect(({userSettings: {climate}, updateAppState}) => ({
 		updateAppState((state) => {
 			state.userSettings.climate.leftTemp = value;
 		});
+		const time = new Date();
+		time.setSeconds(time.getSeconds() - 1);
+		sendTelemetry({
+			appInstanceId: 'hvac',
+			appName: 'hvac',
+			featureName: 'Temperature change',
+			status: 'Running',
+			appStartTime: time,
+			intervalFlag: false
+		});
 	},
 	onUpdateRightTemperature: ({value}) => {
 		updateAppState((state) => {
 			state.userSettings.climate.rightTemp = value;
+		});
+		const time = new Date();
+		time.setSeconds(time.getSeconds() - 1);
+		sendTelemetry({
+			appInstanceId: 'hvac',
+			appName: 'hvac',
+			featureName: 'Temperature change',
+			status: 'Running',
+			appStartTime: time,
+			intervalFlag: false
 		});
 	}
 }))(SaveLayoutArrangement('hvac')(HvacBase));

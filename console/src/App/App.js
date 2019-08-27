@@ -391,10 +391,10 @@ const AppIndex = (Wrapped) => {
 
 			// Radio Started
 			sendTelemetry({
-				appInstanceId: 'radio',
-				appName: 'radio',
+				appInstanceId: 'backgroundRadio',
+				appName: 'backgroundRadio',
 				featureName: 'No Signal',
-				status: 'Stated',
+				status: 'Started',
 				appStartTime: this.appStartTime,
 				intervalFlag: true
 			});
@@ -416,7 +416,7 @@ const AppIndex = (Wrapped) => {
 					// Selected app 'Stopped' call
 					sendTelemetry({
 						appInstanceId: panelIndexMap[this.selectedMenu],
-						appName: 'console',
+						appName: panelIndexMap[this.selectedMenu],
 						featureName: 'Main',
 						status: 'Stopped',
 						appStartTime: this.appStartTime,
@@ -428,7 +428,7 @@ const AppIndex = (Wrapped) => {
 					// Select app 'Started' call
 					sendTelemetry({
 						appInstanceId: panelIndexMap[index],
-						appName: 'console',
+						appName: panelIndexMap[index],
 						featureName: 'Main',
 						status: 'Started',
 						appStartTime: this.appStartTime,

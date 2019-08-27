@@ -112,77 +112,68 @@ class AppContextProvider extends Component {
 			weather: {}
 		};
 		this.lunaIntervalId = {
-			console: null,
-			radio: null
+			backgroundRadio: null,
+			console: null
 		};
 
 		// User change scenario
 		// Use case: Luna API
-		// let disconnectBluetooth = true;
-		// setInterval(() => {
-		// 	if (disconnectBluetooth) {
-		// 		new LS2Request().send({
-		// 			service: 'luna://com.webos.service.bluetooth2/le',
-		// 			method: 'startScan',
-		// 			parameters: {
-		// 				serviceUuid: {
-		// 					uuid: 'aaaaffe3-aaaa-1000-8000-00805f9b34fc'
-		// 				},
-		// 				subscribe: true
-		// 			},
-		// 			onSuccess: (res) => {
-		// 				console.log("============= Bluetooth res =============");
-		// 				console.log(res);
-		// 				console.log("=========================================");
-		// 				let
-		// 					boundaryRssiLaura = window.getRssiLaura(),
-		// 					boundaryRssiThomas = window.getRssiThomas(),
-		// 					noRecognition = true;
+		const
+			fixedBoundaryRssiLaura = window.getRssiLaura(),
+			fixedBoundaryRssiThomas = window.getRssiThomas();
 
-		// 				// for (let i = 0; i < res.devices.length; i++) {
-		// 				// 	const device = res.devices[i];
-		// 				// 	if (device.name === 'L' && boundaryRssiLaura < device.rssi) {
-		// 				// 		boundaryRssiLaura = device.rssi;
-		// 				// 		noRecognition = false;
-		// 				// 	} else if (device.name === 'T' && boundaryRssiThomas < device.rssi) {
-		// 				// 		boundaryRssiThomas = device.rssi;
-		// 				// 		noRecognition = false;
-		// 				// 	}
-		// 				// }
-		// 				// console.log("boundaryRssiLaura: " + boundaryRssiLaura + ", boundaryRssiThomas: " + boundaryRssiThomas);
+		let
+			boundaryRssiLaura = -1000,
+			boundaryRssiThomas = -1000,
+			countForRecognition = 0,
+			fixedCountForRecognition = 5;
 
-		// 				// if (!noRecognition) {
-		// 				// 	this.updateAppState((state) => {
-		// 				// 		state.userId = boundaryRssiLaura >= boundaryRssiThomas ? 1 : 2;
-		// 				// 	});
+		new LS2Request().send({
+			service: 'luna://com.webos.service.bluetooth2/le',
+			method: 'startScan',
+			parameters: {
+				serviceUuid: {
+					uuid: 'aaaaffe3-aaaa-1000-8000-00805f9b34fc'
+				},
+				subscribe: true
+			},
+			onSuccess: (res) => {
 
-		// 				// 	this.props.sendTelemetry({
-		// 				// 		appInstanceId: 'user change',
-		// 				// 		appName: 'console',
-		// 				// 		featureName: 'change',
-		// 				// 		status: 'Running',
-		// 				// 		appStartTime: this.state.appState.appStartTime,
-		// 				// 		intervalFlag: false
-		// 				// 	});
-		// 				// }
+				const device = res.devices[0];
+				if (device.name === 'L' && fixedBoundaryRssiLaura < device.rssi) {
+					boundaryRssiLaura = device.rssi;
+					countForRecognition++;
+				} else if (device.name === 'T' && fixedBoundaryRssiThomas < device.rssi) {
+					boundaryRssiThomas = device.rssi;
+					countForRecognition++;
+				}
 
-		// 				disconnectBluetooth = false;
-		// 			},
-		// 			onComplete: (res) => {
-		// 				console.log("============= Bluetooth Complete res =============");
-		// 				console.log(res);
-		// 				console.log("=========================================");
-		// 				disconnectBluetooth = true;
-		// 			},
-		// 			onFailure: (res) => {
-		// 				console.log("============= Bluetooth Error res =============");
-		// 				console.log(res);
-		// 				console.log("=========================================");
-		// 				disconnectBluetooth = true;
-		// 			}
-		// 		});
-		// 	}
-		// }, 5000);
+				if (fixedCountForRecognition < countForRecognition) {
+					console.log("============= Bluetooth res =============");
+					console.log(res.devices[0].name + ", " + res.devices[0].rssi);
+					console.log("boundaryRssiLaura: " + boundaryRssiLaura + ", boundaryRssiThomas: " + boundaryRssiThomas);
+					console.log("=========================================");
+					const changeUserId = boundaryRssiLaura >= boundaryRssiThomas ? 1 : 2;
+					if (changeUserId !== this.state.userId) {
+						this.updateAppState((state) => {
+							state.userId = changeUserId;
+						});
+
+						this.sendTelemetry({
+							appInstanceId: 'user',
+							appName: 'user',
+							featureName: 'change',
+							status: 'Running',
+							appStartTime: this.state.appState.appStartTime,
+							intervalFlag: false
+						});
+					}
+					boundaryRssiLaura = -1000;
+					boundaryRssiThomas = -1000;
+					countForRecognition = 0;
+				}
+			}
+		});
 
 		// Popup scenario
 		// Test luna call: luna-send -n 1 -f luna://com.webos.service.mcvpclient/simulateCommand '{"command":"simulate command test", "displayTime": 2000}'
@@ -405,10 +396,21 @@ class AppContextProvider extends Component {
 			}
 		});
 
+		console.log("####################################");
+		console.log("AppInstanceId: " + appInstanceId);
+		console.log("AppName: " + appName);
+		console.log("FeatureName: " + featureName);
+		console.log("Status: " + status);
+		console.log("Duration: " + (date - appStartTime) / 1000);
+		console.log("AppStartTime: " + appStartTime.toISOString());
+		console.log("Time: " + date.toISOString());
+		console.log("####################################");
+
 		// Send the current information of the app every 5 seconds
 		if (intervalFlag) {
-			if (this.lunaIntervalId[`${appName}`]) {
-				clearInterval(this.lunaIntervalId[`${appName}`]);
+			const intervalName = appName === 'backgroundRadio' ? 'backgroundRadio' : 'console';
+			if (this.lunaIntervalId[`${intervalName}`]) {
+				clearInterval(this.lunaIntervalId[`${intervalName}`]);
 			}
 			const intervalId = setInterval(() => {
 				const intervalDate = new Date();
@@ -425,8 +427,17 @@ class AppContextProvider extends Component {
 						Time: intervalDate.toISOString()
 					}
 				});
+				console.log("                   ####################################");
+				console.log("                   AppInstanceId: " + appInstanceId);
+				console.log("                   AppName: " + appName);
+				console.log("                   FeatureName: " + featureName);
+				console.log("                   Status: " + 'Running');
+				console.log("                   Duration: " + (intervalDate - appStartTime) / 1000);
+				console.log("                   AppStartTime: " + appStartTime.toISOString());
+				console.log("                   Time: " + intervalDate.toISOString());
+				console.log("                   ####################################");
 			}, 5000);
-			this.lunaIntervalId[`${appName}`] = intervalId;
+			this.lunaIntervalId[`${intervalName}`] = intervalId;
 		}
 	}
 

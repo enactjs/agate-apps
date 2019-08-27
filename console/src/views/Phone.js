@@ -114,6 +114,9 @@ const PhoneBase = kind({
 	},
 
 	render: ({arrangeable, arrangement, onArrange, handleInputKeyDown, onContactClick, onChange, onClear, onSelectDigit, onTogglePopup, showPopup, value, ...rest}) => {
+		console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+		console.log(showPopup);
+		console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 		return (
 			<Panel {...rest}>
 				<CustomLayout arrangeable={arrangeable} arrangement={arrangement} onArrange={onArrange}>
@@ -127,7 +130,7 @@ const PhoneBase = kind({
 								placeholder="Phone Number ..."
 								value={value}
 							/>
-							<Icon onClick={onClear} css={css} >\u232B</Icon>
+							<Icon onClick={onClear} css={css} >arrowshrink</Icon>
 						</Cell>
 						<Cell className="dialer-grid">
 							<Dialer align="center center" onSelectDigit={onSelectDigit} />
