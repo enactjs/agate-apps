@@ -4,7 +4,6 @@ import {storiesOf} from '@storybook/react';
 
 import iconNames from './icons';
 import {boolean, number, select} from '../../src/enact-knobs';
-import {action} from '../../src/utils';
 
 SliderItem.displayName = 'SliderItem';
 
@@ -20,7 +19,6 @@ storiesOf('Agate', module)
 				max={number('max', SliderItem)}
 				min={number('min', SliderItem)}
 				noFill={boolean('noFill', SliderItem)}
-				onChange={action('onChange')}
 				step={number('step', SliderItem)} // def: 1
 			/>
 		),
