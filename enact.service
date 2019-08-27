@@ -23,6 +23,6 @@ After=ls-hubd.service
 Type=oneshot
 ExecStart=/bin/sh -euc 'cd /media/developer/apps/usr/palm/applications/carImage/src/'
 ExecStart=/bin/sh -euc 'node index.js &'
-ExecStart=/bin/sh -euc 'cd /media/developer/apps/usr/palm/applications/communication/src/ &'
+ExecStart=/bin/sh -euc 'cd /media/developer/apps/usr/palm/applications/communication/src/'
 ExecStart=/bin/sh -euc 'node app.js &'
 RemainAfterExit=yes
