@@ -221,6 +221,8 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 				presets: presets || configHoc.presets,
 				status: status || configHoc.status
 			};
+
+			this.lunaIntervalId = null;
 		}
 
 		changePlayStatus = ({frequency = this.state.frequency, preset = this.state.preset, status = this.state.status}) => {
@@ -228,17 +230,60 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 			this.props.updateAppState((state) => {
 				state.radioConfig = {frequency, preset, presets, status};
 			});
+
+			const
+				musicIndex = presets.indexOf(frequency),
+				musicName = musicIndex > -1 ? stationNames[musicIndex] : 'No Signal';
+
 			new LS2Request().send({
 				service: 'luna://com.webos.applicationManager',
 				method: 'launch',
 				parameters: {
 					id: "music",
 					params: {
-						index: (status === "ON") ? presets.indexOf(frequency) : -1
+						index: (status === "ON") ? musicIndex : -1
 					},
 					subscribe: false
 				}
 			});
+
+			// Send a Luna API when music changed
+			if (this.lunaIntervalId) {
+				clearInterval(this.lunaIntervalId);
+			}
+
+			const date = new Date();
+			new LS2Request().send({
+				service: 'luna://com.webos.service.mcvpclient',
+				method: 'sendTelemetry',
+				parameters: {
+					AppInstanceId: 'radio',
+					AppName: 'radio',
+					FeatureName: musicName,
+					Status: 'Running',
+					Duration: (date - this.props.appStartTime) / 1000,
+					AppStartTime: this.props.appStartTime.toISOString(),
+					Time: date.toISOString()
+				}
+			});
+
+			// Send the current radio name of the music app every 5 seconds
+			this.lunaIntervalId = setInterval(() => {
+				const intervalDate = new Date();
+				new LS2Request().send({
+					service: 'luna://com.webos.service.mcvpclient',
+					method: 'sendTelemetry',
+					parameters: {
+						AppInstanceId: 'radio',
+						AppName: 'radio',
+						FeatureName: musicName,
+						Status: 'Running',
+						Duration: (intervalDate - this.props.appStartTime) / 1000,
+						AppStartTime: this.props.appStartTime.toISOString(),
+						Time: intervalDate.toISOString()
+					}
+				});
+			}, 5000);
 		}
 
 		changeStatus = (status) => {
@@ -293,7 +338,8 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 	};
 });
 
-const Radio = AppContextConnect(({radioConfig, updateAppState}) => ({
+const Radio = AppContextConnect(({appState, radioConfig, updateAppState}) => ({
+	appStartTime: appState.appStartTime,
 	radioConfig,
 	updateAppState
 }))(SaveLayoutArrangement('radio')(RadioDecorator(RadioBase)));

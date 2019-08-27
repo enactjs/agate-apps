@@ -11,7 +11,7 @@ import {VirtualGridList, VirtualList} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import appConfig from '../App/configLoader';
+// import appConfig from '../App/configLoader';
 import Communicator from '../../../components/Communicator';
 import ScreenSelectionPopup from '../../../components/ScreenSelectionPopup';
 
@@ -322,10 +322,13 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 				url,
 				videos
 			};
+
+			const host = window.getCommunicationServerHost();
+
 			return (
 				<React.Fragment>
 					<Communicator
-						host={appConfig.communicationServerHost}
+						host={host}
 						onPlayVideo={this.onPlayVideo}
 						// onShowAd={this.onShowAdSpace}
 						screenId={this.state.screenId}
