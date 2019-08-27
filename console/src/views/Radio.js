@@ -9,7 +9,6 @@ import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import LS2Request from '@enact/webos/LS2Request';
 
 import AppContextConnect from '../App/AppContextConnect';
 import PresetItem from '../components/PresetItem';
@@ -222,68 +221,50 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 				status: status || configHoc.status
 			};
 
-			this.lunaIntervalId = null;
+			this.appStartTime = new Date();
+			this.selectedMusic = 'No Signal';
 		}
 
 		changePlayStatus = ({frequency = this.state.frequency, preset = this.state.preset, status = this.state.status}) => {
 			const {presets} = this.state;
+			const {sendLaunchLuna, sendTelemetry} = this.props;
 			this.props.updateAppState((state) => {
 				state.radioConfig = {frequency, preset, presets, status};
 			});
 
 			const
 				musicIndex = presets.indexOf(frequency),
-				musicName = musicIndex > -1 ? stationNames[musicIndex] : 'No Signal';
+				musicName = ((musicIndex > -1) && (status === 'ON')) ? stationNames[musicIndex] : 'No Signal';
 
-			new LS2Request().send({
-				service: 'luna://com.webos.applicationManager',
-				method: 'launch',
-				parameters: {
-					id: "music",
-					params: {
-						index: (status === "ON") ? musicIndex : -1
-					},
-					subscribe: false
+			sendLaunchLuna({
+				id: 'music',
+				params: {
+					index: (status === 'ON') ? musicIndex : -1
 				}
 			});
 
-			// Send a Luna API when music changed
-			if (this.lunaIntervalId) {
-				clearInterval(this.lunaIntervalId);
-			}
-
-			const date = new Date();
-			new LS2Request().send({
-				service: 'luna://com.webos.service.mcvpclient',
-				method: 'sendTelemetry',
-				parameters: {
-					AppInstanceId: 'radio',
-					AppName: 'radio',
-					FeatureName: musicName,
-					Status: 'Running',
-					Duration: (date - this.props.appStartTime) / 1000,
-					AppStartTime: this.props.appStartTime.toISOString(),
-					Time: date.toISOString()
-				}
+			// Send a telemetry when music changed
+			sendTelemetry({
+				appInstanceId: 'radio',
+				appName: 'radio',
+				featureName: this.selectedMusic,
+				status: 'Stopped',
+				appStartTime: this.appStartTime,
+				intervalFlag: false
 			});
 
-			// Send the current radio name of the music app every 5 seconds
-			this.lunaIntervalId = setInterval(() => {
-				const intervalDate = new Date();
-				new LS2Request().send({
-					service: 'luna://com.webos.service.mcvpclient',
-					method: 'sendTelemetry',
-					parameters: {
-						AppInstanceId: 'radio',
-						AppName: 'radio',
-						FeatureName: musicName,
-						Status: 'Running',
-						Duration: (intervalDate - this.props.appStartTime) / 1000,
-						AppStartTime: this.props.appStartTime.toISOString(),
-						Time: intervalDate.toISOString()
-					}
-				});
-			}, 5000);
+			this.appStartTime = new Date();
+
+			sendTelemetry({
+				appInstanceId: 'radio',
+				appName: 'radio',
+				featureName: musicName,
+				status: 'Started',
+				appStartTime: this.appStartTime,
+				intervalFlag: true
+			});
+
+			this.selectedMusic = musicName;
 		}
 
 		changeStatus = (status) => {
@@ -292,9 +273,7 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 		}
 
 		changePreset = (preset) => {
-			this.setState({preset}, () => {
-				this.changePlayStatus({preset});
-			});
+			this.setState({preset});
 		}
 
 		changeFrequency = (frequency) => {
@@ -319,6 +298,8 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 			const {...rest} = this.props;
 
 			delete rest.radioConfig;
+			delete rest.sendLaunchLuna;
+			delete rest.sendTelemetry;
 			delete rest.updateAppState;
 
 			return (
@@ -338,8 +319,9 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 	};
 });
 
-const Radio = AppContextConnect(({appState, radioConfig, updateAppState}) => ({
-	appStartTime: appState.appStartTime,
+const Radio = AppContextConnect(({radioConfig, sendLaunchLuna, sendTelemetry, updateAppState}) => ({
+	sendLaunchLuna,
+	sendTelemetry,
 	radioConfig,
 	updateAppState
 }))(SaveLayoutArrangement('radio')(RadioDecorator(RadioBase)));

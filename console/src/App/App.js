@@ -12,7 +12,6 @@ import {TabbedPanels} from '@enact/agate/Panels';
 import React from 'react';
 import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
-import LS2Request from '@enact/webos/LS2Request';
 
 // Data Services
 import ServiceLayer from '../data/ServiceLayer';
@@ -200,8 +199,11 @@ const AppBase = kind({
 		...rest
 	}) => {
 		delete rest.accent;
+		delete rest.appStartTime;
 		delete rest.endNavigation;
 		delete rest.highlight;
+		delete rest.sendLaunchLuna;
+		delete rest.sendTelemetry;
 		delete rest.showAppList;
 		delete rest.updateAppState;
 
@@ -372,122 +374,68 @@ const AppIndex = (Wrapped) => {
 			this.state = {
 				index: props.defaultIndex || 0
 			};
-			this.lunaIntervalId = null;
-			this.selectedMenu = -1;
+			this.selectedMenu = 0;
+			this.appStartTime = new Date();
 
-			new LS2Request().send({
-				service: 'luna://com.webos.service.mcvpclient',
-				method: 'sendTelemetry',
-				parameters: {
-					AppInstanceId: 'console',
-					AppName: 'console',
-					FeatureName: 'App',
-					Status: 'Started',
-					Duration: 0,
-					AppStartTime: this.props.appStartTime.toISOString(),
-					Time: this.props.appStartTime.toISOString()
-				}
+			const {sendLaunchLuna, sendTelemetry} = this.props;
+
+			// Console Started
+			sendTelemetry({
+				appInstanceId: 'home',
+				appName: 'console',
+				featureName: 'Main',
+				status: 'Started',
+				appStartTime: this.appStartTime,
+				intervalFlag: true
 			});
 
-			// Radio scenario
-			new LS2Request().send({
-				service: 'luna://com.webos.applicationManager',
-				method: 'launch',
-				parameters: {
-					id: "music",
-					subscribe: false
-				}
+			// Radio Started
+			sendTelemetry({
+				appInstanceId: 'radio',
+				appName: 'radio',
+				featureName: 'No Signal',
+				status: 'Stated',
+				appStartTime: this.appStartTime,
+				intervalFlag: true
 			});
 
-			new LS2Request().send({
-				service: 'luna://com.webos.service.mcvpclient',
-				method: 'sendTelemetry',
-				parameters: {
-					AppInstanceId: 'radio',
-					AppName: 'radio',
-					FeatureName: 'App',
-					Status: 'Started',
-					Duration: 0,
-					AppStartTime: this.props.appStartTime.toISOString(),
-					Time: this.props.appStartTime.toISOString()
-				}
-			});
-		}
-
-		componentWillUnmount () {
-			const date = new Date();
-			new LS2Request().send({
-				service: 'luna://com.webos.service.mcvpclient',
-				method: 'sendTelemetry',
-				parameters: {
-					AppInstanceId: 'console',
-					AppName: 'console',
-					FeatureName: 'App',
-					Status: 'Stopped',
-					Duration: (date - this.props.appStartTime) / 1000,
-					AppStartTime: this.props.appStartTime.toISOString(),
-					Time: date.toISOString()
-				}
-			});
-
-			new LS2Request().send({
-				service: 'luna://com.webos.service.mcvpclient',
-				method: 'sendTelemetry',
-				parameters: {
-					AppInstanceId: 'radio',
-					AppName: 'radio',
-					FeatureName: 'App',
-					Status: 'Stopped',
-					Duration: (date - this.props.appStartTime) / 1000,
-					AppStartTime: this.props.appStartTime.toISOString(),
-					Time: date.toISOString()
-				}
+			// Radio app launch
+			sendLaunchLuna({
+				id: 'music'
 			});
 		}
 
 		onSelect = handle(
 			adaptEvent((ev) => {
-				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
+				const
+					{index = getPanelIndexOf(ev.view || 'home')} = ev,
+					{sendTelemetry} = this.props;
 
+				// Send a telemetry when menu changed
 				if (this.selectedMenu !== index ) {
-					this.selectedMenu = index;
-					// Send a Luna API when menu changed
-					if (this.lunaIntervalId) {
-						clearInterval(this.lunaIntervalId);
-					}
-
-					const date = new Date();
-					new LS2Request().send({
-						service: 'luna://com.webos.service.mcvpclient',
-						method: 'sendTelemetry',
-						parameters: {
-							AppInstanceId: 'console',
-							AppName: 'console',
-							FeatureName: panelIndexMap[index],
-							Status: 'Running',
-							Duration: (date - this.props.appStartTime) / 1000,
-							AppStartTime: this.props.appStartTime.toISOString(),
-							Time: date.toISOString()
-						}
+					// Selected app 'Stopped' call
+					sendTelemetry({
+						appInstanceId: panelIndexMap[this.selectedMenu],
+						appName: 'console',
+						featureName: 'Main',
+						status: 'Stopped',
+						appStartTime: this.appStartTime,
+						intervalFlag: false
 					});
 
-					// Send the current output of the console app every 5 seconds
-					this.lunaIntervalId = setInterval(() => {
-						const intervalDate = new Date();
-						new LS2Request().send({
-							service: 'luna://com.webos.service.mcvpclient',
-							method: 'sendTelemetry',
-							parameters: {
-								AppInstanceId: 'console',
-								AppName: 'console',
-								FeatureName: panelIndexMap[index],
-								Status: 'Running',
-								Duration: (intervalDate - this.props.appStartTime) / 1000,
-								AppStartTime: this.props.appStartTime.toISOString(),
-								Time: intervalDate.toISOString()
-							}
-						});
-					}, 5000);
+					this.appStartTime = new Date();
+
+					// Select app 'Started' call
+					sendTelemetry({
+						appInstanceId: panelIndexMap[index],
+						appName: 'console',
+						featureName: 'Main',
+						status: 'Started',
+						appStartTime: this.appStartTime,
+						intervalFlag: true
+					});
+
+					this.selectedMenu = index;
 				}
 				this.setState(state => state.index === index ? null : {prevIndex: state.index, index});
 				return {index};
@@ -511,12 +459,14 @@ const AppIndex = (Wrapped) => {
 
 const AppDecorator = compose(
 	ServiceLayer,
-	AppContextConnect(({appState, userSettings, userId, updateAppState}) => ({
+	AppContextConnect(({appState, sendLaunchLuna, sendTelemetry, userSettings, userId, updateAppState}) => ({
 		accent: userSettings.colorAccent,
 		appStartTime: appState.appStartTime,
 		highlight: userSettings.colorHighlight,
 		layoutArrangeable: userSettings.arrangements.arrangeable,
 		orientation: (userSettings.skin !== 'carbon') ? 'horizontal' : 'vertical',
+		sendLaunchLuna,
+		sendTelemetry,
 		showAppList: appState.showAppList,
 		showBasicPopup: appState.showBasicPopup,
 		showDateTimePopup: appState.showDateTimePopup,
