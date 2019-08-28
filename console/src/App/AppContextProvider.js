@@ -111,82 +111,96 @@ class AppContextProvider extends Component {
 			},
 			weather: {}
 		};
+		this.lunaIntervalId = {
+			backgroundRadio: null,
+			console: null
+		};
 
 		// User change scenario
 		// Use case: Luna API
-		let disconnectBluetooth = true;
-		setInterval(() => {
-			if (disconnectBluetooth) {
-				new LS2Request().send({
-					service: 'luna://com.webos.service.bluetooth2/le',
-					method: 'startScan',
-					parameters: {
-						serviceUuid: {
-							uuid: 'aaaaffe3-aaaa-1000-8000-00805f9b34fc'
-						},
-						subscribe: true
-					},
-					onSuccess: (res) => {
-						console.log("============= Bluetooth res =============");
-						console.log(res);
-						console.log("=========================================");
-						let
-							boundaryRssiLaura = window.getRssiLaura(),
-							boundaryRssiThomas = window.getRssiThomas(),
-							noRecognition = true;
+		const
+			fixedBoundaryRssiLaura = window.getRssiLaura(),
+			fixedBoundaryRssiThomas = window.getRssiThomas();
 
-						for (let i = 0; i < res.devices.length; i++) {
-							const device = res.devices[i];
-							if (device.name === 'L' && boundaryRssiLaura < device.rssi) {
-								boundaryRssiLaura = device.rssi;
-								noRecognition = false;
-							} else if (device.name === 'T' && boundaryRssiThomas < device.rssi) {
-								boundaryRssiThomas = device.rssi;
-								noRecognition = false;
-							}
-						}
-						console.log("boundaryRssiLaura: " + boundaryRssiLaura + ", boundaryRssiThomas: " + boundaryRssiThomas);
+		let
+			boundaryRssiLaura = -1000,
+			boundaryRssiThomas = -1000,
+			changeCountLaura = 0,
+			changeCountThomas = 0,
+			lastTimeLaura = window.performance.now(),
+			lastTimeThomas = window.performance.now();
 
-						if (!noRecognition) {
-							this.updateAppState((state) => {
-								state.userId = boundaryRssiLaura >= boundaryRssiThomas ? 1 : 2;
-							});
-
-							new LS2Request().send({
-								service: 'luna://com.webos.service.mcvpclient',
-								method: 'sendTelemetry',
-								parameters: {
-									AppInstanceId: 'console',
-									AppName: 'console',
-									FeatureName: 'user/change',
-									Status: 'Running',
-									Duration: 0,
-									AppStartTime: this.state.appState.appStartTime.toISOString(),
-									Time: new Date().toISOString()
-								}
-							});
-						}
-
-						disconnectBluetooth = false;
-					},
-					onComplete: (res) => {
-						console.log("============= Bluetooth Complete res =============");
-						console.log(res);
-						console.log("=========================================");
-						disconnectBluetooth = true;
-					},
-					onFailure: (res) => {
-						console.log("============= Bluetooth Error res =============");
-						console.log(res);
-						console.log("=========================================");
-						disconnectBluetooth = true;
-					}
+		const changeUser = (changeUserId) => {
+			if (this.state.userId !== changeUserId) {
+				this.updateAppState((state) => {
+					state.userId = changeUserId;
 				});
+				const time = new Date();
+				time.setSeconds(time.getSeconds() - 1);
+				this.sendTelemetry({
+					appInstanceId: 'user',
+					appName: 'user',
+					featureName: 'change',
+					status: 'Running',
+					appStartTime: time,
+					intervalFlag: false
+				});
+				changeCountLaura = 0;
+				changeCountThomas = 0;
+				boundaryRssiLaura = -1000;
+				boundaryRssiThomas = -1000;
 			}
-		}, 5000);
+		}
+
+		new LS2Request().send({
+			service: 'luna://com.webos.service.bluetooth2/le',
+			method: 'startScan',
+			parameters: {
+				serviceUuid: {
+					uuid: 'aaaaffe3-aaaa-1000-8000-00805f9b34fc'
+				},
+				subscribe: true
+			},
+			onSuccess: (res) => {
+				if (!res.hasOwnProperty('devices')) {
+					return;
+				}
+				const device = res.devices[0];
+				const currentTime = window.performance.now();
+				if (device.name === 'L' && fixedBoundaryRssiLaura < device.rssi) {
+					boundaryRssiLaura = device.rssi;
+					lastTimeLaura = currentTime;
+				} else if (device.name === 'T' && fixedBoundaryRssiThomas < device.rssi) {
+					boundaryRssiThomas = device.rssi;
+					lastTimeThomas = currentTime;
+				}
+
+				if (currentTime - lastTimeLaura > 3000) {
+					boundaryRssiLaura = -1000;
+					changeCountLaura = 0;
+				}
+				if (currentTime - lastTimeThomas > 3000) {
+					boundaryRssiThomas = -1000;
+					changeCountThomas = 0;
+				}
+
+				if (boundaryRssiLaura > boundaryRssiThomas) {
+					changeCountLaura++;
+				} else if (boundaryRssiLaura < boundaryRssiThomas) {
+					changeCountThomas++;
+				} else {
+					return;
+				}
+
+				if (changeCountLaura > 2) {
+					changeUser(1);
+				} else if (changeCountThomas > 2) {
+					changeUser(2);
+				}
+			}
+		});
 
 		// Popup scenario
-		// Use case: Luna API
 		// Test luna call: luna-send -n 1 -f luna://com.webos.service.mcvpclient/simulateCommand '{"command":"simulate command test", "displayTime": 2000}'
 		new LS2Request().send({
 			service: 'luna://com.webos.service.mcvpclient',
@@ -378,6 +392,80 @@ class AppContextProvider extends Component {
 		window.navigator.geolocation.clearWatch(this.watchPositionId);
 	}
 
+	sendLaunchLuna = ({id, params = null}) => {
+		new LS2Request().send({
+			service: 'luna://com.webos.applicationManager',
+			method: 'launch',
+			parameters: {
+				id: id,
+				params: params,
+				subscribe: false
+			}
+		});
+	}
+
+	sendTelemetry = ({appInstanceId, appName, featureName, status, appStartTime, intervalFlag}) => {
+		// Send the currect information for the first time
+		const date = new Date();
+		new LS2Request().send({
+			service: 'luna://com.webos.service.mcvpclient',
+			method: 'sendTelemetry',
+			parameters: {
+				AppInstanceId: appInstanceId,
+				AppName: appName,
+				FeatureName: featureName,
+				Status: status,
+				Duration: (date - appStartTime) / 1000,
+				AppStartTime: appStartTime.toISOString(),
+				Time: date.toISOString()
+			}
+		});
+
+		console.log("{");
+		console.log("	AppInstanceId: '" + appInstanceId + "',");
+		console.log("	AppName: '" + appName + "',");
+		console.log("	FeatureName: '" + featureName + "',");
+		console.log("	Status: '" + status + "',");
+		console.log("	Duration: '" + (date - appStartTime) / 1000 + "',");
+		console.log("	AppStartTime: '" + appStartTime.toISOString() + "',");
+		console.log("	Time: '" + date.toISOString() + "'");
+		console.log("}");
+
+		// Send the current information of the app every 5 seconds
+		if (intervalFlag) {
+			const intervalName = appName === 'backgroundRadio' ? 'backgroundRadio' : 'console';
+			if (this.lunaIntervalId[`${intervalName}`]) {
+				clearInterval(this.lunaIntervalId[`${intervalName}`]);
+			}
+			const intervalId = setInterval(() => {
+				const intervalDate = new Date();
+				new LS2Request().send({
+					service: 'luna://com.webos.service.mcvpclient',
+					method: 'sendTelemetry',
+					parameters: {
+						AppInstanceId: appInstanceId,
+						AppName: appName,
+						FeatureName: featureName,
+						Status: 'Running',
+						Duration: (intervalDate - appStartTime) / 1000,
+						AppStartTime: appStartTime.toISOString(),
+						Time: intervalDate.toISOString()
+					}
+				});
+				console.log("                   {");
+				console.log("                   	AppInstanceId: '" + appInstanceId + "',");
+				console.log("                   	AppName: '" + appName + "',");
+				console.log("                   	FeatureName: '" + featureName + "',");
+				console.log("                   	Status: '" + 'Running' + "',");
+				console.log("                   	Duration: '" + (intervalDate - appStartTime) / 1000 + "',");
+				console.log("                   	AppStartTime: '" + appStartTime.toISOString() + "',");
+				console.log("                   	Time: '" + intervalDate.toISOString() + "'");
+				console.log("                   }");
+			}, 5000);
+			this.lunaIntervalId[`${intervalName}`] = intervalId;
+		}
+	}
+
 	setWeather = async (latitude, longitude) => {
 		let weatherData;
 		try {
@@ -407,6 +495,8 @@ class AppContextProvider extends Component {
 		const context = {
 			...this.state,
 			getUserNames: this.getUserNames,
+			sendLaunchLuna: this.sendLaunchLuna,
+			sendTelemetry: this.sendTelemetry,
 			updateAppState: this.updateAppState,
 			resetUserSettings: this.resetUserSettings,
 			resetAll: this.resetAll

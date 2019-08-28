@@ -123,9 +123,9 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		}
 
 		reconnect = () => {
-			const host = window.getServicesLayerHost();
-			console.warn('%cAttempting to reconnect with the service layer at:', 'color: orange', host);
-			this.connection.reconnect();
+			// const host = window.getServicesLayerHost();
+			// console.warn('%cAttempting to reconnect with the service layer at:', 'color: orange', host);
+			// this.connection.reconnect();
 		}
 
 		// The following two functions generate location coordinates to aid in testing when the

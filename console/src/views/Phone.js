@@ -17,6 +17,8 @@ import CustomLayout, {SaveLayoutArrangement} from '../components/CustomLayout';
 import Dialer from '../components/Dialer';
 import CallPopup from '../components/CallPopup';
 import ContactThumbnail from '../components/ContactThumbnail';
+import AppContextConnect from '../App/AppContextConnect';
+
 import css from './Phone.module.less';
 
 const contacts = [
@@ -88,6 +90,7 @@ const PhoneBase = kind({
 		onChange: PropTypes.func,
 		onTogglePopup: PropTypes.func,
 		showPopup: PropTypes.bool,
+		sendTelemetry: PropTypes.func,
 		value: PropTypes.string
 	},
 
@@ -110,10 +113,23 @@ const PhoneBase = kind({
 			)
 		),
 		onClear: handle(forwardClear),
-		onSelectDigit: handle(appendValue(ev => ev.value))
+		onSelectDigit: handle(appendValue(ev => ev.value)),
+		onClick: (ev, {sendTelemetry}) => {
+			const time = new Date();
+			time.setSeconds(time.getSeconds() - 1);
+			sendTelemetry({
+				appInstanceId: 'phone',
+				appName: 'phone',
+				featureName: 'Call',
+				status: 'Running',
+				appStartTime: time,
+				intervalFlag: false
+			});
+		}
 	},
 
-	render: ({arrangeable, arrangement, onArrange, handleInputKeyDown, onContactClick, onChange, onClear, onSelectDigit, onTogglePopup, showPopup, value, ...rest}) => {
+	render: ({arrangeable, arrangement, onArrange, handleInputKeyDown, onContactClick, onChange, onClear, onClick, onSelectDigit, onTogglePopup, showPopup, value, ...rest}) => {
+		delete rest.sendTelemetry;
 		return (
 			<Panel {...rest}>
 				<CustomLayout arrangeable={arrangeable} arrangement={arrangement} onArrange={onArrange}>
@@ -127,12 +143,12 @@ const PhoneBase = kind({
 								placeholder="Phone Number ..."
 								value={value}
 							/>
-							<Icon onClick={onClear} css={css} >\u232B</Icon>
+							<Icon onClick={onClear} css={css} >arrowshrink</Icon>
 						</Cell>
 						<Cell className="dialer-grid">
 							<Dialer align="center center" onSelectDigit={onSelectDigit} />
 						</Cell>
-						<Cell shrink className="call">
+						<Cell shrink className="call" onClick={onClick}>
 							<Button
 								className={css.callButton}
 								disabled={!value}
@@ -164,13 +180,15 @@ const PhoneBase = kind({
 	}
 });
 
-const Phone = Toggleable(
+const Phone = AppContextConnect(({sendTelemetry}) => ({
+	sendTelemetry
+}))(Toggleable(
 	{prop: 'showPopup', toggle: 'onTogglePopup'},
 	Changeable(
 		SaveLayoutArrangement('phone')(
 			PhoneBase
 		)
 	)
-);
+));
 
 export default Phone;

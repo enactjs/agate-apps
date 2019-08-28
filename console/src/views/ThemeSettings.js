@@ -130,11 +130,21 @@ const ThemeSettings = kind({
 });
 
 // Example to show how to optimize rerenders.
-const SaveableSettings = (settingName, propName = 'value') => AppContextConnect(({userSettings, updateAppState}) => ({
+const SaveableSettings = (settingName, propName = 'value') => AppContextConnect(({sendTelemetry, userSettings, updateAppState}) => ({
 	[propName]: userSettings[settingName],
 	onChange: ({value}) => {
 		updateAppState((state) => {
 			state.userSettings[settingName] = value;
+		});
+		const time = new Date();
+		time.setSeconds(time.getSeconds() - 1);
+		sendTelemetry({
+			appInstanceId: 'settings/theme',
+			appName: 'settings/theme',
+			featureName: 'Color change',
+			status: 'Running',
+			appStartTime: time,
+			intervalFlag: false
 		});
 	}
 }));
@@ -149,11 +159,21 @@ const HighlightColorSetting = SaveableSettings('colorHighlight')(ColorPickerItem
 // const FontSizeSetting = SaveableSettings('fontSize')(SliderButtonItem);
 
 // Make and apply a custom saver that can do additional operations (look ups from a list)
-const SkinSetting = AppContextConnect(({userSettings, updateAppState}) => ({
+const SkinSetting = AppContextConnect(({sendTelemetry, userSettings, updateAppState}) => ({
 	value: skinList.indexOf(userSettings.skin),
 	onChange: ({value}) => {
 		updateAppState((state) => {
 			state.userSettings.skin = skinList[value].toLowerCase();
+		});
+		const time = new Date();
+		time.setSeconds(time.getSeconds() - 1);
+		sendTelemetry({
+			appInstanceId: 'settings/theme',
+			appName: 'settings/theme',
+			featureName: 'Theme change',
+			status: 'Running',
+			appStartTime: time,
+			intervalFlag: false
 		});
 	}
 }))(SliderButtonItem);

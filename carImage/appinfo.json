@@ -1,0 +1,13 @@
+{
+	"id": "carImage",
+	"version": "1.0.0",
+	"vendor": "LGE-SWP",
+	"type": "web",
+	"main": "index.js",
+	"title": "car image",
+	"icon": "icon.png",
+	"uiRevision": 2,
+	"requiredPermissions": [
+		"all"
+	]
+}

@@ -7,8 +7,8 @@ const
     weatherApiKey = '';
 
 const
-    rssiLaura = -75,
-    rssiThomas = -75;
+    rssiLaura = -50,
+    rssiThomas = -50;
 
 function getCommunicationServerHost () {
     return communicationServerHost;
