@@ -381,18 +381,8 @@ const AppIndex = (Wrapped) => {
 			// Console Started
 			sendTelemetry({
 				appInstanceId: 'home',
-				appName: 'console',
+				appName: 'home',
 				featureName: 'Main',
-				status: 'Started',
-				appStartTime: this.appStartTime,
-				intervalFlag: true
-			});
-
-			// Radio Started
-			sendTelemetry({
-				appInstanceId: 'backgroundRadio',
-				appName: 'backgroundRadio',
-				featureName: 'No Signal',
 				status: 'Started',
 				appStartTime: this.appStartTime,
 				intervalFlag: true

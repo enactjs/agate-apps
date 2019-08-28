@@ -245,8 +245,8 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 
 			// Send a telemetry when music changed
 			sendTelemetry({
-				appInstanceId: 'backgroundRadio',
-				appName: 'backgroundRadio',
+				appInstanceId: 'radio',
+				appName: 'radio',
 				featureName: this.selectedMusic,
 				status: 'Stopped',
 				appStartTime: this.appStartTime,
@@ -256,8 +256,8 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 			this.appStartTime = new Date();
 
 			sendTelemetry({
-				appInstanceId: 'backgroundRadio',
-				appName: 'backgroundRadio',
+				appInstanceId: 'radio',
+				appName: 'radio',
 				featureName: musicName,
 				status: 'Started',
 				appStartTime: this.appStartTime,

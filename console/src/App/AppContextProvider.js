@@ -125,8 +125,32 @@ class AppContextProvider extends Component {
 		let
 			boundaryRssiLaura = -1000,
 			boundaryRssiThomas = -1000,
-			countForRecognition = 0,
-			fixedCountForRecognition = 5;
+			changeCountLaura = 0,
+			changeCountThomas = 0,
+			lastTimeLaura = window.performance.now(),
+			lastTimeThomas = window.performance.now();
+
+		const changeUser = (changeUserId) => {
+			if (this.state.userId !== changeUserId) {
+				this.updateAppState((state) => {
+					state.userId = changeUserId;
+				});
+				const time = new Date();
+				time.setSeconds(time.getSeconds() - 1);
+				this.sendTelemetry({
+					appInstanceId: 'user',
+					appName: 'user',
+					featureName: 'change',
+					status: 'Running',
+					appStartTime: time,
+					intervalFlag: false
+				});
+				changeCountLaura = 0;
+				changeCountThomas = 0;
+				boundaryRssiLaura = -1000;
+				boundaryRssiThomas = -1000;
+			}
+		}
 
 		new LS2Request().send({
 			service: 'luna://com.webos.service.bluetooth2/le',
@@ -138,39 +162,40 @@ class AppContextProvider extends Component {
 				subscribe: true
 			},
 			onSuccess: (res) => {
-
+				if (!res.hasOwnProperty('devices')) {
+					return;
+				}
 				const device = res.devices[0];
+				const currentTime = window.performance.now();
 				if (device.name === 'L' && fixedBoundaryRssiLaura < device.rssi) {
 					boundaryRssiLaura = device.rssi;
-					countForRecognition++;
+					lastTimeLaura = currentTime;
 				} else if (device.name === 'T' && fixedBoundaryRssiThomas < device.rssi) {
 					boundaryRssiThomas = device.rssi;
-					countForRecognition++;
+					lastTimeThomas = currentTime;
 				}
 
-				if (fixedCountForRecognition < countForRecognition) {
-					console.log("============= Bluetooth res =============");
-					console.log(res.devices[0].name + ", " + res.devices[0].rssi);
-					console.log("boundaryRssiLaura: " + boundaryRssiLaura + ", boundaryRssiThomas: " + boundaryRssiThomas);
-					console.log("=========================================");
-					const changeUserId = boundaryRssiLaura >= boundaryRssiThomas ? 1 : 2;
-					if (changeUserId !== this.state.userId) {
-						this.updateAppState((state) => {
-							state.userId = changeUserId;
-						});
-
-						this.sendTelemetry({
-							appInstanceId: 'user',
-							appName: 'user',
-							featureName: 'change',
-							status: 'Running',
-							appStartTime: this.state.appState.appStartTime,
-							intervalFlag: false
-						});
-					}
+				if (currentTime - lastTimeLaura > 3000) {
 					boundaryRssiLaura = -1000;
+					changeCountLaura = 0;
+				}
+				if (currentTime - lastTimeThomas > 3000) {
 					boundaryRssiThomas = -1000;
-					countForRecognition = 0;
+					changeCountThomas = 0;
+				}
+
+				if (boundaryRssiLaura > boundaryRssiThomas) {
+					changeCountLaura++;
+				} else if (boundaryRssiLaura < boundaryRssiThomas) {
+					changeCountThomas++;
+				} else {
+					return;
+				}
+
+				if (changeCountLaura > 2) {
+					changeUser(1);
+				} else if (changeCountThomas > 2) {
+					changeUser(2);
 				}
 			}
 		});
@@ -396,15 +421,15 @@ class AppContextProvider extends Component {
 			}
 		});
 
-		console.log("####################################");
-		console.log("AppInstanceId: " + appInstanceId);
-		console.log("AppName: " + appName);
-		console.log("FeatureName: " + featureName);
-		console.log("Status: " + status);
-		console.log("Duration: " + (date - appStartTime) / 1000);
-		console.log("AppStartTime: " + appStartTime.toISOString());
-		console.log("Time: " + date.toISOString());
-		console.log("####################################");
+		console.log("{");
+		console.log("	AppInstanceId: '" + appInstanceId + "',");
+		console.log("	AppName: '" + appName + "',");
+		console.log("	FeatureName: '" + featureName + "',");
+		console.log("	Status: '" + status + "',");
+		console.log("	Duration: '" + (date - appStartTime) / 1000 + "',");
+		console.log("	AppStartTime: '" + appStartTime.toISOString() + "',");
+		console.log("	Time: '" + date.toISOString() + "'");
+		console.log("}");
 
 		// Send the current information of the app every 5 seconds
 		if (intervalFlag) {
@@ -427,15 +452,15 @@ class AppContextProvider extends Component {
 						Time: intervalDate.toISOString()
 					}
 				});
-				console.log("                   ####################################");
-				console.log("                   AppInstanceId: " + appInstanceId);
-				console.log("                   AppName: " + appName);
-				console.log("                   FeatureName: " + featureName);
-				console.log("                   Status: " + 'Running');
-				console.log("                   Duration: " + (intervalDate - appStartTime) / 1000);
-				console.log("                   AppStartTime: " + appStartTime.toISOString());
-				console.log("                   Time: " + intervalDate.toISOString());
-				console.log("                   ####################################");
+				console.log("                   {");
+				console.log("                   	AppInstanceId: '" + appInstanceId + "',");
+				console.log("                   	AppName: '" + appName + "',");
+				console.log("                   	FeatureName: '" + featureName + "',");
+				console.log("                   	Status: '" + 'Running' + "',");
+				console.log("                   	Duration: '" + (intervalDate - appStartTime) / 1000 + "',");
+				console.log("                   	AppStartTime: '" + appStartTime.toISOString() + "',");
+				console.log("                   	Time: '" + intervalDate.toISOString() + "'");
+				console.log("                   }");
 			}, 5000);
 			this.lunaIntervalId[`${intervalName}`] = intervalId;
 		}

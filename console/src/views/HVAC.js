@@ -7,6 +7,7 @@ import React from 'react';
 import {ResponsiveBox} from '@enact/agate/DropManager';
 import SliderButton from '@enact/agate/SliderButton';
 import ToggleButton from '@enact/agate/ToggleButton';
+import PropTypes from 'prop-types';
 
 import AppContextConnect from '../App/AppContextConnect';
 import CustomLayout, {SaveLayoutArrangement} from '../components/CustomLayout';
@@ -35,6 +36,25 @@ const HvacBase = kind({
 		className: 'hvac'
 	},
 
+	propTypes: {
+		sendTelemetry: PropTypes.func
+	},
+
+	handlers: {
+		onClickHandler: (ev, {sendTelemetry}) => {
+			const time = new Date();
+			time.setSeconds(time.getSeconds() - 1);
+			sendTelemetry({
+				appInstanceId: 'hvac',
+				appName: 'hvac',
+				featureName: 'Windshield setting change',
+				status: 'Running',
+				appStartTime: time,
+				intervalFlag: false
+			});
+		}
+	},
+
 	render: ({
 		acSelected,
 		arrangeable,
@@ -44,6 +64,7 @@ const HvacBase = kind({
 		leftHeat,
 		leftTemp,
 		onArrange,
+		onClickHandler,
 		onToggleAc,
 		onToggleAuto,
 		onToggleLeftHeater,
@@ -150,11 +171,11 @@ const HvacBase = kind({
 				</Row>
 				<bottom>
 					<ResponsiveLayout wrap>
-						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="airdown" />
-						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="airup" />
-						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="airright" />
-						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="defrosterback" />
-						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="defrosterfront" />
+						<Cell component={ToggleButton} onClick={onClickHandler} className={css.spacedToggles} shrink icon="airdown" />
+						<Cell component={ToggleButton} onClick={onClickHandler} className={css.spacedToggles} shrink icon="airup" />
+						<Cell component={ToggleButton} onClick={onClickHandler} className={css.spacedToggles} shrink icon="airright" />
+						<Cell component={ToggleButton} onClick={onClickHandler} className={css.spacedToggles} shrink icon="defrosterback" />
+						<Cell component={ToggleButton} onClick={onClickHandler} className={css.spacedToggles} shrink icon="defrosterfront" />
 					</ResponsiveLayout>
 				</bottom>
 			</CustomLayout>

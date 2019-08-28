@@ -33,6 +33,7 @@ const DashboardBase = kind({
 	name: 'Dashboard',
 
 	proptypes: {
+		sendTelemetry: PropTypes.func,
 		linearVelocity: PropTypes.number
 	},
 
@@ -42,14 +43,17 @@ const DashboardBase = kind({
 	},
 
 	computed: {
-		speed: ({linearVelocity}) => Math.round(linearVelocity * 2.237), // meters per second to miles per hour. Multiply by the constant: 2.237
-		onClick: ({sendTelemetry}) => {
+		speed: ({linearVelocity}) => Math.round(linearVelocity * 2.237) // meters per second to miles per hour. Multiply by the constant: 2.237
+	},
+
+	handlers: {
+		onClick: (ev, {sendTelemetry}) => {
 			const time = new Date();
 			time.setSeconds(time.getSeconds() - 1);
 			sendTelemetry({
 				appInstanceId: 'hvac',
 				appName: 'hvac',
-				featureName: 'AC change',
+				featureName: 'Windshield setting change',
 				status: 'Running',
 				appStartTime: time,
 				intervalFlag: false
@@ -59,6 +63,7 @@ const DashboardBase = kind({
 
 	render: ({arrangeable, arrangement, onArrange, onClick, speed, ...rest}) => {
 		delete rest.linearVelocity;
+		delete rest.sendTelemetry;
 		return (
 			<Panel {...rest}>
 				<CustomLayout arrangeable={arrangeable} arrangement={arrangement} onArrange={onArrange}>

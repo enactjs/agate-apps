@@ -37,6 +37,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 			description: PropTypes.string,
 			destination: propTypeLatLonList,
 			follow: PropTypes.bool,
+			sendTelemetry: PropTypes.func,
 			locationSelection: PropTypes.bool,
 			navigating: PropTypes.bool,
 			navigation: PropTypes.object,
@@ -79,6 +80,16 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 				description: loc ? loc.description : '',
 				destination: loc ? [loc.coordinates] : null
 			});
+			const time = new Date();
+			time.setSeconds(time.getSeconds() - 1);
+			this.props.sendTelemetry({
+				appInstanceId: 'map',
+				appName: 'map',
+				featureName: 'Desnation select',
+				status: 'Running',
+				appStartTime: time,
+				intervalFlag: false
+			});
 		}
 
 		startNavigation = ({selected}) => {
@@ -94,6 +105,16 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 					navigating: false
 				});
 			}
+			const time = new Date();
+			time.setSeconds(time.getSeconds() - 1);
+			this.props.sendTelemetry({
+				appInstanceId: 'map',
+				appName: 'map',
+				featureName: 'Navigation status change',
+				status: 'Running',
+				appStartTime: time,
+				intervalFlag: false
+			});
 		}
 
 		toggleAutonomous = () => {
@@ -159,6 +180,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 			delete rest.updateProposedDestination;
 			delete rest.viewLockoutDuration;
 			delete rest.zoomToSpeedScaleFactor;
+			delete rest.sendTelemetry;
 			const durationIncrements = ['day', 'hour', 'min'];
 
 			return (
@@ -289,11 +311,12 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 });
 
 
-const ConnectedMap = AppContextConnect(({location, userId, userSettings, navigation, updateAppState}) => ({
+const ConnectedMap = AppContextConnect(({location, sendTelemetry, userId, userSettings, navigation, updateAppState}) => ({
 	follow: navigation.follow,
 	topLocations: userSettings.topLocations,
 	location,
 	navigation,
+	sendTelemetry,
 	navigating: navigation.navigating,
 	destination: navigation.destination,
 	updateAppState,
