@@ -77,110 +77,113 @@ const HvacBase = kind({
 		rightHeat,
 		rightTemp,
 		...rest
-	}) => (
-		<Panel {...rest}>
-			<CustomLayout arrangeable={arrangeable} arrangement={arrangement} onArrange={onArrange}>
-				<top>
-					<Divider>
-						Fan Speed
-					</Divider>
-					<SliderButton
-						disabled={autoSelected}
-						onChange={onUpdateFanSpeed}
-						value={fanSpeed}
-					>
-						{speeds}
-					</SliderButton>
-				</top>
-				<Row className={css.above} align="center space-around">
-					<Cell
-						className={css.button}
-						component={ToggleButton}
-						icon="heatseatleft"
-						onClick={onToggleLeftHeater}
-						selected={leftHeat}
-						shrink
-						type="grid"
-						underline
-					/>
-					<Cell
-						className={css.button}
-						component={ToggleButton}
-						onClick={onToggleAc}
-						selected={acSelected}
-						shrink
-						type="grid"
-						underline
-					>
-						A/C
-					</Cell>
-					<Cell
-						className={css.button}
-						component={ToggleButton}
-						icon="heatseatright"
-						onClick={onToggleRightHeater}
-						selected={rightHeat}
-						shrink
-						type="grid"
-						underline
-					/>
-				</Row>
-				<Row className={css.below} align="center space-around">
-					<Cell
-						className={css.picker}
-						component={Picker}
-						onChange={onUpdateLeftTemperature}
-						orientation="vertical"
-						shrink
-						value={leftTemp}
-					>
-						{temps}
-					</Cell>
-					<Cell
-						className={css.stackedButtons}
-						shrink
-					>
-						<ToggleButton
-							type="grid"
-							className={css.button}
-							onClick={onToggleAuto}
-							selected={autoSelected}
-							underline
+	}) => {
+		delete rest.sendTelemetry;
+		return (
+			<Panel {...rest}>
+				<CustomLayout arrangeable={arrangeable} arrangement={arrangement} onArrange={onArrange}>
+					<top>
+						<Divider>
+							Fan Speed
+						</Divider>
+						<SliderButton
+							disabled={autoSelected}
+							onChange={onUpdateFanSpeed}
+							value={fanSpeed}
 						>
-							AUTO
-						</ToggleButton>
-						<ToggleButton
+							{speeds}
+						</SliderButton>
+					</top>
+					<Row className={css.above} align="center space-around">
+						<Cell
 							className={css.button}
-							icon="aircirculation"
-							onClick={onToggleRecirculation}
-							selected={recirculate}
+							component={ToggleButton}
+							icon="heatseatleft"
+							onClick={onToggleLeftHeater}
+							selected={leftHeat}
+							shrink
 							type="grid"
 							underline
 						/>
-					</Cell>
-					<Cell
-						className={css.picker}
-						component={Picker}
-						onChange={onUpdateRightTemperature}
-						orientation="vertical"
-						shrink
-						value={rightTemp}
-					>
-						{temps}
-					</Cell>
-				</Row>
-				<bottom>
-					<ResponsiveLayout wrap>
-						<Cell component={ToggleButton} onClick={onClickHandler} className={css.spacedToggles} shrink icon="airdown" />
-						<Cell component={ToggleButton} onClick={onClickHandler} className={css.spacedToggles} shrink icon="airup" />
-						<Cell component={ToggleButton} onClick={onClickHandler} className={css.spacedToggles} shrink icon="airright" />
-						<Cell component={ToggleButton} onClick={onClickHandler} className={css.spacedToggles} shrink icon="defrosterback" />
-						<Cell component={ToggleButton} onClick={onClickHandler} className={css.spacedToggles} shrink icon="defrosterfront" />
-					</ResponsiveLayout>
-				</bottom>
-			</CustomLayout>
-		</Panel>
-	)
+						<Cell
+							className={css.button}
+							component={ToggleButton}
+							onClick={onToggleAc}
+							selected={acSelected}
+							shrink
+							type="grid"
+							underline
+						>
+							A/C
+						</Cell>
+						<Cell
+							className={css.button}
+							component={ToggleButton}
+							icon="heatseatright"
+							onClick={onToggleRightHeater}
+							selected={rightHeat}
+							shrink
+							type="grid"
+							underline
+						/>
+					</Row>
+					<Row className={css.below} align="center space-around">
+						<Cell
+							className={css.picker}
+							component={Picker}
+							onChange={onUpdateLeftTemperature}
+							orientation="vertical"
+							shrink
+							value={leftTemp}
+						>
+							{temps}
+						</Cell>
+						<Cell
+							className={css.stackedButtons}
+							shrink
+						>
+							<ToggleButton
+								type="grid"
+								className={css.button}
+								onClick={onToggleAuto}
+								selected={autoSelected}
+								underline
+							>
+								AUTO
+							</ToggleButton>
+							<ToggleButton
+								className={css.button}
+								icon="aircirculation"
+								onClick={onToggleRecirculation}
+								selected={recirculate}
+								type="grid"
+								underline
+							/>
+						</Cell>
+						<Cell
+							className={css.picker}
+							component={Picker}
+							onChange={onUpdateRightTemperature}
+							orientation="vertical"
+							shrink
+							value={rightTemp}
+						>
+							{temps}
+						</Cell>
+					</Row>
+					<bottom>
+						<ResponsiveLayout wrap>
+							<Cell component={ToggleButton} onClick={onClickHandler} className={css.spacedToggles} shrink icon="airdown" />
+							<Cell component={ToggleButton} onClick={onClickHandler} className={css.spacedToggles} shrink icon="airup" />
+							<Cell component={ToggleButton} onClick={onClickHandler} className={css.spacedToggles} shrink icon="airright" />
+							<Cell component={ToggleButton} onClick={onClickHandler} className={css.spacedToggles} shrink icon="defrosterback" />
+							<Cell component={ToggleButton} onClick={onClickHandler} className={css.spacedToggles} shrink icon="defrosterfront" />
+						</ResponsiveLayout>
+					</bottom>
+				</CustomLayout>
+			</Panel>
+		);
+	}
 });
 
 const Hvac = AppContextConnect(({sendTelemetry, userSettings: {climate}, updateAppState}) => ({
@@ -193,6 +196,7 @@ const Hvac = AppContextConnect(({sendTelemetry, userSettings: {climate}, updateA
 	recirculate: climate.recirculate,
 	rightHeat: climate.rightHeat,
 	rightTemp: climate.rightTemp,
+	sendTelemetry,
 	// handlers
 	onToggleAc: () => {
 		updateAppState((state) => {
