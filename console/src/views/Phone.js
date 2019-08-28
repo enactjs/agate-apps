@@ -114,9 +114,6 @@ const PhoneBase = kind({
 	},
 
 	render: ({arrangeable, arrangement, onArrange, handleInputKeyDown, onContactClick, onChange, onClear, onSelectDigit, onTogglePopup, showPopup, value, ...rest}) => {
-		console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-		console.log(showPopup);
-		console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 		return (
 			<Panel {...rest}>
 				<CustomLayout arrangeable={arrangeable} arrangement={arrangement} onArrange={onArrange}>
