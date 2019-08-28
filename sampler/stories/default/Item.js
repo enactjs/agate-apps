@@ -14,7 +14,6 @@ storiesOf('Agate', module)
 		'Item',
 		() => (
 			<Item
-				outlineFocus={boolean('outlineFocus', Config)}
 				disabled={boolean('disabled', Config)}
 				inline={boolean('inline', Config)}
 			>
