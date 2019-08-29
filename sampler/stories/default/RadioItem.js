@@ -16,7 +16,6 @@ storiesOf('Agate', module)
 			<div>
 				<RadioItem
 					defaultSelected={boolean('defaultSelected', Config)}
-					radioPosition={select('radioPosition', ['before', 'after'], Config, 'after')}
 				>
 					{text('children', Config, 'Sound')}
 				</RadioItem>

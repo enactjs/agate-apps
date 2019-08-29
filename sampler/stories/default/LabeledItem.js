@@ -15,7 +15,7 @@ storiesOf('Agate', module)
 				icon={select('icon', ['', ...iconNames], LabeledItem, 'expand')}
 				label={text('label', LabeledItem, 'Label')}
 				labelInline={boolean('labelInline', LabeledItem)}
-				labelPosition={select('labelPosition', ['before', 'after', 'above', 'below', 'right'], LabeledItem, 'after')}
+				labelPosition={select('labelPosition', ['before', 'after'], LabeledItem, 'after')}
 			>
 				{text('children', LabeledItem, 'Hello LabeledItem')}
 			</LabeledItem>
