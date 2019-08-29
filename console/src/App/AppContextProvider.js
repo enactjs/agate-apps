@@ -9,7 +9,7 @@ import userPresetsForDemo from './userPresetsForDemo';
 const Context = React.createContext();
 
 const getWeather = async (latitude, longitude) => {
-	const key = window.getWeatherApiKey();
+	const key = window.weatherApiKey;
 	if (!key) {
 		console.error('Please set `weatherApiKey` key in your `config.js` file to your own openweathermap.org API key.');
 	}
@@ -119,8 +119,8 @@ class AppContextProvider extends Component {
 		// User change scenario
 		// Use case: Luna API
 		const
-			fixedBoundaryRssiLaura = window.getRssiLaura(),
-			fixedBoundaryRssiThomas = window.getRssiThomas();
+			fixedBoundaryRssiLaura = window.rssiLaura,
+			fixedBoundaryRssiThomas = window.rssiThomas;
 
 		let
 			boundaryRssiLaura = -1000,
@@ -421,15 +421,27 @@ class AppContextProvider extends Component {
 			}
 		});
 
-		console.log("{");
-		console.log("	AppInstanceId: '" + appInstanceId + "',");
-		console.log("	AppName: '" + appName + "',");
-		console.log("	FeatureName: '" + featureName + "',");
-		console.log("	Status: '" + status + "',");
-		console.log("	Duration: '" + (date - appStartTime) / 1000 + "',");
-		console.log("	AppStartTime: '" + appStartTime.toISOString() + "',");
-		console.log("	Time: '" + date.toISOString() + "'");
-		console.log("}");
+		// JSON Debug
+		// window.consoleLog = window.consoleLog + ", " + JSON.stringify({
+		// 	AppInstanceId: appInstanceId,
+		// 	AppName: appName,
+		// 	FeatureName: featureName,
+		// 	Status: status,
+		// 	Duration: (date - appStartTime) / 1000,
+		// 	AppStartTime: appStartTime.toISOString(),
+		// 	Time: date.toISOString()
+		// });
+
+		// Console Debug
+		// console.log("{");
+		// console.log("	AppInstanceId: '" +  + "',");
+		// console.log("	AppName: '" + appName + "',");
+		// console.log("	FeatureName: '" + featureName + "',");
+		// console.log("	Status: '" + status + "',");
+		// console.log("	Duration: '" + (date - appStartTime) / 1000 + "',");
+		// console.log("	AppStartTime: '" + appStartTime.toISOString() + "',");
+		// console.log("	Time: '" + date.toISOString() + "'");
+		// console.log("}");
 
 		// Send the current information of the app every 5 seconds
 		if (intervalFlag) {
@@ -452,15 +464,28 @@ class AppContextProvider extends Component {
 						Time: intervalDate.toISOString()
 					}
 				});
-				console.log("                   {");
-				console.log("                   	AppInstanceId: '" + appInstanceId + "',");
-				console.log("                   	AppName: '" + appName + "',");
-				console.log("                   	FeatureName: '" + featureName + "',");
-				console.log("                   	Status: '" + 'Running' + "',");
-				console.log("                   	Duration: '" + (intervalDate - appStartTime) / 1000 + "',");
-				console.log("                   	AppStartTime: '" + appStartTime.toISOString() + "',");
-				console.log("                   	Time: '" + intervalDate.toISOString() + "'");
-				console.log("                   }");
+
+				// JSON Debug
+				// window.consoleLog = window.consoleLog + ", " + JSON.stringify({
+				// 	AppInstanceId: appInstanceId,
+				// 	AppName: appName,
+				// 	FeatureName: featureName,
+				// 	Status: 'Running',
+				// 	Duration: (intervalDate - appStartTime) / 1000,
+				// 	AppStartTime: appStartTime.toISOString(),
+				// 	Time: intervalDate.toISOString()
+				// });
+
+				// Console Debug
+				// console.log("                   {");
+				// console.log("                   	AppInstanceId: '" + appInstanceId + "',");
+				// console.log("                   	AppName: '" + appName + "',");
+				// console.log("                   	FeatureName: '" + featureName + "',");
+				// console.log("                   	Status: '" + 'Running' + "',");
+				// console.log("                   	Duration: '" + (intervalDate - appStartTime) / 1000 + "',");
+				// console.log("                   	AppStartTime: '" + appStartTime.toISOString() + "',");
+				// console.log("                   	Time: '" + intervalDate.toISOString() + "'");
+				// console.log("                   }");
 			}, 5000);
 			this.lunaIntervalId[`${intervalName}`] = intervalId;
 		}

@@ -19,10 +19,10 @@ import markerCss from './Marker.module.less';
 
 const linear = (input) => input;
 
-if (!window.getMapApiKey()) {
+if (!window.mapApiKey) {
 	Error('Please set `mapApiKey` key in your `config.js` file to your own Mapbox API key.');
 }
-mapboxgl.accessToken = window.getMapApiKey();
+mapboxgl.accessToken = window.mapApiKey;
 
 let startCoordinates = {lon: -122.394558, lat: 37.786600};
 // 37.786600, -122.394558
@@ -273,7 +273,7 @@ class MapCoreBase extends React.Component {
 			});
 			addCarLayer({
 				coordinates: toMapbox(startCoordinates),
-				iconURL: 'http://127.0.0.1:9000/car.png',
+				iconURL: 'http://' + window.carImageHost + '/car.png',
 				map: this.map,
 				orientation: location.orientation
 			});

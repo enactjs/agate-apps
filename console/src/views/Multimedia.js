@@ -323,7 +323,7 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 				videos
 			};
 
-			const host = window.getCommunicationServerHost();
+			const host = window.communicationServerHost;
 
 			return (
 				<React.Fragment>
