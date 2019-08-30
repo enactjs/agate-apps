@@ -86,16 +86,31 @@ const UserSelectionPopupBase = kind({
 		onResetPosition: (ev, {onResetPosition}) => {
 			onResetPosition({x: 52880.8698406219, y: 4182781.1160838, z: -2.3562});
 		},
-		updateUser: ({selected}, {updateAppState}) => {
-			updateAppState((state) => {
-				state.userId = selected + 1;
-			});
+		updateUser: ({selected}, {sendTelemetry, updateAppState, userId}) => {
+			if (userId !== selected + 1) {
+				updateAppState((state) => {
+					state.userId = selected + 1;
+				});
+				setTimeout(() => {
+					const time = new Date();
+					time.setSeconds(time.getSeconds() - 1);
+					sendTelemetry({
+						appInstanceId: 'user',
+						appName: 'user',
+						featureName: 'change',
+						status: 'Running',
+						appStartTime: time,
+						intervalFlag: false
+					});
+				}, 500);
+			}
 		}
 	},
 
 	render: ({userId, usersList, updateUser, resetUserSettings, onResetPosition, onResetAll, ...rest}) => {
 		delete rest.onResetCopilot;
 		delete rest.resetAll;
+		delete rest.sendTelemetry;
 		delete rest.updateAppState;
 		return (
 			<Popup
@@ -126,11 +141,12 @@ const UserSelectionPopupBase = kind({
 	}
 });
 
-const UserSelectionPopup = AppContextConnect(({userId, resetUserSettings, resetAll, usersList, updateAppState}) => ({
+const UserSelectionPopup = AppContextConnect(({userId, resetUserSettings, resetAll, sendTelemetry, usersList, updateAppState}) => ({
 	usersList,
 	userId,
 	resetUserSettings,
 	resetAll,
+	sendTelemetry,
 	updateAppState
 }))(UserSelectionPopupBase);
 
