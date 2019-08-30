@@ -168,7 +168,7 @@ const PhoneBase = kind({
 						phoneNumber={value}
 					/>
 					<video width="320" height="240" controls>
-						<source src="https://privmoviesv2pmd-a.akamaihd.net/Trailers/t2024/walk.mp4" type="video/mp4" />
+						<source src="./assets/walk.mp4" type="video/mp4" />
 					</video>
 					<bottom>
 						<div className={css.scrollableContainer}>
