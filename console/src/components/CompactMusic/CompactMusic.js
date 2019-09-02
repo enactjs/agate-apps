@@ -23,9 +23,9 @@ const PlaybackControls = kind({
 				{...props}
 				align="center center"
 			>
-				<Cell shrink><IconButton size="smallest">skipbackward</IconButton></Cell>
+				<Cell shrink><IconButton size="small">skipbackward</IconButton></Cell>
 				<Cell shrink><IconButton size="small">play</IconButton></Cell>
-				<Cell shrink><IconButton size="smallest">skipforward</IconButton></Cell>
+				<Cell shrink><IconButton size="small">skipforward</IconButton></Cell>
 			</Row>
 		);
 	}

@@ -39,7 +39,7 @@ const ListItemOverlay = kind({
 
 	render: () => (
 		<Column align="center center">
-			<IconButton size="smallest">play</IconButton>
+			<IconButton size="small">play</IconButton>
 		</Column>
 	)
 });
