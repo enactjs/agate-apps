@@ -193,6 +193,9 @@ const MultimediaBase = kind({
 		videos,
 		...rest
 	}) => {
+		console.log("##################################################################");
+		console.log("url : " + url);
+		console.log("##################################################################");
 		return (
 			<React.Fragment>
 				<ScreenSelectionPopup
@@ -222,7 +225,7 @@ const MultimediaBase = kind({
 							</Column>
 						</left>
 						<Row className={css.bodyRow}>
-							<IFrame allow="autoplay" className={css.iframe} src={url} />
+							<IFrame allow="autoplay" allowFullScreen className={css.iframe} src={url} />
 							{/* {showAd ? <Cell className={css.adSpace} shrink>
 								{adContent}
 							</Cell> : null}*/}
@@ -323,7 +326,7 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 				videos
 			};
 
-			const host = window.getCommunicationServerHost();
+			const host = window.communicationServerHost;
 
 			return (
 				<React.Fragment>

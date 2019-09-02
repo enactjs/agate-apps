@@ -9,7 +9,7 @@ import userPresetsForDemo from './userPresetsForDemo';
 const Context = React.createContext();
 
 const getWeather = async (latitude, longitude) => {
-	const key = window.getWeatherApiKey();
+	const key = window.weatherApiKey;
 	if (!key) {
 		console.error('Please set `weatherApiKey` key in your `config.js` file to your own openweathermap.org API key.');
 	}
@@ -119,8 +119,8 @@ class AppContextProvider extends Component {
 		// User change scenario
 		// Use case: Luna API
 		const
-			fixedBoundaryRssiLaura = window.getRssiLaura(),
-			fixedBoundaryRssiThomas = window.getRssiThomas();
+			fixedBoundaryRssiLaura = window.rssiLaura,
+			fixedBoundaryRssiThomas = window.rssiThomas;
 
 		let
 			boundaryRssiLaura = -1000,
@@ -406,30 +406,43 @@ class AppContextProvider extends Component {
 
 	sendTelemetry = ({appInstanceId, appName, featureName, status, appStartTime, intervalFlag}) => {
 		// Send the currect information for the first time
+		const userName = this.state.userId === 1 ? 'Laura' : 'Thomas';
 		const date = new Date();
 		new LS2Request().send({
 			service: 'luna://com.webos.service.mcvpclient',
 			method: 'sendTelemetry',
 			parameters: {
-				AppInstanceId: appInstanceId,
+				AppInstanceId: appInstanceId + "-" + userName,
 				AppName: appName,
 				FeatureName: featureName,
 				Status: status,
 				Duration: (date - appStartTime) / 1000,
-				AppStartTime: appStartTime.toISOString(),
-				Time: date.toISOString()
+				AppStartTime: appStartTime.toISOString().split('.')[0] + "Z",
+				Time: date.toISOString().split('.')[0] + "Z"
 			}
 		});
 
-		console.log("{");
-		console.log("	AppInstanceId: '" + appInstanceId + "',");
-		console.log("	AppName: '" + appName + "',");
-		console.log("	FeatureName: '" + featureName + "',");
-		console.log("	Status: '" + status + "',");
-		console.log("	Duration: '" + (date - appStartTime) / 1000 + "',");
-		console.log("	AppStartTime: '" + appStartTime.toISOString() + "',");
-		console.log("	Time: '" + date.toISOString() + "'");
-		console.log("}");
+		// JSON Debug
+		// window.consoleLog = window.consoleLog + ", " + JSON.stringify({
+		// 	AppInstanceId: appInstanceId + "-" + userName,
+		// 	AppName: appName,
+		// 	FeatureName: featureName,
+		// 	Status: status,
+		// 	Duration: (date - appStartTime) / 1000,
+		// 	AppStartTime: appStartTime.toISOString().split('.')[0] + "Z",
+		// 	Time: date.toISOString().split('.')[0] + "Z"
+		// });
+
+		// Console Debug
+		// console.log("{");
+		// console.log("	AppInstanceId: '" + appInstanceId + "-" + userName + "',");
+		// console.log("	AppName: '" + appName + "',");
+		// console.log("	FeatureName: '" + featureName + "',");
+		// console.log("	Status: '" + status + "',");
+		// console.log("	Duration: '" + (date - appStartTime) / 1000 + "',");
+		// console.log("	AppStartTime: '" + appStartTime.toISOString().split('.')[0] + "Z',");
+		// console.log("	Time: '" + date.toISOString().split('.')[0] + "Z'");
+		// console.log("}");
 
 		// Send the current information of the app every 5 seconds
 		if (intervalFlag) {
@@ -438,29 +451,43 @@ class AppContextProvider extends Component {
 				clearInterval(this.lunaIntervalId[`${intervalName}`]);
 			}
 			const intervalId = setInterval(() => {
+				const intervalUserName = this.state.userId === 1 ? 'Laura' : 'Thomas';
 				const intervalDate = new Date();
 				new LS2Request().send({
 					service: 'luna://com.webos.service.mcvpclient',
 					method: 'sendTelemetry',
 					parameters: {
-						AppInstanceId: appInstanceId,
+						AppInstanceId: appInstanceId + "-" + intervalUserName,
 						AppName: appName,
 						FeatureName: featureName,
 						Status: 'Running',
 						Duration: (intervalDate - appStartTime) / 1000,
-						AppStartTime: appStartTime.toISOString(),
-						Time: intervalDate.toISOString()
+						AppStartTime: appStartTime.toISOString().split('.')[0] + "Z",
+						Time: intervalDate.toISOString().split('.')[0] + "Z"
 					}
 				});
-				console.log("                   {");
-				console.log("                   	AppInstanceId: '" + appInstanceId + "',");
-				console.log("                   	AppName: '" + appName + "',");
-				console.log("                   	FeatureName: '" + featureName + "',");
-				console.log("                   	Status: '" + 'Running' + "',");
-				console.log("                   	Duration: '" + (intervalDate - appStartTime) / 1000 + "',");
-				console.log("                   	AppStartTime: '" + appStartTime.toISOString() + "',");
-				console.log("                   	Time: '" + intervalDate.toISOString() + "'");
-				console.log("                   }");
+
+				// JSON Debug
+				// window.consoleLog = window.consoleLog + ", " + JSON.stringify({
+				// 	AppInstanceId: appInstanceId + "-" + intervalUserName,
+				// 	AppName: appName,
+				// 	FeatureName: featureName,
+				// 	Status: 'Running',
+				// 	Duration: (intervalDate - appStartTime) / 1000,
+				// 	AppStartTime: appStartTime.toISOString().split('.')[0] + "Z",
+				// 	Time: intervalDate.toISOString().split('.')[0] + "Z"
+				// });
+
+				// Console Debug
+				// console.log("                   {");
+				// console.log("                   	AppInstanceId: '" + appInstanceId + "-" + intervalUserName + "',");
+				// console.log("                   	AppName: '" + appName + "',");
+				// console.log("                   	FeatureName: '" + featureName + "',");
+				// console.log("                   	Status: '" + 'Running' + "',");
+				// console.log("                   	Duration: '" + (intervalDate - appStartTime) / 1000 + "',");
+				// console.log("                   	AppStartTime: '" + appStartTime.toISOString().split('.')[0] + "Z',");
+				// console.log("                   	Time: '" + intervalDate.toISOString().split('.')[0] + "Z'");
+				// console.log("                   }");
 			}, 5000);
 			this.lunaIntervalId[`${intervalName}`] = intervalId;
 		}

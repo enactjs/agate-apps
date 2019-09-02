@@ -84,7 +84,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 		initializeConnection () {
 			if (!this.connection) {
-				const host = window.getServicesLayerHost();
+				const host = window.servicesLayerHost;
 				console.log('Connecting to', host);
 				this.connection = connect({
 					url: 'ws://' + host,
@@ -123,7 +123,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		}
 
 		reconnect = () => {
-			// const host = window.getServicesLayerHost();
+			// const host = window.servicesLayerHost;
 			// console.warn('%cAttempting to reconnect with the service layer at:', 'color: orange', host);
 			// this.connection.reconnect();
 		}
@@ -351,7 +351,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			delete rest.navigation;
 			delete rest.updateAppState;
 
-			const host = window.getCommunicationServerHost();
+			const host = window.communicationServerHost;
 
 			return (
 				<React.Fragment>

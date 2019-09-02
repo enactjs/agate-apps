@@ -88,9 +88,9 @@ class Communicator extends React.Component {
 	sendVideo = ({screenId, video}) => {
 		const data = {
 			route: `VIDEO_ADD_SCREEN/${screenId}`,
-			type: 'youtube',
+			type: video.kind,
 			title: video.snippet.title,
-			url: `https://www.youtube.com/embed/${video.id}?autoplay=1`
+			url: video.kind === 'sony#video' ? video.url : `https://www.youtube.com/embed/${video.id}?autoplay=1`
 		};
 
 		console.log('Sending to', this.props.host, ['SEND_DATA:', data, 'Sending VIDEO_SENT:', {id: screenId}]);

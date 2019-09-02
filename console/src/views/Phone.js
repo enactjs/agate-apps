@@ -137,6 +137,7 @@ const PhoneBase = kind({
 						<Cell shrink className="number-field">
 							<Icon>user</Icon>
 							<Input
+								disabled
 								dismissOnEnter
 								onKeyDown={handleInputKeyDown}
 								onChange={onChange}
