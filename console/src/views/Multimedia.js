@@ -313,11 +313,11 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 			const {screenIds} = this.props;
 			this.selectedVideo = video;
 
-			if (screenIds.length > 1) {
-				this.onOpenPopup();
-			} else {
-				this.onSendVideo({screenId: screenIds[0]});
-			}
+			// if (screenIds.length > 1) {
+			// 	this.onOpenPopup();
+			// } else {
+			this.onSendVideo({screenId: screenIds[0]});
+			// }
 		};
 
 		onSendVideo = ({screenId}) => {
