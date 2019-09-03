@@ -243,7 +243,7 @@ class AppContextProvider extends Component {
 		this.setUserSettings(this.state.userId);
 		this.setLocation();
 		// hardcoded to SF for demo
-		this.setWeather(37.7876092, -122.40091);
+		this.setWeather(50.1167467, 8.6390457);
 	}
 
 	componentWillUpdate (nextProps, nextState) {

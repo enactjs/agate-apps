@@ -1,35 +1,18 @@
-const
-    communicationServerHost = '127.0.0.1:3303',
-    servicesLayerHost = '127.0.0.1:9090';
+// Server Hosts
+window.carImageHost = '127.0.0.1:9000';
+window.communicationServerHost = '127.0.0.1:3303';
+window.servicesLayerHost = '127.0.0.1:9090';
 
-const
-    mapApiKey = '',
-    weatherApiKey = '';
+// API keys
+window.mapApiKey = '';
+window.weatherApiKey = '';
 
-const
-    rssiLaura = -50,
-    rssiThomas = -50;
+window.multimedia = 'local';
+/*
+ * If there is a problem playing the local file, please change to `streaming`.
+ * e.g.> window.multimedia = 'streaming';
+ */
 
-function getCommunicationServerHost () {
-    return communicationServerHost;
-}
-
-function getServicesLayerHost () {
-    return servicesLayerHost;
-}
-
-function getMapApiKey () {
-    return mapApiKey;
-}
-
-function getWeatherApiKey () {
-    return weatherApiKey;
-}
-
-function getRssiLaura () {
-    return rssiLaura;
-}
-
-function getRssiThomas () {
-    return rssiThomas;
-}
+// Bluetooth boundary
+window.rssiLaura = -50;
+window.rssiThomas = -50;

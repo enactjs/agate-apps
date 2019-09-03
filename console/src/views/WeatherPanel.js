@@ -23,7 +23,7 @@ const Weather = kind({
 				weatherObj.high = parseInt(weather.current.main.temp);
 				weatherObj.low = parseInt(weather.current.main.temp_min);
 				weatherObj.description = weather.current.weather[0].description;
-				weatherObj.cityName = weather.current.name;
+				weatherObj.cityName = 'Frankfurt'; // hardcoded to cityName for demo
 			}
 
 			return weatherObj;

@@ -70,7 +70,10 @@ const ResponsiveVirtualList = kind({
 						className={className}
 						css={css}
 						onClick={onSelectVideo(videos[index])}
-						src={videos[index].snippet.thumbnails.medium.url}
+						src={window.multimedia === 'local' ?
+								`file:///usr/palm/frameworks/media/${videos[index].id}-mqdefault.jpg`
+							: videos[index].snippet.thumbnails.medium.url
+						}
 					>
 						{videos[index].snippet.title}
 					</ThumbnailItem>
@@ -83,7 +86,10 @@ const ResponsiveVirtualList = kind({
 					aspectRatio="16:9"
 					caption={size === 'full' ? videos[index].snippet.title : ''}
 					className={className}
-					source={videos[index].snippet.thumbnails.medium.url}
+					source={window.multimedia === 'local' ?
+							`file:///usr/palm/frameworks/media/${videos[index].id}-mqdefault.jpg`
+						: videos[index].snippet.thumbnails.medium.url
+					}
 					onClick={onSelectVideo(videos[index])}
 					selectionOverlay={ListItemOverlay}
 					selectionOverlayShowing
@@ -162,6 +168,7 @@ const MultimediaBase = kind({
 		// adContent: PropTypes.any,
 		arrangeable: PropTypes.any,
 		arrangement: PropTypes.any,
+		id: PropTypes.string,
 		onArrange: PropTypes.func,
 		onClosePopup: PropTypes.func,
 		onSelectVideo: PropTypes.func,
@@ -178,6 +185,26 @@ const MultimediaBase = kind({
 		className: 'multimedia'
 	},
 
+	computed: {
+		video: ({id, url}) => {
+			if (id || url) {
+				if (window.multimedia === 'local') {
+					return (
+						<video key={id || url} width="100%" height="100%" autoPlay controls controlsList="nodownload" disablePictureInPicture>
+							<source src={id ? `file:///usr/palm/frameworks/media/${id}.mp4` : url} type="video/mp4" />
+						</video>
+					);
+				} else {
+					return (
+						<IFrame allow="autoplay" allowFullScreen className={css.iframe} src={url} />
+					);
+				}
+			} else {
+				return null;
+			}
+		}
+	},
+
 	render: ({
 		// adContent,
 		arrangeable,
@@ -189,13 +216,10 @@ const MultimediaBase = kind({
 		onSelectVideo,
 		onSendVideo,
 		screenIds,
-		url,
+		video,
 		videos,
 		...rest
 	}) => {
-		console.log("##################################################################");
-		console.log("url : " + url);
-		console.log("##################################################################");
 		return (
 			<React.Fragment>
 				<ScreenSelectionPopup
@@ -225,7 +249,7 @@ const MultimediaBase = kind({
 							</Column>
 						</left>
 						<Row className={css.bodyRow}>
-							<IFrame allow="autoplay" allowFullScreen className={css.iframe} src={url} />
+							{video}
 							{/* {showAd ? <Cell className={css.adSpace} shrink>
 								{adContent}
 							</Cell> : null}*/}
@@ -257,6 +281,7 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 
 			this.state = {
 				// adContent: this.props.adContent || 'Your Ad Here',
+				id: '',
 				screenId: 0,
 				// showAd: this.props.showAd || false,
 				url: '',
@@ -280,8 +305,8 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 			this.setState({showPopup: true});
 		};
 
-		onPlayVideo = ({url}) => {
-			this.setState({url});
+		onPlayVideo = ({id, url}) => {
+			this.setState({id, url});
 		};
 
 		onSelectVideo = (video) => () => {
@@ -312,11 +337,12 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 		// };
 
 		render () {
-			const {showPopup, url, videos} = this.state;
+			const {id, showPopup, url, videos} = this.state;
 
 			const props = {
 				...this.props,
 				// adContent,
+				id,
 				onClosePopup: this.onClosePopup,
 				onSelectVideo: this.onSelectVideo,
 				onSendVideo: this.onSendVideo,
