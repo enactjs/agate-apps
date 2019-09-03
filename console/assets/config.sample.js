@@ -7,10 +7,10 @@ window.servicesLayerHost = '127.0.0.1:9090';
 window.mapApiKey = '';
 window.weatherApiKey = '';
 
-window.multimedia = 'local';
+window.multimedia = 'streaming';
 /*
- * If there is a problem playing the local file, please change to `streaming`.
- * e.g.> window.multimedia = 'streaming';
+ * If there is a problem playing the video, please change to `local`.
+ * e.g.> window.multimedia = 'local';
  */
 
 // Bluetooth boundary
