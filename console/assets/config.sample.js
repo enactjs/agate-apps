@@ -13,10 +13,10 @@ window.multimedia = 'streaming';
  * If there is a problem playing the video, please change to `local`.
  * e.g.> window.multimedia = 'local';
  */
-window.multimediaProduct = 'sony';
+window.multimediaProduct = 'youtube';
 /*
- * If you want to change the multimedia product, please change to `youtube`.
- * e.g.> window.multimediaProduct = 'youtube';
+ * If you want to change the multimedia product, please change to `sony`.
+ * e.g.> window.multimediaProduct = 'sony';
  */
 
 // Bluetooth boundary
