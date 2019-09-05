@@ -19,7 +19,7 @@ storiesOf('Agate', module)
 		'Heading',
 		() => (
 			<Heading
-				customColor={select('customColor', prop.colors, Config)}
+				color={select('color', prop.colors, Config)}
 				showLine={boolean('showLine', Config)}
 				size={select('size', prop.sizes, Config)}
 			>
