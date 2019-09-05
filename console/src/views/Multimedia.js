@@ -19,6 +19,7 @@ import IconButton from '@enact/agate/IconButton';
 import CustomLayout from '../components/CustomLayout';
 
 import youtubeVideos from '../data/youtubeapi.json';
+import sonyVideos from '../data/sonyapi.json';
 
 import css from './Multimedia.module.less';
 
@@ -63,6 +64,7 @@ const ResponsiveVirtualList = kind({
 		// eslint-disable-next-line enact/display-name,enact/prop-types
 		itemRenderer: ({onSelectVideo, size, styler, videos}) => ({index, ...rest}) => {
 			const className = styler.append(css.listItem, size && css[size]);
+			const src = videos[index].snippet.thumbnails.medium.url;
 			if (size === 'large') {
 				return (
 					<ThumbnailItem
@@ -70,10 +72,7 @@ const ResponsiveVirtualList = kind({
 						className={className}
 						css={css}
 						onClick={onSelectVideo(videos[index])}
-						src={window.multimedia === 'local' ?
-								`file:///usr/palm/frameworks/media/${videos[index].id}-mqdefault.jpg`
-							: videos[index].snippet.thumbnails.medium.url
-						}
+						src={src}
 					>
 						{videos[index].snippet.title}
 					</ThumbnailItem>
@@ -86,10 +85,7 @@ const ResponsiveVirtualList = kind({
 					aspectRatio="16:9"
 					caption={size === 'full' ? videos[index].snippet.title : ''}
 					className={className}
-					source={window.multimedia === 'local' ?
-							`file:///usr/palm/frameworks/media/${videos[index].id}-mqdefault.jpg`
-						: videos[index].snippet.thumbnails.medium.url
-					}
+					source={src}
 					onClick={onSelectVideo(videos[index])}
 					selectionOverlay={ListItemOverlay}
 					selectionOverlayShowing
@@ -187,16 +183,23 @@ const MultimediaBase = kind({
 
 	computed: {
 		video: ({id, url}) => {
+			let src = '';
+			if (window.multimedia === 'local') {
+				src = `file:///usr/palm/frameworks/media/${id}.mp4`;
+			} else if (window.multimedia === 'streaming') {
+				src = url;
+			}
 			if (id || url) {
-				if (window.multimedia === 'local') {
+				if (window.multimedia === 'local' ||
+					(window.multimedia === 'streaming' && window.multimediaProduct === 'sony')) {
 					return (
 						<video key={id || url} width="100%" height="100%" autoPlay controls controlsList="nodownload" disablePictureInPicture>
-							<source src={id ? `file:///usr/palm/frameworks/media/${id}.mp4` : url} type="video/mp4" />
+							<source src={src} type="video/mp4" />
 						</video>
 					);
 				} else {
 					return (
-						<IFrame allow="autoplay" allowFullScreen className={css.iframe} src={url} />
+						<IFrame allow="autoplay" allowFullScreen className={css.iframe} src={src} />
 					);
 				}
 			} else {
@@ -262,7 +265,7 @@ const MultimediaBase = kind({
 });
 
 const defaultConfig = {
-	videos: youtubeVideos.items
+	videos: window.multimediaProduct === 'sony' ? sonyVideos.items : youtubeVideos.items
 };
 
 const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {

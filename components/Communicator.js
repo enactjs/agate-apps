@@ -91,7 +91,7 @@ class Communicator extends React.Component {
 			type: video.kind,
 			title: video.snippet.title,
 			id: video.id,
-			url: video.kind === 'sony#video' ? video.url : `https://www.youtube.com/embed/${video.id}?autoplay=1`
+			url: video.url
 		};
 
 		console.log('Sending to', this.props.host, ['SEND_DATA:', data, 'Sending VIDEO_SENT:', {id: screenId}]);
