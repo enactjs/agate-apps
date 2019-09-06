@@ -185,7 +185,7 @@ const MultimediaBase = kind({
 		video: ({id, url}) => {
 			let src = '';
 			if (window.multimedia === 'local') {
-				src = `file:///usr/palm/frameworks/media/${id}.mp4`;
+				src = `./assets/${id}.mp4`;
 			} else if (window.multimedia === 'streaming') {
 				src = url;
 			}
