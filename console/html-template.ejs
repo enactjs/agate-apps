@@ -7,6 +7,9 @@
 		<title><%= htmlWebpackPlugin.options.title %></title>
 		<script src="assets/config.js"></script>
 		<script type="text/javascript">
+document.addEventListener('mouseover', function (event) {
+	event.stopPropagation();
+});
 document.addEventListener('touchmove', function (event) {
 	if (event.scale !== 1) event.preventDefault();
 }, {passive: false});
