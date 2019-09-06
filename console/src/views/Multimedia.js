@@ -19,6 +19,7 @@ import IconButton from '@enact/agate/IconButton';
 import CustomLayout from '../components/CustomLayout';
 
 import youtubeVideos from '../data/youtubeapi.json';
+import sonyVideos from '../data/sonyapi.json';
 
 import css from './Multimedia.module.less';
 
@@ -63,6 +64,7 @@ const ResponsiveVirtualList = kind({
 		// eslint-disable-next-line enact/display-name,enact/prop-types
 		itemRenderer: ({onSelectVideo, size, styler, videos}) => ({index, ...rest}) => {
 			const className = styler.append(css.listItem, size && css[size]);
+			const src = videos[index].snippet.thumbnails.medium.url;
 			if (size === 'large') {
 				return (
 					<ThumbnailItem
@@ -70,7 +72,7 @@ const ResponsiveVirtualList = kind({
 						className={className}
 						css={css}
 						onClick={onSelectVideo(videos[index])}
-						src={videos[index].snippet.thumbnails.medium.url}
+						src={src}
 					>
 						{videos[index].snippet.title}
 					</ThumbnailItem>
@@ -83,7 +85,7 @@ const ResponsiveVirtualList = kind({
 					aspectRatio="16:9"
 					caption={size === 'full' ? videos[index].snippet.title : ''}
 					className={className}
-					source={videos[index].snippet.thumbnails.medium.url}
+					source={src}
 					onClick={onSelectVideo(videos[index])}
 					selectionOverlay={ListItemOverlay}
 					selectionOverlayShowing
@@ -162,6 +164,7 @@ const MultimediaBase = kind({
 		// adContent: PropTypes.any,
 		arrangeable: PropTypes.any,
 		arrangement: PropTypes.any,
+		id: PropTypes.string,
 		onArrange: PropTypes.func,
 		onClosePopup: PropTypes.func,
 		onSelectVideo: PropTypes.func,
@@ -178,6 +181,33 @@ const MultimediaBase = kind({
 		className: 'multimedia'
 	},
 
+	computed: {
+		video: ({id, url}) => {
+			let src = '';
+			if (window.multimedia === 'local') {
+				src = `./assets/${id}.mp4`;
+			} else if (window.multimedia === 'streaming') {
+				src = url;
+			}
+			if (id || url) {
+				if (window.multimedia === 'local' ||
+					(window.multimedia === 'streaming' && window.multimediaProduct === 'sony')) {
+					return (
+						<video key={id || url} width="100%" height="100%" autoPlay controls controlsList="nodownload" disablePictureInPicture>
+							<source src={src} type="video/mp4" />
+						</video>
+					);
+				} else {
+					return (
+						<IFrame allow="autoplay" allowFullScreen className={css.iframe} src={src} />
+					);
+				}
+			} else {
+				return null;
+			}
+		}
+	},
+
 	render: ({
 		// adContent,
 		arrangeable,
@@ -189,13 +219,10 @@ const MultimediaBase = kind({
 		onSelectVideo,
 		onSendVideo,
 		screenIds,
-		url,
+		video,
 		videos,
 		...rest
 	}) => {
-		console.log("##################################################################");
-		console.log("url : " + url);
-		console.log("##################################################################");
 		return (
 			<React.Fragment>
 				<ScreenSelectionPopup
@@ -225,7 +252,7 @@ const MultimediaBase = kind({
 							</Column>
 						</left>
 						<Row className={css.bodyRow}>
-							<IFrame allow="autoplay" allowFullScreen className={css.iframe} src={url} />
+							{video}
 							{/* {showAd ? <Cell className={css.adSpace} shrink>
 								{adContent}
 							</Cell> : null}*/}
@@ -238,7 +265,7 @@ const MultimediaBase = kind({
 });
 
 const defaultConfig = {
-	videos: youtubeVideos.items
+	videos: window.multimediaProduct === 'sony' ? sonyVideos.items : youtubeVideos.items
 };
 
 const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
@@ -257,6 +284,7 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 
 			this.state = {
 				// adContent: this.props.adContent || 'Your Ad Here',
+				id: '',
 				screenId: 0,
 				// showAd: this.props.showAd || false,
 				url: '',
@@ -280,19 +308,19 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 			this.setState({showPopup: true});
 		};
 
-		onPlayVideo = ({url}) => {
-			this.setState({url});
+		onPlayVideo = ({id, url}) => {
+			this.setState({id, url});
 		};
 
 		onSelectVideo = (video) => () => {
 			const {screenIds} = this.props;
 			this.selectedVideo = video;
 
-			if (screenIds.length > 1) {
-				this.onOpenPopup();
-			} else {
-				this.onSendVideo({screenId: screenIds[0]});
-			}
+			// if (screenIds.length > 1) {
+			// 	this.onOpenPopup();
+			// } else {
+			this.onSendVideo({screenId: screenIds[0]});
+			// }
 		};
 
 		onSendVideo = ({screenId}) => {
@@ -312,11 +340,12 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 		// };
 
 		render () {
-			const {showPopup, url, videos} = this.state;
+			const {id, showPopup, url, videos} = this.state;
 
 			const props = {
 				...this.props,
 				// adContent,
+				id,
 				onClosePopup: this.onClosePopup,
 				onSelectVideo: this.onSelectVideo,
 				onSendVideo: this.onSendVideo,

@@ -39,6 +39,8 @@ import AppContextConnect from './AppContextConnect';
 // CSS/LESS Styling
 import css from './App.module.less';
 
+require.context('../../assets/thumbnails/', false, /\.jpg$/);
+
 add('backspace', 8);
 
 // Maintain synchronization of this list with the panels included below. This maps names of panels

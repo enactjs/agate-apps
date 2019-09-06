@@ -10,6 +10,7 @@
       "kind": "youtube#video",
       "etag": "\"XI7nbFXulYBIpL0ayR_gDh3eu1k/TiAIpJz9KCCEHyaZihZsUbyTv7E\"",
       "id": "GGL9QmLdZ8Y",
+      "url": "https://www.youtube.com/embed/GGL9QmLdZ8Y?autoplay=1",
       "snippet": {
         "publishedAt": "2018-12-14T11:00:03.000Z",
         "channelId": "UCoookXUzPciGrEZEXmh4Jjg",
@@ -17,27 +18,27 @@
         "description": "What better way to get into the holiday spirit than a compilation of some of your favorite Sesame Street friends singing holiday classics, like Jingle Bells, and fun new versions like 12 Days of Cookies!\n\n--\nSubscribe to the Sesame Street Channel here: http://www.youtube.com/subscription_center?add_user=SesameStreet\n \nFor more fun games and videos for your preschooler in a safe, child-friendly environment, visit us at http://www.sesamestreet.org\n \nSesame Street is a production of Sesame Workshop, a nonprofit educational organization. The Workshop produces Sesame Street programs, seen in over 150 countries, and other acclaimed shows, including The Electric Company.  Beyond television, the Workshop produces content for multiple media platforms on a wide range of issues including literacy and numeracy, emotional wellbeing, health and wellness, and respect and understanding.  Learn more at http://www.sesamestreet.org.",
         "thumbnails": {
           "default": {
-            "url": "https://i.ytimg.com/vi/GGL9QmLdZ8Y/default.jpg",
+            "url": "./assets/thumbnails/GGL9QmLdZ8Y-default.jpg",
             "width": 120,
             "height": 90
           },
           "medium": {
-            "url": "https://i.ytimg.com/vi/GGL9QmLdZ8Y/mqdefault.jpg",
+            "url": "./assets/thumbnails/GGL9QmLdZ8Y-mqdefault.jpg",
             "width": 320,
             "height": 180
           },
           "high": {
-            "url": "https://i.ytimg.com/vi/GGL9QmLdZ8Y/hqdefault.jpg",
+            "url": "./assets/thumbnails/GGL9QmLdZ8Y-hqdefault.jpg",
             "width": 480,
             "height": 360
           },
           "standard": {
-            "url": "https://i.ytimg.com/vi/GGL9QmLdZ8Y/sddefault.jpg",
+            "url": "./assets/thumbnails/GGL9QmLdZ8Y-sddefault.jpg",
             "width": 640,
             "height": 480
           },
           "maxres": {
-            "url": "https://i.ytimg.com/vi/GGL9QmLdZ8Y/maxresdefault.jpg",
+            "url": "./assets/thumbnails/GGL9QmLdZ8Y-maxresdefault.jpg",
             "width": 1280,
             "height": 720
           }
@@ -91,6 +92,7 @@
       "kind": "youtube#video",
       "etag": "\"XI7nbFXulYBIpL0ayR_gDh3eu1k/kjrkWvn4jcqKVgVMG8DXeK8y154\"",
       "id": "hdZVeBIfMbg",
+      "url": "https://www.youtube.com/embed/hdZVeBIfMbg?autoplay=1",
       "snippet": {
         "publishedAt": "2018-11-09T11:00:08.000Z",
         "channelId": "UCoookXUzPciGrEZEXmh4Jjg",
@@ -98,27 +100,27 @@
         "description": "In this full episode, Elmo had the coolest dreams about dancing chickens that he spends all day trying different ways to make him sleepy so he can have the same dream again! \n\n--\nSubscribe to the Sesame Street Channel here: http://www.youtube.com/subscription_center?add_user=SesameStreet\n \nFor more fun games and videos for your preschooler in a safe, child-friendly environment, visit us at http://www.sesamestreet.org\n \nSesame Street is a production of Sesame Workshop, a nonprofit educational organization. The Workshop produces Sesame Street programs, seen in over 150 countries, and other acclaimed shows, including The Electric Company.  Beyond television, the Workshop produces content for multiple media platforms on a wide range of issues including literacy and numeracy, emotional wellbeing, health and wellness, and respect and understanding.  Learn more at http://www.sesamestreet.org.",
         "thumbnails": {
           "default": {
-            "url": "https://i.ytimg.com/vi/hdZVeBIfMbg/default.jpg",
+            "url": "./assets/thumbnails/hdZVeBIfMbg-default.jpg",
             "width": 120,
             "height": 90
           },
           "medium": {
-            "url": "https://i.ytimg.com/vi/hdZVeBIfMbg/mqdefault.jpg",
+            "url": "./assets/thumbnails/hdZVeBIfMbg-mqdefault.jpg",
             "width": 320,
             "height": 180
           },
           "high": {
-            "url": "https://i.ytimg.com/vi/hdZVeBIfMbg/hqdefault.jpg",
+            "url": "./assets/thumbnails/hdZVeBIfMbg-hqdefault.jpg",
             "width": 480,
             "height": 360
           },
           "standard": {
-            "url": "https://i.ytimg.com/vi/hdZVeBIfMbg/sddefault.jpg",
+            "url": "./assets/thumbnails/hdZVeBIfMbg-sddefault.jpg",
             "width": 640,
             "height": 480
           },
           "maxres": {
-            "url": "https://i.ytimg.com/vi/hdZVeBIfMbg/maxresdefault.jpg",
+            "url": "./assets/thumbnails/hdZVeBIfMbg-maxresdefault.jpg",
             "width": 1280,
             "height": 720
           }
@@ -164,6 +166,7 @@
       "kind": "youtube#video",
       "etag": "\"XI7nbFXulYBIpL0ayR_gDh3eu1k/TulItoI1urDhpLOCr5CSLVMxtzI\"",
       "id": "itFPNGi6Aqg",
+      "url": "https://www.youtube.com/embed/itFPNGi6Aqg?autoplay=1",
       "snippet": {
         "publishedAt": "2018-10-20T01:48:29.000Z",
         "channelId": "UCK5Q72Uyo73uRPk8PmM2A3w",
@@ -171,27 +174,27 @@
         "description": "Paw Patrol Baby Pup Halloween Toy Learning Video for Kids! In this educational Halloween Paw Patrol learning video for kids, let's learn about Halloween and Trick or Treats with the help of, cute kid, Genevieve! It's time for the Paw Patrol pups Chase, Skye, Marshall, and Rubble to dress up in their costumes for Halloween so they can go Trick or Treating. In this educational video, we'll teach kids about the Halloween Holiday and how to trick or treat safely by avoiding candy that they may be allergic to, and candy that does not have wrapping. Stay safe and have fun in this Halloween Paw Patrol baby pup adventure movie for kids!\n\n******************************\nGet Your Own Snuggle Pup Chase!\nhttps://amzn.to/2L0TAhb\n******************************\n\nShop at our Store!\nhttps://bit.ly/2xfHv21\n\nSubscribe to Genevieve's Playhouse Here:\nhttps://www.youtube.com/GenevievesPlayhouse?sub_confirmation=1\n\nBuy Toys featured on our Channel!\nhttps://www.genevievesplayhouse.com/featured-toys\n\n\nPlay these other learning videos for kids!\nGiant 1 Hour Long Paw Patrol Learning Videos: https://youtu.be/1tX2cyvMzX4\nEducational Toy Car Videos for Kids: https://youtu.be/XN8k8ZkJwiQ\nPJ Masks Toy Car Race: https://youtu.be/k0Twsb22Ld4\nGenevieve Teaches Numbers with Cookie Monster: https://youtu.be/_X78XfQkLk0\nLearn Words with Pororo the Little Penguin Toy House: https://youtu.be/G-zIQqBE-Jg\nLaguna Blue and Pinkie Pie are Hungry: https://youtu.be/oCbegRDxgak\nLearn Colors w/ Paw Patrol Underwater Rescue Mission: https://youtu.be/RhrKJvAKsGQ\nPeppa Pig gets a NEW House! https://youtu.be/OoMONAVtcDw",
         "thumbnails": {
           "default": {
-            "url": "https://i.ytimg.com/vi/itFPNGi6Aqg/default.jpg",
+            "url": "./assets/thumbnails/itFPNGi6Aqg-default.jpg",
             "width": 120,
             "height": 90
           },
           "medium": {
-            "url": "https://i.ytimg.com/vi/itFPNGi6Aqg/mqdefault.jpg",
+            "url": "./assets/thumbnails/itFPNGi6Aqg-mqdefault.jpg",
             "width": 320,
             "height": 180
           },
           "high": {
-            "url": "https://i.ytimg.com/vi/itFPNGi6Aqg/hqdefault.jpg",
+            "url": "./assets/thumbnails/itFPNGi6Aqg-hqdefault.jpg",
             "width": 480,
             "height": 360
           },
           "standard": {
-            "url": "https://i.ytimg.com/vi/itFPNGi6Aqg/sddefault.jpg",
+            "url": "./assets/thumbnails/itFPNGi6Aqg-sddefault.jpg",
             "width": 640,
             "height": 480
           },
           "maxres": {
-            "url": "https://i.ytimg.com/vi/itFPNGi6Aqg/maxresdefault.jpg",
+            "url": "./assets/thumbnails/itFPNGi6Aqg-maxresdefault.jpg",
             "width": 1280,
             "height": 720
           }
@@ -248,6 +251,7 @@
       "kind": "youtube#video",
       "etag": "\"XI7nbFXulYBIpL0ayR_gDh3eu1k/oYb8uaOl7X3RTLaaP0THo4g6Vpc\"",
       "id": "4c--xBAAMEI",
+      "url": "https://www.youtube.com/embed/4c--xBAAMEI?autoplay=1",
       "snippet": {
         "publishedAt": "2018-09-14T10:00:01.000Z",
         "channelId": "UCoookXUzPciGrEZEXmh4Jjg",
@@ -255,27 +259,27 @@
         "description": "Elmo's pretending to go to school! In this full episode, chaos ensues when Elmo enlists Alan to be his pretend teacher while he's running Hooper's Store at the same time.\n\n--\nSubscribe to the Sesame Street Channel here: http://www.youtube.com/subscription_center?add_user=SesameStreet\n \nFor more fun games and videos for your preschooler in a safe, child-friendly environment, visit us at http://www.sesamestreet.org\n \nSesame Street is a production of Sesame Workshop, a nonprofit educational organization. The Workshop produces Sesame Street programs, seen in over 150 countries, and other acclaimed shows, including The Electric Company.  Beyond television, the Workshop produces content for multiple media platforms on a wide range of issues including literacy and numeracy, emotional wellbeing, health and wellness, and respect and understanding.  Learn more at http://www.sesamestreet.org.",
         "thumbnails": {
           "default": {
-            "url": "https://i.ytimg.com/vi/4c--xBAAMEI/default.jpg",
+            "url": "./assets/thumbnails/4c--xBAAMEI-default.jpg",
             "width": 120,
             "height": 90
           },
           "medium": {
-            "url": "https://i.ytimg.com/vi/4c--xBAAMEI/mqdefault.jpg",
+            "url": "./assets/thumbnails/4c--xBAAMEI-mqdefault.jpg",
             "width": 320,
             "height": 180
           },
           "high": {
-            "url": "https://i.ytimg.com/vi/4c--xBAAMEI/hqdefault.jpg",
+            "url": "./assets/thumbnails/4c--xBAAMEI-hqdefault.jpg",
             "width": 480,
             "height": 360
           },
           "standard": {
-            "url": "https://i.ytimg.com/vi/4c--xBAAMEI/sddefault.jpg",
+            "url": "./assets/thumbnails/4c--xBAAMEI-sddefault.jpg",
             "width": 640,
             "height": 480
           },
           "maxres": {
-            "url": "https://i.ytimg.com/vi/4c--xBAAMEI/maxresdefault.jpg",
+            "url": "./assets/thumbnails/4c--xBAAMEI-maxresdefault.jpg",
             "width": 1280,
             "height": 720
           }
@@ -324,6 +328,7 @@
       "kind": "youtube#video",
       "etag": "\"XI7nbFXulYBIpL0ayR_gDh3eu1k/MKezKwePBB-Z1rUSz5V0sc5JI1k\"",
       "id": "sHCh93lUduI",
+      "url": "https://www.youtube.com/embed/sHCh93lUduI?autoplay=1",
       "snippet": {
         "publishedAt": "2018-12-11T12:00:13.000Z",
         "channelId": "UCB2aeGGPNj7l5Z71bYNqX-Q",
@@ -331,27 +336,27 @@
         "description": "Merry Christmas from Woody Woodpecker and his friends! \n#CHRISTMAS \n► Subscribe to the Woody Woodpecker YouTube channel for new full episodes and more: http://bit.ly/2vlHLwH\n\nWoody Woodpecker is an animated cartoon character, an anthropomorphic acorn woodpecker who appeared in theatrical short films produced by the Walter Lantz animation studio and distributed by Universal Pictures. Though not the first of the screwball characters that became popular in the 1940s, Woody is perhaps the most indicative of the type.\n\n► Watch more Woody Woodpecker Videos\n\n► Click here to Watch Woody Woodpecker Full Episodes: http://bit.ly/2wdY8sL\n\n► Click here to Watch Woody Woodpecker Season 1: http://bit.ly/2ur0vGo\n\nWoody Woodpecker is an animated cartoon character, an anthropomorphic red-headed woodpecker who appeared in theatrical short films produced by the Walter Lantz animation studio and distributed by Universal Studios. Though not the first of the screwball characters that became popular in the 1940s, Woody is perhaps the most indicative of the type.",
         "thumbnails": {
           "default": {
-            "url": "https://i.ytimg.com/vi/sHCh93lUduI/default.jpg",
+            "url": "./assets/thumbnails/sHCh93lUduI-default.jpg",
             "width": 120,
             "height": 90
           },
           "medium": {
-            "url": "https://i.ytimg.com/vi/sHCh93lUduI/mqdefault.jpg",
+            "url": "./assets/thumbnails/sHCh93lUduI-mqdefault.jpg",
             "width": 320,
             "height": 180
           },
           "high": {
-            "url": "https://i.ytimg.com/vi/sHCh93lUduI/hqdefault.jpg",
+            "url": "./assets/thumbnails/sHCh93lUduI-hqdefault.jpg",
             "width": 480,
             "height": 360
           },
           "standard": {
-            "url": "https://i.ytimg.com/vi/sHCh93lUduI/sddefault.jpg",
+            "url": "./assets/thumbnails/sHCh93lUduI-sddefault.jpg",
             "width": 640,
             "height": 480
           },
           "maxres": {
-            "url": "https://i.ytimg.com/vi/sHCh93lUduI/maxresdefault.jpg",
+            "url": "./assets/thumbnails/sHCh93lUduI-maxresdefault.jpg",
             "width": 1280,
             "height": 720
           }
@@ -410,107 +415,9 @@
     },
     {
       "kind": "youtube#video",
-      "etag": "\"XI7nbFXulYBIpL0ayR_gDh3eu1k/_BAmk4M2blmAalkIjYjrtwoB6mw\"",
-      "id": "XqZsoesa55w",
-      "snippet": {
-        "publishedAt": "2016-06-17T23:00:30.000Z",
-        "channelId": "UCcdwLMPsaU2ezNSJU1nFoBQ",
-        "title": "Baby Shark Dance | Sing and Dance! | Animal Songs | PINKFONG Songs for Children",
-        "description": "You are watching the original Pinkfong Baby Shark Dance video. \nJoin Pinkfong's Baby Shark Challenge by uploading your own videos on social media! \n\nJoin #BabySharkChallenge Now! 🦈🦈🦈🦈\n\nPINKFONG! No. 1 Kids' app chosen by 150 million children worldwide\n★ Best Kids Songs & Stories [Free Download]: http://i.sstudy.kr/L/591/des/\n\n★ To see Pinkfong's Japanese baby shark songs, Click here: https://www.youtube.com/watch?v=XqZso...\n★ Subscribe to Pinkfong's Japanese YouTube Channel: https://www.youtube.com/channel/UCXt0...        \n\nIt’s time to dance to Baby Shark!\nLet’s try making sharks using hands and arms!\nUse your fingers to make little Baby Shark!\nOpen your hands to make Mommy Shark!\nSpread your arms wide to make Daddy Shark!\nLet’s not forget Grandma and Grandpa Shark!\nDoo doo doo doo doo doo! \nThe dance will help children develop fine motor skills as they have fun!\n\n----\n★ Lyrics\n\nBaby Shark\n\nBaby shark, doo doo doo doo doo doo.\nBaby shark, doo doo doo doo doo doo.\nBaby shark, doo doo doo doo doo doo.\nBaby shark!\n\nMommy shark, doo doo doo doo doo doo.\nMommy shark, doo doo doo doo doo doo.\nMommy shark, doo doo doo doo doo doo.\nMommy shark!\n\nDaddy shark, doo doo doo doo doo doo.\nDaddy shark, doo doo doo doo doo doo.\nDaddy shark, doo doo doo doo doo doo.\nDaddy shark!\n\nGrandma shark, doo doo doo doo doo doo.\nGrandma shark, doo doo doo doo doo doo.\nGrandma shark, doo doo doo doo doo doo.\nGrandma shark!\n\nGrandpa shark, doo doo doo doo doo doo.\nGrandpa shark, doo doo doo doo doo doo.\nGrandpa shark, doo doo doo doo doo doo.\nGrandpa shark!\n\nLet’s go hunt, doo doo doo doo doo doo.\nLet’s go hunt, doo doo doo doo doo doo.\nLet’s go hunt, doo doo doo doo doo doo.\nLet’s go hunt!\n\nRun away, doo doo doo doo doo doo.\nRun away, doo doo doo doo doo doo.\nRun away, doo doo doo doo doo doo.\nRun away!\n\nSafe at last, doo doo doo doo doo doo.\nSafe at last, doo doo doo doo doo doo.\nSafe at last, doo doo doo doo doo doo.\nSafe at last!\n\nIt’s the end, doo doo doo doo doo doo.\nIt’s the end, doo doo doo doo doo doo.\nIt’s the end, doo doo doo doo doo doo.\nIt’s the end!\n\n----\nSubscribe to PINKFONG's YouTube channel for hundreds of kids' favorite songs and stories, including phonics songs, nursery rhymes, bedtime lullabies, children's classics, fairy tales and more!\n\nNew videos are uploaded every week.\n★ YouTube Channel: http://www.youtube.com/user/SmartBook...\n\nEnjoy educational songs and stories for preschool kids created by the experts in children's education.\n\nFollow us on Facebook for new updates and free promotions.\n★ Facebook: https://www.facebook.com/pinkfong.official \n★ Instagram: https://instagram.com/pinkfong.official \n★ Twitter: https://twitter.com/pinkfong_usa\n★ Website:  https://www.pinkfong.com \n★ Official Merch Store: https://www.amazon.com/pinkfong\n\nCopyright © 2016 Smart Study Co., Ltd. All Rights Reserved.\n\n#pinkfong #kid #kids #kidssongs #baby #babies #babiessongs #babyshark #phonics #smartstudy #toddler #toddlersongs #toddlermusic #babysharkchallenge",
-        "thumbnails": {
-          "default": {
-            "url": "https://i.ytimg.com/vi/XqZsoesa55w/default.jpg",
-            "width": 120,
-            "height": 90
-          },
-          "medium": {
-            "url": "https://i.ytimg.com/vi/XqZsoesa55w/mqdefault.jpg",
-            "width": 320,
-            "height": 180
-          },
-          "high": {
-            "url": "https://i.ytimg.com/vi/XqZsoesa55w/hqdefault.jpg",
-            "width": 480,
-            "height": 360
-          },
-          "standard": {
-            "url": "https://i.ytimg.com/vi/XqZsoesa55w/sddefault.jpg",
-            "width": 640,
-            "height": 480
-          },
-          "maxres": {
-            "url": "https://i.ytimg.com/vi/XqZsoesa55w/maxresdefault.jpg",
-            "width": 1280,
-            "height": 720
-          }
-        },
-        "channelTitle": "Pinkfong! Kids' Songs & Stories",
-        "tags": [
-          "baby shark",
-          "baby shark dance",
-          "baby shark song",
-          "cute dance for children",
-          "dance for kids",
-          "baby shark challenge",
-          "pinkfong",
-          "family",
-          "kids",
-          "children",
-          "toddlers",
-          "babies",
-          "preschoolers",
-          "preschool",
-          "education",
-          "educational",
-          "videos",
-          "kids education",
-          "education for children",
-          "preschool learning",
-          "videos for kids",
-          "kids videos",
-          "kids animation",
-          "songs",
-          "songs for kids",
-          "songs for children",
-          "kids app",
-          "free app",
-          "kids game",
-          "itunes",
-          "google play",
-          "app store",
-          "nursery rhymes",
-          "cute animation",
-          "baby shark for kids"
-        ],
-        "categoryId": "27",
-        "liveBroadcastContent": "none",
-        "defaultLanguage": "en",
-        "localized": {
-          "title": "Baby Shark Dance | Sing and Dance! | Animal Songs | PINKFONG Songs for Children",
-          "description": "You are watching the original Pinkfong Baby Shark Dance video. \nJoin Pinkfong's Baby Shark Challenge by uploading your own videos on social media! \n\nJoin #BabySharkChallenge Now! 🦈🦈🦈🦈\n\nPINKFONG! No. 1 Kids' app chosen by 150 million children worldwide\n★ Best Kids Songs & Stories [Free Download]: http://i.sstudy.kr/L/591/des/\n\n★ To see Pinkfong's Japanese baby shark songs, Click here: https://www.youtube.com/watch?v=XqZso...\n★ Subscribe to Pinkfong's Japanese YouTube Channel: https://www.youtube.com/channel/UCXt0...        \n\nIt’s time to dance to Baby Shark!\nLet’s try making sharks using hands and arms!\nUse your fingers to make little Baby Shark!\nOpen your hands to make Mommy Shark!\nSpread your arms wide to make Daddy Shark!\nLet’s not forget Grandma and Grandpa Shark!\nDoo doo doo doo doo doo! \nThe dance will help children develop fine motor skills as they have fun!\n\n----\n★ Lyrics\n\nBaby Shark\n\nBaby shark, doo doo doo doo doo doo.\nBaby shark, doo doo doo doo doo doo.\nBaby shark, doo doo doo doo doo doo.\nBaby shark!\n\nMommy shark, doo doo doo doo doo doo.\nMommy shark, doo doo doo doo doo doo.\nMommy shark, doo doo doo doo doo doo.\nMommy shark!\n\nDaddy shark, doo doo doo doo doo doo.\nDaddy shark, doo doo doo doo doo doo.\nDaddy shark, doo doo doo doo doo doo.\nDaddy shark!\n\nGrandma shark, doo doo doo doo doo doo.\nGrandma shark, doo doo doo doo doo doo.\nGrandma shark, doo doo doo doo doo doo.\nGrandma shark!\n\nGrandpa shark, doo doo doo doo doo doo.\nGrandpa shark, doo doo doo doo doo doo.\nGrandpa shark, doo doo doo doo doo doo.\nGrandpa shark!\n\nLet’s go hunt, doo doo doo doo doo doo.\nLet’s go hunt, doo doo doo doo doo doo.\nLet’s go hunt, doo doo doo doo doo doo.\nLet’s go hunt!\n\nRun away, doo doo doo doo doo doo.\nRun away, doo doo doo doo doo doo.\nRun away, doo doo doo doo doo doo.\nRun away!\n\nSafe at last, doo doo doo doo doo doo.\nSafe at last, doo doo doo doo doo doo.\nSafe at last, doo doo doo doo doo doo.\nSafe at last!\n\nIt’s the end, doo doo doo doo doo doo.\nIt’s the end, doo doo doo doo doo doo.\nIt’s the end, doo doo doo doo doo doo.\nIt’s the end!\n\n----\nSubscribe to PINKFONG's YouTube channel for hundreds of kids' favorite songs and stories, including phonics songs, nursery rhymes, bedtime lullabies, children's classics, fairy tales and more!\n\nNew videos are uploaded every week.\n★ YouTube Channel: http://www.youtube.com/user/SmartBook...\n\nEnjoy educational songs and stories for preschool kids created by the experts in children's education.\n\nFollow us on Facebook for new updates and free promotions.\n★ Facebook: https://www.facebook.com/pinkfong.official \n★ Instagram: https://instagram.com/pinkfong.official \n★ Twitter: https://twitter.com/pinkfong_usa\n★ Website:  https://www.pinkfong.com \n★ Official Merch Store: https://www.amazon.com/pinkfong\n\nCopyright © 2016 Smart Study Co., Ltd. All Rights Reserved.\n\n#pinkfong #kid #kids #kidssongs #baby #babies #babiessongs #babyshark #phonics #smartstudy #toddler #toddlersongs #toddlermusic #babysharkchallenge"
-        },
-        "defaultAudioLanguage": "en-US"
-      },
-      "contentDetails": {
-        "duration": "PT2M17S",
-        "dimension": "2d",
-        "definition": "hd",
-        "caption": "false",
-        "licensedContent": false,
-        "projection": "rectangular"
-      },
-      "statistics": {
-        "viewCount": "2140675490",
-        "likeCount": "4845000",
-        "dislikeCount": "1839929",
-        "favoriteCount": "0",
-        "commentCount": "11911"
-      }
-    },
-    {
-      "kind": "youtube#video",
       "etag": "\"XI7nbFXulYBIpL0ayR_gDh3eu1k/x7fMvqydGhMl0saEjWBbysvFc2I\"",
       "id": "X-4BlfANOIE",
+      "url": "https://www.youtube.com/embed/X-4BlfANOIE?autoplay=1",
       "snippet": {
         "publishedAt": "2018-05-05T05:00:00.000Z",
         "channelId": "UCAOtE1V7Ots4DjM8JLlrYgg",
@@ -518,27 +425,27 @@
         "description": "We meet the newest member of the Piggy Family, Baby Alexander! Come and join us as Peppa comes to play with her!\n☆ Subscribe for more videos: http://bit.ly/PeppaPigYT\n☆ Are you in the US? Buy our Peppa Pig DVD’s now! http://bit.ly/PeppaDVDsAmazon\n\n☆ Watch more Peppa Pig  - https://www.youtube.com/playlist?list=PLFEgnf4tmQe_L3xlmtFwX8Qm5czqwCcVi\n\nWelcome to the Official Peppa Pig channel and the home of Peppa on YouTube!  We have created a world of Peppa with episodes and compilations to keep even the most dedicated Peppa fans happy.  Enjoy and don't forget to subscribe.\n\n☆ Like Peppa Pig on Facebook: http://bit.ly/PeppaPigFB\n☆ Watch more: http://bit.ly/PeppaPigYTEps\n☆ Visit our official website:http://bit.ly/PeppaPigWebsite\n☆ Follow Peppa on Twitter: http://bit.ly/PeppaPigTwitter\n☆ Are you in the US? Buy our Peppa Pig DVD’s now! http://bit.ly/PeppaDVDsAmazon\nPEPPA PIG © ASTLEY BAKER DAVIES LTD/ENTERTAINMENT ONE UK LTD 2003.\nPeppa Pig created by Mark Baker and Neville Astley. \n#Peppa #PeppaPig #PeppaPigEnglish",
         "thumbnails": {
           "default": {
-            "url": "https://i.ytimg.com/vi/X-4BlfANOIE/default.jpg",
+            "url": "./assets/thumbnails/X-4BlfANOIE-default.jpg",
             "width": 120,
             "height": 90
           },
           "medium": {
-            "url": "https://i.ytimg.com/vi/X-4BlfANOIE/mqdefault.jpg",
+            "url": "./assets/thumbnails/X-4BlfANOIE-mqdefault.jpg",
             "width": 320,
             "height": 180
           },
           "high": {
-            "url": "https://i.ytimg.com/vi/X-4BlfANOIE/hqdefault.jpg",
+            "url": "./assets/thumbnails/X-4BlfANOIE-hqdefault.jpg",
             "width": 480,
             "height": 360
           },
           "standard": {
-            "url": "https://i.ytimg.com/vi/X-4BlfANOIE/sddefault.jpg",
+            "url": "./assets/thumbnails/X-4BlfANOIE-sddefault.jpg",
             "width": 640,
             "height": 480
           },
           "maxres": {
-            "url": "https://i.ytimg.com/vi/X-4BlfANOIE/maxresdefault.jpg",
+            "url": "./assets/thumbnails/X-4BlfANOIE-maxresdefault.jpg",
             "width": 1280,
             "height": 720
           }
@@ -597,6 +504,7 @@
       "kind": "youtube#video",
       "etag": "\"XI7nbFXulYBIpL0ayR_gDh3eu1k/jSB4Zozf__RI15gy5Y1RBrMCYzw\"",
       "id": "ZlQXfpCIBnU",
+      "url": "https://www.youtube.com/embed/ZlQXfpCIBnU?autoplay=1",
       "snippet": {
         "publishedAt": "2018-03-10T06:30:03.000Z",
         "channelId": "UCngkVoq8aayyK6qX9JJitRg",
@@ -604,27 +512,27 @@
         "description": "Click Here To Subscribe For More Adventures: http://goo.gl/n6oFhZ\nLily is always on hand to help with her practical little pocket! Peter Rabbit and Benjamin would be lost without it!\nPeter Rabbit is full of adventure and excitement, tapping into children’s innate desire for exploration. It celebrates the themes of friendship, nature, discovery and adventure as Peter investigates the world around him.\nPeter rabbit movie, Peter rabbit trailer, Peter the rabbit, rabbit movie, Peter rabbit movie release, Peter rabbit full movie\nClick Here To Subscribe For More Adventures: http://goo.gl/n6oFhZ",
         "thumbnails": {
           "default": {
-            "url": "https://i.ytimg.com/vi/ZlQXfpCIBnU/default.jpg",
+            "url": "./assets/thumbnails/ZlQXfpCIBnU-default.jpg",
             "width": 120,
             "height": 90
           },
           "medium": {
-            "url": "https://i.ytimg.com/vi/ZlQXfpCIBnU/mqdefault.jpg",
+            "url": "./assets/thumbnails/ZlQXfpCIBnU-mqdefault.jpg",
             "width": 320,
             "height": 180
           },
           "high": {
-            "url": "https://i.ytimg.com/vi/ZlQXfpCIBnU/hqdefault.jpg",
+            "url": "./assets/thumbnails/ZlQXfpCIBnU-hqdefault.jpg",
             "width": 480,
             "height": 360
           },
           "standard": {
-            "url": "https://i.ytimg.com/vi/ZlQXfpCIBnU/sddefault.jpg",
+            "url": "./assets/thumbnails/ZlQXfpCIBnU-sddefault.jpg",
             "width": 640,
             "height": 480
           },
           "maxres": {
-            "url": "https://i.ytimg.com/vi/ZlQXfpCIBnU/maxresdefault.jpg",
+            "url": "./assets/thumbnails/ZlQXfpCIBnU-maxresdefault.jpg",
             "width": 1280,
             "height": 720
           }
@@ -684,6 +592,7 @@
       "kind": "youtube#video",
       "etag": "\"XI7nbFXulYBIpL0ayR_gDh3eu1k/dq5RNj2cZKGuhUNfp4zMFRBuI8Q\"",
       "id": "sNoWAz6bia8",
+      "url": "https://www.youtube.com/embed/sNoWAz6bia8?autoplay=1",
       "snippet": {
         "publishedAt": "2017-06-08T12:00:02.000Z",
         "channelId": "UChGJGhZ9SOOHvBB0Y4DOO_w",
@@ -691,27 +600,27 @@
         "description": "BEST LEARNING COLORS for Kids Video with Ryan ToysReview! Learn colors while finding surprise toys hidden in Sesame Street fizzy tub! Fun Educational video for children toddlers and babies while having fun with toys! Thanks for joining this children activities with Ryan's Family that kids can have fun indoor or outdoor! \n\nLearn Colors with Coca Cola and Fanta for Children Toddlers and Babies! Kids Learn Colours Video \nhttps://youtu.be/HYSY-GCWSwY?list=PLasCX3wfxLR0x41VacgQZUN2hYB6c1O2I\n\nThe Ball Pit Show for learning colors! Children and Toddlers educational video \nhttps://youtu.be/upk7zoQwv0U?list=PLasCX3wfxLR0x41VacgQZUN2hYB6c1O2I\n\nPretend Play Children Activities Brushing Teeth Learning Toys for Kids Eating McDonald's Food Gross \nhttps://youtu.be/IbnVsiW-a7w?list=PLasCX3wfxLR3wiQ7qwm-83m5WyqUzwSzX\n\nPLAY DOH COOKIE MONSTER LETTER LUNCH Cookie Monster EATS PEPPA PIG Disney Cars Learn ABC Alphabet \nhttps://youtu.be/esKNMnzmZpI?list=PLasCX3wfxLR3wiQ7qwm-83m5WyqUzwSzX\n\nSQUISHY BALLS Mesh Slime Learn Colors and Animals Cut Open Squishy Splat Ball Toddlers and Kids Toys \nhttps://youtu.be/i_iNYF_NeSk?list=PLasCX3wfxLR3wiQ7qwm-83m5WyqUzwSzX\n\nTOY CUTTING VELCRO FRUITS AND VEGETABLES Toy kitchen cooking soup Learn names of fruits & Vegetables \nhttps://youtu.be/CI7wSCWqCyc?list=PLasCX3wfxLR3wiQ7qwm-83m5WyqUzwSzX\n\nLET'S GO FISHING GAME Surprise Eggs Opening Toys Family Fun Activity for Kids Learn Colors \nhttps://youtu.be/7OykPKbe5-g?list=PLasCX3wfxLR3wiQ7qwm-83m5WyqUzwSzX",
         "thumbnails": {
           "default": {
-            "url": "https://i.ytimg.com/vi/sNoWAz6bia8/default.jpg",
+            "url": "./assets/thumbnails/sNoWAz6bia8-default.jpg",
             "width": 120,
             "height": 90
           },
           "medium": {
-            "url": "https://i.ytimg.com/vi/sNoWAz6bia8/mqdefault.jpg",
+            "url": "./assets/thumbnails/sNoWAz6bia8-mqdefault.jpg",
             "width": 320,
             "height": 180
           },
           "high": {
-            "url": "https://i.ytimg.com/vi/sNoWAz6bia8/hqdefault.jpg",
+            "url": "./assets/thumbnails/sNoWAz6bia8-hqdefault.jpg",
             "width": 480,
             "height": 360
           },
           "standard": {
-            "url": "https://i.ytimg.com/vi/sNoWAz6bia8/sddefault.jpg",
+            "url": "./assets/thumbnails/sNoWAz6bia8-sddefault.jpg",
             "width": 640,
             "height": 480
           },
           "maxres": {
-            "url": "https://i.ytimg.com/vi/sNoWAz6bia8/maxresdefault.jpg",
+            "url": "./assets/thumbnails/sNoWAz6bia8-maxresdefault.jpg",
             "width": 1280,
             "height": 720
           }
@@ -776,6 +685,7 @@
       "kind": "youtube#video",
       "etag": "\"XI7nbFXulYBIpL0ayR_gDh3eu1k/KFddDEIMSzaoHTLHzJsdtMZJ_sY\"",
       "id": "ECsWVHb-gi4",
+      "url": "https://www.youtube.com/embed/ECsWVHb-gi4?autoplay=1",
       "snippet": {
         "publishedAt": "2017-09-11T12:00:00.000Z",
         "channelId": "UChGJGhZ9SOOHvBB0Y4DOO_w",
@@ -783,27 +693,27 @@
         "description": "CHILDREN'S MUSEUM Pretend Play Indoor Playground for Kids Family Fun with Kids Songs Nursery Rhyme like Old McDonald had a farm! Great Indoor Play Area with lots of Children Activities and fun kids toys! Ryan's family had fun playing with  learning toys and pretend food.  Kids can interactive play and pretend to a doctor or dentist or pretend play farming. There's even kid size shopping trip to grocery store for pretend food like apple. There's also play sand for kids in giant sandbox, and kids can pretend go fishing, ride on cars like superman and be a chef! Great Indoor Play Center for fun learning experiences for children! Fun Kids Video for children who loves learning and playing with toys at the same time!",
         "thumbnails": {
           "default": {
-            "url": "https://i.ytimg.com/vi/ECsWVHb-gi4/default.jpg",
+            "url": "./assets/thumbnails/ECsWVHb-gi4-default.jpg",
             "width": 120,
             "height": 90
           },
           "medium": {
-            "url": "https://i.ytimg.com/vi/ECsWVHb-gi4/mqdefault.jpg",
+            "url": "./assets/thumbnails/ECsWVHb-gi4-mqdefault.jpg",
             "width": 320,
             "height": 180
           },
           "high": {
-            "url": "https://i.ytimg.com/vi/ECsWVHb-gi4/hqdefault.jpg",
+            "url": "./assets/thumbnails/ECsWVHb-gi4-hqdefault.jpg",
             "width": 480,
             "height": 360
           },
           "standard": {
-            "url": "https://i.ytimg.com/vi/ECsWVHb-gi4/sddefault.jpg",
+            "url": "./assets/thumbnails/ECsWVHb-gi4-sddefault.jpg",
             "width": 640,
             "height": 480
           },
           "maxres": {
-            "url": "https://i.ytimg.com/vi/ECsWVHb-gi4/maxresdefault.jpg",
+            "url": "./assets/thumbnails/ECsWVHb-gi4-maxresdefault.jpg",
             "width": 1280,
             "height": 720
           }
@@ -869,6 +779,7 @@
       "kind": "youtube#video",
       "etag": "\"XI7nbFXulYBIpL0ayR_gDh3eu1k/ewzm7lfU4hchsn2EUZyTsTczS4k\"",
       "id": "V7Zy5a9nfDg",
+      "url": "https://www.youtube.com/embed/V7Zy5a9nfDg?autoplay=1",
       "snippet": {
         "publishedAt": "2018-06-08T10:00:03.000Z",
         "channelId": "UCoookXUzPciGrEZEXmh4Jjg",
@@ -876,27 +787,27 @@
         "description": "There is something in the air on Sesame Street that is making everyone want to sing! In this full episodes, Elmo and Rosita sing their way through Sesame Street searching for each other for their playdate!\n\n--\nSubscribe to the Sesame Street Channel here: http://www.youtube.com/subscription_center?add_user=SesameStreet\n \nFor more fun games and videos for your preschooler in a safe, child-friendly environment, visit us at http://www.sesamestreet.org\n \nSesame Street is a production of Sesame Workshop, a nonprofit educational organization. The Workshop produces Sesame Street programs, seen in over 150 countries, and other acclaimed shows, including The Electric Company.  Beyond television, the Workshop produces content for multiple media platforms on a wide range of issues including literacy and numeracy, emotional wellbeing, health and wellness, and respect and understanding.  Learn more at http://www.sesamestreet.org.",
         "thumbnails": {
           "default": {
-            "url": "https://i.ytimg.com/vi/V7Zy5a9nfDg/default.jpg",
+            "url": "./assets/thumbnails/V7Zy5a9nfDg-default.jpg",
             "width": 120,
             "height": 90
           },
           "medium": {
-            "url": "https://i.ytimg.com/vi/V7Zy5a9nfDg/mqdefault.jpg",
+            "url": "./assets/thumbnails/V7Zy5a9nfDg-mqdefault.jpg",
             "width": 320,
             "height": 180
           },
           "high": {
-            "url": "https://i.ytimg.com/vi/V7Zy5a9nfDg/hqdefault.jpg",
+            "url": "./assets/thumbnails/V7Zy5a9nfDg-hqdefault.jpg",
             "width": 480,
             "height": 360
           },
           "standard": {
-            "url": "https://i.ytimg.com/vi/V7Zy5a9nfDg/sddefault.jpg",
+            "url": "./assets/thumbnails/V7Zy5a9nfDg-sddefault.jpg",
             "width": 640,
             "height": 480
           },
           "maxres": {
-            "url": "https://i.ytimg.com/vi/V7Zy5a9nfDg/maxresdefault.jpg",
+            "url": "./assets/thumbnails/V7Zy5a9nfDg-maxresdefault.jpg",
             "width": 1280,
             "height": 720
           }
@@ -946,6 +857,7 @@
       "kind": "youtube#video",
       "etag": "\"XI7nbFXulYBIpL0ayR_gDh3eu1k/lAM0kl-CWqXnEqHmpvEm72bivHw\"",
       "id": "XB_Ud6K8oyE",
+      "url": "https://www.youtube.com/embed/XB_Ud6K8oyE?autoplay=1",
       "snippet": {
         "publishedAt": "2018-04-09T12:00:03.000Z",
         "channelId": "UChGJGhZ9SOOHvBB0Y4DOO_w",
@@ -953,27 +865,27 @@
         "description": "Top 10 Science Experiments you can do at home for kids with Ryan ToysReview!  Ryan learns Diet Coke and Mentos, Smoke Ring, Wingbag balloons blow up, learn electricity, create helicopter balloons, Blowing up balloons with Baking Soda and Vinegar, Elephant Toothpaste, Boo Bubbles with Dry Ice, Oozing Pumpkin, Marshmallow in a vacuum, and Cornstarch and water dancing goo!\nEasy Children's Activities that's family fun for everyone and it's a great kids learning videos to teach children and toddlers about science using household ingredients!",
         "thumbnails": {
           "default": {
-            "url": "https://i.ytimg.com/vi/XB_Ud6K8oyE/default.jpg",
+            "url": "./assets/thumbnails/XB_Ud6K8oyE-default.jpg",
             "width": 120,
             "height": 90
           },
           "medium": {
-            "url": "https://i.ytimg.com/vi/XB_Ud6K8oyE/mqdefault.jpg",
+            "url": "./assets/thumbnails/XB_Ud6K8oyE-mqdefault.jpg",
             "width": 320,
             "height": 180
           },
           "high": {
-            "url": "https://i.ytimg.com/vi/XB_Ud6K8oyE/hqdefault.jpg",
+            "url": "./assets/thumbnails/XB_Ud6K8oyE-hqdefault.jpg",
             "width": 480,
             "height": 360
           },
           "standard": {
-            "url": "https://i.ytimg.com/vi/XB_Ud6K8oyE/sddefault.jpg",
+            "url": "./assets/thumbnails/XB_Ud6K8oyE-sddefault.jpg",
             "width": 640,
             "height": 480
           },
           "maxres": {
-            "url": "https://i.ytimg.com/vi/XB_Ud6K8oyE/maxresdefault.jpg",
+            "url": "./assets/thumbnails/XB_Ud6K8oyE-maxresdefault.jpg",
             "width": 1280,
             "height": 720
           }
@@ -1030,6 +942,7 @@
       "kind": "youtube#video",
       "etag": "\"XI7nbFXulYBIpL0ayR_gDh3eu1k/WyeTmoLilFzstVK5vmtPhAk4QqU\"",
       "id": "J9ULL5fCBo4",
+      "url": "https://www.youtube.com/embed/J9ULL5fCBo4?autoplay=1",
       "snippet": {
         "publishedAt": "2018-11-17T14:32:21.000Z",
         "channelId": "UCwOGO9gT1y0IvzPqKal4loQ",
@@ -1037,27 +950,27 @@
         "description": "Ryan Plays Let's go Pikachu & Eeve on Nintendo Switch with Daddy. Let's catch them all!\nIf you suggest using any other games, let us know in the comments below!!",
         "thumbnails": {
           "default": {
-            "url": "https://i.ytimg.com/vi/J9ULL5fCBo4/default.jpg",
+            "url": "./assets/thumbnails/J9ULL5fCBo4-default.jpg",
             "width": 120,
             "height": 90
           },
           "medium": {
-            "url": "https://i.ytimg.com/vi/J9ULL5fCBo4/mqdefault.jpg",
+            "url": "./assets/thumbnails/J9ULL5fCBo4-mqdefault.jpg",
             "width": 320,
             "height": 180
           },
           "high": {
-            "url": "https://i.ytimg.com/vi/J9ULL5fCBo4/hqdefault.jpg",
+            "url": "./assets/thumbnails/J9ULL5fCBo4-hqdefault.jpg",
             "width": 480,
             "height": 360
           },
           "standard": {
-            "url": "https://i.ytimg.com/vi/J9ULL5fCBo4/sddefault.jpg",
+            "url": "./assets/thumbnails/J9ULL5fCBo4-sddefault.jpg",
             "width": 640,
             "height": 480
           },
           "maxres": {
-            "url": "https://i.ytimg.com/vi/J9ULL5fCBo4/maxresdefault.jpg",
+            "url": "./assets/thumbnails/J9ULL5fCBo4-maxresdefault.jpg",
             "width": 1280,
             "height": 720
           }
@@ -1121,6 +1034,7 @@
       "kind": "youtube#video",
       "etag": "\"XI7nbFXulYBIpL0ayR_gDh3eu1k/xM1jFJUI6z7ScV-BeSCnuuzDmWg\"",
       "id": "6xwiTa_xVlM",
+      "url": "https://www.youtube.com/embed/6xwiTa_xVlM?autoplay=1",
       "snippet": {
         "publishedAt": "2017-09-22T15:50:03.000Z",
         "channelId": "UCCHmMn-aFceiyb81Z-fu-zw",
@@ -1128,27 +1042,27 @@
         "description": "Jake and Ty play four separate minute to win it games as the compete against each other in this crazy challenge.\n\nDid you enjoy this video?  Here are some other videos we think you might like.\n\nOperation Slime Challenge: https://www.youtube.com/watch?v=FycQVuqxORw\nCoke and Mentos Challenge: https://www.youtube.com/watch?v=ZZD0C2Fu-vs\nLip Retractor Challenge: https://www.youtube.com/watch?v=IXKf89bTx_E\nFast Food Fondue Challenge: https://www.youtube.com/watch?v=oUgfiExrN4U\nRainbow Ice Bath Challenge: https://www.youtube.com/watch?v=sM8tujZbsLU\nNever Have I Ever: https://www.youtube.com/watch?v=n340lu1BIpY\nTwisted Twister:  https://www.youtube.com/watch?v=XzR_twNyxSE\nHungry Hungry Hippos Game Twist: https://www.youtube.com/watch?v=Z0kuKpzfh0Y\nFamily Lip Retractor Challenge: https://www.youtube.com/watch?v=y_ridJVmS8E\n\nYou can send fanmail! \nJake and Ty\nP.O. Box 6792\nN. Logan, Utah 84341\n\nOur Family Channels: \n\nAllAroundAudrey: https://www.youtube.com/channel/UCS0kA-D1M87dDfkWRl_DLJA\nJustJordan33: https://www.youtube.com/channel/UCHOMvu3axPhTG5zLqrHynig\nJake and Ty: https://www.youtube.com/channel/UCCHmMn-aFceiyb81Z-fu-zw\nThat YouTub3 Family: https://www.youtube.com/channel/UCbZgDzTkBQMkPWYBFESJ3sQ\n\nFOLLOW US!\nInstagram: https://www.instagram.com/jakeandtygames/\nTwitter: https://twitter.com/JakeandTyGames\n\n \nPlease Subscribe to be notified when we post another video. http://www.youtube.com/channel/UCCHmMn-aFceiyb81Z-fu-zw?sub_confirmation=1\n\nMusic:\n“Blue Tail Fly” by Jay Man www.ourmusicbox.com\n“Can Can” by Jay Man www.ourmusicbox.com\n“Ten Green Bottles” by Jay Man www.ourmusicbox.com\n\nThanks For Watching!\n-Jake and Ty",
         "thumbnails": {
           "default": {
-            "url": "https://i.ytimg.com/vi/6xwiTa_xVlM/default.jpg",
+            "url": "./assets/thumbnails/6xwiTa_xVlM-default.jpg",
             "width": 120,
             "height": 90
           },
           "medium": {
-            "url": "https://i.ytimg.com/vi/6xwiTa_xVlM/mqdefault.jpg",
+            "url": "./assets/thumbnails/6xwiTa_xVlM-mqdefault.jpg",
             "width": 320,
             "height": 180
           },
           "high": {
-            "url": "https://i.ytimg.com/vi/6xwiTa_xVlM/hqdefault.jpg",
+            "url": "./assets/thumbnails/6xwiTa_xVlM-hqdefault.jpg",
             "width": 480,
             "height": 360
           },
           "standard": {
-            "url": "https://i.ytimg.com/vi/6xwiTa_xVlM/sddefault.jpg",
+            "url": "./assets/thumbnails/6xwiTa_xVlM-sddefault.jpg",
             "width": 640,
             "height": 480
           },
           "maxres": {
-            "url": "https://i.ytimg.com/vi/6xwiTa_xVlM/maxresdefault.jpg",
+            "url": "./assets/thumbnails/6xwiTa_xVlM-maxresdefault.jpg",
             "width": 1280,
             "height": 720
           }

@@ -1,35 +1,25 @@
-const
-    communicationServerHost = '127.0.0.1:3303',
-    servicesLayerHost = '127.0.0.1:9090';
+// API keys
+window.mapApiKey = '';
+window.weatherApiKey = '';
 
-const
-    mapApiKey = '',
-    weatherApiKey = '';
+// Bluetooth boundary
+window.rssiLaura = -55;
+window.rssiThomas = -55;
 
-const
-    rssiLaura = -50,
-    rssiThomas = -50;
 
-function getCommunicationServerHost () {
-    return communicationServerHost;
-}
+// Server Hosts
+window.carImageHost = '127.0.0.1:9000';
+window.communicationServerHost = '127.0.0.1:3303';
+window.servicesLayerHost = '127.0.0.1:9090';
 
-function getServicesLayerHost () {
-    return servicesLayerHost;
-}
-
-function getMapApiKey () {
-    return mapApiKey;
-}
-
-function getWeatherApiKey () {
-    return weatherApiKey;
-}
-
-function getRssiLaura () {
-    return rssiLaura;
-}
-
-function getRssiThomas () {
-    return rssiThomas;
-}
+// Multimedia configs
+window.multimedia = 'streaming';
+/*
+ * If there is a problem playing the video, please change to `local`.
+ * e.g.> window.multimedia = 'local';
+ */
+window.multimediaProduct = 'youtube';
+/*
+ * If you want to change the multimedia product, please change to `sony`.
+ * e.g.> window.multimediaProduct = 'sony';
+ */

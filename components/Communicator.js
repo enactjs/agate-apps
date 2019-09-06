@@ -4,7 +4,7 @@ import React from 'react';
 import openSocket from 'socket.io-client';
 
 const handleAddVideo = handle(
-	adaptEvent(item => ({url: item.url}), forward('onPlayVideo'))
+	adaptEvent(item => ({id: item.id, url: item.url}), forward('onPlayVideo'))
 );
 
 // const handleShowAd = handle(
@@ -90,7 +90,8 @@ class Communicator extends React.Component {
 			route: `VIDEO_ADD_SCREEN/${screenId}`,
 			type: video.kind,
 			title: video.snippet.title,
-			url: video.kind === 'sony#video' ? video.url : `https://www.youtube.com/embed/${video.id}?autoplay=1`
+			id: video.id,
+			url: video.url
 		};
 
 		console.log('Sending to', this.props.host, ['SEND_DATA:', data, 'Sending VIDEO_SENT:', {id: screenId}]);
