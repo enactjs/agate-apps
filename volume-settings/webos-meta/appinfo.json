@@ -1,0 +1,20 @@
+{
+  "id": "com.enact.settings.volumes",
+  "version": "1.0.0",
+  "vendor": "LGE-SWP",
+  "type": "web",
+  "main": "index.html",
+  "title": "Volume Settings",
+  "icon": "icon.png",
+  "uiRevision": 2,
+  "requiredPermissions": [
+    "all"
+  ],
+  "enableBackgroundRun": true,
+  "defaultWindowType": "overlay",
+  "useUnlimitedMediaPolicy": true,
+  "noSplashOnLaunch": true,
+  "handlesRelaunch": true,
+  "transparent": true,
+  "spinnerOnLaunch": false
+}

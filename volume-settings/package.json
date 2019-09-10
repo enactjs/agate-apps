@@ -1,0 +1,44 @@
+{
+	"name": "volume-settings",
+	"version": "1.0.0",
+	"description": "A basic starting point for Agate samples.",
+	"author": "Baekwoo Jung <baekwoo.jung@lge.com>",
+	"main": "src/index.js",
+	"scripts": {
+		"serve": "enact serve",
+		"pack": "enact pack",
+		"pack-p": "enact pack -p",
+		"watch": "enact pack --watch",
+		"clean": "enact clean",
+		"lint": "enact lint .",
+		"license": "enact license",
+		"test": "enact test",
+		"test-watch": "enact test --watch"
+	},
+	"license": "UNLICENSED",
+	"private": true,
+	"repository": "",
+	"enact": {
+		"theme": "agate"
+	},
+	"eslintConfig": {
+		"extends": "enact/strict"
+	},
+	"eslintIgnore": [
+		"node_modules/*",
+		"build/*",
+		"dist/*"
+	],
+	"dependencies": {
+		"@enact/agate": "github:enactjs/agate#develop",
+		"@enact/core": "^3.0.0",
+		"@enact/i18n": "^3.0.0",
+		"@enact/spotlight": "^3.0.0",
+		"@enact/ui": "^3.0.0",
+		"@enact/webos": "^3.0.0",
+		"ilib": "^14.2.0",
+		"prop-types": "^15.7.2",
+		"react": "^16.8.6",
+		"react-dom": "^16.8.6"
+	}
+}
