@@ -68,7 +68,8 @@ const skins = {
 	'Copper': 'copper',
 	'Copper Day': 'copper-day',
 	'Electro': 'electro',
-	'Gallium': 'gallium',
+	'Gallium Day': 'gallium-day',
+	'Gallium Night': 'gallium-night',
 	'Titanium': 'titanium'
 };
 
@@ -100,7 +101,7 @@ const StorybookDecorator = (story, config) => {
 	const sample = story();
 	const Config = {
 		defaultProps: {
-			skin: 'gallium'
+			skin: 'gallium-day'
 		},
 		groupId: globalGroup
 	};
@@ -129,7 +130,11 @@ const StorybookDecorator = (story, config) => {
 			accent: '#0359f0',
 			highlight: '#ff8100'
 		},
-		gallium: {
+		'gallium-day': {
+			accent: '#8b7efe',
+			highlight: '#e16253'
+		},
+		'gallium-night': {
 			accent: '#fc7982',
 			highlight: '#bd10e0'
 		},
@@ -139,7 +144,7 @@ const StorybookDecorator = (story, config) => {
 		}
 	};
 	const skinFromURL = getPropFromURL('skin');
-	const currentSkin = skinFromURL ? skinFromURL : 'gallium';
+	const currentSkin = skinFromURL ? skinFromURL : 'gallium-day';
 	const newSkin = (memory.skin !== currentSkin);
 	memory.skin = currentSkin;  // Remember the skin for the next time we load.
 	const accentFromURL = getPropFromURL('accent');
