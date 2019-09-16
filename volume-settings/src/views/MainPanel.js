@@ -25,8 +25,8 @@ class MainPanel extends React.Component {
 		};
 
 		new LS2Request().send({
-			service: 'luna://com.webos.service.audio/media/',
-			method: 'status',
+			lunaService,
+			lunaStatusMethod,
 			parameters: {
 				subscribe: true
 			},
