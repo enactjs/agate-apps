@@ -1,12 +1,17 @@
-import {Cell, Row} from '@enact/ui/Layout';
 import Divider from '@enact/agate/Divider'
 import Icon from '@enact/agate/Icon';
-import LS2Request from '@enact/webos/LS2Request';
 import {Panel} from '@enact/agate/Panels';
-import React from 'react';
 import Slider from '@enact/agate/Slider';
+import {Cell, Row} from '@enact/ui/Layout';
+import LS2Request from '@enact/webos/LS2Request';
+import React from 'react';
 
 import css from './MainPanel.module.less';
+
+const
+	lunaService = {service: 'luna://com.webos.service.audio/media/'},
+	lunaStatusMethod = {method: 'status'},
+	luanSetMethod = {method: 'setVolume'};
 
 class MainPanel extends React.Component {
 	constructor (props) {
@@ -18,9 +23,6 @@ class MainPanel extends React.Component {
 			messageVolume: 20,
 			safetyAlertVolume: 40
 		};
-
-		this.controlsDisplayTime = 5000;
-		this.controlsDisplayTimeoutID = null;
 
 		new LS2Request().send({
 			service: 'luna://com.webos.service.audio/media/',
@@ -34,25 +36,34 @@ class MainPanel extends React.Component {
 			}
 		});
 
-		this.onClicMute0 = this.onClickMute('media');
-		this.onClicMute1 = this.onClickMute('message');
-		this.onClicMute2 = this.onClickMute('safetyAlert');
+		this.onClicMuteMedia = this.onClickMute('media');
+		this.onClicMuteMessage = this.onClickMute('message');
+		this.onClicMuteSafetyAlert = this.onClickMute('safetyAlert');
 
-		this.onClickMaxVolume0 = this.onClickMaxVolume('media');
-		this.onClickMaxVolume1 = this.onClickMaxVolume('message');
-		this.onClickMaxVolume2 = this.onClickMaxVolume('safetyAlert');
+		this.onClickMaxVolumeMedia = this.onClickMaxVolume('media');
+		this.onClickMaxVolumeMessage = this.onClickMaxVolume('message');
+		this.onClickMaxVolumeSafetyAlert = this.onClickMaxVolume('safetyAlert');
 
-		this.onChangeVolume0 = this.onChangeVolume('media');
-		this.onChangeVolume1 = this.onChangeVolume('message');
-		this.onChangeVolume2 = this.onChangeVolume('safetyAlert');
+		this.onChangeVolumeMedia = this.onChangeVolume('media');
+		this.onChangeVolumeMessage = this.onChangeVolume('message');
+		this.onChangeVolumeSafetyAlert = this.onChangeVolume('safetyAlert');
 	}
+
+	componentWillUnmount () {
+		if (this.controlsDisplayTimeoutID) {
+			clearTimeout(this.controlsDisplayTimeoutID);
+		}
+	}
+
+	controlsDisplayTime = 5000
+	controlsDisplayTimeoutID = null
 
 	onClickMute = (name) => () => {
 		this.setState({[name + 'Volume']: 0});
 		if (name === 'media') {
 			new LS2Request().send({
-				service: 'luna://com.webos.service.audio/media/',
-				method: 'setVolume',
+				lunaService,
+				lunaStatusMethod,
 				parameters: {
 					volume: 0
 				}
@@ -65,8 +76,8 @@ class MainPanel extends React.Component {
 		this.setState({[name + 'Volume']: 100});
 		if (name === 'media') {
 			new LS2Request().send({
-				service: 'luna://com.webos.service.audio/media/',
-				method: 'setVolume',
+				lunaService,
+				luanSetMethod,
 				parameters: {
 					volume: 100
 				}
@@ -79,8 +90,8 @@ class MainPanel extends React.Component {
 		this.setState({[name + 'Volume']: value});
 		if (name === 'media') {
 			new LS2Request().send({
-				service: 'luna://com.webos.service.audio/media/',
-				method: 'setVolume',
+				lunaService,
+				luanSetMethod,
 				parameters: {
 					volume: value
 				}
@@ -90,7 +101,6 @@ class MainPanel extends React.Component {
 	}
 
 	onDisplayControls = () => {
-		console.log("onDisplayControls");
 		this.setState({isConstrolsHidden: false});
 		if (this.controlsDisplayTimeoutID) {
 			clearTimeout(this.controlsDisplayTimeoutID);
@@ -115,20 +125,20 @@ class MainPanel extends React.Component {
 						Media Volume
 					</Cell>
 					<Cell>
-						<Icon onClick={this.onClicMute0}>{mediaVolume === 0 ? 'volume0' : 'volume1'}</Icon>
+						<Icon onClick={this.onClicMuteMedia}>{mediaVolume === 0 ? 'volume0' : 'volume1'}</Icon>
 					</Cell>
 					<Cell size="55%">
 						<Slider
 							max={100}
 							min={0}
 							value={mediaVolume}
-							onChange={this.onChangeVolume0}
+							onChange={this.onChangeVolumeMedia}
 							orientation="horizontal"
 							step={1}
 						/>
 					</Cell>
 					<Cell>
-						<Icon onClick={this.onClickMaxVolume0}>volume2</Icon>
+						<Icon onClick={this.onClickMaxVolumeMedia}>volume2</Icon>
 					</Cell>
 				</Row>
 				<Row>
@@ -136,14 +146,14 @@ class MainPanel extends React.Component {
 						Message Volume
 					</Cell>
 					<Cell>
-						<Icon onClick={this.onClicMute1}>{messageVolume === 0 ? 'volume0' : 'volume1'}</Icon>
+						<Icon onClick={this.onClicMuteMessage}>{messageVolume === 0 ? 'volume0' : 'volume1'}</Icon>
 					</Cell>
 					<Cell size="55%">
 						<Slider
 							max={100}
 							min={0}
 							value={messageVolume}
-							onChange={this.onChangeVolume1}
+							onChange={this.onChangeVolumeMessage}
 							orientation="horizontal"
 							step={1}
 						/>
@@ -157,20 +167,20 @@ class MainPanel extends React.Component {
 						Safety Alert Message
 					</Cell>
 					<Cell>
-						<Icon onClick={this.onClicMute2}>{safetyAlertVolume === 0 ? 'volume0' : 'volume1'}</Icon>
+						<Icon onClick={this.onClicMuteSafetyAlert}>{safetyAlertVolume === 0 ? 'volume0' : 'volume1'}</Icon>
 					</Cell>
 					<Cell size="55%">
 						<Slider
 							max={100}
 							min={0}
 							value={safetyAlertVolume}
-							onChange={this.onChangeVolume2}
+							onChange={this.onChangeVolumeSafetyAlert}
 							orientation="horizontal"
 							step={1}
 						/>
 					</Cell>
 					<Cell>
-						<Icon onClick={this.onClickMaxVolume2}>volume2</Icon>
+						<Icon onClick={this.onClickMaxVolumeSafetyAlert}>volume2</Icon>
 					</Cell>
 				</Row>
 			</Panel>

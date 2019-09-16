@@ -1,7 +1,7 @@
 {
 	"name": "volume-settings",
 	"version": "1.0.0",
-	"description": "A basic starting point for Agate samples.",
+	"description": "A POC of the volume settings for webOS Auto",
 	"author": "Baekwoo Jung <baekwoo.jung@lge.com>",
 	"main": "src/index.js",
 	"scripts": {

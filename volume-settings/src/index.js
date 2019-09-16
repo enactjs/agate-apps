@@ -17,7 +17,7 @@ if (typeof window !== 'undefined') {
 		window.PalmSystem.setWindowProperty('needFocus', 'true');
 		window.PalmSystem.setInputRegion(
 			[
-				{'x': 0, 'y': 0, 'width': 1920, 'height': 270}
+				{x: 0, y: 0, width: 1920, height: 270}
 			]
 		);
 	}
