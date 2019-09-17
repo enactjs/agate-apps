@@ -209,6 +209,7 @@ const AppBase = kind({
 						{title: 'Radio', icon: 'radio'},
 						{title: 'Apps', icon: 'apps'}
 					]}
+					noCloseButton
 					onSelect={onSelect}
 					index={index}
 				>
