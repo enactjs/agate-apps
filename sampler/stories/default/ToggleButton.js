@@ -1,5 +1,6 @@
+import Button, {ButtonBase} from '@enact/agate/Button';
 import ToggleButton, {ToggleButtonBase} from '@enact/agate/ToggleButton';
-import UiButton from '@enact/ui/Button';
+import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
@@ -9,7 +10,7 @@ import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
 ToggleButton.displayName = 'ToggleButton';
-const Config = mergeComponentMetadata('ToggleButton', UiButton, ToggleButtonBase, ToggleButton);
+const Config = mergeComponentMetadata('ToggleButton', UIButtonBase, UIButton, ButtonBase, Button, ToggleButtonBase, ToggleButton);
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -24,7 +25,7 @@ storiesOf('Agate', module)
 				onClick={action('onClick')}
 				disabled={boolean('disabled', Config)}
 				icon={select('icon', prop.icons, Config)}
-				small={boolean('small', Config)}
+				size={select('size', ['small', 'large'], Config)}
 				onToggle={action('onToggle')}
 				underline={boolean('underline', Config, true)}
 				toggleOffLabel={text('toggleOffLabel', Config, 'Off')}

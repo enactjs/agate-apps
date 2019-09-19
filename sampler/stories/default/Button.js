@@ -29,7 +29,7 @@ storiesOf('Agate', module)
 				icon={select('icon', prop.icons, Config)}
 				joinedPosition={select('joinedPosition', prop.joinedPosition, Config)}
 				selected={boolean('selected', Config)}
-				small={boolean('small', Config)}
+				size={select('size', ['small', 'large'], Config)}
 				type={select('type', ['standard', 'grid'], Config)}
 			>
 				{text('children', Button, 'Click me')}
