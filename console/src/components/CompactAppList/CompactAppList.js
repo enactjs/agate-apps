@@ -43,7 +43,7 @@ const CompactAppList = kind({
 				<AppIconCell
 					shrink
 					size="50%"
-					icon="audio"
+					icon="music"
 					onKeyUp={onTabChange}
 					data-tabindex={getPanelIndexOf('radio')}
 					onClick={onTabChange}

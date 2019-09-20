@@ -23,9 +23,9 @@ const PlaybackControls = kind({
 				{...props}
 				align="center center"
 			>
-				<Cell shrink><IconButton size="small">skipbackward</IconButton></Cell>
-				<Cell shrink><IconButton size="small">play</IconButton></Cell>
-				<Cell shrink><IconButton size="small">skipforward</IconButton></Cell>
+				<Cell shrink><IconButton size="small">arrowlargeleft</IconButton></Cell>
+				<Cell shrink><IconButton size="small">ellipsis</IconButton></Cell>
+				<Cell shrink><IconButton size="small">arrowlargeright</IconButton></Cell>
 			</Row>
 		);
 	}
@@ -41,7 +41,7 @@ const CompactMusicBase = kind({
 
 	render: (props) => {
 		return (
-			<Widget {...props} icon="audio" title="Listen" description="Listen to your favorite tunes" view="radio" align="center center">
+			<Widget {...props} icon="music" title="Listen" description="Listen to your favorite tunes" view="radio" align="center center">
 				<Cell shrink>
 					<GridListImageItem
 						caption="The Title"
