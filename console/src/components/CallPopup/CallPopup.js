@@ -55,8 +55,8 @@ const CallPopup = kind({
 					<Cell />
 				</Row>
 				<Row className={css.icons} slot="buttons">
-					<Button icon="audio" />
-					<Button icon="plug" />
+					<Button icon="music" />
+					<Button icon="earphone" />
 					<Button icon="stop" onClick={onCallEnd} />
 				</Row>
 			</Popup>

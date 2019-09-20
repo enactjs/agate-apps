@@ -39,11 +39,11 @@ const ResponsiveTuner = ResponsiveBox(({containerShape, children, onUp, onDown, 
 	return (
 		<Layout align="center center" orientation={orientation} {...rest}>
 			{/* {(console.log({rest: rest}) ? 'test' : null)}*/}
-			<Cell shrink component={Button} onClick={vertical ? onUp : onDown} icon={vertical ? 'arrowsmallup' : 'arrowsmallleft'} />
+			<Cell shrink component={Button} onClick={vertical ? onUp : onDown} icon={vertical ? 'arrowlargeup' : 'arrowlargeleft'} />
 			<Cell shrink className={css.label}>
 				{children}
 			</Cell>
-			<Cell shrink component={Button} onClick={vertical ? onDown : onUp} icon={vertical ? 'arrowsmalldown' : 'arrowsmallright'} />
+			<Cell shrink component={Button} onClick={vertical ? onDown : onUp} icon={vertical ? 'arrowlargedown' : 'arrowlargeright'} />
 		</Layout>
 	);
 });
@@ -155,8 +155,8 @@ const RadioBase = kind({
 						<Row align="center space-around" wrap className={css.info}>
 							{/* Status Selector */}
 							<Cell shrink className={css.radioToggle}>
-								<ToggleButton onClick={onStatusToggle} selected={status === 'OFF'} small type="grid">OFF</ToggleButton>|
-								<ToggleButton onClick={onStatusToggle} selected={status === 'ON'} small type="grid">ON</ToggleButton>
+								<ToggleButton onClick={onStatusToggle} selected={status === 'OFF'} size="small" type="grid">OFF</ToggleButton>|
+								<ToggleButton onClick={onStatusToggle} selected={status === 'ON'} size="small" type="grid">ON</ToggleButton>
 							</Cell>
 							{/* Station Info */}
 							<Cell shrink className={css.title}>

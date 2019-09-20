@@ -201,7 +201,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 									noFollowButton ?
 										null :
 										<IconButton
-											size="smallest"
+											size="small"
 											alt="Follow Mode"
 											selected={follow}
 											onClick={this.toggleFollow}
@@ -213,7 +213,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 									noExpandButton ?
 										null :
 										<IconButton
-											size="smallest"
+											size="small"
 											alt="Fullscreen"
 											onClick={this.onExpand}
 										>
@@ -293,7 +293,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 									className={css.columnCell}
 									component={ToggleButton}
 									css={css}
-									small
+									size="small"
 									// We want to be able to factor in the autonomous state, but
 									// perhaps that needs to happen in ServiceLayer, and not here.
 									selected={destination && navigating}

@@ -144,7 +144,7 @@ const PhoneBase = kind({
 								placeholder="Phone Number ..."
 								value={value}
 							/>
-							<Icon onClick={onClear} css={css} >arrowshrink</Icon>
+							<Icon onClick={onClear} css={css}>arrowlargeleft</Icon>
 						</Cell>
 						<Cell className="dialer-grid">
 							<Dialer align="center center" onSelectDigit={onSelectDigit} />

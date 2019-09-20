@@ -41,7 +41,7 @@ const CompactHeader = kind({
 				<Cell shrink>
 					<IconButton
 						className={css.btn}
-						size="smallest"
+						size="small"
 						alt="Fullscreen"
 						onClick={onExpand}
 					>

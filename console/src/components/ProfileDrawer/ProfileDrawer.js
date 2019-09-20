@@ -147,7 +147,7 @@ const ProfileDrawerBase = kind({
 									onClick={layoutArrangeableToggle}
 									selected={layoutArrangeable}
 									shrink
-									small
+									size="small"
 									toggleOffLabel="Edit Layout"
 									toggleOnLabel="Done"
 									type="grid"

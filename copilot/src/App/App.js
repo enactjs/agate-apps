@@ -53,7 +53,7 @@ const AppBase = kind({
 					</Row>
 				</Cell> : null}
 				<Cell>
-					<Button style={{position: 'absolute', zIndex: 1, top: '60px'}} icon="plug" onClick={onTogglePopup} />
+					<Button style={{position: 'absolute', zIndex: 1, top: '60px'}} icon="setting" onClick={onTogglePopup} />
 					<Row className={css.bodyRow}>
 						<IFrame allow="autoplay" className={css.iframe} src={url} />
 						{!showAd ? null : <Cell className={css.adSpace} shrink>
