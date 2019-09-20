@@ -27,10 +27,10 @@ storiesOf('Agate', module)
 				]}
 			>
 				<beforeTabs>
-					<Button size="small" type="grid" icon="arrowhookleft" />
+					<Button size="small" type="grid" icon="arrowlargeleft" />
 				</beforeTabs>
 				<afterTabs>
-					<Button size="small" type="grid" icon="arrowhookright" />
+					<Button size="small" type="grid" icon="arrowlargeright" />
 				</afterTabs>
 				<Panel>
 					<Button icon="home">Click me!</Button>
