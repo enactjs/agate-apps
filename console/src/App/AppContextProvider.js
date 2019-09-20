@@ -413,6 +413,7 @@ class AppContextProvider extends Component {
 			method: 'sendTelemetry',
 			parameters: {
 				AppInstanceId: appInstanceId + "-" + userName,
+				UserName: userName,
 				AppName: appName,
 				FeatureName: featureName,
 				Status: status,
@@ -458,6 +459,7 @@ class AppContextProvider extends Component {
 					method: 'sendTelemetry',
 					parameters: {
 						AppInstanceId: appInstanceId + "-" + intervalUserName,
+						UserName: intervalUserName,
 						AppName: appName,
 						FeatureName: featureName,
 						Status: 'Running',
