@@ -10,10 +10,12 @@ import ri from '@enact/ui/resolution';
 import {VirtualGridList, VirtualList} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 import React from 'react';
+import Image from '@enact/agate/Image';
 
 // import appConfig from '../App/configLoader';
 import Communicator from '../../../components/Communicator';
 import ScreenSelectionPopup from '../../../components/ScreenSelectionPopup';
+import Sonylogo from '../../assets/sonylogo.png';
 
 import IconButton from '@enact/agate/IconButton';
 import CustomLayout from '../components/CustomLayout';
@@ -240,7 +242,9 @@ const MultimediaBase = kind({
 					>
 						<left>
 							<Column>
-								<Cell shrink component={Divider} className={css.divider}>Recommended Videos</Cell>
+								{window.multimediaProduct ? (<Cell shrink component={Image} className={css.logo} src={Sonylogo}/>) : null}
+								<Cell shrink component={Divider} className={css.divider}>Videos</Cell>
+								{window.multimediaProduct ? (<Cell shrink component={Divider} className={css.dividerSony}>Powered by Sony Pictures</Cell>) : null}
 								<Cell>
 									<ResponsiveVirtualList
 										dataSize={videos.length}
