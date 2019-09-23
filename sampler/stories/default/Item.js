@@ -3,7 +3,7 @@ import UiItem, {ItemBase as UiItemBase} from '@enact/ui/Item';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 
-import {boolean, text} from '../../src/enact-knobs';
+import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
 const Config = mergeComponentMetadata('Item', UiItemBase, UiItem, ItemBase, Item);
