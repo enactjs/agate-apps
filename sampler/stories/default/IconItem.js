@@ -13,8 +13,8 @@ storiesOf('Agate', module)
 			<IconItem
 				label={text('label', IconItem, 'Label')}
 				disabled={boolean('disabled', IconItem)}
-				iconAfter={select('iconAfter', [...iconNames], IconItem, 'compass')}
-				iconBefore={select('iconBefore', ['', ...iconNames], IconItem, '')}
+				icon={select('icon', [...iconNames], IconItem, 'compass')}
+				titleIcon={select('titleIcon', ['', ...iconNames], IconItem, '')}
 			>
 				{text('children', IconItem, 'Hello IconItem')}
 			</IconItem>
