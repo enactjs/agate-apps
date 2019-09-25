@@ -14,7 +14,6 @@ storiesOf('Agate', module)
 		'Item',
 		() => (
 			<Item
-				active={boolean('active', Config)}
 				disabled={boolean('disabled', Config)}
 				inline={boolean('inline', Config)}
 				label={text('label', Config, '')}
