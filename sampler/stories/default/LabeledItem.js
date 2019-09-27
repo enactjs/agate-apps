@@ -14,6 +14,7 @@ storiesOf('Agate', module)
 				label={text('label', LabeledItem, 'Label')}
 				disabled={boolean('disabled', LabeledItem)}
 				titleIcon={select('titleIcon', ['', ...iconNames], LabeledItem, 'expand')}
+				labelPosition={select('labelPosition', ['above', 'after', 'before', 'below'], LabeledItem, 'below')}
 			>
 				{text('children', LabeledItem, 'Hello LabeledItem')}
 			</LabeledItem>

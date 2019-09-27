@@ -3,7 +3,7 @@ import UiItem, {ItemBase as UiItemBase} from '@enact/ui/Item';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 
-import {boolean, text} from '../../src/enact-knobs';
+import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
 const Config = mergeComponentMetadata('Item', UiItemBase, UiItem, ItemBase, Item);
@@ -16,6 +16,9 @@ storiesOf('Agate', module)
 			<Item
 				disabled={boolean('disabled', Config)}
 				inline={boolean('inline', Config)}
+				label={text('label', Config, '')}
+				labelPosition={select('labelPosition', ['above', 'after', 'before', 'below'], Config, 'below')}
+				selected={boolean('selected', Config)}
 			>
 				{text('children', Config, 'Hello Item')}
 			</Item>
