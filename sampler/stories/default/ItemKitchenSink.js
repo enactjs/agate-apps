@@ -10,9 +10,9 @@ import {storiesOf} from '@storybook/react';
 
 Item.displayName = 'Item';
 
-storiesOf('Agate', module)
+storiesOf('Agate QA.Item', module)
 	.add(
-		'Item Kitchen Sink',
+		'Kitchen Sink',
 		() => (
 			<Scroller>
 				<IconItem icon="home" titleIcon="home">IconItem</IconItem>
