@@ -76,6 +76,11 @@ const UserSelectionPopupBase = kind({
 	},
 
 	handlers: {
+		onCloseButtonClick: (ev, {updateAppState}) => {
+			updateAppState((state) => {
+				state.appState.showUserSelectionPopup = false;
+			});
+		},
 		onResetAll: (ev, {onResetAll, resetAll, onResetCopilot, onResetPosition}) => {
 			onResetAll();
 			resetAll();
