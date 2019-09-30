@@ -158,6 +158,7 @@ const ProfileDrawerBase = kind({
 					</TabGroup>
 				</Drawer>
 				<UserSelectionPopup
+					onClose={onToggleUserSelectionPopup}
 					onCloseButtonClick={onToggleUserSelectionPopup}
 					onResetAll={onResetAll}
 					open={showUserSelectionPopup}
