@@ -281,7 +281,7 @@ const AppBase = kind({
 					<Multimedia onSendVideo={sendVideo} screenIds={[0, 1]} />
 				</TabbedPanels>
 				<UserSelectionPopup
-					onClose={onToggleUserSelectionPopup}
+					onCloseButtonClick={onToggleUserSelectionPopup}
 					onResetAll={onResetAll}
 					open={showUserSelectionPopup}
 					onResetPosition={resetPosition}
@@ -298,19 +298,19 @@ const AppBase = kind({
 					showUserSelectionPopup={showUserSelectionPopup}
 				/>*/}
 				<Popup
-					onClose={onToggleBasicPopup}
+					onCloseButtonClick={onToggleBasicPopup}
 					open={showBasicPopup}
 				>
 					{`Popup for ${skinName} skin`}
 				</Popup>
 				<Popup
-					onClose={onToggleDestinationReachedPopup}
+					onCloseButtonClick={onToggleDestinationReachedPopup}
 					open={showDestinationReachedPopup}
 				>
 					Destination reached!
 				</Popup>
 				<Popup
-					onClose={onTogglePopup}
+					onCloseButtonClick={onTogglePopup}
 					open={showPopup}
 					closeButton
 				>
@@ -324,7 +324,7 @@ const AppBase = kind({
 				</Popup>
 				<Popup
 					className={css.dateTimePopup}
-					onClose={onToggleDateTimePopup}
+					onCloseButtonClick={onToggleDateTimePopup}
 					open={showDateTimePopup}
 					closeButton
 				>

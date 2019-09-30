@@ -90,7 +90,7 @@ const ScreenSelectionPopupBase = kind({
 				{...rest}
 				open={open}
 				closeButton
-				onClose={onClose}
+				onCloseButtonClick={onClose}
 				title={title}
 			>
 				{children}
