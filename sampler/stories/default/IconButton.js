@@ -27,7 +27,7 @@ storiesOf('Agate', module)
 				disabled={boolean('disabled', Config)}
 				highlighted={boolean('highlighted', Config)}
 				selected={boolean('selected', Config)}
-				size={select('size', ['smallest', 'small', 'large'], Config)}
+				size={select('size', ['smallest', 'small', 'large', 'huge'], Config)}
 				type={select('type', ['standard', 'grid'], Config)}
 			>
 				{select('children', prop.icons, Config, 'home')}
