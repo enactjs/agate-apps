@@ -18,7 +18,6 @@ storiesOf('Agate', module)
 					open={boolean('open', Config)}
 					noAnimation={boolean('noAnimation', Config)}
 					noAutoDismiss={boolean('noAutoDismiss', Config)}
-					onCloseButtonClick={action('onCloseButtonClick')}
 					onClose={action('onClose')}
 					onHide={action('onHide')}
 					scrimType={select('scrimType', ['none', 'translucent', 'transparent'], Config, 'translucent')}
