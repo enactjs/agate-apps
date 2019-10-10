@@ -54,6 +54,7 @@ const CompactHeaterBase = kind({
 			<Widget {...rest} title="Heated Seats" description="Warm up the seats" view="hvac" align="center space-around" orientation="horizontal">
 				<Cell shrink>
 					<LabeledIconButton
+						css={css}
 						icon="heatseatleft"
 						onClick={onToggleLeftHeater}
 						selected={leftHeat}
@@ -63,6 +64,7 @@ const CompactHeaterBase = kind({
 				</Cell>
 				<Cell shrink>
 					<LabeledIconButton
+						css={css}
 						icon="heatseatright"
 						onClick={onToggleRightHeater}
 						selected={rightHeat}
