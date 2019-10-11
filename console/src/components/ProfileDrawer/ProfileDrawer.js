@@ -44,7 +44,7 @@ const ProfileDrawerBase = kind({
 		tabPosition: 'before',
 		tabs: [
 			{title: 'Home', icon: 'home'},
-			{title: 'Settings', icon: 'gear'},
+			{title: 'Settings', icon: 'setting'},
 			{title: 'Theme', icon: 'display'}
 		]
 	},
@@ -147,7 +147,7 @@ const ProfileDrawerBase = kind({
 									onClick={layoutArrangeableToggle}
 									selected={layoutArrangeable}
 									shrink
-									small
+									size="small"
 									toggleOffLabel="Edit Layout"
 									toggleOnLabel="Done"
 									type="grid"

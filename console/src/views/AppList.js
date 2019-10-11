@@ -46,13 +46,13 @@ const AppList = kind({
 					<Row className={css.row} align="start center">
 						<AppIconCell icon="radio" data-tabindex={getPanelIndexOf('radio')} onKeyUp={onTabChange} onClick={onTabChange}>Radio</AppIconCell>
 						<AppIconCell icon="rearscreen" data-tabindex={getPanelIndexOf('multimedia')} onKeyUp={onTabChange} onClick={onTabChange}>Multimedia</AppIconCell>
-						<AppIconCell icon="repeat" onKeyUp={onPopupOpen} onClick={onToggleBasicPopup}>Connect</AppIconCell>
+						<AppIconCell icon="pairing" onKeyUp={onPopupOpen} onClick={onToggleBasicPopup}>Connect</AppIconCell>
 					</Row>
 				</Cell>
 				<Cell shrink>
 					<Row className={css.row} align="start center">
 						<AppIconCell icon="dashboard" data-tabindex={getPanelIndexOf('dashboard')} onKeyUp={onTabChange} onClick={onTabChange}>Dashboard</AppIconCell>
-						<AppIconCell icon="gear" data-tabindex={getPanelIndexOf('settings')} onKeyUp={onTabChange} onClick={onTabChange}>Settings</AppIconCell>
+						<AppIconCell icon="setting" data-tabindex={getPanelIndexOf('settings')} onKeyUp={onTabChange} onClick={onTabChange}>Settings</AppIconCell>
 						<AppIconCell icon="closex" onClick={onTogglePopup}>Point of Interest</AppIconCell>
 					</Row>
 				</Cell>
