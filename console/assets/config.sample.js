@@ -1,3 +1,8 @@
+/*
+ * Important
+ * This file is the console app configuration file. If you create dist, you need to change the file name to config.js and put it in the assets folder.
+ */
+
 // API keys
 window.mapApiKey = '';
 window.weatherApiKey = '';

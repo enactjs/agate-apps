@@ -261,7 +261,9 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		stopNavigation = () => {
 			console.log('%cStopping Navigation', 'color: magenta');
 			// Trick the simulator into stopping by telling it to navigate to where it already is.
-			this.connection.send('routingRequest', [this.props.location, this.props.location]);
+			if (this.connection) {
+				this.connection.send('routingRequest', [this.props.location, this.props.location]);
+			}
 		}
 
 		sendNavigation = () => {
@@ -284,7 +286,9 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		}
 
 		resetPosition = (coordinates) => {
-			this.connection.send('positionReset', coordinates);
+			if (this.connection) {
+				this.connection.send('positionReset', coordinates);
+			}
 		}
 
 		resetCopilot = () => {

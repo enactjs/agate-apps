@@ -117,7 +117,7 @@ const DashboardBase = kind({
 					<bottomLeft>
 						<ResponsiveLayout style={{height: '100%'}}>
 							<Cell>
-								<IconItem icon="gear" label="temp" spotlightDisabled>
+								<IconItem icon="temperature" label="temp" spotlightDisabled>
 									<ProgressBar className={css.progressBar} progress={0.25} />
 								</IconItem>
 							</Cell>
@@ -134,7 +134,7 @@ const DashboardBase = kind({
 					<bottomRight>
 						<ResponsiveLayout style={{height: '100%'}}>
 							<Cell>
-								<IconItem icon="plug" label="fuel" spotlightDisabled>
+								<IconItem icon="setting" label="fuel" spotlightDisabled>
 									<ProgressBar className={css.progressBar} progress={0.75} />
 								</IconItem>
 							</Cell>
