@@ -23,9 +23,10 @@ storiesOf('Agate', module)
 		'IconButton',
 		() => (
 			<IconButton
-				onClick={action('onClick')}
+				backgroundOpacity={select('backgroundOpacity', ['opaque', 'lightOpaque', 'transparent'], Config)}
 				disabled={boolean('disabled', Config)}
 				highlighted={boolean('highlighted', Config)}
+				onClick={action('onClick')}
 				selected={boolean('selected', Config)}
 				size={select('size', ['smallest', 'small', 'large', 'huge'], Config)}
 				type={select('type', ['standard', 'grid'], Config)}
