@@ -22,10 +22,11 @@ storiesOf('Agate', module)
 		'ToggleButton',
 		() => (
 			<ToggleButton
-				onClick={action('onClick')}
+				backgroundOpacity={select('backgroundOpacity', ['opaque', 'lightOpaque', 'transparent'], Config)}
 				disabled={boolean('disabled', Config)}
 				icon={select('icon', prop.icons, Config)}
 				size={select('size', ['small', 'large'], Config)}
+				onClick={action('onClick')}
 				onToggle={action('onToggle')}
 				underline={boolean('underline', Config, true)}
 				toggleOffLabel={text('toggleOffLabel', Config, 'Off')}

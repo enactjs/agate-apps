@@ -23,11 +23,12 @@ storiesOf('Agate', module)
 		'Button',
 		() => (
 			<Button
-				onClick={action('onClick')}
+				backgroundOpacity={select('backgroundOpacity', ['opaque', 'lightOpaque', 'transparent'], Config)}
 				disabled={boolean('disabled', Config)}
 				highlighted={boolean('highlighted', Config)}
 				icon={select('icon', prop.icons, Config)}
 				joinedPosition={select('joinedPosition', prop.joinedPosition, Config)}
+				onClick={action('onClick')}
 				selected={boolean('selected', Config)}
 				size={select('size', ['small', 'large'], Config)}
 				type={select('type', ['standard', 'grid'], Config)}
