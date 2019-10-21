@@ -29,6 +29,7 @@ storiesOf('Agate', module)
 				onClick={action('onClick')}
 				selected={boolean('selected', Config)}
 				size={select('size', ['smallest', 'small', 'large', 'huge'], Config)}
+				spinner={select('spinner', ['none', 'loading', 'searching'], Config, 'none')}
 				type={select('type', ['standard', 'grid'], Config)}
 			>
 				{select('children', prop.icons, Config, 'home')}
