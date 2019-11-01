@@ -3,6 +3,7 @@ import Button from '@enact/agate/Button';
 import ColorPicker from '@enact/agate/ColorPicker';
 import DateTimePicker from '@enact/agate/DateTimePicker';
 import Divider from '@enact/agate/Divider'
+import Icon from '@enact/agate/Icon';
 import IconButton from '@enact/agate/IconButton';
 import IconItem from '@enact/agate/IconItem';
 import IncrementSlider from '@enact/agate/IncrementSlider';
@@ -86,6 +87,11 @@ const MainPanel = kind({
 				<Cell>
 					<Item>
 						Hello Item
+					</Item>
+					<Item>
+						<Icon slot="slotBefore">fan</Icon>
+						Hello Slottable Item
+						<Icon slot="slotAfter">music</Icon>
 					</Item>
 					<LabeledItem label="Label" titleIcon="expand">
 						Hello LabeledItem
