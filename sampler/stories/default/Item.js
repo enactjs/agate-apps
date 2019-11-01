@@ -1,3 +1,4 @@
+import Icon, {icons as iconList} from '@enact/agate/Icon';
 import Item, {ItemBase} from '@enact/agate/Item';
 import UiItem, {ItemBase as UiItemBase} from '@enact/ui/Item';
 import React from 'react';
@@ -8,6 +9,8 @@ import {mergeComponentMetadata} from '../../src/utils';
 
 const Config = mergeComponentMetadata('Item', UiItemBase, UiItem, ItemBase, Item);
 Item.displayName = 'Item';
+
+const icons = Object.keys(iconList);
 
 storiesOf('Agate', module)
 	.add(
@@ -20,7 +23,13 @@ storiesOf('Agate', module)
 				labelPosition={select('labelPosition', ['above', 'after', 'before', 'below'], Config, 'below')}
 				selected={boolean('selected', Config)}
 			>
+				<Icon slot="slotBefore">
+					{select('slotBefore', [null, ...icons], Config, null)}
+				</Icon>
 				{text('children', Config, 'Hello Item')}
+				<Icon slot="slotAfter">
+					{select('slotAfter', [null, ...icons], Config, null)}
+				</Icon>
 			</Item>
 		),
 		{
