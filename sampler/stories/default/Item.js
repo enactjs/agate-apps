@@ -15,23 +15,27 @@ const icons = Object.keys(iconList);
 storiesOf('Agate', module)
 	.add(
 		'Item',
-		() => (
-			<Item
-				disabled={boolean('disabled', Config)}
-				inline={boolean('inline', Config)}
-				label={text('label', Config, '')}
-				labelPosition={select('labelPosition', ['above', 'after', 'before', 'below'], Config, 'below')}
-				selected={boolean('selected', Config)}
-			>
-				<Icon slot="slotBefore">
-					{select('slotBefore', [null, ...icons], Config, null)}
-				</Icon>
-				{text('children', Config, 'Hello Item')}
-				<Icon slot="slotAfter">
-					{select('slotAfter', [null, ...icons], Config, null)}
-				</Icon>
-			</Item>
-		),
+		() => {
+			const slotBeforeIcon = select('slotBefore Icon', [null, ...icons], Config);
+			const slotAfterIcon = select('slotAfter Icon', [null, ...icons], Config);
+			return (
+				<Item
+					disabled={boolean('disabled', Config)}
+					inline={boolean('inline', Config)}
+					label={text('label', Config)}
+					labelPosition={select('labelPosition', ['above', 'after', 'before', 'below'], Config, 'below')}
+					selected={boolean('selected', Config)}
+				>
+					{slotBeforeIcon ? <slotBefore>
+						<Icon>{slotBeforeIcon}</Icon>
+					</slotBefore> : null}
+					{text('children', Config, 'Hello Item')}
+					{slotAfterIcon ? <slotAfter>
+						<Icon>{slotAfterIcon}</Icon>
+					</slotAfter> : null}
+				</Item>
+			);
+		},
 		{
 			text: 'Basic usage of Item'
 		}
