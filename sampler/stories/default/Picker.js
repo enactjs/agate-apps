@@ -20,6 +20,6 @@ storiesOf('Agate', module)
 			</div>
 		),
 		{
-			text: 'Basic usage of Item'
+			text: 'Basic usage of Picker'
 		}
 	);
