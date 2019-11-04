@@ -1,4 +1,4 @@
-import Icon, {icons as iconList} from '@enact/agate/Icon';
+import Icon, {icons} from '@enact/agate/Icon';
 import Item, {ItemBase} from '@enact/agate/Item';
 import UiItem, {ItemBase as UiItemBase} from '@enact/ui/Item';
 import React from 'react';
@@ -10,14 +10,14 @@ import {mergeComponentMetadata} from '../../src/utils';
 const Config = mergeComponentMetadata('Item', UiItemBase, UiItem, ItemBase, Item);
 Item.displayName = 'Item';
 
-const icons = Object.keys(iconList);
+const iconList = [null, ...Object.keys(icons)];
 
 storiesOf('Agate', module)
 	.add(
 		'Item',
 		() => {
-			const slotBeforeIcon = select('slotBefore Icon', [null, ...icons], Config);
-			const slotAfterIcon = select('slotAfter Icon', [null, ...icons], Config);
+			const slotBeforeIcon = select('slotBefore Icon', iconList, Config);
+			const slotAfterIcon = select('slotAfter Icon', iconList, Config);
 			return (
 				<Item
 					disabled={boolean('disabled', Config)}
