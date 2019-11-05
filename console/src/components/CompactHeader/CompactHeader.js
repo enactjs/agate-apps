@@ -1,4 +1,4 @@
-import Divider from '@enact/agate/Divider';
+import Heading from '@enact/agate/Heading';
 import {adaptEvent, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import {Row, Cell} from '@enact/ui/Layout';
@@ -35,7 +35,7 @@ const CompactHeader = kind({
 	},
 
 	render: ({children, onExpand, noExpandButton, ...rest}) => (
-		<Row component={Divider} spacing="large" {...rest}>
+		<Row component={Heading} spacing="large" {...rest}>
 			{children && <Cell className={css.title}>{children}</Cell>}
 			{!noExpandButton ? (
 				<Cell shrink>

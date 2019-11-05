@@ -1,4 +1,4 @@
-import Divider from '@enact/agate/Divider';
+import Heading from '@enact/agate/Heading';
 import {Panel} from '@enact/agate/Panels';
 import GridListImageItem from '@enact/agate/GridListImageItem';
 import ThumbnailItem from '@enact/agate/ThumbnailItem';
@@ -210,7 +210,7 @@ const MultimediaBase = kind({
 					>
 						<left>
 							<Column>
-								<Cell shrink component={Divider} className={css.divider}>Recommended Videos</Cell>
+								<Cell shrink component={Heading} className={css.heading}>Recommended Videos</Cell>
 								<Cell>
 									<ResponsiveVirtualList
 										dataSize={videos.length}

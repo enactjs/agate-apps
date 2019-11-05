@@ -6,7 +6,7 @@ import classnames from 'classnames';
 import Group from '@enact/ui/Group';
 import {Cell, Column, Row} from '@enact/ui/Layout';
 import Button from '@enact/agate/Button';
-import Divider from '@enact/agate/Divider';
+import Heading from '@enact/agate/Heading';
 import IconButton from '@enact/agate/IconButton';
 import ToggleButton from '@enact/agate/ToggleButton';
 import Skinnable from '@enact/agate/Skinnable';
@@ -191,7 +191,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 							{
 								autonomousSelection && !(destination && navigating) ?
 									<Cell shrink={locationSelection} className={css.columnCell}>
-										<Divider spacing="medium" className={css.heading}>Self-driving</Divider>
+										<Heading spacing="medium" className={css.heading}>Self-driving</Heading>
 										<Row
 											component={Group}
 											childComponent={Cell}
@@ -220,7 +220,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 							{/* {
 								compact && destination && description &&
 								<Cell shrink className={css.columnCell}>
-									<Divider>Navigating To</Divider>
+									<Heading>Navigating To</Heading>
 									<Button
 										className={css.button}
 										small

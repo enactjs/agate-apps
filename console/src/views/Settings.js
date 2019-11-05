@@ -1,5 +1,5 @@
 import {Cell, Column, Row} from '@enact/ui/Layout';
-import Divider from '@enact/agate/Divider';
+import Heading from '@enact/agate/Heading';
 import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
 import React from 'react';
@@ -49,7 +49,7 @@ const Settings = kind({
 					<Column className={css.content}>
 						<Cell
 							className={css.header}
-							component={Divider}
+							component={Heading}
 							shrink
 							spacing="none"
 						>

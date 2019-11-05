@@ -1,5 +1,5 @@
 import Button from '@enact/agate/Button';
-import Divider from '@enact/agate/Divider';
+import Heading from '@enact/agate/Heading';
 import {LabeledItemBase} from '@enact/agate/LabeledItem';
 import {Panel} from '@enact/agate/Panels';
 import ToggleButton from '@enact/agate/ToggleButton';
@@ -163,7 +163,7 @@ const RadioBase = kind({
 					{/* List*/}
 					<div className={css.presetList}>
 						Presets
-						<Divider startSection />
+						<Heading startSection />
 						{['', '', '', '', ''].map((name, index) => (
 							<PresetItem
 								key={'preset' + index}
