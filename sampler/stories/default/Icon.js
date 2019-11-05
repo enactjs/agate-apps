@@ -1,5 +1,5 @@
 import Icon, {IconBase} from '@enact/agate/Icon';
-import Divider from '@enact/agate/Divider';
+import Heading from '@enact/agate/Heading';
 import UiIcon from '@enact/ui/Icon';
 import Scroller from '@enact/ui/Scroller';
 import iconNames from './icons';
@@ -31,7 +31,7 @@ storiesOf('Agate', module)
 					</Icon>
 					<br />
 					<br />
-					<Divider>All Icons</Divider>
+					<Heading>All Icons</Heading>
 					{iconNames.map((icon, index) => <Icon key={index} size={size} title={icon}>{icon}</Icon>)}
 				</Scroller>
 			);
