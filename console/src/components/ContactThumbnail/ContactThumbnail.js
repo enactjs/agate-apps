@@ -33,7 +33,7 @@ const ContactThumbnail = kind({
 	render: ({contact, onSelect, ...props}) => (
 		<div {...props} css={css} onClick={onSelect}>
 			<Item label={contact.number}>
-				<Icon>user</Icon>
+				<Icon slot="slotBefore">user</Icon>
 				{contact.name}
 			</Item>
 		</div>

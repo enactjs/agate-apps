@@ -96,7 +96,7 @@ const MainPanel = kind({
 						Hello LabeledItem
 					</LabeledItem>
 					<Item label="Label">
-						<Icon>compass</Icon>
+						<Icon slot="slotBefore">compass</Icon>
 						Hello Item with Icon
 					</Item>
 					<RadioItem icon="music">

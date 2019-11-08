@@ -72,14 +72,14 @@ const DashboardBase = kind({
 							<Column className={css.sideInfo} align="stretch space-between">
 								<Cell shrink>
 									<Item  label="23.1 psi" spotlightDisabled>
-										<Icon>compass</Icon>
+										<Icon slot="slotBefore">compass</Icon>
 										Tire psi
 									</Item>
 								</Cell>
 								<Cell component={Divider} shrink startSection />
 								<Cell shrink>
 									<Item label="23.1 psi" spotlightDisabled>
-										<Icon>compass</Icon>
+										<Icon slot="slotBefore">compass</Icon>
 										Tire psi
 									</Item>
 								</Cell>
@@ -94,14 +94,14 @@ const DashboardBase = kind({
 							<Column className={css.sideInfo} align="stretch space-between">
 								<Cell shrink>
 									<Item label="23.1 psi" spotlightDisabled>
-										<Icon>compass</Icon>
+										<Icon slot="slotBefore">compass</Icon>
 										Tire psi
 									</Item>
 								</Cell>
 								<Cell component={Divider} shrink startSection />
 								<Cell shrink>
 									<Item label="23.1 psi" spotlightDisabled>
-										<Icon>compass</Icon>
+										<Icon slot="slotBefore">compass</Icon>
 										Tire psi
 									</Item>
 								</Cell>
@@ -113,7 +113,7 @@ const DashboardBase = kind({
 						<ResponsiveLayout style={{height: '100%'}}>
 							<Cell>
 								<Item label="temp" spotlightDisabled>
-									<Icon>temperature</Icon>
+									<Icon slot="slotBefore">temperature</Icon>
 									<ProgressBar className={css.progressBar} progress={0.25} />
 								</Item>
 							</Cell>
@@ -131,7 +131,7 @@ const DashboardBase = kind({
 						<ResponsiveLayout style={{height: '100%'}}>
 							<Cell>
 								<Item label="fuel" spotlightDisabled>
-									<Icon>setting</Icon>
+									<Icon slot="slotBefore">setting</Icon>
 									<ProgressBar className={css.progressBar} progress={0.75} />
 								</Item>
 							</Cell>
