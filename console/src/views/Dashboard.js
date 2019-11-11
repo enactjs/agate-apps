@@ -1,6 +1,6 @@
 import Divider from '@enact/agate/Divider';
 import Item from '@enact/agate/Item';
-import IconItem from '@enact/agate/IconItem';
+import Icon from '@enact/agate/Icon';
 import {ResponsiveBox} from '@enact/agate/DropManager';
 import {Panel} from '@enact/agate/Panels';
 import ProgressBar from '@enact/agate/ProgressBar';
@@ -71,11 +71,17 @@ const DashboardBase = kind({
 						<Cell size="20%">
 							<Column className={css.sideInfo} align="stretch space-between">
 								<Cell shrink>
-									<IconItem icon="compass" label="23.1 psi" spotlightDisabled>Tire psi</IconItem>
+									<Item  label="23.1 psi" spotlightDisabled>
+										<Icon slot="slotBefore">compass</Icon>
+										Tire psi
+									</Item>
 								</Cell>
 								<Cell component={Divider} shrink startSection />
 								<Cell shrink>
-									<IconItem icon="compass" label="23.1 psi" spotlightDisabled>Tire psi</IconItem>
+									<Item label="23.1 psi" spotlightDisabled>
+										<Icon slot="slotBefore">compass</Icon>
+										Tire psi
+									</Item>
 								</Cell>
 							</Column>
 						</Cell>
@@ -87,11 +93,17 @@ const DashboardBase = kind({
 						<Cell size="20%">
 							<Column className={css.sideInfo} align="stretch space-between">
 								<Cell shrink>
-									<IconItem icon="compass" label="23.1 psi" spotlightDisabled>Tire psi</IconItem>
+									<Item label="23.1 psi" spotlightDisabled>
+										<Icon slot="slotBefore">compass</Icon>
+										Tire psi
+									</Item>
 								</Cell>
 								<Cell component={Divider} shrink startSection />
 								<Cell shrink>
-									<IconItem icon="compass" label="23.1 psi" spotlightDisabled>Tire psi</IconItem>
+									<Item label="23.1 psi" spotlightDisabled>
+										<Icon slot="slotBefore">compass</Icon>
+										Tire psi
+									</Item>
 								</Cell>
 							</Column>
 						</Cell>
@@ -100,9 +112,10 @@ const DashboardBase = kind({
 					<bottomLeft>
 						<ResponsiveLayout style={{height: '100%'}}>
 							<Cell>
-								<IconItem icon="temperature" label="temp" spotlightDisabled>
+								<Item label="temp" spotlightDisabled>
+									<Icon slot="slotBefore">temperature</Icon>
 									<ProgressBar className={css.progressBar} progress={0.25} />
-								</IconItem>
+								</Item>
 							</Cell>
 						</ResponsiveLayout>
 					</bottomLeft>
@@ -117,9 +130,10 @@ const DashboardBase = kind({
 					<bottomRight>
 						<ResponsiveLayout style={{height: '100%'}}>
 							<Cell>
-								<IconItem icon="setting" label="fuel" spotlightDisabled>
+								<Item label="fuel" spotlightDisabled>
+									<Icon slot="slotBefore">setting</Icon>
 									<ProgressBar className={css.progressBar} progress={0.75} />
-								</IconItem>
+								</Item>
 							</Cell>
 						</ResponsiveLayout>
 					</bottomRight>

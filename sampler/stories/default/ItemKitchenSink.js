@@ -1,6 +1,5 @@
 import Divider from '@enact/agate/Divider';
 import Icon from '@enact/agate/Icon';
-import IconItem from '@enact/agate/IconItem';
 import Item from '@enact/agate/Item';
 import LabeledItem from '@enact/agate/LabeledItem';
 import Scroller from '@enact/agate/Scroller';
@@ -15,7 +14,6 @@ storiesOf('Agate QA.Item', module)
 		'Kitchen Sink',
 		() => (
 			<Scroller>
-				<IconItem icon="home" titleIcon="home">IconItem</IconItem>
 				<LabeledItem label="label" titleIcon="home">LabeledItem</LabeledItem>
 				<SlotItem slotAfter={<Icon>home</Icon>} slotBefore={<Icon>home</Icon>}>SlotItem</SlotItem>
 				<Divider startSection>Item variations</Divider>
