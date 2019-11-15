@@ -1,5 +1,6 @@
 import Button from '@enact/agate/Button';
-import IconItem from '@enact/agate/IconItem';
+import Icon from '@enact/agate/Icon';
+import Item from '@enact/agate/Item';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
 import {Panel, TabbedPanels} from '@enact/agate/Panels';
 import React from 'react';
@@ -21,28 +22,22 @@ storiesOf('Agate', module)
 				orientation={select('orientation', ['vertical', 'horizontal'], TabbedPanels, 'vertical')}
 				tabPosition={select('tabPosition', ['before', 'after'], TabbedPanels, 'before')}
 				tabs={[
-					{title: 'Button', icon: 'fullscreen'},
-					{title: 'IconItem', icon: 'aircirculation'},
+					{title: 'Button', icon: 'netbook'},
+					{title: 'Item', icon: 'aircirculation'},
 					{title: 'LabeledIconButton', icon: 'temperature'}
 				]}
 			>
 				<beforeTabs>
-					<Button size="small" type="grid" icon="arrowhookleft" />
+					<Button size="small" type="grid" icon="arrowlargeleft" />
 				</beforeTabs>
 				<afterTabs>
-					<Button size="small" type="grid" icon="arrowhookright" />
+					<Button size="small" type="grid" icon="arrowlargeright" />
 				</afterTabs>
 				<Panel>
-					<Button icon="fullscreen">Click me!</Button>
+					<Button icon="netbook">Click me!</Button>
 				</Panel>
 				<Panel>
-					<IconItem
-						label="Label"
-						icon="aircirculation"
-						titleIcon="aircirculation"
-					>
-						Hello IconItem
-					</IconItem>
+					<Item label="label" labelPosition="before" slotBefore={<Icon>aircirculation</Icon>}>Hello Item</Item>
 				</Panel>
 				<Panel className="enact-fit">
 					<LabeledIconButton

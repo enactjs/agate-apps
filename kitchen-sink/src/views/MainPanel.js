@@ -5,7 +5,6 @@ import DateTimePicker from '@enact/agate/DateTimePicker';
 import Heading from '@enact/agate/Heading'
 import Icon from '@enact/agate/Icon';
 import IconButton from '@enact/agate/IconButton';
-import IconItem from '@enact/agate/IconItem';
 import IncrementSlider from '@enact/agate/IncrementSlider';
 import Input from '@enact/agate/Input';
 import Item from '@enact/agate/Item';
@@ -96,9 +95,10 @@ const MainPanel = kind({
 					<LabeledItem label="Label" titleIcon="expand">
 						Hello LabeledItem
 					</LabeledItem>
-					<IconItem label="Label" icon="compass">
-						Hello IconItem
-					</IconItem>
+					<Item label="Label">
+						<Icon slot="slotBefore">compass</Icon>
+						Hello Item with Icon
+					</Item>
 					<RadioItem icon="music">
 						Sound
 					</RadioItem>
