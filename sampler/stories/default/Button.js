@@ -30,7 +30,7 @@ storiesOf('Agate', module)
 				joinedPosition={select('joinedPosition', prop.joinedPosition, Config)}
 				onClick={action('onClick')}
 				selected={boolean('selected', Config)}
-				size={select('size', ['small', 'large'], Config)}
+				size={select('size', ['smallest', 'small', 'large', 'huge'], Config)}
 				type={select('type', ['standard', 'grid'], Config)}
 			>
 				{text('children', Button, 'Click me')}
