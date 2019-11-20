@@ -5,7 +5,7 @@ import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
 import icons from './icons';
-import {boolean, select, text} from '../../src/enact-knobs';
+import {boolean, select, text, number} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
 Button.displayName = 'Button';
@@ -23,7 +23,10 @@ storiesOf('Agate', module)
 		'Button',
 		() => (
 			<Button
-				backgroundOpacity={select('backgroundOpacity', ['opaque', 'lightOpaque', 'transparent'], Config)}
+				//animation={boolean('animation', Config)}
+				animate={select('animate', [null, 'onRender'], Config)}
+				animationDelay={number('animationDelay', Config)}
+				backgroundOpacity={select('backgroundOpacity', ['opaque', 'lightOpaque', 'transparent'],Config)}
 				disabled={boolean('disabled', Config)}
 				highlighted={boolean('highlighted', Config)}
 				icon={select('icon', prop.icons, Config)}
