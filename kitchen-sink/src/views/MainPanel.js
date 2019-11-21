@@ -27,7 +27,7 @@ const MainPanel = kind({
 
 	render: (props) => (
 		<Panel {...props}>
-			<Heading spacing="medium" showLine>
+			<Heading showLine>
 				Agate kitchen sink
 			</Heading>
 			<Row align="center space-around">

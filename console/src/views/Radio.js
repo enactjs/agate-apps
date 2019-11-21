@@ -163,7 +163,7 @@ const RadioBase = kind({
 					{/* List*/}
 					<div className={css.presetList}>
 						Presets
-						<Heading  showLine/>
+						<Heading showLine/>
 						{['', '', '', '', ''].map((name, index) => (
 							<PresetItem
 								key={'preset' + index}
