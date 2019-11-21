@@ -76,7 +76,7 @@ const DashboardBase = kind({
 										Tire psi
 									</Item>
 								</Cell>
-								<Cell component={Heading} shrink startSection />
+								<Cell component={Heading} shrink showLine/>
 								<Cell shrink>
 									<Item label="23.1 psi" spotlightDisabled>
 										<Icon slot="slotBefore">compass</Icon>
@@ -98,7 +98,7 @@ const DashboardBase = kind({
 										Tire psi
 									</Item>
 								</Cell>
-								<Cell component={Heading} shrink startSection />
+								<Cell component={Heading} shrink showLine />
 								<Cell shrink>
 									<Item label="23.1 psi" spotlightDisabled>
 										<Icon slot="slotBefore">compass</Icon>

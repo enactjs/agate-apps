@@ -181,11 +181,15 @@ const WelcomePopupBase = kind({
 								<Cell shrink className={css.contentCell + ' ' + css.time}>
 									{time}
 								</Cell>
-								<Cell shrink className={css.contentCell + ' ' + css.heading} component={Heading} />
+								<Cell shrink className={css.contentCell}>
+									<Heading  className={css.heading} />
+								</Cell>
 								<Cell className={css.contentCell}>
 									{Small1Component}
 								</Cell>
-								<Cell shrink className={css.contentCell + ' ' + css.heading} component={Heading} />
+								<Cell shrink className={css.contentCell}>
+									<Heading  className={css.heading} />
+								</Cell>
 								<Cell className={css.contentCell}>
 									{Small2Component}
 								</Cell>
