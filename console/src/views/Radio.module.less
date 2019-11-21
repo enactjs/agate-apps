@@ -1,3 +1,5 @@
+@import "~@enact/agate/styles/skin.less";
+
 .radio {
 	.tune,
 	.scan,
@@ -12,4 +14,10 @@
 	.title {
 		width: 200px;
 	}
+
+	.applySkins({
+		.header {
+			border-bottom: @agate-header-border-bottom-width solid @agate-heading-border-color;
+		}
+	});
 }

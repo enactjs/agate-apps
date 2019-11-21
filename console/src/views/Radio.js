@@ -161,9 +161,8 @@ const RadioBase = kind({
 					</topRight>
 
 					{/* List*/}
-					<div className={css.presetList}>
-						Presets
-						<Heading showLine/>
+					<div>
+						<Heading className={css.header} spacing="none">Presets</Heading>
 						{['', '', '', '', ''].map((name, index) => (
 							<PresetItem
 								key={'preset' + index}
