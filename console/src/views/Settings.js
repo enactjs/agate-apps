@@ -50,6 +50,7 @@ const Settings = kind({
 						<Cell
 							className={css.header}
 							component={Heading}
+							showLine
 							shrink
 							spacing="none"
 						>
