@@ -101,6 +101,7 @@ const ThemeSettings = kind({
 						<Cell
 							component={Heading}
 							shrink
+							showLine
 							spacing="medium"
 						>
 								Theme
