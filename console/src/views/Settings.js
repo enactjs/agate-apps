@@ -48,7 +48,6 @@ const Settings = kind({
 				<Cell size="40%">
 					<Column className={css.content}>
 						<Cell
-							className={css.header}
 							component={Heading}
 							showLine
 							shrink
