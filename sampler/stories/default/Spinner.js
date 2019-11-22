@@ -64,7 +64,7 @@ storiesOf('Agate', module)
 						centered={boolean('centered', Config)}
 						color={select('color', ['dark', 'light'], Config, 'light')}
 						scrim={boolean('scrim', Config)}
-						size={select('size', ['medium', 'small'], Config)}
+						size={select('size', ['huge', 'large', 'small', 'smallest'], Config)}
 						type={select('type', ['loading', 'searching'], Config, 'searching')}
 						transparent={boolean('transparent', Config)}
 					/>
