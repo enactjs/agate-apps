@@ -99,7 +99,6 @@ const ThemeSettings = kind({
 				<Cell size="70%">
 					<Column className={css.content}>
 						<Cell
-							className={css.header}
 							component={Heading}
 							shrink
 							spacing="medium"
