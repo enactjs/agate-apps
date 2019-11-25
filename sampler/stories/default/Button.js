@@ -23,7 +23,7 @@ storiesOf('Agate', module)
 		'Button',
 		() => (
 			<Button
-				animate={select('animate', [null, 'onRender'], Config)}
+				animateOnRender={boolean('animateOnRender', Config)}
 				animationDelay={number('animationDelay', Config)}
 				backgroundOpacity={select('backgroundOpacity', ['opaque', 'lightOpaque', 'transparent'],Config)}
 				disabled={boolean('disabled', Config)}
