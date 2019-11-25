@@ -1,7 +1,7 @@
 import React from 'react';
 import kind from '@enact/core/kind';
 import {Column, Cell} from '@enact/ui/Layout';
-import Divider from '@enact/agate/Divider';
+import Heading from '@enact/agate/Heading';
 import Image from '@enact/agate/Image';
 import Skinnable from '@enact/agate/Skinnable';
 
@@ -57,7 +57,7 @@ const WeatherItemBase = kind({
 		return (
 			<Column {...rest} align="center space-around">
 				{label ? (
-					<Cell className={css.item} component={Divider} shrink>
+					<Cell className={css.item} component={Heading} shrink>
 						{label}
 					</Cell>
 				) : null}

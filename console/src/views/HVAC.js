@@ -1,4 +1,4 @@
-import Divider from '@enact/agate/Divider';
+import Heading from '@enact/agate/Heading';
 import kind from '@enact/core/kind';
 import Layout, {Cell, Row} from '@enact/ui/Layout';
 import {Panel} from '@enact/agate/Panels';
@@ -60,9 +60,9 @@ const HvacBase = kind({
 		<Panel {...rest}>
 			<CustomLayout arrangeable={arrangeable} arrangement={arrangement} onArrange={onArrange}>
 				<top>
-					<Divider>
+					<Heading>
 						Fan Speed
-					</Divider>
+					</Heading>
 					<SliderButton
 						disabled={autoSelected}
 						onChange={onUpdateFanSpeed}

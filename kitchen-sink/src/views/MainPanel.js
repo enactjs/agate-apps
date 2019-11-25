@@ -2,7 +2,7 @@ import {Row, Cell} from '@enact/ui/Layout';
 import Button from '@enact/agate/Button';
 import ColorPicker from '@enact/agate/ColorPicker';
 import DateTimePicker from '@enact/agate/DateTimePicker';
-import Divider from '@enact/agate/Divider'
+import Heading from '@enact/agate/Heading'
 import Icon from '@enact/agate/Icon';
 import IconButton from '@enact/agate/IconButton';
 import IncrementSlider from '@enact/agate/IncrementSlider';
@@ -27,9 +27,9 @@ const MainPanel = kind({
 
 	render: (props) => (
 		<Panel {...props}>
-			<Divider spacing="normal" startSection>
+			<Heading showLine>
 				Agate kitchen sink
-			</Divider>
+			</Heading>
 			<Row align="center space-around">
 				<Cell shrink>
 					<Button>Click me</Button>
@@ -110,7 +110,7 @@ const MainPanel = kind({
 					<DateTimePicker />
 				</Cell>
 			</Row>
-			<Divider>ProgressBar</Divider>
+			<Heading>ProgressBar</Heading>
 			<ProgressBar
 				rientation="horizontal"
 				progress={0.4}

@@ -4,7 +4,7 @@ import {Panel} from '@enact/agate/Panels';
 import ColorPicker from '@enact/agate/ColorPicker';
 import {Row, Column, Cell} from '@enact/ui/Layout';
 import SliderButton from '@enact/agate/SliderButton';
-import Divider from '@enact/agate/Divider';
+import Heading from '@enact/agate/Heading';
 
 import {getPanelIndexOf} from '../App';
 import AppContextConnect from '../App/AppContextConnect';
@@ -99,9 +99,9 @@ const ThemeSettings = kind({
 				<Cell size="70%">
 					<Column className={css.content}>
 						<Cell
-							className={css.header}
-							component={Divider}
+							component={Heading}
 							shrink
+							showLine
 							spacing="medium"
 						>
 								Theme

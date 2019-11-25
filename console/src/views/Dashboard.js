@@ -1,4 +1,4 @@
-import Divider from '@enact/agate/Divider';
+import Heading from '@enact/agate/Heading';
 import Item from '@enact/agate/Item';
 import Icon from '@enact/agate/Icon';
 import {ResponsiveBox} from '@enact/agate/DropManager';
@@ -76,7 +76,7 @@ const DashboardBase = kind({
 										Tire psi
 									</Item>
 								</Cell>
-								<Cell component={Divider} shrink startSection />
+								<Cell component={Heading} shrink showLine/>
 								<Cell shrink>
 									<Item label="23.1 psi" spotlightDisabled>
 										<Icon slot="slotBefore">compass</Icon>
@@ -98,7 +98,7 @@ const DashboardBase = kind({
 										Tire psi
 									</Item>
 								</Cell>
-								<Cell component={Divider} shrink startSection />
+								<Cell component={Heading} shrink showLine />
 								<Cell shrink>
 									<Item label="23.1 psi" spotlightDisabled>
 										<Icon slot="slotBefore">compass</Icon>

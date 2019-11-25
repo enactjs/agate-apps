@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import {color} from '@storybook/addon-knobs';
 import {Column, Cell} from '@enact/ui/Layout';
 import AgateDecorator from '@enact/agate/AgateDecorator';
-import Divider from '@enact/agate/Divider';
+import Heading from '@enact/agate/Heading';
 import {Panels, Panel} from '@enact/agate/Panels';
 import {select} from '../enact-knobs';
 
@@ -33,7 +33,7 @@ const PanelsBase = kind({
 				<Panel className={css.panel}>
 					<Column>
 						<Cell shrink>
-							<Divider startSection>{title}</Divider>
+							<Heading showLine>{title}</Heading>
 							{description ? (
 								<div className={css.description}>
 									<p>{description}</p>
