@@ -77,7 +77,7 @@ const PanelSwitchingIconButton = kind({
   computed: {
     selected: ({ index, view }) => index === getPanelIndexOf(view)
   },
-  render: ({ onSelect, ...rest }) => {
+  render: ({ onSelect, view, ...rest }) => {
     delete rest.index;
     return <Button {...rest} onClick={onSelect} />;
   }
@@ -244,17 +244,15 @@ const AppBase = kind({
                       index={index}
                       onSelect={onSelect}
                       view="settings/theme"
-                    >
-                      edit
-                    </PanelSwitchingIconButton>
+                      icon="edit"
+                    />
                   </Cell>
                   <Cell shrink>
                     <Button
                       onClick={layoutArrangeableToggle}
                       selected={layoutArrangeable}
-                    >
-                      display
-                    </Button>
+                      icon="display"
+                    />
                   </Cell>
                 </Row>
               </Cell>

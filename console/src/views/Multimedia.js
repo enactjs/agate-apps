@@ -34,7 +34,7 @@ const ListItemOverlay = kind({
 
   render: () => (
     <Column align="center center">
-      <Button size="small">arrowlargeright</Button>
+      <Button size="small" icon="arrowlargeright" />
     </Column>
   )
 });
