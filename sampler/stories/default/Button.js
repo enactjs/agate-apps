@@ -26,6 +26,8 @@ storiesOf('Agate', module)
 				animateOnRender={boolean('animateOnRender', Config)}
 				animationDelay={number('animationDelay', Config)}
 				backgroundOpacity={select('backgroundOpacity', ['opaque', 'lightOpaque', 'transparent'],Config)}
+				badge={text('badge', Config, 'badge')}
+				badgeColor={select('badgeColor', ['', 'red', 'green', 'blue', 'black'], Config)}
 				disabled={boolean('disabled', Config)}
 				highlighted={boolean('highlighted', Config)}
 				icon={select('icon', prop.icons, Config)}
