@@ -21,13 +21,13 @@ const PlaybackControls = kind({
 		return (
 			<Row {...props} align="center center">
 				<Cell shrink>
-					<Button size="small">arrowlargeleft</Button>
+					<Button size="small" icon="arrowlargeleft" />
 				</Cell>
 				<Cell shrink>
-					<Button size="small">ellipsis</Button>
+					<Button size="small" icon="ellipsis" />
 				</Cell>
 				<Cell shrink>
-					<Button size="small">arrowlargeright</Button>
+					<Button size="small" icon="arrowlargeright" />
 				</Cell>
 			</Row>
 		);
