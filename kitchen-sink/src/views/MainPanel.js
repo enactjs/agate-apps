@@ -113,7 +113,7 @@ const MainPanel = kind({
 				</Cell>
 			</Row>
 			<Heading>ProgressBar</Heading>
-			<ProgressBar rientation="horizontal" progress={0.4} />
+			<ProgressBar orientation="horizontal" progress={0.4} />
 		</Panel>
 	)
 });
