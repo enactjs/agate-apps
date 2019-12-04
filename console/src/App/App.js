@@ -234,9 +234,8 @@ const AppBase = kind({
 											index={index}
 											onSelect={onSelect}
 											view="settings/theme"
-										>
-											edit
-										</PanelSwitchingIconButton>
+											icon="edit"
+										/>
 									</Cell>
 									<Cell shrink>
 										<Button
