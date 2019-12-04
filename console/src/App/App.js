@@ -77,8 +77,9 @@ const PanelSwitchingIconButton = kind({
 	computed: {
 		selected: ({index, view}) => index === getPanelIndexOf(view)
 	},
-	render: ({onSelect, ...rest}) => {
+	render: ({onSelect, view, ...rest}) => {
 		delete rest.index;
+		delete rest.view;
 
 		return <Button {...rest} onClick={onSelect} />;
 	}
