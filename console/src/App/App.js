@@ -75,7 +75,7 @@ const PanelSwitchingIconButton = kind({
 		)
 	},
 	computed: {
-		selected: ({index, view}) => index === getPanelIndexOf(view)
+		selected: ({index, view}) => (index === getPanelIndexOf(view))
 	},
 	render: ({onSelect, ...rest}) => {
 		delete rest.index;
@@ -100,8 +100,7 @@ const AppBase = kind({
 	handlers: {
 		layoutArrangeableToggle: (ev, {updateAppState}) => {
 			updateAppState((state) => {
-				state.userSettings.arrangements.arrangeable = !state
-					.userSettings.arrangements.arrangeable;
+				state.userSettings.arrangements.arrangeable = !state.userSettings.arrangements.arrangeable;
 			});
 		},
 		// onToggleProfileEdit: (ev, {updateAppState}) => {
@@ -111,20 +110,17 @@ const AppBase = kind({
 		// },
 		onToggleDateTimePopup: (ev, {updateAppState}) => {
 			updateAppState((state) => {
-				state.appState.showDateTimePopup = !state.appState
-					.showDateTimePopup;
+				state.appState.showDateTimePopup = !state.appState.showDateTimePopup;
 			});
 		},
 		onToggleDestinationReachedPopup: (ev, {updateAppState}) => {
 			updateAppState((state) => {
-				state.appState.showDestinationReachedPopup = !state.appState
-					.showDestinationReachedPopup;
+				state.appState.showDestinationReachedPopup = !state.appState.showDestinationReachedPopup;
 			});
 		},
 		onToggleWelcomePopup: (ev, {updateAppState}) => {
 			updateAppState((state) => {
-				state.appState.showWelcomePopup = !state.appState
-					.showWelcomePopup;
+				state.appState.showWelcomePopup = !state.appState.showWelcomePopup;
 			});
 		},
 		onTogglePopup: (ev, {updateAppState}) => {
@@ -139,8 +135,7 @@ const AppBase = kind({
 		},
 		onToggleUserSelectionPopup: (ev, {updateAppState}) => {
 			updateAppState((state) => {
-				state.appState.showUserSelectionPopup = !state.appState
-					.showUserSelectionPopup;
+				state.appState.showUserSelectionPopup = !state.appState.showUserSelectionPopup;
 			});
 		},
 		onResetAll: (ev, {onSelect, updateAppState}) => {
@@ -153,12 +148,15 @@ const AppBase = kind({
 				state.appState.showWelcomePopup = true;
 			});
 		},
-		onSelect: handle(forward('onSelect'), (ev, {updateAppState}) => {
-			updateAppState((state) => {
-				// turn off arrangeable when switching panels.
-				state.userSettings.arrangements.arrangeable = false;
-			});
-		})
+		onSelect: handle(
+			forward('onSelect'),
+			(ev, {updateAppState}) => {
+				updateAppState((state) => {
+					// turn off arrangeable when switching panels.
+					state.userSettings.arrangements.arrangeable = false;
+				});
+			}
+		)
 	},
 
 	render: ({
@@ -196,11 +194,7 @@ const AppBase = kind({
 		delete rest.showAppList;
 		delete rest.updateAppState;
 
-		const copperSkinFamily =
-			skinName === 'copper' ||
-			skinName === 'copper-day' ||
-			skinName === 'cobalt' ||
-			skinName === 'cobalt-day';
+		const copperSkinFamily = (skinName === 'copper' || skinName === 'copper-day' || skinName === 'cobalt' || skinName === 'cobalt-day');
 
 		return (
 			<div {...rest}>
@@ -224,40 +218,25 @@ const AppBase = kind({
 								userId={userId - 1}
 								onClick={onToggleUserSelectionPopup}
 							/>
-							{copperSkinFamily ? (
-								<Clock className={css.clock} />
-							) : null}
+							{copperSkinFamily ? <Clock className={css.clock} /> : null}
 						</div>
 					</beforeTabs>
 					<afterTabs>
 						<Column
 							className={css.afterTabs}
-							align={
-								copperSkinFamily
-									? 'start center'
-									: 'center space-around'
-							}
+							align={(copperSkinFamily ? 'start center' : 'center space-around')}
 						>
-							{copperSkinFamily ? null : (
-								<Cell shrink>
-									<Clock />
-								</Cell>
-							)}
+							{copperSkinFamily ? null : <Cell shrink><Clock /></Cell>}
 							<Cell shrink className={css.buttons}>
-								<Row
-									align={
-										copperSkinFamily
-											? 'center start'
-											: 'center space-around'
-									}
-								>
+								<Row align={(copperSkinFamily ? 'center start' : 'center space-around')}>
 									<Cell shrink>
 										<PanelSwitchingIconButton
 											index={index}
 											onSelect={onSelect}
 											view="settings/theme"
-											icon="edit"
-										/>
+										>
+											edit
+										</PanelSwitchingIconButton>
 									</Cell>
 									<Cell shrink>
 										<Button
@@ -315,7 +294,10 @@ const AppBase = kind({
 					onSelect={onSelect}
 					showUserSelectionPopup={showUserSelectionPopup}
 				/>*/}
-				<Popup onClose={onToggleBasicPopup} open={showBasicPopup}>
+				<Popup
+					onClose={onToggleBasicPopup}
+					open={showBasicPopup}
+				>
 					{`Popup for ${skinName} skin`}
 				</Popup>
 				<Popup
@@ -324,10 +306,15 @@ const AppBase = kind({
 				>
 					Destination reached!
 				</Popup>
-				<Popup onClose={onTogglePopup} open={showPopup} closeButton>
-					<title>{`Popup for ${skinName} skin`}</title>
-					This is an example of a popup with a body section and a
-					title. Plus there&apos;re buttons!
+				<Popup
+					onClose={onTogglePopup}
+					open={showPopup}
+					closeButton
+				>
+					<title>
+						{`Popup for ${skinName} skin`}
+					</title>
+					This is an example of a popup with a body section and a title. Plus there&apos;re buttons!
 					<buttons>
 						<Button>Transport Mode</Button>
 					</buttons>
@@ -338,7 +325,9 @@ const AppBase = kind({
 					open={showDateTimePopup}
 					closeButton
 				>
-					<title>Date & Time</title>
+					<title>
+						Date & Time
+					</title>
 					<DateTimePicker onClose={onToggleDateTimePopup} />
 				</Popup>
 				<WelcomePopup
@@ -354,9 +343,9 @@ const AppBase = kind({
 
 const AppIndex = (Wrapped) => {
 	return class extends React.Component {
-		static displayName = 'AppIndex';
+		static displayName = 'AppIndex'
 
-		constructor(props) {
+		constructor (props) {
 			super(props);
 			this.state = {
 				index: props.defaultIndex || 0
@@ -366,16 +355,12 @@ const AppIndex = (Wrapped) => {
 		onSelect = handle(
 			adaptEvent((ev) => {
 				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
-				this.setState((state) =>
-					state.index === index
-						? null
-						: {prevIndex: state.index, index}
-				);
+				this.setState(state => state.index === index ? null : {prevIndex: state.index, index});
 				return {index};
 			}, forward('onSelect'))
 		).bind(this);
 
-		render() {
+		render () {
 			const {...rest} = this.props;
 			delete rest.defaultIndex;
 			return (
@@ -396,7 +381,7 @@ const AppDecorator = compose(
 		accent: userSettings.colorAccent,
 		highlight: userSettings.colorHighlight,
 		layoutArrangeable: userSettings.arrangements.arrangeable,
-		orientation: userSettings.skin !== 'carbon' ? 'horizontal' : 'vertical',
+		orientation: (userSettings.skin !== 'carbon') ? 'horizontal' : 'vertical',
 		showAppList: appState.showAppList,
 		showBasicPopup: appState.showBasicPopup,
 		showDateTimePopup: appState.showDateTimePopup,
@@ -416,4 +401,7 @@ const AppDecorator = compose(
 const App = AppDecorator(AppBase);
 
 export default App;
-export {App, getPanelIndexOf};
+export {
+	App,
+	getPanelIndexOf
+};

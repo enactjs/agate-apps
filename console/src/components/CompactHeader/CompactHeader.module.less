@@ -1,10 +1,14 @@
-@import '~@enact/agate/styles/skin.less';
+@import "~@enact/agate/styles/skin.less";
 
 .compactHeader {
-	.applySkins(
-			{.title {line-height: 45px;
-				// The height of the "smallest" Button with icon, so each line of text is vertically centered with the Button with icon
-				text-transform: uppercase;} .btn {margin-right: 0;}}
-		)
-		;;
+	.applySkins({
+		.title {
+			line-height: 45px; // The height of the "smallest" IconButtons, so each line of text is vertically centered with the IconButton
+			text-transform: uppercase;
+		}
+
+		.btn {
+			margin-right: 0;
+		}
+	});
 }

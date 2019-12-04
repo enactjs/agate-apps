@@ -25,7 +25,12 @@ import css from './Multimedia.module.less';
 const IFrame = kind({
 	name: 'IFrame',
 	render: (props) => {
-		return <Cell {...props} component="iframe" />;
+		return (
+			<Cell
+				{...props}
+				component="iframe"
+			/>
+		);
 	}
 });
 
@@ -56,10 +61,7 @@ const ResponsiveVirtualList = kind({
 	},
 	computed: {
 		// eslint-disable-next-line enact/display-name,enact/prop-types
-		itemRenderer: ({onSelectVideo, size, styler, videos}) => ({
-			index,
-			...rest
-		}) => {
+		itemRenderer: ({onSelectVideo, size, styler, videos}) => ({index, ...rest}) => {
 			const className = styler.append(css.listItem, size && css[size]);
 			if (size === 'large') {
 				return (
@@ -208,13 +210,7 @@ const MultimediaBase = kind({
 					>
 						<left>
 							<Column>
-								<Cell
-									shrink
-									component={Heading}
-									className={css.heading}
-								>
-									Recommended Videos
-								</Cell>
+								<Cell shrink component={Heading} className={css.heading}>Recommended Videos</Cell>
 								<Cell>
 									<ResponsiveVirtualList
 										dataSize={videos.length}
@@ -226,11 +222,7 @@ const MultimediaBase = kind({
 							</Column>
 						</left>
 						<Row className={css.bodyRow}>
-							<IFrame
-								allow="autoplay"
-								className={css.iframe}
-								src={url}
-							/>
+							<IFrame allow="autoplay" className={css.iframe} src={url} />
 							{/* {showAd ? <Cell className={css.adSpace} shrink>
 								{adContent}
 							</Cell> : null}*/}
@@ -255,9 +247,9 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 			onSendVideo: PropTypes.func,
 			screenIds: PropTypes.array
 			// showAd: PropTypes.bool
-		};
+		}
 
-		constructor(props) {
+		constructor (props) {
 			super(props);
 
 			this.state = {
@@ -303,11 +295,8 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 		onSendVideo = ({screenId}) => {
 			screenId = Array.isArray(screenId) ? screenId : [screenId];
 
-			screenId.forEach((id) => {
-				this.props.onSendVideo({
-					screenId: id,
-					video: this.selectedVideo
-				});
+			screenId.forEach(id => {
+				this.props.onSendVideo({screenId: id, video: this.selectedVideo});
 			});
 
 			this.selectedVideo = {};
@@ -319,7 +308,7 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 		// 	this.adTimer.startAfter(duration);
 		// };
 
-		render() {
+		render () {
 			const {showPopup, url, videos} = this.state;
 
 			const props = {

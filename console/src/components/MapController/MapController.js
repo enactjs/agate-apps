@@ -19,7 +19,7 @@ import {formatDuration, formatTime} from '../../../../components/Formatter';
 import css from './MapController.module.less';
 
 const StyledButton = ({style = {}, ...rest}) => {
-	style.width = 'auto'; // Allow the buttons to properly self-size. Margins + auto-sizing confuses relatively positioned elements with 0 width and flex.
+	style.width = 'auto';  // Allow the buttons to properly self-size. Margins + auto-sizing confuses relatively positioned elements with 0 width and flex.
 	return <Button {...rest} style={style} css={css} />;
 };
 
@@ -44,16 +44,16 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 			tools: PropTypes.node, // Buttons and tools for interacting with the map. (Slottable)
 			viewLockoutDuration: PropTypes.number,
 			zoomToSpeedScaleFactor: PropTypes.number
-		};
+		}
 
 		static defaultProps = {
 			centeringDuration: 2000,
 			follow: true,
 			viewLockoutDuration: 4000,
 			zoomToSpeedScaleFactor: 0.02
-		};
+		}
 
-		constructor(props) {
+		constructor (props) {
 			super(props);
 
 			this.state = {
@@ -63,28 +63,17 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 		}
 
 		handleSetDestination = ({selected}) => {
-			console.log(
-				'Proposing new destination index:',
-				selected,
-				'->',
-				this.props.topLocations[selected]
-			);
+			console.log('Proposing new destination index:', selected, '->', this.props.topLocations[selected]);
 			const loc = this.props.topLocations[selected];
 			this.updateDestination({
 				description: loc ? loc.description : '',
 				destination: loc ? [loc.coordinates] : null
 			});
-		};
+		}
 
 		startNavigation = ({selected}) => {
 			if (selected) {
-				console.log(
-					'MapController - start navigation to',
-					this.props.topLocations,
-					this.props.topLocations[this.state.destinationIndex],
-					'from index:',
-					this.state.destinationIndex
-				);
+				console.log('MapController - start navigation to', this.props.topLocations, this.props.topLocations[this.state.destinationIndex], 'from index:', this.state.destinationIndex);
 				this.updateDestination({
 					navigating: true
 				});
@@ -95,23 +84,19 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 					navigating: false
 				});
 			}
-		};
+		}
 
 		toggleAutonomous = () => {
 			this.props.updateAppState((state) => {
 				state.navigation.autonomous = !state.navigation.autonomous;
 			});
-		};
+		}
 		toggleFollow = () => {
 			this.props.updateAppState((state) => {
 				state.navigation.follow = !state.navigation.follow;
 			});
-		};
-		updateDestination = ({
-			description,
-			destination,
-			navigating = false
-		}) => {
+		}
+		updateDestination = ({description, destination, navigating = false}) => {
 			this.props.updateAppState((state) => {
 				if (typeof destination !== 'undefined') {
 					state.navigation.description = description;
@@ -121,26 +106,26 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 					state.navigation.navigating = navigating;
 				}
 			});
-		};
+		}
 		updateNavigation = ({duration, distance}) => {
 			this.props.updateAppState((state) => {
 				const startTime = new Date().getTime();
-				const eta = new Date(startTime + duration * 1000).getTime();
+				const eta = new Date(startTime + (duration * 1000)).getTime();
 
 				state.navigation.duration = duration;
 				state.navigation.startTime = startTime;
 				state.navigation.eta = eta;
 				state.navigation.distance = distance;
 			});
-		};
+		}
 
 		onExpand = () => {
 			if (this.props.onExpand) {
 				this.props.onExpand({view: 'map'});
 			}
-		};
+		}
 
-		render() {
+		render () {
 			const {
 				autonomousSelection,
 				className,
@@ -178,64 +163,57 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 					<tools>
 						<Column className={css.toolsColumn}>
 							<Cell align="end" shrink>
-								{noFollowButton ? null : (
-									<Button
-										size="small"
-										alt="Follow Mode"
-										selected={follow}
-										onClick={this.toggleFollow}
-										icon="compass"
-									/>
-								)}
-								{noExpandButton ? null : (
-									<Button
-										size="small"
-										alt="Fullscreen"
-										onClick={this.onExpand}
-										icon="expand"
-									/>
-								)}
+								{
+									noFollowButton ?
+										null :
+										<Button
+											size="small"
+											alt="Follow Mode"
+											selected={follow}
+											onClick={this.toggleFollow}
+											icon="compass"
+										/>
+								}
+								{
+									noExpandButton ?
+										null :
+										<Button
+											size="small"
+											alt="Fullscreen"
+											onClick={this.onExpand}
+											icon="expand"
+										/>
+								}
 							</Cell>
-							{autonomousSelection &&
-							!(destination && navigating) ? (
-								<Cell
-									shrink={locationSelection}
-									className={css.columnCell}
-								>
-									<Heading
-										spacing="medium"
-										className={css.heading}
-									>
-										Self-driving
-									</Heading>
-									<Row
-										component={Group}
-										childComponent={Cell}
-										itemProps={{component: StyledButton}}
-										onSelect={this.toggleAutonomous}
-										select="radio"
-										selectedProp="selected"
-										selected={navigation.autonomous ? 0 : 1}
-									>
-										{['AUTO', 'MANUAL']}
-									</Row>
-								</Cell>
-							) : null}
-							{locationSelection &&
-							!(destination && navigating) ? (
-								<Cell className={css.columnCell}>
-									<DestinationList
-										destination={destination}
-										onSetDestination={
-											this.handleSetDestination
-										}
-										positions={topLocations}
-										title="Top Locations"
-									/>
-								</Cell>
-							) : (
-								<Cell className={css.columnCell} />
-							)}
+							{
+								autonomousSelection && !(destination && navigating) ?
+									<Cell shrink={locationSelection} className={css.columnCell}>
+										<Heading spacing="medium" className={css.heading}>Self-driving</Heading>
+										<Row
+											component={Group}
+											childComponent={Cell}
+											itemProps={{component: StyledButton}}
+											onSelect={this.toggleAutonomous}
+											select="radio"
+											selectedProp="selected"
+											selected={navigation.autonomous ? 0 : 1}
+										>
+											{['AUTO', 'MANUAL']}
+										</Row>
+									</Cell> : null
+							}
+							{
+								locationSelection && !(destination && navigating) ?
+									<Cell className={css.columnCell}>
+										<DestinationList
+											destination={destination}
+											onSetDestination={this.handleSetDestination}
+											positions={topLocations}
+											title="Top Locations"
+										/>
+									</Cell> :
+									<Cell className={css.columnCell} />
+							}
 							{/* {
 								compact && destination && description &&
 								<Cell shrink className={css.columnCell}>
@@ -248,55 +226,32 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 									>{description}</Button>
 								</Cell>
 							}*/}
-							{destination && (
-								<Cell
-									shrink
-									className={
-										css.columnCell + ' ' + css.travelInfo
-									}
-								>
+							{
+								destination &&
+								<Cell shrink className={css.columnCell + ' ' + css.travelInfo}>
 									<p>
-										{formatDuration(
-											navigation.duration,
-											durationIncrements
-										)
-											.split(' ')
-											.map(
-												// This bit of overly-complicated nonsense is to separate
-												// out the duration into numbers (wrapped in span tags)
-												// and strings. The initial string is split on spaces and
-												// spaces are added around the strings rather than the
-												// strings and the numbers, so the numbers can be a
-												// larger font size and the spacing around them will
-												// remain constant. The format of the string coming in
-												// is always "number string number string", etc, so the
-												// spaces only on the strings should be acceptable.
-												(str, index) =>
-													isNaN(parseInt(str)) ? (
-														' ' + str + ' '
-													) : (
-														<span
-															className={
-																css.number
-															}
-															key={
-																'number' + index
-															}
-														>
-															{str}
-														</span>
-													)
-											)}
+										{formatDuration(navigation.duration, durationIncrements).split(' ').map(
+											// This bit of overly-complicated nonsense is to separate
+											// out the duration into numbers (wrapped in span tags)
+											// and strings. The initial string is split on spaces and
+											// spaces are added around the strings rather than the
+											// strings and the numbers, so the numbers can be a
+											// larger font size and the spacing around them will
+											// remain constant. The format of the string coming in
+											// is always "number string number string", etc, so the
+											// spaces only on the strings should be acceptable.
+											(str, index) =>
+												(isNaN(parseInt(str)) ?
+													' ' + str + ' ' :
+													<span className={css.number} key={'number' + index}>{str}</span>
+												)
+										)}
 									</p>
-									<p>
-										{(
-											navigation.distance / 1609.344
-										).toFixed(1)}{' '}
-										mi - {formatTime(navigation.eta)}
-									</p>
+									<p>{(navigation.distance / 1609.344).toFixed(1)} mi - {formatTime(navigation.eta)}</p>
 								</Cell>
-							)}
-							{!noStartStopToggle && destination && (
+							}
+							{
+								!noStartStopToggle && destination &&
 								<Cell
 									shrink
 									className={css.columnCell}
@@ -310,7 +265,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 									toggleOnLabel="Stop Navigation"
 									toggleOffLabel="Start Navigation"
 								/>
-							)}
+							}
 						</Column>
 					</tools>
 				</Wrapped>
@@ -319,17 +274,16 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 	};
 });
 
-const ConnectedMap = AppContextConnect(
-	({location, userSettings, navigation, updateAppState}) => ({
-		follow: navigation.follow,
-		topLocations: userSettings.topLocations,
-		location,
-		navigation,
-		navigating: navigation.navigating,
-		destination: navigation.destination,
-		updateAppState
-	})
-);
+
+const ConnectedMap = AppContextConnect(({location, userSettings, navigation, updateAppState}) => ({
+	follow: navigation.follow,
+	topLocations: userSettings.topLocations,
+	location,
+	navigation,
+	navigating: navigation.navigating,
+	destination: navigation.destination,
+	updateAppState
+}));
 
 const MapController = ConnectedMap(Pure(MapControllerHoc(Skinnable(MapCore))));
 

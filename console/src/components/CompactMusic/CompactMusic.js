@@ -44,14 +44,7 @@ const CompactMusicBase = kind({
 
 	render: (props) => {
 		return (
-			<Widget
-				{...props}
-				icon="music"
-				title="Listen"
-				description="Listen to your favorite tunes"
-				view="radio"
-				align="center center"
-			>
+			<Widget {...props} icon="music" title="Listen" description="Listen to your favorite tunes" view="radio" align="center center">
 				<Cell shrink>
 					<GridListImageItem
 						caption="The Title"
@@ -69,4 +62,7 @@ const CompactMusicBase = kind({
 });
 
 export default CompactMusicBase;
-export {CompactMusicBase as CompactMusic, CompactMusicBase};
+export {
+	CompactMusicBase as CompactMusic,
+	CompactMusicBase
+};

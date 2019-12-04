@@ -26,7 +26,9 @@ const MainPanel = kind({
 
 	render: (props) => (
 		<Panel {...props}>
-			<Heading showLine>Agate kitchen sink</Heading>
+			<Heading showLine>
+				Agate kitchen sink
+			</Heading>
 			<Row align="center space-around">
 				<Cell shrink>
 					<Button>Click me</Button>
@@ -45,25 +47,19 @@ const MainPanel = kind({
 				</Cell>
 				<Cell shrink>
 					<ColorPicker direction="right" value="#3467af">
-						{[
-							'green',
-							'yellow',
-							'orange',
-							'red',
-							'black',
-							'gray',
-							'white',
-							'maroon'
-						]}
+						{['green',
+						'yellow',
+						'orange',
+						'red',
+						'black',
+						'gray',
+						'white',
+						'maroon']}
 					</ColorPicker>
 				</Cell>
 				<Cell shrink>
-					<LabeledIcon inline icon="temperature">
-						Hello LabeledIcon
-					</LabeledIcon>
-					<LabeledIconButton inline icon="compass">
-						Hello LabeledIconButton
-					</LabeledIconButton>
+					<LabeledIcon inline icon="temperature">Hello LabeledIcon</LabeledIcon>
+					<LabeledIconButton inline icon="compass">Hello LabeledIconButton</LabeledIconButton>
 				</Cell>
 			</Row>
 			<Row>
@@ -82,15 +78,21 @@ const MainPanel = kind({
 						orientation="horizontal"
 						step={1}
 					/>
-					<SliderButton>{['Light', 'Medium', 'Dark']}</SliderButton>
+					<SliderButton>
+						{['Light',
+						'Medium',
+						'Dark']}
+					</SliderButton>
 				</Cell>
 				<Cell>
-					<Picker>{['LO', 'MD', 'HI']}</Picker>
+					<Picker>{['LO', 'MD' , 'HI']}</Picker>
 				</Cell>
 			</Row>
 			<Row>
 				<Cell>
-					<Item>Hello Item</Item>
+					<Item>
+						Hello Item
+					</Item>
 					<Item>
 						<Icon slot="slotBefore">fan</Icon>
 						Hello Slottable Item
@@ -103,7 +105,9 @@ const MainPanel = kind({
 						<Icon slot="slotBefore">compass</Icon>
 						Hello Item with Icon
 					</Item>
-					<RadioItem icon="music">Sound</RadioItem>
+					<RadioItem icon="music">
+						Sound
+					</RadioItem>
 					<SwitchItem defaultSelected icon="music">
 						Sound
 					</SwitchItem>
@@ -113,7 +117,10 @@ const MainPanel = kind({
 				</Cell>
 			</Row>
 			<Heading>ProgressBar</Heading>
-			<ProgressBar orientation="horizontal" progress={0.4} />
+			<ProgressBar
+				rientation="horizontal"
+				progress={0.4}
+			/>
 		</Panel>
 	)
 });

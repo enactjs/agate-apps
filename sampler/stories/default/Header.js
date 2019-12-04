@@ -23,30 +23,26 @@ const prop = {
 	}
 };
 
-storiesOf('Agate', module).add(
-	'Header',
-	() => {
-		const childrenSelection = select(
-			'children',
-			['no buttons', '1 button', '2 buttons'],
-			Config
-		);
-		const children = prop.children[childrenSelection];
+storiesOf('Agate', module)
+	.add(
+		'Header',
+		() => {
+			const childrenSelection = select('children', ['no buttons', '1 button', '2 buttons'], Config);
+			const children = prop.children[childrenSelection];
 
-		const story = (
-			<Header
-				hideLine={boolean('hideLine', Config)}
-				subtitle={text('subtitle', Config, 'Subtitle')}
-				title={text('title', Config, 'Title')}
-				titleAbove={text('titleAbove', Config, 'Title Above')}
-			>
-				{children}
-			</Header>
-		);
-		return story;
-	},
-	{
-		text:
-			"A block to use as a screen's title and description. Supports additional buttons, subtitle and title above."
-	}
-);
+			const story = (
+				<Header
+					hideLine={boolean('hideLine', Config)}
+					subtitle={text('subtitle', Config, 'Subtitle')}
+					title={text('title', Config, 'Title')}
+					titleAbove={text('titleAbove', Config, 'Title Above')}
+				>
+					{children}
+				</Header>
+			);
+			return story;
+		},
+		{
+			text: 'A block to use as a screen\'s title and description. Supports additional buttons, subtitle and title above.'
+		}
+	);
