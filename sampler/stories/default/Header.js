@@ -1,6 +1,5 @@
 import {Header, HeaderBase} from '@enact/agate/Header';
 import Button from '@enact/agate/Button';
-import IconButton from '@enact/agate/IconButton';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 
@@ -14,11 +13,13 @@ const Config = mergeComponentMetadata('Header', HeaderBase, Header);
 const prop = {
 	children: {
 		'no buttons': null,
-		'1 button': <IconButton>home</IconButton>,
-		'2 buttons': <React.Fragment>
-			<Button>A Button</Button>
-			<IconButton>home</IconButton>
-		</React.Fragment>
+		'1 button': <Button icon="home" />,
+		'2 buttons': (
+			<React.Fragment>
+				<Button>A Button</Button>
+				<Button icon="home" />
+			</React.Fragment>
+		)
 	}
 };
 

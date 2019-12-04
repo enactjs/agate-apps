@@ -2,9 +2,8 @@ import {Row, Cell} from '@enact/ui/Layout';
 import Button from '@enact/agate/Button';
 import ColorPicker from '@enact/agate/ColorPicker';
 import DateTimePicker from '@enact/agate/DateTimePicker';
-import Heading from '@enact/agate/Heading'
+import Heading from '@enact/agate/Heading';
 import Icon from '@enact/agate/Icon';
-import IconButton from '@enact/agate/IconButton';
 import IncrementSlider from '@enact/agate/IncrementSlider';
 import Input from '@enact/agate/Input';
 import Item from '@enact/agate/Item';
@@ -33,8 +32,13 @@ const MainPanel = kind({
 			<Row align="center space-around">
 				<Cell shrink>
 					<Button>Click me</Button>
-					<IconButton type="standard">home</IconButton>
-					<ToggleButton underline type="standard" toggleOffLabel="Off" toggleOnLabel="On" />
+					<Button type="standard" icon="home" />
+					<ToggleButton
+						underline
+						type="standard"
+						toggleOffLabel="Off"
+						toggleOnLabel="On"
+					/>
 				</Cell>
 				<Cell shrink>
 					<Input placeholder="Input text here" />
@@ -112,7 +116,7 @@ const MainPanel = kind({
 			</Row>
 			<Heading>ProgressBar</Heading>
 			<ProgressBar
-				rientation="horizontal"
+				orientation="horizontal"
 				progress={0.4}
 			/>
 		</Panel>

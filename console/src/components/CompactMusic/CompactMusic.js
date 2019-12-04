@@ -1,7 +1,7 @@
 import GridListImageItem from '@enact/agate/GridListImageItem';
 import kind from '@enact/core/kind';
 import {Row, Cell} from '@enact/ui/Layout';
-import IconButton from '@enact/agate/IconButton';
+import Button from '@enact/agate/Button';
 import React from 'react';
 
 import Widget from '../Widget';
@@ -19,13 +19,16 @@ const PlaybackControls = kind({
 
 	render: (props) => {
 		return (
-			<Row
-				{...props}
-				align="center center"
-			>
-				<Cell shrink><IconButton size="small">arrowlargeleft</IconButton></Cell>
-				<Cell shrink><IconButton size="small">ellipsis</IconButton></Cell>
-				<Cell shrink><IconButton size="small">arrowlargeright</IconButton></Cell>
+			<Row {...props} align="center center">
+				<Cell shrink>
+					<Button size="small" icon="arrowlargeleft" />
+				</Cell>
+				<Cell shrink>
+					<Button size="small" icon="ellipsis" />
+				</Cell>
+				<Cell shrink>
+					<Button size="small" icon="arrowlargeright" />
+				</Cell>
 			</Row>
 		);
 	}
