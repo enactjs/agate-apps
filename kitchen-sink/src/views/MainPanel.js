@@ -116,7 +116,7 @@ const MainPanel = kind({
 			</Row>
 			<Heading>ProgressBar</Heading>
 			<ProgressBar
-				rientation="horizontal"
+				orientation="horizontal"
 				progress={0.4}
 			/>
 		</Panel>
