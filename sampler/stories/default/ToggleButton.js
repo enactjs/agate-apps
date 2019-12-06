@@ -25,13 +25,13 @@ storiesOf('Agate', module)
 				backgroundOpacity={select('backgroundOpacity', ['opaque', 'lightOpaque', 'transparent'], Config)}
 				disabled={boolean('disabled', Config)}
 				icon={select('icon', prop.icons, Config)}
-				size={select('size', ['small', 'large'], Config)}
 				onClick={action('onClick')}
 				onToggle={action('onToggle')}
-				underline={boolean('underline', Config, true)}
+				size={select('size', ['smallest', 'small', 'large', 'huge'], Config)}
 				toggleOffLabel={text('toggleOffLabel', Config, 'Off')}
 				toggleOnLabel={text('toggleOnLabel', Config, 'On')}
 				type={select('type', ['grid', 'standard'], Config, 'standard')}
+				underline={boolean('underline', Config, true)}
 			>
 				{text('children', ToggleButton, 'Click me')}
 			</ToggleButton>

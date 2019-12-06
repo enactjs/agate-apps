@@ -16,7 +16,7 @@ storiesOf('Agate', module)
 		() => (
 			<div>
 				<SwitchItem
-					defaultSelected={boolean('defaultSelected', Config, true)}
+					disabled={boolean('disabled', Config, false)}
 					icon={select('icon', ['', ...iconNames], Config, 'music')}
 				>
 					{text('children', Config, 'Sound')}
