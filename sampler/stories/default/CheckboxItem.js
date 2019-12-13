@@ -15,7 +15,6 @@ storiesOf('Agate', module)
 		() => (
 			<CheckboxItem
 				disabled={boolean('disabled', Config)}
-				inline={boolean('inline', Config)}
 				onToggle={action('onToggle')}
 			>
 				{text('children', Config, 'Hello CheckboxItem')}
