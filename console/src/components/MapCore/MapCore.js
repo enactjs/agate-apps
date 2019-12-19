@@ -67,6 +67,10 @@ const buildQueryString = (props) => {
 	return pairs.join('&');
 };
 
+const retry = async (time) => {
+	return new Promise(resolve => {setTimeout(() => {resolve();}, time);});
+}
+
 //
 // Get Directions
 //
@@ -87,8 +91,19 @@ const getRoute = async (waypoints) => {
 		radiuses: [100, ...Array(waypointParts.length - 1).fill(100)],
 		access_token: mapboxgl.accessToken // eslint-disable-line camelcase
 	});
+
+	let response;
 	// console.log('qs:', qs);
-	const response = await window.fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${waypointString}?${qs}`);
+	while (true) {
+		try {
+			response = await window.fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${waypointString}?${qs}`);
+			break;
+		} catch (error) {
+			const retryTime = 10000;
+			console.error('mapbox error:', error);
+			await retry(retryTime);
+		}
+	}
 	return await response.json();
 };
 
@@ -245,64 +260,7 @@ class MapCoreBase extends React.Component {
 	}
 
 	componentDidMount () {
-		const {location, skin} = this.props;
-		const style = skinStyles[skin] || skinStyles.titanium;
-		if (location) {
-			startCoordinates = location;
-		}
-		// stop drawing map if accessToken is not set.
-		if (!mapboxgl.accessToken) return;
-
-		this.map = new mapboxgl.Map({
-			container: this.mapNode,
-			attributionControlboolean: false,
-			style,
-			center: toMapbox(startCoordinates),
-			zoom: this.zoomLevel
-		});
-
-		this.map.on('load', () => {
-			const destination = this.props.destination;
-			this.mapLoaded = true;
-
-			addMarkerLayer({
-				map: this.map,
-				coordinates: this.pointsList,
-				updateDestination: this.props.updateDestination,
-				skin: this.props.skin
-			});
-			addCarLayer({
-				coordinates: toMapbox(startCoordinates),
-				iconURL: 'http://' + window.carImageHost + '/car.png',
-				map: this.map,
-				orientation: location.orientation
-			});
-
-			this.bbox = getBoundsOfAll([toMapbox(startCoordinates)], this.bbox);
-
-			// Relates to the section above.
-			this.map.fitBounds(this.bbox, {
-				padding: getMapPadding()
-			});
-
-			const actions = {};
-			if (destination instanceof Array && destination[destination.length - 1].lat !== 0) {
-				actions.plotRoute = destination;
-			}
-
-			// If there is stuff to do, do it!
-			if (Object.keys(actions).length) {
-				this.actionManager(actions);
-			}
-
-			this.routeRedrawJob = setInterval(() => {
-				if (this.queuedRouteRedraw) {
-					this.actionManager({plotRoute: destination});
-				}
-			}, this.props.routeRedrawInterval);
-		});
-
-		this.setContextRef();
+		this.loadMap();
 	}
 
 	componentDidUpdate (prevProps) {
@@ -365,6 +323,82 @@ class MapCoreBase extends React.Component {
 		if (this.viewLockTimer) this.viewLockTimer.stop();
 		this.context.onMapUnmount(this);
 		if (this.map) this.map.remove();
+	}
+
+	onLoadMap = () => {
+		const destination = this.props.destination;
+		this.mapLoaded = true;
+
+		addMarkerLayer({
+			map: this.map,
+			coordinates: this.pointsList,
+			updateDestination: this.props.updateDestination,
+			skin: this.props.skin
+		});
+		addCarLayer({
+			coordinates: toMapbox(startCoordinates),
+			iconURL: 'http://' + window.carImageHost + '/car.png',
+			map: this.map,
+			orientation: this.props.location.orientation
+		});
+
+		this.bbox = getBoundsOfAll([toMapbox(startCoordinates)], this.bbox);
+
+		// Relates to the section above.
+		this.map.fitBounds(this.bbox, {
+			padding: getMapPadding()
+		});
+
+		const actions = {};
+		if (destination instanceof Array && destination[destination.length - 1].lat !== 0) {
+			actions.plotRoute = destination;
+		}
+
+		// If there is stuff to do, do it!
+		if (Object.keys(actions).length) {
+			this.actionManager(actions);
+		}
+
+		this.routeRedrawJob = setInterval(() => {
+			if (this.queuedRouteRedraw) {
+				this.actionManager({plotRoute: destination});
+			}
+		}, this.props.routeRedrawInterval);
+
+		this.setContextRef();
+	}
+
+	onErrorMap = ({error}) => {
+		const retryTime = 10000;
+		console.error('mapbox error:', error.message);
+		setTimeout(this.loadMap, retryTime);
+	}
+
+	loadMap = async () => {
+		console.log('trying to load map...');
+		if (!this || !this.mapNode) {
+			// In this case, this function is called j
+			return;
+		}
+		const {location, skin} = this.props;
+		const style = skinStyles[skin] || skinStyles.titanium;
+		if (location) {
+			startCoordinates = location;
+		}
+		// stop drawing map if accessToken is not set.
+		if (!mapboxgl.accessToken) return;
+
+		this.map = new mapboxgl.Map({
+			container: this.mapNode,
+			attributionControl: false,
+			style,
+			center: toMapbox(startCoordinates),
+			zoom: this.zoomLevel
+		});
+
+		this.map.on('load', this.onLoadMap);
+
+		this.map.on('error', this.onErrorMap);
 	}
 
 	actionManager = (actions) => {
