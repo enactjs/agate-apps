@@ -493,17 +493,25 @@ class AppContextProvider extends Component {
 		}
 	}
 
-	setWeather = async (latitude, longitude) => {
-		let weatherData;
-		try {
-			weatherData = await getWeather(latitude, longitude);
-		} catch (error) {
-			console.error('Weather error:', error);
-			this.updateAppState((state) => {
-				state.weather.status = 'error';
-			});
+	retry = async (time) => {
+		return new Promise(resolve => {setTimeout(() => {resolve();}, time);});
+	}
 
-			return;
+	setWeather = async (latitude, longitude) => {
+		const retryTime = 10000;
+		let weatherData;
+		while (true) {
+			try {
+				weatherData = await getWeather(latitude, longitude);
+				break;
+			} catch (error) {
+				console.error('Weather error:', error);
+				this.updateAppState((state) => {
+					state.weather.status = 'error';
+				});
+
+				await this.retry(retryTime);
+			}
 		}
 
 		this.updateAppState((state) => {
