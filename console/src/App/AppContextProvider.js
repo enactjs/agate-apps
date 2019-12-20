@@ -414,6 +414,7 @@ class AppContextProvider extends Component {
 			parameters: {
 				AppInstanceId: appInstanceId + "-" + userName,
 				AppName: appName,
+				UserName: userName,
 				FeatureName: featureName,
 				Status: status,
 				Duration: (date - appStartTime) / 1000,
