@@ -377,23 +377,49 @@ const AppIndex = (Wrapped) => {
 				index: props.defaultIndex || 0
 			};
 			this.selectedMenu = 0;
-			this.appStartTime = new Date();
 
 			const {sendLaunchLuna, sendTelemetry} = this.props;
 
 			// Console Started
-			sendTelemetry({
-				appInstanceId: 'home',
-				appName: 'home',
+			this.sendTelemetryAppStarted(this.selectedMenu);
+
+			// Radio app launch
+			sendLaunchLuna({
+				id: 'music'
+			});
+
+			document.addEventListener("visibilitychange", this.onVisibilityChange);
+		}
+
+		onVisibilityChange = () => {
+			if (document.visibilityState !== 'hidden') {
+				this.sendTelemetryAppStarted(this.selectedMenu);
+			} else {
+				this.sendTelemetryAppStopped(this.selectedMenu);
+			}
+		}
+
+		sendTelemetryAppStarted = (index) => {
+			this.appStartTime = new Date();
+
+			this.props.sendTelemetry({
+				appInstanceId: panelIndexMap[index],
+				appName: panelIndexMap[index],
 				featureName: 'Main',
 				status: 'Started',
 				appStartTime: this.appStartTime,
 				intervalFlag: true
 			});
+		}
 
-			// Radio app launch
-			sendLaunchLuna({
-				id: 'music'
+		sendTelemetryAppStopped = (index) => {
+			this.props.sendTelemetry({
+				appInstanceId: panelIndexMap[index],
+				appName: panelIndexMap[index],
+				featureName: 'Main',
+				status: 'Stopped',
+				appStartTime: this.appStartTime,
+				intervalFlag: false
 			});
 		}
 
@@ -406,26 +432,9 @@ const AppIndex = (Wrapped) => {
 				// Send a telemetry when menu changed
 				if (this.selectedMenu !== index ) {
 					// Selected app 'Stopped' call
-					sendTelemetry({
-						appInstanceId: panelIndexMap[this.selectedMenu],
-						appName: panelIndexMap[this.selectedMenu],
-						featureName: 'Main',
-						status: 'Stopped',
-						appStartTime: this.appStartTime,
-						intervalFlag: false
-					});
-
-					this.appStartTime = new Date();
-
+					this.sendTelemetryAppStopped(this.selectedMenu);
 					// Select app 'Started' call
-					sendTelemetry({
-						appInstanceId: panelIndexMap[index],
-						appName: panelIndexMap[index],
-						featureName: 'Main',
-						status: 'Started',
-						appStartTime: this.appStartTime,
-						intervalFlag: true
-					});
+					this.sendTelemetryAppStarted(index);
 
 					this.selectedMenu = index;
 				}
