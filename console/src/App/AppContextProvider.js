@@ -242,8 +242,6 @@ class AppContextProvider extends Component {
 
 		this.setUserSettings(this.state.userId);
 		this.setLocation();
-		// hardcoded to SF for demo
-		this.setWeather(50.1167467, 8.6390457);
 	}
 
 	componentWillUpdate (nextProps, nextState) {
@@ -414,6 +412,7 @@ class AppContextProvider extends Component {
 			parameters: {
 				AppInstanceId: appInstanceId + "-" + userName,
 				AppName: appName,
+				UserName: userName,
 				FeatureName: featureName,
 				Status: status,
 				Duration: (date - appStartTime) / 1000,
@@ -502,7 +501,19 @@ class AppContextProvider extends Component {
 		let weatherData;
 		while (true) {
 			try {
-				weatherData = await getWeather(latitude, longitude);
+				//weatherData = await getWeather(latitude, longitude);
+
+				/* HARDCODING FOR DEMO
+					San Francisco
+					weatherData = await getWeather(37.78878, -122.40467);
+
+					Las Vegas
+					weatherData = await getWeather(36.131484, -115.150405);
+
+					Frankfurt
+					weatherData = await getWeather(50.1167467, 8.6390457);
+				 */
+				weatherData = await getWeather(36.131484, -115.150405);
 				break;
 			} catch (error) {
 				console.error('Weather error:', error);
