@@ -1,4 +1,5 @@
 import Divider from '@enact/agate/Divider';
+import Image from '@enact/agate/Image';
 import {Panel} from '@enact/agate/Panels';
 import GridListImageItem from '@enact/agate/GridListImageItem';
 import ThumbnailItem from '@enact/agate/ThumbnailItem';
@@ -240,7 +241,17 @@ const MultimediaBase = kind({
 					>
 						<left>
 							<Column>
-								<Cell shrink component={Divider} className={css.divider}>Recommended Videos</Cell>
+								{
+									window.multimediaProduct === 'sony' ? (
+										<div>
+											<Cell shrink component={Image} className={css.sonyLogo} src="assets/sonylogo.png" />
+											<Cell shrink component={Divider} className={css.divider}>Videos</Cell>
+											<Cell shrink component={Divider} className={css.dividerSony}>Powered by Sony Pictures</Cell>
+										</div>
+									) : (
+										<Cell shrink component={Divider} className={css.divider}>Recommended Videos</Cell>
+									)
+								}
 								<Cell>
 									<ResponsiveVirtualList
 										dataSize={videos.length}
