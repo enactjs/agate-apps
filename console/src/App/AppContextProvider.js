@@ -426,6 +426,7 @@ class AppContextProvider extends Component {
 		// window.consoleLog = window.consoleLog + ", " + JSON.stringify({
 		// 	AppInstanceId: appInstanceId + "-" + userName,
 		// 	AppName: appName,
+		// 	UserName: userName,
 		// 	FeatureName: featureName,
 		// 	Status: status,
 		// 	Duration: (date - appStartTime) / 1000,
@@ -437,6 +438,7 @@ class AppContextProvider extends Component {
 		// console.log("{");
 		// console.log("	AppInstanceId: '" + appInstanceId + "-" + userName + "',");
 		// console.log("	AppName: '" + appName + "',");
+		// console.log("	UserName: '" + userName + "',");
 		// console.log("	FeatureName: '" + featureName + "',");
 		// console.log("	Status: '" + status + "',");
 		// console.log("	Duration: '" + (date - appStartTime) / 1000 + "',");

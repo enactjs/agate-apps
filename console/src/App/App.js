@@ -269,6 +269,7 @@ const AppBase = kind({
 						onCompactExpand={onSelect}
 						onSelect={onSelect}
 						onSendVideo={sendVideo}
+						style={{padding: 0}}
 					/>
 					<Phone arrangeable={layoutArrangeable} />
 					<Hvac arrangeable={layoutArrangeable} />

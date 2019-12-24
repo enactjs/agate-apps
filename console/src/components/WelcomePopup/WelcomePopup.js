@@ -161,7 +161,7 @@ const WelcomePopupBase = kind({
 				{/* <Panels arranger={Arranger} index={index} enteringProp="hideChildren" onTransition={handleTransition}> */}
 				{/* <UserSelectionPanel users={usersList} onSelectUser={onSelectUser} /> */}
 				{/* <WelcomePanel /> */}
-				<Panel className={css.panel} css={css}>
+				<Panel className={css.panel} css={css} style={{padding: 0}}>
 					<Row className={css.welcome}>
 						<Cell className={css.left} size="33%">
 							<Column>
