@@ -22,7 +22,7 @@ const AppListBase = kind({
 				onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
 			}
 		},
-		onTabLaunch: (ev, {onSelect, sendLaunchLuna, sendTelemetry}) => {
+		onTabLaunch: (ev, {sendLaunchLuna}) => {
 			const
 				{keyCode, type, currentTarget: {dataset: {appid: id}}} = ev,
 				params = {displayAffinity: 0};
@@ -48,7 +48,6 @@ const AppListBase = kind({
 
 	render: ({onTabChange, onTabLaunch, onTogglePopup, onToggleBasicPopup, onPopupOpen, ...rest}) => {
 		delete rest.sendLaunchLuna;
-		delete rest.sendTelemetry;
 		return (
 			<Panel {...rest}>
 				<Column align="center center">
@@ -86,10 +85,8 @@ const AppListBase = kind({
 	}
 });
 
-const AppList = AppContextConnect(({sendLaunchLuna, sendTelemetry, updateAppState}) => ({
-	sendLaunchLuna,
-	sendTelemetry,
-	updateAppState
+const AppList = AppContextConnect(({sendLaunchLuna}) => ({
+	sendLaunchLuna
 }))(AppListBase);
 
 export default AppList;
