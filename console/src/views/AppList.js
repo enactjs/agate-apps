@@ -75,7 +75,7 @@ const AppListBase = kind({
 					<Cell shrink>
 						<Row className={css.row} align="start center">
 							<AppIconCell icon="weather" data-tabindex={getPanelIndexOf('weather')} onKeyUp={onTabChange} onClick={onTabChange}>Weather</AppIconCell>
-							<AppIconCell icon={productivity_icon} data-appid={'com.ms.app.test.calendar'} onKeyUp={onTabLaunch} onClick={onTabLaunch}>Productivity</AppIconCell>
+							<AppIconCell icon={productivity_icon} data-appid={'com.ms.app.test.productivity'} onKeyUp={onTabLaunch} onClick={onTabLaunch}>Productivity</AppIconCell>
 							<AppIconCell icon={gaming_icon} data-appid={'com.webos.app.scrcpy'} onKeyUp={onTabLaunch} onClick={onTabLaunch}>Gaming</AppIconCell>
 						</Row>
 					</Cell>
