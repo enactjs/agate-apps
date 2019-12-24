@@ -378,7 +378,7 @@ const AppIndex = (Wrapped) => {
 			};
 			this.selectedMenu = 0;
 
-			const {sendLaunchLuna, sendTelemetry} = this.props;
+			const {sendLaunchLuna} = this.props;
 
 			// Console Started
 			this.sendTelemetryAppStarted(this.selectedMenu);
@@ -425,9 +425,7 @@ const AppIndex = (Wrapped) => {
 
 		onSelect = handle(
 			adaptEvent((ev) => {
-				const
-					{index = getPanelIndexOf(ev.view || 'home')} = ev,
-					{sendTelemetry} = this.props;
+				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
 
 				// Send a telemetry when menu changed
 				if (this.selectedMenu !== index ) {
