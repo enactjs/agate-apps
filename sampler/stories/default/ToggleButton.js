@@ -8,7 +8,6 @@ import {action} from '@storybook/addon-actions';
 import iconNames from './icons';
 import {boolean, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
-import {bool} from 'prop-types';
 
 ToggleButton.displayName = 'ToggleButton';
 const Config = mergeComponentMetadata('ToggleButton', UIButtonBase, UIButton, ButtonBase, Button, ToggleButtonBase, ToggleButton);
