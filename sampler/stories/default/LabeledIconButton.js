@@ -22,7 +22,7 @@ storiesOf('Agate', module)
 				inline={boolean('inline', Config)}
 				labelPosition={select('labelPosition', ['above', 'after', 'before', 'below', 'left', 'right'], Config)}
 				selected={boolean('selected', Config)}
-				size={select('size', ['small', 'large'], Config)}
+				size={select('size', ['smallest', 'small', 'large', 'huge'], Config)}
 				spriteCount={number('spriteCount', Config, {min: 1}, 1)}
 			>
 				{text('children', Config, 'Hello LabeledIconButton')}

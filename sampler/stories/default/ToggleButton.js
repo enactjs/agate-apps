@@ -23,7 +23,7 @@ storiesOf('Agate', module)
 				icon={select('icon', ['', ...iconNames], Config)}
 				onClick={action('onClick')}
 				onToggle={action('onToggle')}
-				size={select('size', ['small', 'large'], Config)}
+				size={select('size', ['smallest', 'small', 'large', 'huge'], Config)}
 				toggleOffLabel={text('toggleOffLabel', Config, 'Off')}
 				toggleOnLabel={text('toggleOnLabel', Config, 'On')}
 				type={select('type', ['grid', 'standard'], Config, 'standard')}
