@@ -16,11 +16,11 @@
     "extends": "enact/strict"
   },
   "dependencies": {
-    "@enact/agate": "github:enactjs/agate#develop",
-    "@enact/core": "^3.0.0-rc.2",
-    "@enact/i18n": "^3.0.0-rc.2",
-    "@enact/ui": "^3.0.0-rc.2",
-    "ilib": "^14.2.0",
+    "@enact/agate": "github:enactjs/agate",
+    "@enact/core": "^3.2.5",
+    "@enact/i18n": "^3.2.5",
+    "@enact/ui": "^3.2.5",
+    "ilib": "^14.4.0",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
