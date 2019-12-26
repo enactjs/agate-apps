@@ -17,7 +17,6 @@ storiesOf('Agate', module)
 		'Input',
 		() => (
 			<Input
-				defaultValue={text('defaultValue', Config, '')}
 				disabled={boolean('disabled', Config)}
 				dismissOnEnter={boolean('dismissOnEnter', Config)}
 				iconAfter={select('iconAfter', iconNames, Config)}
