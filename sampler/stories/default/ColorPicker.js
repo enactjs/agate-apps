@@ -3,7 +3,7 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
-import {boolean, text, select} from '../../src/enact-knobs';
+import {text, select} from '../../src/enact-knobs';
 
 ColorPicker.displayName = 'ColorPicker';
 const prop = {
@@ -18,7 +18,6 @@ storiesOf('Agate', module)
 			<ColorPicker
 				direction={select('direction', prop.direction, ColorPicker, 'right')}
 				defaultValue={text('defaultValue', ColorPicker, '#3467af')}
-				extended={boolean('extended', ColorPicker)}
 				onChange={action('onChange')}
 			>
 				{prop.colors}
