@@ -4,10 +4,12 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {color} from '@storybook/addon-knobs';
-import {Column, Cell} from '@enact/ui/Layout';
+import {Row, Column, Cell} from '@enact/ui/Layout';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Heading from '@enact/agate/Heading';
 import {Panels, Panel} from '@enact/agate/Panels';
+import Skinnable from '@enact/agate/Skinnable';
+import Scroller from '@enact/agate/Scroller';
 import {boolean, select} from '../enact-knobs';
 
 import css from './AgateEnvironment.module.less';
@@ -18,6 +20,8 @@ const globalGroup = 'Global Knobs';
 // 	const {protocol, host, pathname} = window.parent.location;
 // 	window.parent.location.href = protocol + '//' + host + pathname;
 // };
+
+const SkinFrame = Skinnable((props) => <Row {...props} style={{...props.style, marginBottom: '2em'}} />);
 
 const PanelsBase = kind({
 	name: 'AgateEnvironment',
@@ -134,6 +138,7 @@ const StorybookDecorator = (story, config) => {
 	memory.skin = currentSkin;  // Remember the skin for the next time we load.
 	const accentFromURL = getPropFromURL('accent');
 	const highlightFromURL = getPropFromURL('highlight');
+	const allSkins = boolean('show all skins', Config);
 
 	return (
 		<Agate
@@ -144,7 +149,14 @@ const StorybookDecorator = (story, config) => {
 			accent={color('accent', (!newSkin && accentFromURL ? accentFromURL : defaultColors[currentSkin].accent), Config.groupId)}
 			highlight={color('highlight', (!newSkin && highlightFromURL ? highlightFromURL : defaultColors[currentSkin].highlight), Config.groupId)}
 		>
-			{sample}
+			<Scroller>
+				{allSkins ? Object.keys(skins).map(skin => (
+					<SkinFrame skin={skins[skin]} key={skin}>
+						<Cell size="20%" component={Heading}>{skin}</Cell>
+						<Cell>{sample}</Cell>
+					</SkinFrame>
+				)) : sample}
+			</Scroller>
 		</Agate>
 	);
 };
