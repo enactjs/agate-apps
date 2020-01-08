@@ -54,7 +54,8 @@ const defaultUserSettings = {
 	colorHighlight: '#66aabb',
 	fontSize: 0,
 	name: '',
-	skin: 'carbon'
+	skin: 'carbon',
+	skinVariants: 'night'
 	// topLocations: []
 };
 

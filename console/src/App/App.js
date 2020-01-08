@@ -389,6 +389,7 @@ const AppDecorator = compose(
 		showUserSelectionPopup: appState.showUserSelectionPopup,
 		showWelcomePopup: appState.showWelcomePopup,
 		skin: userSettings.skin,
+		skinVariants: userSettings.skinVariants,
 		skinName: userSettings.skin,
 		updateAppState,
 		userId
