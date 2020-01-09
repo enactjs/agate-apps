@@ -15,7 +15,6 @@ storiesOf('Agate', module)
 		() => (
 			<CheckboxItem
 				disabled={boolean('disabled', Config)}
-				iconPosition={select('iconPosition', ['', 'after', 'before'], Config, '')}
 				inline={boolean('inline', Config)}
 				label={text('label', Config, '')}
 				labelPosition={select('labelPosition', ['', 'above', 'after', 'before', 'below'], Config, '')}
