@@ -19,7 +19,6 @@ storiesOf('Agate', module)
 				label={text('label', Config, '')}
 				labelPosition={select('labelPosition', ['', 'above', 'after', 'before', 'below'], Config, '')}
 				onToggle={action('onToggle')}
-				selected={boolean('selected', Config)}
 			>
 				{text('children', Config, 'Hello CheckboxItem')}
 			</CheckboxItem>
