@@ -12,6 +12,7 @@ import css from './AppList.module.less';
 
 import productivity_icon from '../../assets/apps/productivity_icon.png';
 import gaming_icon from '../../assets/apps/gaming_icon.png';
+import cerence_icon from '../../assets/apps/cerence_icon.png';
 
 const AppListBase = kind({
 	name: 'Home',
@@ -37,8 +38,7 @@ const AppListBase = kind({
 	propTypes: {
 		onPopupOpen: PropTypes.func,
 		onSelect: PropTypes.func,
-		onToggleBasicPopup: PropTypes.func,
-		onTogglePopup: PropTypes.func
+		onToggleBasicPopup: PropTypes.func
 	},
 
 	styles: {
@@ -46,8 +46,9 @@ const AppListBase = kind({
 		className: 'appList'
 	},
 
-	render: ({onTabChange, onTabLaunch, onTogglePopup, onToggleBasicPopup, onPopupOpen, ...rest}) => {
+	render: ({onTabChange, onTabLaunch, onToggleBasicPopup, onPopupOpen, ...rest}) => {
 		delete rest.sendLaunchLuna;
+		delete rest.onTogglePopup;
 		return (
 			<Panel {...rest}>
 				<Column align="center center">
@@ -69,12 +70,12 @@ const AppListBase = kind({
 						<Row className={css.row} align="start center">
 							<AppIconCell icon="dashboard" data-tabindex={getPanelIndexOf('dashboard')} onKeyUp={onTabChange} onClick={onTabChange}>Dashboard</AppIconCell>
 							<AppIconCell icon="setting" data-tabindex={getPanelIndexOf('settings')} onKeyUp={onTabChange} onClick={onTabChange}>Settings</AppIconCell>
-							<AppIconCell icon="closex" onClick={onTogglePopup}>Point of Interest</AppIconCell>
+							<AppIconCell icon="weather" data-tabindex={getPanelIndexOf('weather')} onKeyUp={onTabChange} onClick={onTabChange}>Weather</AppIconCell>
 						</Row>
 					</Cell>
 					<Cell shrink>
 						<Row className={css.row} align="start center">
-							<AppIconCell icon="weather" data-tabindex={getPanelIndexOf('weather')} onKeyUp={onTabChange} onClick={onTabChange}>Weather</AppIconCell>
+							<AppIconCell icon={cerence_icon} data-appid={'com.webos.app.ark'} onKeyUp={onTabLaunch} onClick={onTabLaunch}>Cerence</AppIconCell>
 							<AppIconCell icon={productivity_icon} data-appid={'com.ms.app.test.productivity'} onKeyUp={onTabLaunch} onClick={onTabLaunch}>Productivity</AppIconCell>
 							<AppIconCell icon={gaming_icon} data-appid={'com.webos.app.scrcpy'} onKeyUp={onTabLaunch} onClick={onTabLaunch}>Gaming</AppIconCell>
 						</Row>
