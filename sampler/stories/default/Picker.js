@@ -1,4 +1,4 @@
-import Picker, {PickerBase} from '@enact/agate/Picker';
+import Picker from '@enact/agate/Picker';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';

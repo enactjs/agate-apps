@@ -3,7 +3,7 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
-import {boolean, text, select} from '../../src/enact-knobs';
+import {boolean} from '../../src/enact-knobs';
 import Item from '@enact/agate/Item';
 import {mergeComponentMetadata} from '../../src/utils';
 
