@@ -6,8 +6,8 @@
 .marker {
 	height: 45px;
 	width: 45px;
-	-webkit-mask-image: url('../../../assets/marker.svg');
-	mask-image: url('../../../assets/marker.svg');
+	-webkit-mask-image: url("../../../assets/marker.svg");
+	mask-image: url("../../../assets/marker.svg");
 	-webkit-mask-size: contain;
 	mask-size: contain;
 	font-weight: normal;
@@ -20,8 +20,7 @@
 		color: @agate-highlight;
 
 		// Theme-specific colors
-		&:global(.cobalt),
-		&:global(.cobalt-day) {
+		&:global(.cobalt) {
 			color: @agate-white;
 		}
 	});

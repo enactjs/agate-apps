@@ -177,15 +177,15 @@ const addCarLayer = ({coordinates, iconURL, map, orientation = 0}) => {
 
 const skinStyles = {
 	carbon: 'mapbox://styles/mapbox/dark-v9',
-	copper: 'mapbox://styles/haileyr/cjq7ouqypbbcs2rqvzz11ymhd',
-	'copper-day': 'mapbox://styles/haileyr/cjq6alsqdb9lf2rntxvk4cxbl',
-	cobalt: 'mapbox://styles/haileyr/cjq6am8p979322rn0n7w7kaeu',
-	'cobalt-day': 'mapbox://styles/haileyr/cjq6drk0y4ddr2snybwbu9u8m',
+	copper: 'mapbox://styles/haileyr/cjq6alsqdb9lf2rntxvk4cxbl',
+	'copper-night': 'mapbox://styles/haileyr/cjq7ouqypbbcs2rqvzz11ymhd',
+	cobalt: 'mapbox://styles/haileyr/cjq6drk0y4ddr2snybwbu9u8m',
+	'cobalt-night': 'mapbox://styles/haileyr/cjq6am8p979322rn0n7w7kaeu',
 	electro: 'mapbox://styles/haileyr/cjq6am8p979322rn0n7w7kaeu',
 	titanium: 'mapbox://styles/mapbox/light-v9'
 };
 
-const lightSkins = ['copper-day', 'cobalt-day', 'titanium'];
+const lightSkins = ['copper', 'cobalt', 'titanium'];
 
 class MapCoreBase extends React.Component {
 	static contextType = ServiceLayerContext;
@@ -203,6 +203,7 @@ class MapCoreBase extends React.Component {
 		position: propTypeLatLon, // The map's centering position
 		routeRedrawInterval: PropTypes.number,
 		skin: PropTypes.string,
+		skinVariants: PropTypes.string,
 		tools: PropTypes.node, // Buttons and tools for interacting with the map. (Slottable)
 		viewLockoutDuration: PropTypes.number,
 		zoomLevel: PropTypes.number, // Sets the starting zoom level for the map
@@ -246,8 +247,10 @@ class MapCoreBase extends React.Component {
 	}
 
 	componentDidMount () {
-		const {location, skin} = this.props;
-		const style = skinStyles[skin] || skinStyles.titanium;
+		const {location, skin, skinVariants} = this.props;
+		// Check for night-mode and a map style with a matching night mode
+		const nightStyle = (skinVariants === 'night') ? skinStyles[skin + '-night'] : null;
+		const style = nightStyle || skinStyles[skin] || skinStyles.titanium;
 		if (location) {
 			startCoordinates = location;
 		}
@@ -723,7 +726,8 @@ const ConnectedMap = AppContextConnect(({location, userSettings}) => ({
 	// colorMarker: userSettings.colorHighlight,
 	colorRouteLine: userSettings.colorHighlight,
 	location,
-	skin: userSettings.skin
+	skin: userSettings.skin,
+	skinVariants: userSettings.skinVariants
 }));
 
 const MapCore = ConnectedMap(Slottable({slots: ['tools']}, MapCoreBase));

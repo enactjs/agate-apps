@@ -15,6 +15,7 @@ if (typeof window !== 'undefined') {
 	const args = qs.parse(window.location.search);
 	const index = parseInt(args.index || 0);
 	const skin = args.skin;
+	const skinVariants = args.skinVariants;
 
 	const onSelect = (ev) => {
 		const params = qs.parse(window.location.search);
@@ -28,6 +29,7 @@ if (typeof window !== 'undefined') {
 		<AppContextProvider
 			defaultShowWelcomePopup={args.showWelcomePopup !== 'false'}
 			defaultSkin={skin}
+			defaultSkinVariants={skinVariants}
 		>
 			<App defaultIndex={index} onSelect={onSelect} />
 		</AppContextProvider>
