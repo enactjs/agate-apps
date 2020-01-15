@@ -8,7 +8,7 @@ import {Column, Cell} from '@enact/ui/Layout';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Heading from '@enact/agate/Heading';
 import {Panels, Panel} from '@enact/agate/Panels';
-import {select} from '../enact-knobs';
+import {boolean, select} from '../enact-knobs';
 
 import css from './AgateEnvironment.module.less';
 
@@ -64,12 +64,9 @@ const AgateFullscreen = AgateDecorator({overlay: false}, FullscreenBase);
 const skins = {
 	'Carbon': 'carbon',
 	'Cobalt': 'cobalt',
-	'Cobalt Day': 'cobalt-day',
 	'Copper': 'copper',
-	'Copper Day': 'copper-day',
 	'Electro': 'electro',
-	'Gallium Day': 'gallium-day',
-	'Gallium Night': 'gallium-night',
+	'Gallium': 'gallium',
 	'Titanium': 'titanium'
 };
 
@@ -101,7 +98,7 @@ const StorybookDecorator = (story, config) => {
 	const sample = story();
 	const Config = {
 		defaultProps: {
-			skin: 'gallium-day'
+			skin: 'gallium'
 		},
 		groupId: globalGroup
 	};
@@ -111,10 +108,6 @@ const StorybookDecorator = (story, config) => {
 			highlight: '#6abe0b'
 		},
 		cobalt: {
-			accent: '#fc7982',
-			highlight: '#ffffff'
-		},
-		'cobalt-day': {
 			accent: '#8c81ff',
 			highlight: '#ffffff'
 		},
@@ -122,21 +115,13 @@ const StorybookDecorator = (story, config) => {
 			accent: '#a47d66',
 			highlight: '#ffffff'
 		},
-		'copper-day': {
-			accent: '#a47d66',
-			highlight: '#ffffff'
-		},
 		electro: {
 			accent: '#0359f0',
 			highlight: '#ff8100'
 		},
-		'gallium-day': {
+		gallium: {
 			accent: '#8b7efe',
 			highlight: '#e16253'
-		},
-		'gallium-night': {
-			accent: '#fc7982',
-			highlight: '#bd10e0'
 		},
 		titanium: {
 			accent: '#a6a6a6',
@@ -144,7 +129,7 @@ const StorybookDecorator = (story, config) => {
 		}
 	};
 	const skinFromURL = getPropFromURL('skin');
-	const currentSkin = skinFromURL ? skinFromURL : 'gallium-day';
+	const currentSkin = skinFromURL ? skinFromURL : 'gallium';
 	const newSkin = (memory.skin !== currentSkin);
 	memory.skin = currentSkin;  // Remember the skin for the next time we load.
 	const accentFromURL = getPropFromURL('accent');
@@ -155,6 +140,7 @@ const StorybookDecorator = (story, config) => {
 			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
 			skin={select('skin', skins, Config, currentSkin)}
+			skinVariants={boolean('Night Mode', Config, false) && 'night'}
 			accent={color('accent', (!newSkin && accentFromURL ? accentFromURL : defaultColors[currentSkin].accent), Config.groupId)}
 			highlight={color('highlight', (!newSkin && highlightFromURL ? highlightFromURL : defaultColors[currentSkin].highlight), Config.groupId)}
 		>
