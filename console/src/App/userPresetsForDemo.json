@@ -29,6 +29,7 @@
 		"fontSize": 0,
 		"name": "Laura",
 		"skin": "copper",
+		"skinVariants": "night",
 		"topLocations": [
 			{
 				"description": "Home",
@@ -107,6 +108,7 @@
 		"fontSize": 0,
 		"name": "Thomas",
 		"skin": "cobalt",
+		"skinVariants": "night",
 		"topLocations": [
 			{
 				"description": "Home",
