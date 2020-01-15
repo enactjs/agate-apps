@@ -21,7 +21,7 @@ storiesOf('Agate', module)
 			<div>
 				<Dropdown
 					disabled={boolean('disabled', Config)}
-					onChange={action('onChange')}
+					onChange={action('onSelect')}
 				>
 					{prop.colors}
 				</Dropdown>
