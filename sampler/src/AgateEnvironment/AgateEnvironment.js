@@ -21,7 +21,16 @@ const globalGroup = 'Global Knobs';
 // 	window.parent.location.href = protocol + '//' + host + pathname;
 // };
 
-const SkinFrame = Skinnable((props) => <Row {...props} style={{...props.style, marginBottom: '2em'}} />);
+const SkinFrame = Skinnable(kind({
+	name: 'SkinFrame',
+	styles: {
+		css,
+		className: 'skinFrame'
+	},
+	render: (props) => (
+		<Row {...props} />
+	)
+}));
 
 const PanelsBase = kind({
 	name: 'AgateEnvironment',
@@ -102,6 +111,7 @@ const StorybookDecorator = (story, config) => {
 	const sample = story();
 	const Config = {
 		defaultProps: {
+			'night mode': false,
 			skin: 'gallium'
 		},
 		groupId: globalGroup
@@ -133,19 +143,23 @@ const StorybookDecorator = (story, config) => {
 		}
 	};
 	const skinFromURL = getPropFromURL('skin');
-	const currentSkin = skinFromURL ? skinFromURL : 'gallium';
+	const currentSkin = skinFromURL ? skinFromURL : Config.defaultProps.skin;
 	const newSkin = (memory.skin !== currentSkin);
 	memory.skin = currentSkin;  // Remember the skin for the next time we load.
 	const accentFromURL = getPropFromURL('accent');
 	const highlightFromURL = getPropFromURL('highlight');
 	const allSkins = boolean('show all skins', Config);
+	const skinKnobs = {};
+	if (!allSkins) {
+		skinKnobs.skin = select('skin', skins, Config, currentSkin);
+	}
 
 	return (
 		<Agate
 			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
-			skin={select('skin', skins, Config, currentSkin)}
-			skinVariants={boolean('Night Mode', Config, false) && 'night'}
+			{...skinKnobs}
+			skinVariants={boolean('night mode', Config) && 'night'}
 			accent={color('accent', (!newSkin && accentFromURL ? accentFromURL : defaultColors[currentSkin].accent), Config.groupId)}
 			highlight={color('highlight', (!newSkin && highlightFromURL ? highlightFromURL : defaultColors[currentSkin].highlight), Config.groupId)}
 		>
