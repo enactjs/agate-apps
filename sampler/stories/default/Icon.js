@@ -6,9 +6,8 @@ import iconNames from './icons';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 
-import {number, select, text} from '../../src/enact-knobs';
-import emptify from '../../src/utils/emptify.js';
-import {mergeComponentMetadata} from '../../src/utils';
+import {number, select, text} from '@enact/storybook-utils/addons/knobs';
+import {mergeComponentMetadata, emptify} from '@enact/storybook-utils';
 
 // import icons
 import docs from '../../images/icon-enact-docs.png';

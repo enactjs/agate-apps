@@ -4,10 +4,10 @@ import Item from '@enact/agate/Item';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
 import {Panel, TabbedPanels} from '@enact/agate/Panels';
 import React from 'react';
-import {action} from '@storybook/addon-actions';
+import {action} from '@enact/storybook-utils/addons/actions';
 import {storiesOf} from '@storybook/react';
 
-import {boolean, select} from '../../src/enact-knobs';
+import {boolean, select} from '@enact/storybook-utils/addons/knobs';
 
 TabbedPanels.displayName = 'TabbedPanels';
 

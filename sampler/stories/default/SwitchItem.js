@@ -2,9 +2,9 @@ import SwitchItem from '@enact/agate/SwitchItem';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 
-import {boolean, select, text} from '../../src/enact-knobs';
+import {boolean, select, text} from '@enact/storybook-utils/addons/knobs';
 import iconNames from './icons';
-import {mergeComponentMetadata} from '../../src/utils';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 
 const Config = mergeComponentMetadata('SwitchItem', SwitchItem);
 SwitchItem.displayName = 'SwitchItem';

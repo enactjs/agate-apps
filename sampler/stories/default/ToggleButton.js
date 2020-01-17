@@ -3,11 +3,11 @@ import ToggleButton, {ToggleButtonBase} from '@enact/agate/ToggleButton';
 import UIButton, {ButtonBase as UIButtonBase} from '@enact/ui/Button';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
+import {action} from '@enact/storybook-utils/addons/actions';
 
 import iconNames from './icons';
-import {boolean, select, text} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {boolean, select, text} from '@enact/storybook-utils/addons/knobs';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 
 ToggleButton.displayName = 'ToggleButton';
 const Config = mergeComponentMetadata('ToggleButton', UIButtonBase, UIButton, ButtonBase, Button, ToggleButtonBase, ToggleButton);

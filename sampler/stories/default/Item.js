@@ -4,8 +4,8 @@ import UiItem, {ItemBase as UiItemBase} from '@enact/ui/Item';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 
-import {boolean, select, text} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {boolean, select, text} from '@enact/storybook-utils/addons/knobs';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 
 const Config = mergeComponentMetadata('Item', UiItemBase, UiItem, ItemBase, Item);
 Item.displayName = 'Item';
