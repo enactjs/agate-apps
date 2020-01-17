@@ -27,9 +27,9 @@
   },
   "devDependencies": {
     "@enact/storybook-utils": "github:enactjs/storybook-utils#feature/sampler-migrate",
-    "@storybook/addons": "5.1.9",
-    "@storybook/react": "5.1.9",
-    "@storybook/theming": "5.1.9",
+    "@storybook/addons": "5.3.6",
+    "@storybook/react": "5.3.6",
+    "@storybook/theming": "5.3.6",
     "babel-loader": "^8.0.6",
     "core-js": "^3.6.4"
   }
