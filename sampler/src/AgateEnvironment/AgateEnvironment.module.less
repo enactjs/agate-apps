@@ -1,7 +1,27 @@
-// // AgateEnvironment.module.less
-// //
-// @import "~@enact/moonstone/styles/variables.less";
+// AgateEnvironment.module.less
 //
+@import "~@enact/agate/styles/mixins.less";
+@import "~@enact/agate/styles/skin.less";
+
+.skinFrame {
+	padding: 1em;
+	position: relative;
+
+	.applySkins({
+		// These background rules, and the &::before below are cloned from AgateDecorator to mimic the style an app gets.
+		background-color: @agate-bg-color;
+		background-image: @agate-bg-image;
+
+		&::before {
+			content: "";
+			display: block;
+			background-image: @agate-bg-image2;
+			position: absolute;
+			.position(0);
+		}
+	});
+}
+
 // // from ~@enact/ui/styles/core.less. Can't import global mixins.
 // .enact-selectable() {
 // 	cursor: auto;
