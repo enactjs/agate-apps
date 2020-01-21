@@ -3,7 +3,7 @@ import React from 'react';
 import {storiesOf} from '@storybook/react';
 import {action} from '@storybook/addon-actions';
 
-import {boolean, number, select} from '../../src/enact-knobs';
+import {boolean, number, select, text} from '../../src/enact-knobs';
 import {mergeComponentMetadata} from '../../src/utils';
 
 const Config = mergeComponentMetadata('Dropdown', Dropdown, DropdownBase);
@@ -19,9 +19,10 @@ storiesOf('Agate', module)
 			return (
 				<div>
 					<Dropdown
-						direction={select('direction', ['up', 'down'], Config)}
+						direction={select('direction', ['left', 'right', 'up', 'down'], Config)}
 						disabled={boolean('disabled', Config)}
-						onChange={action('onSelect')}
+						onSelect={action('onSelect')}
+						title={text('title', Config, 'Please select')}
 					>
 						{items}
 					</Dropdown>
