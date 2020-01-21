@@ -2,10 +2,10 @@ import SliderButton, {SliderButtonBase} from '@enact/agate/SliderButton';
 import {icons} from '@enact/agate/Icon';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
+import {action} from '@enact/storybook-utils/addons/actions';
 
-import {boolean, select} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {boolean, select} from '@enact/storybook-utils/addons/knobs';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 
 SliderButton.displayName = 'SliderButton';
 const Config = mergeComponentMetadata('SliderButton', SliderButtonBase, SliderButton);

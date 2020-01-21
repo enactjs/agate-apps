@@ -4,11 +4,13 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {color} from '@storybook/addon-knobs';
-import {Column, Cell} from '@enact/ui/Layout';
+import {Row, Column, Cell} from '@enact/ui/Layout';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Heading from '@enact/agate/Heading';
 import {Panels, Panel} from '@enact/agate/Panels';
-import {boolean, select} from '../enact-knobs';
+import {boolean, select} from '@enact/storybook-utils/addons/knobs';
+import Skinnable from '@enact/agate/Skinnable';
+import Scroller from '@enact/agate/Scroller';
 
 import css from './AgateEnvironment.module.less';
 
@@ -18,6 +20,17 @@ const globalGroup = 'Global Knobs';
 // 	const {protocol, host, pathname} = window.parent.location;
 // 	window.parent.location.href = protocol + '//' + host + pathname;
 // };
+
+const SkinFrame = Skinnable(kind({
+	name: 'SkinFrame',
+	styles: {
+		css,
+		className: 'skinFrame'
+	},
+	render: (props) => (
+		<Row {...props} />
+	)
+}));
 
 const PanelsBase = kind({
 	name: 'AgateEnvironment',
@@ -98,6 +111,7 @@ const StorybookDecorator = (story, config) => {
 	const sample = story();
 	const Config = {
 		defaultProps: {
+			'night mode': false,
 			skin: 'gallium'
 		},
 		groupId: globalGroup
@@ -129,22 +143,34 @@ const StorybookDecorator = (story, config) => {
 		}
 	};
 	const skinFromURL = getPropFromURL('skin');
-	const currentSkin = skinFromURL ? skinFromURL : 'gallium';
+	const currentSkin = skinFromURL ? skinFromURL : Config.defaultProps.skin;
 	const newSkin = (memory.skin !== currentSkin);
 	memory.skin = currentSkin;  // Remember the skin for the next time we load.
 	const accentFromURL = getPropFromURL('accent');
 	const highlightFromURL = getPropFromURL('highlight');
+	const allSkins = boolean('show all skins', Config);
+	const skinKnobs = {};
+	if (!allSkins) {
+		skinKnobs.skin = select('skin', skins, Config, currentSkin);
+	}
 
 	return (
 		<Agate
 			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
-			skin={select('skin', skins, Config, currentSkin)}
-			skinVariants={boolean('Night Mode', Config, false) && 'night'}
+			{...skinKnobs}
+			skinVariants={boolean('night mode', Config) && 'night'}
 			accent={color('accent', (!newSkin && accentFromURL ? accentFromURL : defaultColors[currentSkin].accent), Config.groupId)}
 			highlight={color('highlight', (!newSkin && highlightFromURL ? highlightFromURL : defaultColors[currentSkin].highlight), Config.groupId)}
 		>
-			{sample}
+			<Scroller>
+				{allSkins ? Object.keys(skins).map(skin => (
+					<SkinFrame skin={skins[skin]} key={skin}>
+						<Cell size="20%" component={Heading}>{skin}</Cell>
+						<Cell>{sample}</Cell>
+					</SkinFrame>
+				)) : sample}
+			</Scroller>
 		</Agate>
 	);
 };

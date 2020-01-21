@@ -3,8 +3,8 @@ import Heading, {HeadingBase} from '@enact/agate/Heading';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 
-import {boolean, select, text} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {boolean, select, text} from '@enact/storybook-utils/addons/knobs';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 
 Heading.displayName = 'Heading';
 const Config = mergeComponentMetadata('Heading', Heading, HeadingBase);

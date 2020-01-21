@@ -2,11 +2,11 @@ import Button, {ButtonBase} from '@enact/agate/Button';
 import UiButton from '@enact/ui/Button';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
+import {action} from '@enact/storybook-utils/addons/actions';
 
 import icons from './icons';
-import {boolean, select, text, number} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {boolean, select, text, number} from '@enact/storybook-utils/addons/knobs';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 
 Button.displayName = 'Button';
 const Config = mergeComponentMetadata('Button', UiButton, ButtonBase, Button);

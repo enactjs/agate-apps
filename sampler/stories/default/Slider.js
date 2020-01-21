@@ -1,10 +1,10 @@
 import Slider, {SliderBase} from '@enact/agate/Slider';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
+import {action} from '@enact/storybook-utils/addons/actions';
 
-import {boolean, number, select} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {boolean, number, select} from '@enact/storybook-utils/addons/knobs';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 
 Slider.displayName = 'Slider';
 const Config = mergeComponentMetadata('Slider', SliderBase, Slider);

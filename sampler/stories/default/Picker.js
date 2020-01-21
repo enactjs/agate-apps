@@ -1,9 +1,9 @@
 import Picker from '@enact/agate/Picker';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
-import {boolean} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {action} from '@enact/storybook-utils/addons/actions';
+import {boolean} from '@enact/storybook-utils/addons/knobs';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 
 const Config = mergeComponentMetadata('Picker', Picker);
 

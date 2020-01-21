@@ -1,9 +1,9 @@
 import ColorPicker from '@enact/agate/ColorPicker';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
+import {action} from '@enact/storybook-utils/addons/actions';
 
-import {text, select} from '../../src/enact-knobs';
+import {text, select} from '@enact/storybook-utils/addons/knobs';
 
 ColorPicker.displayName = 'ColorPicker';
 const prop = {
