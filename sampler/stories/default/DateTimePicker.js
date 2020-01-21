@@ -1,9 +1,9 @@
 import DateTimePicker from '@enact/agate/DateTimePicker';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
+import {action} from '@enact/storybook-utils/addons/actions';
 
-import {mergeComponentMetadata, removeProps} from '../../src/utils';
+import {mergeComponentMetadata, removeProps} from '@enact/storybook-utils';
 
 const Config = mergeComponentMetadata('DateTimePicker', DateTimePicker);
 removeProps(Config, 'year defaultOpen day maxDays maxMonths month onChangeDate onChangeMonth onChangeYear order');

@@ -3,8 +3,8 @@ import UiProgressBar from '@enact/ui/ProgressBar';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
 
-import {boolean, number, select} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {boolean, number, select} from '@enact/storybook-utils/addons/knobs';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 
 ProgressBar.displayName = 'ProgressBar';
 const Config = mergeComponentMetadata('ProgressBar', UiProgressBar, ProgressBarBase, ProgressBar);

@@ -1,11 +1,11 @@
 import IncrementSlider, {IncrementSliderBase} from '@enact/agate/IncrementSlider';
 import React from 'react';
 import {storiesOf} from '@storybook/react';
-import {action} from '@storybook/addon-actions';
+import {action} from '@enact/storybook-utils/addons/actions';
 
 import {decrementIcons, incrementIcons} from './icons';
-import {boolean, number, select} from '../../src/enact-knobs';
-import {mergeComponentMetadata} from '../../src/utils';
+import {boolean, number, select} from '@enact/storybook-utils/addons/knobs';
+import {mergeComponentMetadata} from '@enact/storybook-utils';
 
 IncrementSlider.displayName = 'IncrementSlider';
 const Config = mergeComponentMetadata('IncrementSlider', IncrementSliderBase, IncrementSlider);

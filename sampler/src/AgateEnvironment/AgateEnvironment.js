@@ -8,9 +8,9 @@ import {Row, Column, Cell} from '@enact/ui/Layout';
 import AgateDecorator from '@enact/agate/AgateDecorator';
 import Heading from '@enact/agate/Heading';
 import {Panels, Panel} from '@enact/agate/Panels';
+import {boolean, select} from '@enact/storybook-utils/addons/knobs';
 import Skinnable from '@enact/agate/Skinnable';
 import Scroller from '@enact/agate/Scroller';
-import {boolean, select} from '../enact-knobs';
 
 import css from './AgateEnvironment.module.less';
 
