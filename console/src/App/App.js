@@ -3,7 +3,6 @@ import kind from '@enact/core/kind';
 import {add} from '@enact/core/keymap';
 import {adaptEvent, forward, handle} from '@enact/core/handle';
 import {Cell, Column, Row} from '@enact/ui/Layout';
-import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
 import Popup from '@enact/agate/Popup';
 import DateTimePicker from '@enact/agate/DateTimePicker';
@@ -11,6 +10,7 @@ import {TabbedPanels} from '@enact/agate/Panels';
 import React from 'react';
 import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
+import ThemeDecorator from '@enact/agate/ThemeDecorator';
 
 // Data Services
 import ServiceLayer from '../data/ServiceLayer';
@@ -395,7 +395,7 @@ const AppDecorator = compose(
 		userId
 	})),
 	AppIndex,
-	AgateDecorator
+	ThemeDecorator
 );
 
 const App = AppDecorator(AppBase);
