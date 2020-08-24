@@ -110,7 +110,6 @@ const ProfileDrawerBase = kind({
 		delete rest.updateAppState;
 		return (
 			<React.Fragment>
-				<Drawer {...rest} css={css} scrimType="none">
 					<TabGroup
 						onSelect={onSelect}
 						orientation="vertical"
@@ -156,7 +155,6 @@ const ProfileDrawerBase = kind({
 							</Column>
 						</afterTabs>
 					</TabGroup>
-				</Drawer>
 				<UserSelectionPopup
 					onClose={onToggleUserSelectionPopup}
 					onResetAll={onResetAll}

@@ -33,6 +33,8 @@ import Weather from '../views/WeatherPanel';
 import Dashboard from '../views/Dashboard';
 import Multimedia from '../views/Multimedia';
 
+import ProfileDrawer from '../components/ProfileDrawer/ProfileDrawer';
+
 // Local Components
 import AppContextConnect from './AppContextConnect';
 
@@ -106,11 +108,11 @@ const AppBase = kind({
 				state.userSettings.arrangements.arrangeable = !state.userSettings.arrangements.arrangeable;
 			});
 		},
-		// onToggleProfileEdit: (ev, {updateAppState}) => {
-		// 	updateAppState((state) => {
-		// 		state.appState.showProfileEdit = !state.appState.showProfileEdit;
-		// 	});
-		// },
+		onToggleProfileEdit: (ev, {updateAppState}) => {
+			updateAppState((state) => {
+				state.appState.showProfileEdit = !state.appState.showProfileEdit;
+			});
+		},
 		onToggleDateTimePopup: (ev, {updateAppState}) => {
 			updateAppState((state) => {
 				state.appState.showDateTimePopup = !state.appState.showDateTimePopup;
@@ -178,7 +180,7 @@ const AppBase = kind({
 		onToggleDestinationReachedPopup,
 		onToggleMessagePopup,
 		onTogglePopup,
-		// onToggleProfileEdit,
+		onToggleProfileEdit,
 		onToggleUserSelectionPopup,
 		onToggleWelcomePopup,
 		orientation,
@@ -224,6 +226,7 @@ const AppBase = kind({
 					noCloseButton
 					onSelect={onSelect}
 					index={index}
+					style={{display: 'none'}}
 				>
 					<beforeTabs>
 						<div className={css.beforeTabs}>
@@ -300,7 +303,7 @@ const AppBase = kind({
 					onResetPosition={resetPosition}
 					onResetCopilot={resetCopilot}
 				/>
-				{/* <ProfileDrawer
+				<ProfileDrawer
 					index={index}
 					getPanelIndexOf={getPanelIndexOf}
 					onProfileEditEnd={onToggleProfileEdit}
@@ -309,7 +312,7 @@ const AppBase = kind({
 					onResetCopilot={resetCopilot}
 					onSelect={onSelect}
 					showUserSelectionPopup={showUserSelectionPopup}
-				/>*/}
+				/>
 				<Popup
 					onClose={onToggleBasicPopup}
 					open={showBasicPopup}

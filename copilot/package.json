@@ -32,9 +32,9 @@
 	],
 	"dependencies": {
 		"@enact/agate": "github:enactjs/agate#1.0.0-alpha.3",
-		"@enact/core": "^3.0.0",
-		"@enact/i18n": "^3.0.0",
-		"@enact/ui": "^3.0.0",
+		"@enact/core": "3.0.0",
+		"@enact/i18n": "3.0.0",
+		"@enact/ui": "3.0.0",
 		"prop-types": "^15.7.2",
 		"query-string": "^6.2.0",
 		"react": "^16.8.6",
