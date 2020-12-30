@@ -145,7 +145,7 @@ class App extends React.Component {
 	}
 
 	reloadApp = () => {
-		window.location.reload();
+		global.location.reload();
 	}
 
 	render () {

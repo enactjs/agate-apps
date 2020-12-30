@@ -57,10 +57,10 @@ const Tick = hoc((config, Wrapped) => {
 			this.state = {
 				date: new Date()
 			};
-			this.ticker = window.setInterval(this.update, 1000);
+			this.ticker = global.setInterval(this.update, 1000);
 		}
 		componentWillUnmount () {
-			window.clearInterval(this.ticker);
+			global.clearInterval(this.ticker);
 		}
 		update = () => this.setState({date: new Date()})
 		render () {

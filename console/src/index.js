@@ -12,17 +12,17 @@ let appElement = <App />;
 
 // In a browser environment, render instead of exporting
 if (typeof window !== 'undefined') {
-	const args = qs.parse(window.location.search);
+	const args = qs.parse((global.location && global.location.search) || '');
 	const index = parseInt(args.index || 0);
 	const skin = args.skin;
 	const skinVariants = args.skinVariants;
 
 	const onSelect = (ev) => {
-		const params = qs.parse(window.location.search);
+		const params = qs.parse((global.location && global.location.search) || '');
 		params.index = ev.index;
 		const stringified = qs.stringify(params);
 
-		window.history.pushState(ev, '', `?${stringified}`);
+		global.history.pushState(ev, '', `?${stringified}`);
 	};
 
 	appElement = (

@@ -16,10 +16,10 @@ const getWeather = async (latitude, longitude) => {
 	const currentUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${key}&units=imperial`;
 	const threeHourUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${key}&units=imperial`;
 
-	const response = await window.fetch(currentUrl);
+	const response = await global.fetch(currentUrl);
 	const json = await response.json();
 
-	const threeHoursResponse = await window.fetch(threeHourUrl);
+	const threeHoursResponse = await global.fetch(threeHourUrl);
 	const threeHourJson = await threeHoursResponse.json();
 
 	return {
@@ -180,15 +180,15 @@ class AppContextProvider extends Component {
 	}
 
 	loadUserSettings = (userId) => {
-		return JSON.parse(window.localStorage.getItem(`user${userId}`)) || this.getDefaultUserSettings(userId);
+		return JSON.parse((global.localStorage && global.localStorage.getItem(`user${userId}`)) || '{}') || this.getDefaultUserSettings(userId);
 	}
 
 	saveUserSettings = (userId, userSettings) => {
-		window.localStorage.setItem(`user${userId}`, JSON.stringify(userSettings));
+		global.localStorage.setItem(`user${userId}`, JSON.stringify(userSettings));
 	}
 
 	deleteUserSettings = (userId) => {
-		window.localStorage.removeItem(`user${userId}`);
+		global.localStorage.removeItem(`user${userId}`);
 	}
 
 	updateUserSettings = (key, value) => {
@@ -211,7 +211,7 @@ class AppContextProvider extends Component {
 
 	getAllSavedUserIds = () => {
 		// Read the user database and return just a list of the registered id numbers
-		return Object.keys(window.localStorage)
+		return Object.keys(global.localStorage)
 			.filter(key => (key.indexOf('user') === 0))
 			.map(key => parseInt(key.replace('user', '')));
 	}
@@ -240,8 +240,8 @@ class AppContextProvider extends Component {
 	}
 
 	setLocation = () => {
-		if (window.navigator.geolocation) {
-			this.watchPositionId = window.navigator.geolocation.watchPosition((position) => {
+		if (global.navigator && global.navigator.geolocation) {
+			this.watchPositionId = global.navigator.geolocation.watchPosition((position) => {
 				// This code will only fire when the watchPosition changes, not necessarily when
 				// the app state's location changes. Dev Note: Find a way to trigger the weather to
 				// be set if the location changes and disable this watch in that case, but reconnect
@@ -265,7 +265,9 @@ class AppContextProvider extends Component {
 	}
 
 	unsetLocationMonitoring = () => {
-		window.navigator.geolocation.clearWatch(this.watchPositionId);
+		if (global.navigator) {
+			global.navigator.geolocation.clearWatch(this.watchPositionId);
+		}
 	}
 
 	setWeather = async (latitude, longitude) => {

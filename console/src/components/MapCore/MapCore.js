@@ -89,7 +89,7 @@ const getRoute = async (waypoints) => {
 		access_token: mapboxgl.accessToken // eslint-disable-line camelcase
 	});
 	// console.log('qs:', qs);
-	const response = await window.fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${waypointString}?${qs}`);
+	const response = await global.fetch(`https://api.mapbox.com/directions/v5/mapbox/driving/${waypointString}?${qs}`);
 	return await response.json();
 };
 
@@ -390,7 +390,7 @@ class MapCoreBase extends React.Component {
 						break;
 					}
 					case 'positionCar': {
-						// window.requestAnimationFrame(() => this.updateCarLayer({location: actions[action]}));
+						// global.requestAnimationFrame(() => this.updateCarLayer({location: actions[action]}));
 						this.updateCarLayer({location: actions[action]});
 						break;
 					}
