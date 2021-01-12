@@ -10,6 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
+        ref: develop
         fetch-depth: 0
     - uses: FantasticFiasco/action-update-license-year@v2
       with:
