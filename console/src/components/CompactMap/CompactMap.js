@@ -1,6 +1,5 @@
 import kind from '@enact/core/kind';
 import Skinnable from '@enact/agate/Skinnable';
-import React from 'react';
 import PropTypes from 'prop-types';
 
 import MapController from '../MapController';

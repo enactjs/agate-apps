@@ -3,7 +3,6 @@ import {adaptEvent, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import {Row, Cell} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 import Button from '@enact/agate/Button';
 

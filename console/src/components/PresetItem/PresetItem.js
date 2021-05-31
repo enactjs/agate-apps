@@ -5,7 +5,6 @@ import SlotItem from '@enact/ui/SlotItem';
 import Touchable from '@enact/ui/Touchable';
 import compose from 'ramda/src/compose';
 import kind from '@enact/core/kind';
-import React from 'react';
 import {ItemBase} from '@enact/agate/Item';
 import {LabeledItemBase} from '@enact/agate/LabeledItem';
 

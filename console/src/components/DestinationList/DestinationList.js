@@ -2,7 +2,6 @@ import Heading from '@enact/agate/Heading';
 import kind from '@enact/core/kind';
 import Button from '@enact/agate/Button';
 import Group from '@enact/ui/Group';
-import React from 'react';
 import PropTypes from 'prop-types';
 import {equals} from 'ramda';
 

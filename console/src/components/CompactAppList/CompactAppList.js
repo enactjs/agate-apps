@@ -1,7 +1,6 @@
 import kind from '@enact/core/kind';
 import {Row} from '@enact/ui/Layout';
 import Droppable, {ResponsiveBox} from '@enact/agate/DropManager';
-import React from 'react';
 import PropTypes from 'prop-types';
 
 import Widget from '../Widget';

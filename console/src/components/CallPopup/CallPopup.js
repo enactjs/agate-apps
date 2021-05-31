@@ -4,7 +4,6 @@ import {adaptEvent, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import {Cell, Row} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 import css from './CallPopup.module.less';
 

@@ -2,7 +2,6 @@ import Item from '@enact/agate/Item';
 import Icon from '@enact/agate/Icon';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 import css from './ContactThumbnail.module.less';
 

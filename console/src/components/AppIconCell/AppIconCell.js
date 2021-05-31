@@ -1,4 +1,3 @@
-import React from 'react';
 import kind from '@enact/core/kind';
 import {Cell} from '@enact/ui/Layout';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';

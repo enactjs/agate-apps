@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import hoc from '@enact/core/hoc';
 import Pure from '@enact/ui/internal/Pure';

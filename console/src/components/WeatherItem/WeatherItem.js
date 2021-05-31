@@ -1,4 +1,3 @@
-import React from 'react';
 import kind from '@enact/core/kind';
 import {Column, Cell} from '@enact/ui/Layout';
 import Heading from '@enact/agate/Heading';

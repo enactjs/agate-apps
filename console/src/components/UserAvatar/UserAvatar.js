@@ -2,7 +2,6 @@ import GridListImageItem from '@enact/agate/GridListImageItem';
 import kind from '@enact/core/kind';
 import {adaptEvent, forward, handle} from '@enact/core/handle';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 import lauraAvatar from '../../../assets/laura.png';
 import thomasAvatar from '../../../assets/thomas.png';

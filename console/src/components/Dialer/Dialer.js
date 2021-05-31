@@ -1,7 +1,6 @@
 import Button from '@enact/agate/Button';
 import kind from '@enact/core/kind';
 import {Row, Column, Cell} from '@enact/ui/Layout';
-import React from 'react';
 
 import css from './Dialer.module.less';
 
