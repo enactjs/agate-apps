@@ -4,8 +4,8 @@ import App from './App';
 const appElement = (
 	<App
 		skin="gallium"
-		accent="#FC7982"
-		highlight="#FFFFFF"
+		accent="#8b7efe"
+		highlight="#e16253"
 	/>
 );
 
