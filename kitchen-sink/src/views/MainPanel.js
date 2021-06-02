@@ -8,7 +8,6 @@ import Input from '@enact/agate/Input';
 import Item from '@enact/agate/Item';
 import LabeledIcon from '@enact/agate/LabeledIcon';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
-import LabeledItem from '@enact/agate/LabeledItem';
 import {Panel} from '@enact/agate/Panels';
 import Picker from '@enact/agate/Picker';
 import ProgressBar from '@enact/agate/ProgressBar';
@@ -30,7 +29,7 @@ const MainPanel = kind({
 			<Row align="center space-around">
 				<Cell shrink>
 					<Button>Click me</Button>
-					<Button icon="plus" type="standard">home</Button>
+					<Button icon="plus" type="standard">Home</Button>
 					<ToggleButton underline type="standard" toggleOffLabel="Off" toggleOnLabel="On" />
 				</Cell>
 				<Cell shrink>
@@ -84,10 +83,10 @@ const MainPanel = kind({
 					<Item>
 						Hello Item
 					</Item>
-					<LabeledItem label="Label" titleIcon="expand">
+					<Item label="Label" titleIcon="expand">
 						Hello LabeledItem
-					</LabeledItem>
-					<Item label="Label" icon="compass">
+					</Item>
+					<Item label="Label" slotBefore="compass">
 						Hello IconItem
 					</Item>
 					<RadioItem icon="music">

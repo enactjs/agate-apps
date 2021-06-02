@@ -1,7 +1,7 @@
 {
 	"name": "kitchen-sink",
 	"version": "1.0.0",
-	"description": "A general template for an Enact Moonstone application.",
+	"description": "A general template for an Enact Agate application.",
 	"author": "",
 	"main": "src/index.js",
 	"scripts": {
@@ -19,7 +19,7 @@
 	"private": true,
 	"repository": "",
 	"enact": {
-		"theme": "moonstone"
+		"theme": "agate"
 	},
 	"eslintConfig": {
 		"extends": "enact"
