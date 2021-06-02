@@ -1,4 +1,4 @@
-import Divider from '@enact/agate/Divider';
+import Heading from '@enact/agate/Heading';
 import kind from '@enact/core/kind';
 import Button from '@enact/agate/Button';
 import Group from '@enact/ui/Group';
@@ -13,7 +13,7 @@ import css from './DestinationList.module.less';
 
 const DestinationButton = (props) => {
 	const {children, 'data-index': index, ...rest} = props;
-	return <Button small {...rest} css={css}>
+	return <Button size="small" {...rest} css={css}>
 		<Marker css={css}>{index + 1}</Marker>
 		{children}
 	</Button>;
@@ -53,7 +53,7 @@ const DestinationList = kind({
 	render: ({positions, onSetDestination, selected, title, ...rest}) => {
 		return (
 			<div {...rest}>
-				<Divider spacing="medium" className={css.heading}>{title}</Divider>
+				<Heading spacing="medium" className={css.heading}>{title}</Heading>
 				<Group
 					component="div"
 					childComponent={DestinationButton}

@@ -1,4 +1,4 @@
-import Divider from '@enact/agate/Divider';
+import Heading from '@enact/agate/Heading';
 import {Panel} from '@enact/agate/Panels';
 import GridListImageItem from '@enact/agate/GridListImageItem';
 import ThumbnailItem from '@enact/agate/ThumbnailItem';
@@ -15,7 +15,7 @@ import appConfig from '../App/configLoader';
 import Communicator from '../../../components/Communicator';
 import ScreenSelectionPopup from '../../../components/ScreenSelectionPopup';
 
-import IconButton from '@enact/agate/IconButton';
+import Button from '@enact/agate/Button';
 import CustomLayout from '../components/CustomLayout';
 
 import youtubeVideos from '../data/youtubeapi.json';
@@ -39,7 +39,7 @@ const ListItemOverlay = kind({
 
 	render: () => (
 		<Column align="center center">
-			<IconButton size="smallest">play</IconButton>
+			<Button size="small" icon="arrowlargeright" />
 		</Column>
 	)
 });
@@ -210,7 +210,7 @@ const MultimediaBase = kind({
 					>
 						<left>
 							<Column>
-								<Cell shrink component={Divider} className={css.divider}>Recommended Videos</Cell>
+								<Cell shrink component={Heading} className={css.heading}>Recommended Videos</Cell>
 								<Cell>
 									<ResponsiveVirtualList
 										dataSize={videos.length}

@@ -1,5 +1,5 @@
 import Button from '@enact/agate/Button';
-import Divider from '@enact/agate/Divider';
+import Heading from '@enact/agate/Heading';
 import FullscreenPopup from '@enact/agate/FullscreenPopup';
 // import {Panel, Panels} from '@enact/agate/Panels';
 import {Panel} from '@enact/agate/Panels';
@@ -55,7 +55,7 @@ const getCompactComponent = ({components, key, onSendVideo}) => {
 // 	render: ({onSelectUser, users}) => {
 // 		return (
 // 			<WelcomePanel className={css.userSelectionPanel}>
-// 				<Divider slot="header" className={css.header}>Welcome</Divider>
+// 				<Heading slot="header" className={css.header}>Welcome</Heading>
 // 				<Row align="center space-around" className={css.bodyRow}>
 // 					{users.map((user, index) => (
 // 						<Cell shrink key={'userKey' + index}>
@@ -181,11 +181,11 @@ const WelcomePopupBase = kind({
 								<Cell shrink className={css.contentCell + ' ' + css.time}>
 									{time}
 								</Cell>
-								<Cell shrink className={css.contentCell + ' ' + css.divider} component={Divider} />
+								<Cell shrink className={css.contentCell + ' ' + css.heading} component={Heading} />
 								<Cell className={css.contentCell}>
 									{Small1Component}
 								</Cell>
-								<Cell shrink className={css.contentCell + ' ' + css.divider} component={Divider} />
+								<Cell shrink className={css.contentCell + ' ' + css.heading} component={Heading} />
 								<Cell className={css.contentCell}>
 									{Small2Component}
 								</Cell>

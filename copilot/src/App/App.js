@@ -1,4 +1,3 @@
-import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
 import {Cell, Column, Row} from '@enact/ui/Layout';
 // import Job from '@enact/core/util/Job';
@@ -6,6 +5,7 @@ import kind from '@enact/core/kind';
 import LabeledItem from '@enact/agate/LabeledItem';
 // import PropTypes from 'prop-types';
 import React from 'react';
+import ThemeDecorator from '@enact/agate/ThemeDecorator';
 
 import Communicator from '../../../components/Communicator';
 import ScreenSelectionPopup from '../../../components/ScreenSelectionPopup';
@@ -53,7 +53,7 @@ const AppBase = kind({
 					</Row>
 				</Cell> : null}
 				<Cell>
-					<Button style={{position: 'absolute', zIndex: 1, top: '60px'}} icon="plug" onClick={onTogglePopup} />
+					<Button style={{position: 'absolute', zIndex: 1, top: '60px'}} icon="setting" onClick={onTogglePopup} />
 					<Row className={css.bodyRow}>
 						<IFrame allow="autoplay" className={css.iframe} src={url} />
 						{!showAd ? null : <Cell className={css.adSpace} shrink>
@@ -145,7 +145,7 @@ class App extends React.Component {
 	}
 
 	reloadApp = () => {
-		window.location.reload();
+		global.location.reload();
 	}
 
 	render () {
@@ -183,4 +183,4 @@ class App extends React.Component {
 	}
 }
 
-export default AgateDecorator(NetworkInfo(App));
+export default ThemeDecorator(NetworkInfo(App));

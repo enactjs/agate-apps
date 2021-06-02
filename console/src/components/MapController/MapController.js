@@ -6,8 +6,7 @@ import classnames from 'classnames';
 import Group from '@enact/ui/Group';
 import {Cell, Column, Row} from '@enact/ui/Layout';
 import Button from '@enact/agate/Button';
-import Divider from '@enact/agate/Divider';
-import IconButton from '@enact/agate/IconButton';
+import Heading from '@enact/agate/Heading';
 import ToggleButton from '@enact/agate/ToggleButton';
 import Skinnable from '@enact/agate/Skinnable';
 
@@ -167,31 +166,29 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 								{
 									noFollowButton ?
 										null :
-										<IconButton
-											size="smallest"
+										<Button
+											size="small"
 											alt="Follow Mode"
 											selected={follow}
 											onClick={this.toggleFollow}
-										>
-											compass
-										</IconButton>
+											icon="compass"
+										/>
 								}
 								{
 									noExpandButton ?
 										null :
-										<IconButton
-											size="smallest"
+										<Button
+											size="small"
 											alt="Fullscreen"
 											onClick={this.onExpand}
-										>
-											expand
-										</IconButton>
+											icon="expand"
+										/>
 								}
 							</Cell>
 							{
 								autonomousSelection && !(destination && navigating) ?
 									<Cell shrink={locationSelection} className={css.columnCell}>
-										<Divider spacing="medium" className={css.heading}>Self-driving</Divider>
+										<Heading spacing="medium" className={css.heading}>Self-driving</Heading>
 										<Row
 											component={Group}
 											childComponent={Cell}
@@ -220,7 +217,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 							{/* {
 								compact && destination && description &&
 								<Cell shrink className={css.columnCell}>
-									<Divider>Navigating To</Divider>
+									<Heading>Navigating To</Heading>
 									<Button
 										className={css.button}
 										small
@@ -260,7 +257,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 									className={css.columnCell}
 									component={ToggleButton}
 									css={css}
-									small
+									size="small"
 									// We want to be able to factor in the autonomous state, but
 									// perhaps that needs to happen in ServiceLayer, and not here.
 									selected={destination && navigating}

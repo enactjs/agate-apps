@@ -1,5 +1,5 @@
 import Button from '@enact/agate/Button';
-import Divider from '@enact/agate/Divider';
+import Heading from '@enact/agate/Heading';
 import {LabeledItemBase} from '@enact/agate/LabeledItem';
 import {Panel} from '@enact/agate/Panels';
 import ToggleButton from '@enact/agate/ToggleButton';
@@ -38,11 +38,11 @@ const ResponsiveTuner = ResponsiveBox(({containerShape, children, onUp, onDown, 
 	return (
 		<Layout align="center center" orientation={orientation} {...rest}>
 			{/* {(console.log({rest: rest}) ? 'test' : null)}*/}
-			<Cell shrink component={Button} onClick={vertical ? onUp : onDown} icon={vertical ? 'arrowsmallup' : 'arrowsmallleft'} />
+			<Cell shrink component={Button} onClick={vertical ? onUp : onDown} icon={vertical ? 'arrowlargeup' : 'arrowlargeleft'} />
 			<Cell shrink className={css.label}>
 				{children}
 			</Cell>
-			<Cell shrink component={Button} onClick={vertical ? onDown : onUp} icon={vertical ? 'arrowsmalldown' : 'arrowsmallright'} />
+			<Cell shrink component={Button} onClick={vertical ? onDown : onUp} icon={vertical ? 'arrowlargedown' : 'arrowlargeright'} />
 		</Layout>
 	);
 });
@@ -138,8 +138,8 @@ const RadioBase = kind({
 						<Row align="center space-around" wrap className={css.info}>
 							{/* Band Selector */}
 							<Cell shrink className={css.radioToggle}>
-								<ToggleButton onClick={onBandToggle} selected={band === 'AM'} small type="grid">AM</ToggleButton>|
-								<ToggleButton onClick={onBandToggle} selected={band === 'FM'} small type="grid">FM</ToggleButton>
+								<ToggleButton onClick={onBandToggle} selected={band === 'AM'} size="small" type="grid">AM</ToggleButton>|
+								<ToggleButton onClick={onBandToggle} selected={band === 'FM'} size="small" type="grid">FM</ToggleButton>
 							</Cell>
 							{/* Station Info */}
 							<Cell shrink className={css.title}>
@@ -161,9 +161,8 @@ const RadioBase = kind({
 					</topRight>
 
 					{/* List*/}
-					<div className={css.presetList}>
-						Presets
-						<Divider startSection />
+					<div>
+						<Heading showLine>Presets</Heading>
 						{['', '', '', '', ''].map((name, index) => (
 							<PresetItem
 								key={'preset' + index}

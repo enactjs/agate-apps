@@ -1,11 +1,11 @@
-import Divider from '@enact/agate/Divider';
+import Heading from '@enact/agate/Heading';
 import {adaptEvent, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import {Row, Cell} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import IconButton from '@enact/agate/IconButton';
+import Button from '@enact/agate/Button';
 
 import css from './CompactHeader.module.less';
 
@@ -35,18 +35,17 @@ const CompactHeader = kind({
 	},
 
 	render: ({children, onExpand, noExpandButton, ...rest}) => (
-		<Row component={Divider} spacing="large" {...rest}>
+		<Row component={Heading} spacing="large" {...rest}>
 			{children && <Cell className={css.title}>{children}</Cell>}
 			{!noExpandButton ? (
 				<Cell shrink>
-					<IconButton
+					<Button
 						className={css.btn}
-						size="smallest"
+						size="small"
 						alt="Fullscreen"
 						onClick={onExpand}
-					>
-						expand
-					</IconButton>
+						icon="expand"
+					/>
 				</Cell>
 			) : null}
 		</Row>

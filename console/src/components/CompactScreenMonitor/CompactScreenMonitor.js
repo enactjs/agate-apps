@@ -52,7 +52,7 @@ const CompactScreenMonitorBase = kind({
 			<WidgetBase
 				{...rest}
 				containerShape={containerShape}
-				icon="livezoom"
+				icon="carspeaker"
 				title="Now Playing"
 				view="multimedia"
 			>

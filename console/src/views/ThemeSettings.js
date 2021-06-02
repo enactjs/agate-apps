@@ -4,7 +4,7 @@ import {Panel} from '@enact/agate/Panels';
 import ColorPicker from '@enact/agate/ColorPicker';
 import {Row, Column, Cell} from '@enact/ui/Layout';
 import SliderButton from '@enact/agate/SliderButton';
-import Divider from '@enact/agate/Divider';
+import Heading from '@enact/agate/Heading';
 
 import {getPanelIndexOf} from '../App';
 import AppContextConnect from '../App/AppContextConnect';
@@ -16,14 +16,20 @@ import componentCss from './Settings.module.less';
 const skinCollection = {
 	carbon: 'Carbon',
 	cobalt: 'Cobalt',
-	'cobalt-day': 'Cobalt Day',
 	copper: 'Copper',
+	gallium: 'Gallium'
 	// electro: 'Electro',
-	// titanium: 'Titanium',
-	'copper-day': 'Copper Day'
+	// titanium: 'Titanium'
 };
 const skinList = Object.keys(skinCollection);
 const skinNames = skinList.map((skin) => skinCollection[skin]);  // Build the names list based on the skin list array, so the indexes always match up, in case the object keys don't return in the same order.
+
+const skinVariantsCollection = {
+	'': 'Day',
+	night: 'Night'
+};
+const skinVariantsList = Object.keys(skinVariantsCollection);
+const skinVariantsNames = skinVariantsList.map((skinVariants) => skinVariantsCollection[skinVariants]);  // Build the names list based on the skin list array, so the indexes always match up, in case the object keys don't return in the same order.
 
 const swatchPalette = [
 	'#e0b094', '#ffffff', '#a47d66', '#be064d',
@@ -90,7 +96,7 @@ const ThemeSettings = kind({
 		<Panel {...rest}>
 			<Row align=" start">
 				<Cell shrink>
-					<LabeledIconButton onClick={onSelect} labelPosition="after" data-tabindex={prevIndex != null ? prevIndex : getPanelIndexOf('settings')} icon="arrowhookleft">
+					<LabeledIconButton onClick={onSelect} labelPosition="after" data-tabindex={prevIndex != null ? prevIndex : getPanelIndexOf('settings')} icon="arrowlargeleft">
 						Back
 					</LabeledIconButton>
 				</Cell>
@@ -99,9 +105,9 @@ const ThemeSettings = kind({
 				<Cell size="70%">
 					<Column className={css.content}>
 						<Cell
-							className={css.header}
-							component={Divider}
+							component={Heading}
 							shrink
+							showLine
 							spacing="medium"
 						>
 								Theme
@@ -116,6 +122,11 @@ const ThemeSettings = kind({
 							<SkinSetting label="Skin:">
 								{skinNames}
 							</SkinSetting>
+						</Cell>
+						<Cell shrink className={css.spacedItem}>
+							<SkinVariantsSetting label="Variant:">
+								{skinVariantsNames}
+							</SkinVariantsSetting>
 						</Cell>
 						{/* <Cell shrink>
 							<FontSizeSetting label="Text Size:">
@@ -154,6 +165,15 @@ const SkinSetting = AppContextConnect(({userSettings, updateAppState}) => ({
 	onChange: ({value}) => {
 		updateAppState((state) => {
 			state.userSettings.skin = skinList[value].toLowerCase();
+		});
+	}
+}))(SliderButtonItem);
+
+const SkinVariantsSetting = AppContextConnect(({userSettings, updateAppState}) => ({
+	value: skinVariantsList.indexOf(userSettings.skinVariants),
+	onChange: ({value}) => {
+		updateAppState((state) => {
+			state.userSettings.skinVariants = skinVariantsList[value].toLowerCase();
 		});
 	}
 }))(SliderButtonItem);

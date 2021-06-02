@@ -3,15 +3,14 @@ import kind from '@enact/core/kind';
 import {add} from '@enact/core/keymap';
 import {adaptEvent, forward, handle} from '@enact/core/handle';
 import {Cell, Column, Row} from '@enact/ui/Layout';
-import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
-import IconButton from '@enact/agate/IconButton';
 import Popup from '@enact/agate/Popup';
 import DateTimePicker from '@enact/agate/DateTimePicker';
 import {TabbedPanels} from '@enact/agate/Panels';
 import React from 'react';
 import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
+import ThemeDecorator from '@enact/agate/ThemeDecorator';
 
 // Data Services
 import ServiceLayer from '../data/ServiceLayer';
@@ -38,7 +37,6 @@ import AppContextConnect from './AppContextConnect';
 
 // CSS/LESS Styling
 import css from './App.module.less';
-
 
 add('backspace', 8);
 
@@ -81,9 +79,9 @@ const PanelSwitchingIconButton = kind({
 	},
 	render: ({onSelect, ...rest}) => {
 		delete rest.index;
-		return (
-			<IconButton {...rest} onClick={onSelect} />
-		);
+		delete rest.view;
+
+		return <Button {...rest} onClick={onSelect} />;
 	}
 });
 
@@ -196,7 +194,7 @@ const AppBase = kind({
 		delete rest.showAppList;
 		delete rest.updateAppState;
 
-		const copperSkinFamily = (skinName === 'copper' || skinName === 'copper-day' || skinName === 'cobalt' || skinName === 'cobalt-day');
+		const copperSkinFamily = (skinName === 'copper' || skinName === 'cobalt');
 
 		return (
 			<div {...rest}>
@@ -209,6 +207,7 @@ const AppBase = kind({
 						{title: 'Radio', icon: 'radio'},
 						{title: 'Apps', icon: 'apps'}
 					]}
+					noCloseButton
 					onSelect={onSelect}
 					index={index}
 				>
@@ -235,17 +234,15 @@ const AppBase = kind({
 											index={index}
 											onSelect={onSelect}
 											view="settings/theme"
-										>
-											edit
-										</PanelSwitchingIconButton>
+											icon="edit"
+										/>
 									</Cell>
 									<Cell shrink>
-										<IconButton
+										<Button
 											onClick={layoutArrangeableToggle}
 											selected={layoutArrangeable}
-										>
-											display
-										</IconButton>
+											icon="display"
+										/>
 									</Cell>
 								</Row>
 							</Cell>
@@ -392,12 +389,13 @@ const AppDecorator = compose(
 		showUserSelectionPopup: appState.showUserSelectionPopup,
 		showWelcomePopup: appState.showWelcomePopup,
 		skin: userSettings.skin,
+		skinVariants: userSettings.skinVariants,
 		skinName: userSettings.skin,
 		updateAppState,
 		userId
 	})),
 	AppIndex,
-	AgateDecorator
+	ThemeDecorator
 );
 
 const App = AppDecorator(AppBase);
