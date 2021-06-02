@@ -5,7 +5,7 @@ const appElement = (
 	<App
 		skin="gallium"
 		accent="#8b7efe"
-		highlight="#e16253"
+		highlight="#c6c0fe"
 	/>
 );
 
