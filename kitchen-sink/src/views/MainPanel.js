@@ -3,7 +3,7 @@ import Button from '@enact/agate/Button';
 import ColorPicker from '@enact/agate/ColorPicker';
 import DateTimePicker from '@enact/agate/DateTimePicker';
 import Heading from '@enact/agate/Heading';
-import Icon from "@enact/agate/Icon";
+import Icon from '@enact/agate/Icon';
 import IncrementSlider from '@enact/agate/IncrementSlider';
 import Input from '@enact/agate/Input';
 import Item from '@enact/agate/Item';
@@ -38,14 +38,16 @@ const MainPanel = kind({
 				</Cell>
 				<Cell shrink>
 					<ColorPicker direction="right" value="#3467af">
-						{['green',
-						'yellow',
-						'orange',
-						'red',
-						'black',
-						'gray',
-						'white',
-						'maroon']}
+						{[
+							'green',
+							'yellow',
+							'orange',
+							'red',
+							'black',
+							'gray',
+							'white',
+							'maroon'
+						]}
 					</ColorPicker>
 				</Cell>
 				<Cell shrink>
@@ -70,13 +72,15 @@ const MainPanel = kind({
 						step={1}
 					/>
 					<SliderButton>
-						{['Light',
-						'Medium',
-						'Dark']}
+						{[
+							'Light',
+							'Medium',
+							'Dark'
+						]}
 					</SliderButton>
 				</Cell>
 				<Cell>
-					<Picker>{['LO', 'MD' , 'HI']}</Picker>
+					<Picker>{['LO', 'MD', 'HI']}</Picker>
 				</Cell>
 			</Row>
 			<Row>
