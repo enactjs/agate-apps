@@ -30,7 +30,7 @@ const MainPanel = kind({
 			<Row align="center space-around">
 				<Cell shrink>
 					<Button>Click me</Button>
-					<Button icon="plus" type="standard">Home</Button>
+					<Button icon="home" type="standard" />
 					<ToggleButton underline type="standard" toggleOffLabel="Off" toggleOnLabel="On" />
 				</Cell>
 				<Cell shrink>
