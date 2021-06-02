@@ -87,7 +87,7 @@ const MainPanel = kind({
 					<Item label="Label" titleIcon="expand">
 						Hello LabeledItem
 					</Item>
-					<Item label="Label" slotBefore={<Icon size="small">speaker</Icon>}>
+					<Item slotBefore={<Icon size="small">speaker</Icon>}>
 						Hello IconItem
 					</Item>
 					<RadioItem icon="music">
