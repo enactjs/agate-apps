@@ -31,7 +31,12 @@ const MainPanel = kind({
 				<Cell shrink>
 					<Button>Click me</Button>
 					<Button icon="home" type="standard" />
-					<ToggleButton underline type="standard" toggleOffLabel="Off" toggleOnLabel="On" />
+					<ToggleButton
+						underline
+						type="standard"
+						toggleOffLabel="Off"
+						toggleOnLabel="On"
+					/>
 				</Cell>
 				<Cell shrink>
 					<Input placeholder="Input text here" />
