@@ -1,7 +1,6 @@
 import kind from '@enact/core/kind';
 import AgateDecorator from '@enact/agate/AgateDecorator';
-import Panels from '@enact/moonstone/Panels';
-import React from 'react';
+import Panels from '@enact/agate/Panels';
 
 import MainPanel from '../views/MainPanel';
 

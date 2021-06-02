@@ -2,15 +2,14 @@ import {Row, Cell} from '@enact/ui/Layout';
 import Button from '@enact/agate/Button';
 import ColorPicker from '@enact/agate/ColorPicker';
 import DateTimePicker from '@enact/agate/DateTimePicker';
-import Divider from '@enact/agate/Divider'
-import IconButton from '@enact/agate/IconButton';
-import IconItem from '@enact/agate/IconItem';
+import Heading from '@enact/agate/Heading';
 import IncrementSlider from '@enact/agate/IncrementSlider';
 import Input from '@enact/agate/Input';
 import Item from '@enact/agate/Item';
 import LabeledIcon from '@enact/agate/LabeledIcon';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
 import LabeledItem from '@enact/agate/LabeledItem';
+import {Panel} from '@enact/agate/Panels';
 import Picker from '@enact/agate/Picker';
 import ProgressBar from '@enact/agate/ProgressBar';
 import RadioItem from '@enact/agate/RadioItem';
@@ -19,21 +18,19 @@ import SliderButton from '@enact/agate/SliderButton';
 import SwitchItem from '@enact/agate/SwitchItem';
 import ToggleButton from '@enact/agate/ToggleButton';
 import kind from '@enact/core/kind';
-import {Panel} from '@enact/moonstone/Panels';
-import React from 'react';
 
 const MainPanel = kind({
 	name: 'MainPanel',
 
 	render: (props) => (
 		<Panel {...props}>
-			<Divider spacing="normal" startSection>
+			<Heading spacing="medium" showLine>
 				Agate kitchen sink
-			</Divider>
+			</Heading>
 			<Row align="center space-around">
 				<Cell shrink>
 					<Button>Click me</Button>
-					<IconButton type="standard">home</IconButton>
+					<Button icon="plus" type="standard">home</Button>
 					<ToggleButton underline type="standard" toggleOffLabel="Off" toggleOnLabel="On" />
 				</Cell>
 				<Cell shrink>
@@ -90,9 +87,9 @@ const MainPanel = kind({
 					<LabeledItem label="Label" titleIcon="expand">
 						Hello LabeledItem
 					</LabeledItem>
-					<IconItem label="Label" icon="compass">
+					<Item label="Label" icon="compass">
 						Hello IconItem
-					</IconItem>
+					</Item>
 					<RadioItem icon="music">
 						Sound
 					</RadioItem>
@@ -104,7 +101,7 @@ const MainPanel = kind({
 					<DateTimePicker />
 				</Cell>
 			</Row>
-			<Divider>ProgressBar</Divider>
+			<Heading>ProgressBar</Heading>
 			<ProgressBar
 				rientation="horizontal"
 				progress={0.4}

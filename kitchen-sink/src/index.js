@@ -1,10 +1,9 @@
-import React from 'react';
 import {render} from 'react-dom';
 import App from './App';
 
 const appElement = (
 	<App
-		skin="cobalt"
+		skin="gallium"
 		accent="#FC7982"
 		highlight="#FFFFFF"
 	/>
