@@ -3,6 +3,7 @@ import Button from '@enact/agate/Button';
 import ColorPicker from '@enact/agate/ColorPicker';
 import DateTimePicker from '@enact/agate/DateTimePicker';
 import Heading from '@enact/agate/Heading';
+import Icon from "@enact/agate/Icon";
 import IncrementSlider from '@enact/agate/IncrementSlider';
 import Input from '@enact/agate/Input';
 import Item from '@enact/agate/Item';
@@ -23,7 +24,7 @@ const MainPanel = kind({
 
 	render: (props) => (
 		<Panel {...props}>
-			<Heading spacing="medium" showLine>
+			<Heading showLine>
 				Agate kitchen sink
 			</Heading>
 			<Row align="center space-around">
@@ -86,13 +87,13 @@ const MainPanel = kind({
 					<Item label="Label" titleIcon="expand">
 						Hello LabeledItem
 					</Item>
-					<Item label="Label" slotBefore="compass">
+					<Item label="Label" slotBefore={<Icon size="small">speaker</Icon>}>
 						Hello IconItem
 					</Item>
 					<RadioItem icon="music">
 						Sound
 					</RadioItem>
-					<SwitchItem defaultSelected icon="music">
+					<SwitchItem icon="music">
 						Sound
 					</SwitchItem>
 				</Cell>
@@ -102,7 +103,7 @@ const MainPanel = kind({
 			</Row>
 			<Heading>ProgressBar</Heading>
 			<ProgressBar
-				rientation="horizontal"
+				orientation="horizontal"
 				progress={0.4}
 			/>
 		</Panel>
