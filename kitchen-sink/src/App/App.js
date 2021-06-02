@@ -1,5 +1,5 @@
 import kind from '@enact/core/kind';
-import AgateDecorator from '@enact/agate/AgateDecorator';
+import ThemeDecorator from '@enact/agate/ThemeDecorator';
 import Panels from '@enact/agate/Panels';
 
 import MainPanel from '../views/MainPanel';
@@ -21,4 +21,4 @@ const App = kind({
 	)
 });
 
-export default AgateDecorator(App);
+export default ThemeDecorator(App);
