@@ -3,7 +3,6 @@ import kind from '@enact/core/kind';
 import Layout, {Cell, Row} from '@enact/ui/Layout';
 import {Panel} from '@enact/agate/Panels';
 import Picker from '@enact/agate/Picker';
-import React from 'react';
 import {ResponsiveBox} from '@enact/agate/DropManager';
 import SliderButton from '@enact/agate/SliderButton';
 import ToggleButton from '@enact/agate/ToggleButton';

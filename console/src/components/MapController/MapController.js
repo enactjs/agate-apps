@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import {Component} from 'react';
 import hoc from '@enact/core/hoc';
 import Pure from '@enact/ui/internal/Pure';
 import classnames from 'classnames';
@@ -23,7 +24,7 @@ const StyledButton = ({style = {}, ...rest}) => {
 };
 
 const MapControllerHoc = hoc((configHoc, Wrapped) => {
-	return class extends React.Component {
+	return class extends Component {
 		static displayName = 'MapControllerHoc';
 
 		static propTypes = {

@@ -7,7 +7,7 @@ import Button from '@enact/agate/Button';
 import Popup from '@enact/agate/Popup';
 import DateTimePicker from '@enact/agate/DateTimePicker';
 import {TabbedPanels} from '@enact/agate/Panels';
-import React from 'react';
+import {Component} from 'react';
 import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
 import ThemeDecorator from '@enact/agate/ThemeDecorator';
@@ -341,7 +341,7 @@ const AppBase = kind({
 });
 
 const AppIndex = (Wrapped) => {
-	return class extends React.Component {
+	return class extends Component {
 		static displayName = 'AppIndex'
 
 		constructor (props) {

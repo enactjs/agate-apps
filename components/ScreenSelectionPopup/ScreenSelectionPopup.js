@@ -2,7 +2,6 @@ import Button from '@enact/agate/Button';
 import Popup from '@enact/agate/Popup';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 const screenNames = [
 	'Front',

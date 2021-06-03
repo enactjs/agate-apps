@@ -2,7 +2,6 @@ import {Cell, Column, Row} from '@enact/ui/Layout';
 import Heading from '@enact/agate/Heading';
 import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
-import React from 'react';
 import LabeledItem from '@enact/agate/LabeledItem';
 import SwitchItem from '@enact/agate/SwitchItem';
 

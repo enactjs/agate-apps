@@ -7,7 +7,6 @@ import ProgressBar from '@enact/agate/ProgressBar';
 import ToggleButton from '@enact/agate/ToggleButton';
 import kind from '@enact/core/kind';
 import Layout, {Cell, Column, Row} from '@enact/ui/Layout';
-import React from 'react';
 import PropTypes from 'prop-types';
 
 import AppContextConnect from '../App/AppContextConnect';

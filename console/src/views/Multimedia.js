@@ -9,7 +9,7 @@ import {Cell, Column, Row} from '@enact/ui/Layout';
 import ri from '@enact/ui/resolution';
 import {VirtualGridList, VirtualList} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Component, Fragment} from 'react';
 
 import appConfig from '../App/configLoader';
 import Communicator from '../../../components/Communicator';
@@ -194,7 +194,7 @@ const MultimediaBase = kind({
 		...rest
 	}) => {
 		return (
-			<React.Fragment>
+			<Fragment>
 				<ScreenSelectionPopup
 					onClose={onClosePopup}
 					onSelect={onSendVideo}
@@ -229,7 +229,7 @@ const MultimediaBase = kind({
 						</Row>
 					</CustomLayout>
 				</Panel>
-			</React.Fragment>
+			</Fragment>
 		);
 	}
 });
@@ -239,7 +239,7 @@ const defaultConfig = {
 };
 
 const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
-	return class extends React.Component {
+	return class extends Component {
 		static displayName = 'MultimediaDecorator';
 
 		static propTypes = {
@@ -323,7 +323,7 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 				videos
 			};
 			return (
-				<React.Fragment>
+				<Fragment>
 					<Communicator
 						host={appConfig.communicationServerHost}
 						onPlayVideo={this.onPlayVideo}
@@ -331,7 +331,7 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 						screenId={this.state.screenId}
 					/>
 					<Wrapped {...props} />
-				</React.Fragment>
+				</Fragment>
 			);
 		}
 	};

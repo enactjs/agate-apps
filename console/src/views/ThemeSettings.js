@@ -1,4 +1,3 @@
-import React from 'react';
 import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
 import ColorPicker from '@enact/agate/ColorPicker';

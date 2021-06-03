@@ -1,11 +1,11 @@
-import React, {Component} from 'react';
+import {Component, createContext, Fragment, PureComponent} from 'react';
 import produce from 'immer';
 import {assocPath, equals, mergeDeepRight, omit, path} from 'ramda';
 
 import appConfig from '../App/configLoader';
 import userPresetsForDemo from './userPresetsForDemo';
 
-const Context = React.createContext();
+const Context = createContext();
 
 const getWeather = async (latitude, longitude) => {
 	const key = appConfig.weatherApiKey;
@@ -104,7 +104,7 @@ class AppContextProvider extends Component {
 		};
 	}
 
-	componentWillMount () {
+	UNSAFE_componentWillMount () { // https://reactjs.org/docs/react-component.html#unsafe_componentwillmount
 		// If there are no users in the list when we load for the first time, stamp some out and prepare the system.
 		if (this.getAllSavedUserIds().length <= 0) {
 			this.resetAll();
@@ -122,7 +122,7 @@ class AppContextProvider extends Component {
 		this.setWeather(37.7876092, -122.40091);
 	}
 
-	componentWillUpdate (nextProps, nextState) {
+	UNSAFE_componentWillUpdate (nextProps, nextState) { //https://reactjs.org/docs/react-component.html#unsafe_componentwillupdate
 		if (this.state.userId !== nextState.userId && equals(this.state.userSettings, nextState.userSettings)) {
 			this.setUserSettings(nextState.userId);
 		}
@@ -314,12 +314,12 @@ class AppContextProvider extends Component {
 	}
 }
 
-class PureFragment extends React.PureComponent {
+class PureFragment extends PureComponent {
 	render () {
 		return (
-			<React.Fragment>
+			<Fragment>
 				{this.props.children}
-			</React.Fragment>
+			</Fragment>
 		);
 	}
 }

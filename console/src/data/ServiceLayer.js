@@ -3,7 +3,7 @@
 // External
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
-import React from 'react';
+import {Component, createContext, createRef, Fragment, memo} from 'react';
 import compose from 'ramda/src/compose';
 import {equals} from 'ramda';
 import PropTypes from 'prop-types';
@@ -17,11 +17,11 @@ import Communicator from '../../../components/Communicator';
 
 import AppStateConnect from '../App/AppContextConnect';
 
-const ServiceLayerContext = React.createContext();
+const ServiceLayerContext = createContext();
 
 const ServiceLayerBase = hoc((configHoc, Wrapped) => {
-	const PureWrapped = React.memo(Wrapped);
-	return class extends React.Component {
+	const PureWrapped = memo(Wrapped);
+	return class extends Component {
 		static displayName = 'ServiceLayer';
 
 		static propTypes = {
@@ -37,7 +37,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		constructor (props) {
 			super(props);
 
-			this.comm = React.createRef();
+			this.comm = createRef();
 			this.maps = new Set();
 			this.location = this.props.location;
 			this.isFirstPosition = true;
@@ -350,7 +350,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			delete rest.updateAppState;
 
 			return (
-				<React.Fragment>
+				<Fragment>
 					<ServiceLayerContext.Provider value={{getMap: this.getMap, onMapUnmount: this.onMapUnmount}}>
 						<Communicator
 							ref={this.comm}
@@ -365,7 +365,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 							reloadApp={this.reloadApp}
 						/>
 					</ServiceLayerContext.Provider>
-				</React.Fragment>
+				</Fragment>
 			);
 		}
 	};

@@ -237,7 +237,7 @@ class MapCoreBase extends React.Component {
 		};
 	}
 
-	componentWillMount () {
+	UNSAFE_componentWillMount () { // https://reactjs.org/docs/react-component.html#unsafe_componentwillupdate
 		if (!mapboxgl.accessToken) {
 			this.message = 'MapBox API key is not set. The map cannot be loaded.';
 		}

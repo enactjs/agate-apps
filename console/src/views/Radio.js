@@ -7,7 +7,7 @@ import {ResponsiveBox} from '@enact/agate/DropManager';
 import Layout, {Row, Cell} from '@enact/ui/Layout';
 import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
-import React, {Component} from 'react';
+import {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import PresetItem from '../components/PresetItem';
