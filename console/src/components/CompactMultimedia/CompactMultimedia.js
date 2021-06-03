@@ -1,7 +1,7 @@
 import kind from '@enact/core/kind';
 import {Cell, Column} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Fragment} from 'react';
 
 import {WidgetBase, WidgetDecorator} from '../Widget';
 import {ScreenSelectionPopup} from '../../../../components/ScreenSelectionPopup';
@@ -45,7 +45,7 @@ const CompactMultimediaBase = kind({
 		const size = containerShape.size.relative || 'small';
 
 		return (
-			<React.Fragment>
+			<Fragment>
 				<ScreenSelectionPopup
 					onClose={onClosePopup}
 					onSelect={onSendVideo}
@@ -73,7 +73,7 @@ const CompactMultimediaBase = kind({
 						</Column>
 					</Cell>
 				</WidgetBase>
-			</React.Fragment>
+			</Fragment>
 		);
 	}
 });

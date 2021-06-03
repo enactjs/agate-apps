@@ -4,7 +4,7 @@ import {equals} from 'ramda';
 import {Job} from '@enact/core/util';
 import mapboxgl from 'mapbox-gl';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Component} from 'react';
 import Slottable from '@enact/ui/Slottable';
 import ri from '@enact/ui/resolution';
 // import convert from 'color-convert';
@@ -187,7 +187,7 @@ const skinStyles = {
 
 const lightSkins = ['copper', 'cobalt', 'titanium'];
 
-class MapCoreBase extends React.Component {
+class MapCoreBase extends Component {
 	static contextType = ServiceLayerContext;
 	static propTypes = {
 		updateDestination: PropTypes.func.isRequired,

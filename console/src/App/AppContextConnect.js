@@ -1,10 +1,10 @@
-import React from 'react';
+import {Component, memo} from 'react';
 import {AppContext} from './AppContextProvider';
 
 const AppStateConnect = (mapContextToProps) => (Wrapped) => {
-	const PureWrapped = React.memo(Wrapped);
+	const PureWrapped = memo(Wrapped);
 
-	return class extends React.Component {
+	return class extends Component {
 		static displayName = 'AppStateConnect'
 
 		render () {
