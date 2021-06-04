@@ -1,6 +1,6 @@
 import {adaptEvent, forward, handle} from '@enact/core/handle';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Component} from 'react';
 import openSocket from 'socket.io-client';
 
 const handleAddVideo = handle(
@@ -15,7 +15,7 @@ const handleShowETA = handle(
 	forward('onShowETA'),
 );
 
-class Communicator extends React.Component {
+class Communicator extends Component {
 
 	static propTypes = {
 		host: PropTypes.string,
