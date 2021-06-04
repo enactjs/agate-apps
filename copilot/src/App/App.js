@@ -4,7 +4,7 @@ import {Cell, Column, Row} from '@enact/ui/Layout';
 import kind from '@enact/core/kind';
 import LabeledItem from '@enact/agate/LabeledItem';
 // import PropTypes from 'prop-types';
-import React from 'react';
+import {Component, Fragment} from 'react';
 import ThemeDecorator from '@enact/agate/ThemeDecorator';
 
 import Communicator from '../../../components/Communicator';
@@ -87,7 +87,7 @@ const getInitialState = ({popupOpen = true, screenId = 1} = {}) => ({
 	url: ''
 });
 
-class App extends React.Component {
+class App extends Component {
 
 	static propTypes = {
 		// adContent: PropTypes.string,
@@ -163,7 +163,7 @@ class App extends React.Component {
 		delete props.highlight;
 
 		return (
-			<React.Fragment>
+			<Fragment>
 				<Communicator
 					host={appConfig.communicationServerHost}
 					screenId={this.state.screenId}
@@ -178,7 +178,7 @@ class App extends React.Component {
 					onSetScreen={this.onSetScreen}
 					onTogglePopup={this.onTogglePopup}
 				/>
-			</React.Fragment>
+			</Fragment>
 		);
 	}
 }

@@ -31,14 +31,14 @@
 		"dist/*"
 	],
 	"dependencies": {
-		"@enact/agate": "github:enactjs/agate#1.0.0-alpha.3",
-		"@enact/core": "^3.0.0",
-		"@enact/i18n": "^3.0.0",
-		"@enact/ui": "^3.0.0",
+		"@enact/agate": "enactjs/agate#2.0.0-alpha.3",
+		"@enact/core": "^4.0.2",
+		"@enact/i18n": "^4.0.2",
+		"@enact/ui": "^4.0.2",
 		"prop-types": "^15.7.2",
 		"query-string": "^6.2.0",
-		"react": "^16.8.6",
-		"react-dom": "^16.8.6"
+		"react": "^17.0.2",
+		"react-dom": "^17.0.2"
 	},
 	"devDependencies": {
 		"cpy-cli": "^2.0.0"

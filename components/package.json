@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "@enact/core": "^4.0.2",
+    "@enact/agate": "enactjs/agate#2.0.0-alpha.3",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "query-string": "^6.2.0",
