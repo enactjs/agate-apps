@@ -285,6 +285,12 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			this.connection.send('positionReset', coordinates);
 		}
 
+		sendSkin = (skin) => {
+			console.log('2. service layer send skin');
+			console.log(skin)
+			this.comm.current.sendSkin(skin);
+		}
+
 		resetCopilot = () => {
 			this.comm.current.resetCopilot();
 		}
@@ -360,6 +366,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 						<PureWrapped
 							{...rest}
 							sendVideo={this.sendVideo}
+							sendSkin={this.sendSkin}
 							resetPosition={this.resetPosition}
 							resetCopilot={this.resetCopilot}
 							reloadApp={this.reloadApp}

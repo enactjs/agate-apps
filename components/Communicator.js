@@ -7,6 +7,10 @@ const handleAddVideo = handle(
 	adaptEvent(item => ({url: item.url}), forward('onPlayVideo'))
 );
 
+const handleAddSkin = handle(
+	forward('onAddSkin')
+);
+
 // const handleShowAd = handle(
 // 	forward('onShowAd')
 // );
@@ -31,6 +35,7 @@ class Communicator extends React.Component {
 		super(props);
 
 		handleAddVideo.bindAs(this, 'handleAddVideo');
+		handleAddSkin.bindAs(this, 'handleAddSkin');
 		// handleShowAd.bindAs(this, 'handleShowAd');
 		handleShowETA.bindAs(this, 'handleShowETA');
 	}
@@ -61,12 +66,13 @@ class Communicator extends React.Component {
 		if (this.props.onReload) {
 			this.socket.on('RELOAD_APP', this.props.onReload);
 		}
+		this.socket.on(`ADD_SKIN`, this.handleAddSkin);
 
 		if (screenId != null) {
 			this.socket.on(`VIDEO_ADD_SCREEN/${screenId}`, this.handleAddVideo);
 			// this.socket.on('SHOW_AD', this.handleShowAd);
 			this.socket.on('SHOW_ETA', this.handleShowETA);
-			console.log('Connected to', this.props.host, 'and listening for events:', `VIDEO_ADD_SCREEN/${screenId}`, 'SHOW_ETA');
+			console.log('Connected to', this.props.host, 'and listening for events:', `VIDEO_ADD_SCREEN/${screenId}`, 'SHOW_ETA', 'ADD_SKIN');
 		}
 	}
 
@@ -75,6 +81,7 @@ class Communicator extends React.Component {
 			if (screenId != null) {
 				this.socket.removeAllListeners(`VIDEO_ADD_SCREEN/${screenId}`);
 				this.socket.removeAllListeners('SHOW_ETA');
+				// this.socket.removeAllListeners('ADD_SKIN');
 			}
 
 			this.socket.close();
@@ -97,6 +104,17 @@ class Communicator extends React.Component {
 		this.socket.emit('SEND_DATA', data);
 		this.socket.emit('VIDEO_SENT', {id: screenId});
 	};
+
+	sendSkin = (skin) => {
+		console.log('3. communicator send skin');
+
+		const data = {
+			route: 'ADD_SKIN',
+			skin
+		};
+		console.log('Sending skin to', this.props.host, ['SEND_DATA:', data]);
+		this.socket.emit('SEND_DATA', data);
+	}
 
 	resetCopilot = () => {
 		const data = {route: 'RESET_COPILOT'};

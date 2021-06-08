@@ -43,7 +43,7 @@ const AppBase = kind({
 		className: 'app'
 	},
 
-	render: ({adContent, duration, eta, ipAddress, popupOpen, showAd, onSetScreen, onTogglePopup, url, ...rest}) => {
+	render: ({adContent, duration, eta, ipAddress, popupOpen, showAd, onSetScreen, onTogglePopup, url, skin,...rest}) => {
 		return (
 			<Column {...rest}>
 				{eta ? <Cell shrink>
@@ -84,7 +84,8 @@ const getInitialState = ({popupOpen = true, screenId = 1} = {}) => ({
 	popupOpen,
 	screenId,
 	// showAd: this.props.showAd || false,
-	url: ''
+	url: '',
+	skin: ''
 });
 
 class App extends Component {
@@ -108,6 +109,10 @@ class App extends Component {
 	// onHideAdSpace = () => {
 	// 	this.setState({adContent: '', showAd: false});
 	// };
+
+	onAddSkin = ({skin}) => {
+		this.setState({skin});
+	};
 
 	onPlayVideo = ({url}) => {
 		this.setState({url});
@@ -140,7 +145,7 @@ class App extends Component {
 	};
 
 	resetApp = () => {
-		// If the popup was dismissed, leave it closed during a reset. (maintain popupOpen state throguh resets)
+		// If the popup was dismissed, leave it closed during a reset. (maintain popupOpen state through resets)
 		this.setState(({popupOpen}) => getInitialState({popupOpen}));
 	}
 
@@ -149,7 +154,7 @@ class App extends Component {
 	}
 
 	render () {
-		const {duration, eta, popupOpen, showAd, url} = this.state;
+		const {duration, eta, popupOpen, showAd, url, skin} = this.state;
 		const props = {
 			...this.props,
 			// adContent,
@@ -157,8 +162,10 @@ class App extends Component {
 			eta,
 			popupOpen,
 			showAd,
-			url
+			url,
+			skin
 		};
+		console.log(this.state.skin)
 		delete props.accent;
 		delete props.highlight;
 
@@ -168,13 +175,16 @@ class App extends Component {
 					host={appConfig.communicationServerHost}
 					screenId={this.state.screenId}
 					onPlayVideo={this.onPlayVideo}
+					onAddSkin={this.onAddSkin}
 					onReset={this.resetApp}
 					onReload={this.reloadApp}
 					// onShowAd={this.onShowAdSpace}
 					onShowETA={this.onShowETA}
+					skin={skin}
 				/>
 				<AppBase
 					{...props}
+					skin={skin}
 					onSetScreen={this.onSetScreen}
 					onTogglePopup={this.onTogglePopup}
 				/>
