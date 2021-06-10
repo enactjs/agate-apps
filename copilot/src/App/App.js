@@ -3,7 +3,7 @@ import {Cell, Column, Row} from '@enact/ui/Layout';
 // import Job from '@enact/core/util/Job';
 import kind from '@enact/core/kind';
 import LabeledItem from '@enact/agate/LabeledItem';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import {Component, Fragment} from 'react';
 import ThemeDecorator from '@enact/agate/ThemeDecorator';
 
@@ -32,6 +32,18 @@ const IFrame = kind({
 
 const AppBase = kind({
 	name: 'App',
+
+	propTypes: {
+		adContent: PropTypes.any,
+		duration: PropTypes.number || null,
+		eta: PropTypes.number || null,
+		ipAddress: PropTypes.string,
+		onSetScreen: PropTypes.func,
+		onTogglePopup: PropTypes.func,
+		popupOpen: PropTypes.bool,
+		showAd: PropTypes.bool,
+		url: PropTypes.string
+	},
 
 	defaultProps: {
 		eta: 0,
@@ -92,7 +104,7 @@ class App extends Component {
 	static propTypes = {
 		// adContent: PropTypes.string,
 		// showAd: PropTypes.bool
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -142,11 +154,11 @@ class App extends Component {
 	resetApp = () => {
 		// If the popup was dismissed, leave it closed during a reset. (maintain popupOpen state throguh resets)
 		this.setState(({popupOpen}) => getInitialState({popupOpen}));
-	}
+	};
 
 	reloadApp = () => {
 		global.location.reload();
-	}
+	};
 
 	render () {
 		const {duration, eta, popupOpen, showAd, url} = this.state;

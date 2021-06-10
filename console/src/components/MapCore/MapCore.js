@@ -169,7 +169,7 @@ const addCarLayer = ({coordinates, iconURL, map, orientation = 0}) => {
 				map.addImage('car', icon);
 				map.addLayer(carLayer);
 			} catch (err) {
-				console.warn('Map is unmounted.', error);
+				console.warn('Map is unmounted.', error); // eslint-disable-line no-console
 			}
 		});
 	}
@@ -208,7 +208,7 @@ class MapCoreBase extends Component {
 		viewLockoutDuration: PropTypes.number,
 		zoomLevel: PropTypes.number, // Sets the starting zoom level for the map
 		zoomToSpeedScaleFactor: PropTypes.number
-	}
+	};
 
 	static defaultProps = {
 		centeringDuration: 2000,
@@ -220,7 +220,7 @@ class MapCoreBase extends Component {
 		viewLockoutDuration: 4000,
 		zoomLevel: 15,
 		zoomToSpeedScaleFactor: 0.02
-	}
+	};
 
 	constructor (props) {
 		super(props);
@@ -382,7 +382,7 @@ class MapCoreBase extends Component {
 				switch (action) {
 					case 'plotRoute': {
 						if (actions[action]) {
-							console.log('%cPlotting route to:', 'color: orange', [this.props.location, ...actions[action]]);
+							console.log('%cPlotting route to:', 'color: orange', [this.props.location, ...actions[action]]); // eslint-disable-line no-console
 							this.drawDirection([this.props.location, ...actions[action]]);
 						} else {
 							this.removeDirection();
@@ -405,7 +405,7 @@ class MapCoreBase extends Component {
 				}
 			}
 		}
-	}
+	};
 
 	panPercent ({x = 0, y = 0}) {
 		// Zoom level is an logarithmic function such that increasing the level by 1 decreases the
@@ -433,30 +433,30 @@ class MapCoreBase extends Component {
 		const vel = Math.max(0, linearVelocity);
 		// console.log('calc zoom:', this.props.location.linearVelocity, this.props.location);
 		return Math.abs(19 - ((vel * vel) * this.props.zoomToSpeedScaleFactor));
-	}
+	};
 
 	velocityZoom = (linearVelocity) => {
 		const zoom = this.props.follow ? this.calculateZoomLevel(linearVelocity) : this.zoomLevel;
 		// this.zoomMap(zoom);
 		this.zoomLevel = clampZoom(zoom);
-	}
+	};
 
 	zoomMap = (zoomLevel) => {
 		zoomLevel = clampZoom(zoomLevel);
 		this.zoomLevel = zoomLevel;
 		if (!this.viewLockTimer) {
-			console.log('zoomTo:', zoomLevel);
+			console.log('zoomTo:', zoomLevel); // eslint-disable-line no-console
 			this.map.zoomTo(zoomLevel);
 		}
-	}
+	};
 
 	zoomIn = () => {
 		this.zoomMap(this.zoomLevel + 1);
-	}
+	};
 
 	zoomOut = () => {
 		this.zoomMap(this.zoomLevel - 1);
-	}
+	};
 
 	centerMap = ({center = this.props.location, instant = false, duration}) => {
 		// Never center the map if we're currently in view-lock
@@ -484,7 +484,7 @@ class MapCoreBase extends Component {
 			// this.map.flyTo({center, maxDuration: (instant ? 500 : this.props.centeringDuration)});
 			this.localinfo.center = toLatLon(this.map.getCenter()); // save the current center, based on their truth rather than ours
 		}
-	}
+	};
 
 	updateCarLayer = ({location}) => {
 		if (this.map) {
@@ -508,14 +508,14 @@ class MapCoreBase extends Component {
 				this.map.setLayoutProperty(carLayerId, 'icon-rotate', location.orientation);
 			}
 		}
-	}
+	};
 
 	showPopup = (coordinates, description) => {
 		new mapboxgl.Popup()
 			.setLngLat(coordinates)
 			.setHTML(description)
 			.addTo(this.map);
-	}
+	};
 
 	showFullRouteOnMap = (waypoints) => {
 		// const bounds = waypoints.reduce((result, coord) => {
@@ -531,14 +531,14 @@ class MapCoreBase extends Component {
 		// Set a time to automatically pan back to the current position.
 		if (this.viewLockTimer) this.viewLockTimer.stop();
 		this.viewLockTimer = new Job(this.finishedShowingFullRouteOnMap, this.props.viewLockoutDuration);
-		console.log('Starting view-lock');
+		console.log('Starting view-lock'); // eslint-disable-line no-console
 		this.viewLockTimer.start();
-	}
+	};
 
 	finishedShowingFullRouteOnMap = () => {
-		console.log('View-lock released!');
+		console.log('View-lock released!'); // eslint-disable-line no-console
 		if (this.viewLockTimer) this.viewLockTimer = null;
-	}
+	};
 
 	getRouteLineColor = () => {
 		const {colorRouteLine, skin} = this.props;
@@ -550,7 +550,7 @@ class MapCoreBase extends Component {
 			return '#999999';
 		}
 		return colorRouteLine;
-	}
+	};
 
 	removeDirection = () => {
 		const direction = this.map.getSource('route');
@@ -563,7 +563,7 @@ class MapCoreBase extends Component {
 				}
 			});
 		}
-	}
+	};
 
 	drawDirection = async (waypoints) => {
 		// console.log('drawDirection:', waypoints);
@@ -614,7 +614,7 @@ class MapCoreBase extends Component {
 			try {
 				direction = this.map.getSource('route');
 			} catch (error) {
-				console.warn('Map is unmounted', error);
+				console.warn('Map is unmounted', error); // eslint-disable-line no-console
 				return;
 			}
 			if (direction) {
@@ -656,9 +656,9 @@ class MapCoreBase extends Component {
 			this.queuedRouteRedraw = false;
 		} else {
 			// what was in the data object anyway??
-			console.log('No routes in response:', data, waypoints);
+			console.log('No routes in response:', data, waypoints); // eslint-disable-line no-console
 		}
-	}
+	};
 
 	// estimateRoute = ({selected}) => {
 	// 	// TODO: Clear the route when deselecting a destination
@@ -671,9 +671,9 @@ class MapCoreBase extends Component {
 
 	setContextRef = () => {
 		this.context.getMap(this);
-	}
+	};
 
-	setMapNode = (node) => (this.mapNode = node)
+	setMapNode = (node) => (this.mapNode = node);
 
 	// Button options
 	// <Button alt="Fullscreen" icon="fullscreen" data-tabindex={getPanelIndexOf('map')} onSelect={onSelect} onKeyUp={onTabChange} onClick={onTabChange} />

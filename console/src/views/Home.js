@@ -203,6 +203,7 @@ const Home = kind({
 	propTypes: {
 		arrangeable: PropTypes.bool,
 		onCompactExpand: PropTypes.func,
+		onSelect: PropTypes.func,
 		onSendVideo: PropTypes.func
 	},
 

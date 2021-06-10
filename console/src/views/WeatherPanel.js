@@ -5,9 +5,15 @@ import Heading from '@enact/agate/Heading';
 import viewCSS from './WeatherPanel.module.less';
 import WeatherItem from '../components/WeatherItem';
 import AppStateConnect from '../App/AppContextConnect';
+import PropTypes from 'prop-types';
 
 const Weather = kind({
 	name: 'Weather',
+
+	propTypes: {
+		css: PropTypes.object,
+		weather: PropTypes.object
+	},
 
 	styles: {
 		css: viewCSS,

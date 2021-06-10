@@ -247,7 +247,7 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 			onSendVideo: PropTypes.func,
 			screenIds: PropTypes.array
 			// showAd: PropTypes.bool
-		}
+		};
 
 		constructor (props) {
 			super(props);

@@ -4,6 +4,7 @@ import ColorPicker from '@enact/agate/ColorPicker';
 import {Row, Column, Cell} from '@enact/ui/Layout';
 import SliderButton from '@enact/agate/SliderButton';
 import Heading from '@enact/agate/Heading';
+import PropTypes from 'prop-types';
 
 import {getPanelIndexOf} from '../App';
 import AppContextConnect from '../App/AppContextConnect';
@@ -39,6 +40,11 @@ const swatchPalette = [
 
 const FormRow = kind({
 	name: 'FormRow',
+	propTypes: {
+		alignLabel: PropTypes.string,
+		css: PropTypes.object,
+		label: PropTypes.string
+	},
 	styles: {
 		css: componentCss,
 		className: 'formRow'
@@ -54,6 +60,13 @@ const FormRow = kind({
 const ColorPickerItem = kind({
 	name: 'ColorPickerItem',
 
+	propTypes: {
+		css: PropTypes.object,
+		label: PropTypes.string,
+		onSelect: PropTypes.func,
+		prevIndex: PropTypes.number
+	},
+
 	render: ({label, ...rest}) => (
 		<Cell style={{textAlign: 'center'}}>
 			<ColorPicker {...rest} />
@@ -64,6 +77,10 @@ const ColorPickerItem = kind({
 
 const SliderButtonItem = kind({
 	name: 'SliderButtonItem',
+	propTypes: {
+		alignLabel: PropTypes.string,
+		label: PropTypes.string
+	},
 	styles: {
 		css: componentCss,
 		className: 'sliderButtonRow'
@@ -79,6 +96,14 @@ const SliderButtonItem = kind({
 
 const ThemeSettings = kind({
 	name: 'ThemeSettings',
+
+	propTypes: {
+		alignLabel: PropTypes.string,
+		css: PropTypes.object,
+		label: PropTypes.string,
+		onSelect: PropTypes.func,
+		prevIndex: PropTypes.number
+	},
 
 	styles: {
 		css: componentCss,
@@ -109,7 +134,7 @@ const ThemeSettings = kind({
 							showLine
 							spacing="medium"
 						>
-								Theme
+							Theme
 						</Cell>
 						<Cell shrink className={css.spacedItem}>
 							<FormRow align="start space-around" alignLabel="center" className={css.formRow}>

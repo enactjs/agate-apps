@@ -10,7 +10,6 @@ const Digit = kind({
 
 	propTypes: {
 		onSelect: PropTypes.func,
-		onSelectDigit: PropTypes.func,
 		subtitle: PropTypes.string
 	},
 
@@ -32,6 +31,10 @@ const Digit = kind({
 
 const Dialer = kind({
 	name: 'Dialer',
+
+	propTypes: {
+		onSelectDigit: PropTypes.func
+	},
 
 	styles: {
 		css,

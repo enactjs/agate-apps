@@ -3,6 +3,7 @@ import {Column, Cell} from '@enact/ui/Layout';
 import Heading from '@enact/agate/Heading';
 import Image from '@enact/agate/Image';
 import Skinnable from '@enact/agate/Skinnable';
+import PropTypes from 'prop-types';
 
 import cloudy from '../../../assets/weather/cloudy.png';
 import overcast from '../../../assets/weather/overcast.png';
@@ -16,6 +17,15 @@ import css from './WeatherItem.module.less';
 
 const WeatherItemBase = kind({
 	name: 'WeatherItem',
+
+	propTypes: {
+		description: PropTypes.string,
+		featured: PropTypes.bool,
+		high: PropTypes.bool,
+		label: PropTypes.string,
+		low: PropTypes.bool,
+		status: PropTypes.number
+	},
 
 	styles: {
 		css,

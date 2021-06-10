@@ -4,6 +4,7 @@ import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
 import LabeledItem from '@enact/agate/LabeledItem';
 import SwitchItem from '@enact/agate/SwitchItem';
+import PropTypes from 'prop-types';
 
 import NetworkInfo from '../../../components/NetworkInfo';
 import viewCss from './Settings.module.less';
@@ -11,13 +12,21 @@ import {getPanelIndexOf} from '../App';
 
 const SwitchItemCell =  kind({
 	name: 'SwitchItemCell',
+
+	propTypes: {
+		css: PropTypes.object,
+		noToggle: PropTypes.bool
+	},
+
 	styles: {
 		css: viewCss,
 		className: 'switchItem'
 	},
+
 	computed: {
 		className: ({css, noToggle, styler}) => styler.append(noToggle ? css.noToggle : '')
 	},
+
 	render: ({css, ...rest}) => {
 		delete rest.noToggle;
 		return (
@@ -30,6 +39,15 @@ const SwitchItemCell =  kind({
 
 const Settings = kind({
 	name: 'Settings',
+
+	propTypes: {
+		css: PropTypes.object,
+		ipAddress: PropTypes.string,
+		onReloadApp: PropTypes.func,
+		onSelect: PropTypes.func,
+		onToggleDateTimePopup: PropTypes.func
+	},
+
 	styles: {
 		css: viewCss,
 		className: 'settingsView'

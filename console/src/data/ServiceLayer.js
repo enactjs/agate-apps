@@ -32,7 +32,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			location: propTypeLatLon,
 			navigating: PropTypes.bool,
 			navigation: PropTypes.object
-		}
+		};
 
 		constructor (props) {
 			super(props);
@@ -84,16 +84,16 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 		initializeConnection () {
 			if (!this.connection) {
-				console.log('Connecting to', appConfig.servicesLayerHost);
+				console.log('Connecting to', appConfig.servicesLayerHost); // eslint-disable-line no-console
 				this.connection = connect({
 					url: 'ws://' + appConfig.servicesLayerHost,
 					onConnection: () => {
-						console.log('%cConnected to Service Layer', 'color: green');
+						console.log('%cConnected to Service Layer', 'color: green'); // eslint-disable-line no-console
 						if (this.reconnectLater) this.reconnectLater.stop();
 						this.setConnected(true);
 					},
 					onClose: () => {
-						console.log('%cDisconnected from Service Layer', 'color: red');
+						console.log('%cDisconnected from Service Layer', 'color: red'); // eslint-disable-line no-console
 
 						this.initiateAutomaticReconnect();
 
@@ -119,12 +119,12 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			if (this.reconnectLater) this.reconnectLater.stop();
 			this.reconnectLater = new Job(this.reconnect, 1000);
 			this.reconnectLater.start();
-		}
+		};
 
 		reconnect = () => {
-			console.warn('%cAttempting to reconnect with the service layer at:', 'color: orange', appConfig.servicesLayerHost);
+			console.warn('%cAttempting to reconnect with the service layer at:', 'color: orange', appConfig.servicesLayerHost); // eslint-disable-line no-console
 			this.connection.reconnect();
-		}
+		};
 
 		// The following two functions generate location coordinates to aid in testing when the
 		// simulator is not available.
@@ -134,8 +134,8 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 				this.onPosition(this.fabricatePosition(this.fakePositionIndex));
 				this.fakePositionIndex++;
 			}, 1000);
-			console.log('Starting fake position generation');
-		}
+			console.log('Starting fake position generation'); // eslint-disable-line no-console
+		};
 
 		fabricatePosition = (seed, maxSeed = 60) => {
 			const seedFactor = 4,
@@ -147,10 +147,10 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 				pose: {
 					position: {x: x + (seed * seedFactor), y: y + (seed * seedFactor), z},
 					heading: 0.7625,
-					linear_velocity: {x: 0, y: 0, z: 0}
+					linear_velocity: {x: 0, y: 0, z: 0} // eslint-disable-line
 				}
 			};
-		}
+		};
 
 		// `data` takes the shape of message.pose
 		normalizePositionData (data) {
@@ -191,7 +191,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 				metersFromDestination < 10 &&
 				!this.destinationReached
 			) {
-				console.log('Destination Reached');
+				console.log('Destination Reached'); // eslint-disable-line no-console
 				this.arriveAtDestination();
 			}
 
@@ -215,15 +215,15 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					}
 				}
 			}
-		}
+		};
 
 		onRoutingRequest = (message) => {
 			if (message.broadcast && message.header && message.header.status && message.header.status.error_code === 0) {
 				// Just a normal request received response. Don't bother to do anything.
 			} else {
-				console.log('%conRoutingRequest:', 'color: orange', message);
+				console.log('%conRoutingRequest:', 'color: orange', message); // eslint-disable-line no-console
 			}
-		}
+		};
 
 		onRoutingResponse = (message) => {
 			// We may be able to load multiple previous waypoints here, if more than one was sent
@@ -237,7 +237,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			if (!equals(destination, this.props.destination)) {
 				this.updateDestination({destination, navigating: true});
 			}
-		}
+		};
 
 		//
 		// General Event Handling
@@ -249,29 +249,29 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			this.destinationReached = false; // New destination means the popup is available again.
 			// console.log('Checking for whether to start navigating.', Boolean(navigating), Boolean(destination && destination.slice(-1).lat !== 0));
 			if (autonomous && navigating && destination && destination.slice(-1).lat !== 0) {
-				console.log('%cSending routing request:', 'color: magenta', [location, ...destination]);
+				console.log('%cSending routing request:', 'color: magenta', [location, ...destination]); // eslint-disable-line no-console
 				if (this.connection) {
 					this.connection.send('routingRequest', [location, ...destination]);
 				}
 			}
-		}
+		};
 
 		stopNavigation = () => {
-			console.log('%cStopping Navigation', 'color: magenta');
+			console.log('%cStopping Navigation', 'color: magenta'); // eslint-disable-line no-console
 			// Trick the simulator into stopping by telling it to navigate to where it already is.
 			this.connection.send('routingRequest', [this.props.location, this.props.location]);
-		}
+		};
 
 		sendNavigation = () => {
 			this.comm.current.sendETA(this.props.navigation);
-		}
+		};
 
 		setConnected = (connected) => {
 			this.props.updateAppState((state) => {
 				if (state.connections.serviceLayer === connected) return null;
 				state.connections.serviceLayer = connected;
 			});
-		}
+		};
 
 		sendVideo = (args) => {
 			const {screenId, video: {snippet: {thumbnails}}} = args;
@@ -279,30 +279,30 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 				state.multimedia.nowPlaying[screenId] = thumbnails;
 			});
 			this.comm.current.sendVideo(args);
-		}
+		};
 
 		resetPosition = (coordinates) => {
 			this.connection.send('positionReset', coordinates);
-		}
+		};
 
 		resetCopilot = () => {
 			this.comm.current.resetCopilot();
-		}
+		};
 
 		reloadApp = () => {
 			this.comm.current.reloadApp();
-		}
+		};
 
 		handleReload = () => {
 			global.location.reload();
-		}
+		};
 
 		setConnected = (connected) => {
 			this.props.updateAppState((state) => {
 				if (state.connections.serviceLayer === connected) return null;
 				state.connections.serviceLayer = connected;
 			});
-		}
+		};
 
 		setLocation = ({location}) => {
 			this.props.updateAppState((state) => {
@@ -310,7 +310,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					state.location = location;
 				}
 			});
-		}
+		};
 
 		updateDestination = ({destination, navigating}) => {
 			this.props.updateAppState((state) => {
@@ -319,7 +319,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					state.navigation.navigating = navigating;
 				}
 			});
-		}
+		};
 
 		arriveAtDestination = () => {
 			if (!this.destinationReached) {
@@ -329,15 +329,15 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 					state.navigation.navigating = false;
 				});
 			}
-		}
+		};
 
 		getMap = (map) => {
 			this.maps.add(map);
-		}
+		};
 
 		onMapUnmount = (map) => {
 			this.maps.delete(map);
-		}
+		};
 
 		render () {
 			const {...rest} = this.props;

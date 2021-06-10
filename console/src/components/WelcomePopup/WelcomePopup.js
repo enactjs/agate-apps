@@ -85,6 +85,7 @@ const WelcomePopupBase = kind({
 		// onShowWelcome: PropTypes.func,
 		profileName: PropTypes.string,
 		// updateUser: PropTypes.func,
+		setDestination: PropTypes.func,
 		userId: PropTypes.number
 	},
 
@@ -213,10 +214,11 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 	return class extends Component {
 		static displayName = 'WelcomePopupState';
 
-		// static propTypes = {
-		// 	open: PropTypes.bool,
-		// 	skin: PropTypes.string
-		// }
+		static propTypes = {
+			// open: PropTypes.bool,
+			// skin: PropTypes.string
+			updateAppState: PropTypes.func
+		};
 
 		// constructor (props) {
 		// 	super(props);
@@ -246,7 +248,7 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 					state.navigation.navigating = true;
 				}
 			});
-		}
+		};
 
 		// handleShowWelcome = () => {
 		// 	this.setState(({index}) => index === 1 ? {index: ++index} : null);
@@ -256,7 +258,7 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 			this.props.updateAppState((state) => {
 				state.navigation.destination = destination;
 			});
-		}
+		};
 
 		// updateUser = ({selected}) => {
 		// 	this.props.updateAppState((state) => {
