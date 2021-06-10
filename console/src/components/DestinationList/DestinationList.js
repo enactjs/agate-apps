@@ -18,6 +18,10 @@ const DestinationButton = (props) => {
 	</Button>;
 };
 
+DestinationButton.propTypes = {
+	'data-index': PropTypes.number
+};
+
 const DestinationList = kind({
 	name: 'DestinationList',
 

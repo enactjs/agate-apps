@@ -1,5 +1,6 @@
 import {Component, createContext, Fragment, PureComponent} from 'react';
 import produce from 'immer';
+import PropTypes from 'prop-types';
 import {assocPath, equals, mergeDeepRight, omit, path} from 'ramda';
 
 import appConfig from '../App/configLoader';
@@ -10,7 +11,7 @@ const Context = createContext();
 const getWeather = async (latitude, longitude) => {
 	const key = appConfig.weatherApiKey;
 	if (!key) {
-		console.error('Please set `weatherApiKey` key in your `config.js` file to your own openweathermap.org API key.');
+		console.error('Please set `weatherApiKey` key in your `config.js` file to your own openweathermap.org API key.'); // eslint-disable-line no-console
 	}
 
 	const currentUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${key}&units=imperial`;
@@ -60,6 +61,10 @@ const defaultUserSettings = {
 };
 
 class AppContextProvider extends Component {
+	static propTypes = {
+		defaultShowWelcomePopup: PropTypes.bool
+	};
+
 	constructor (props) {
 		super(props);
 		this.watchPositionId = null;  // Store the reference to the position watcher.
@@ -122,7 +127,7 @@ class AppContextProvider extends Component {
 		this.setWeather(37.7876092, -122.40091);
 	}
 
-	UNSAFE_componentWillUpdate (nextProps, nextState) { //https://reactjs.org/docs/react-component.html#unsafe_componentwillupdate
+	UNSAFE_componentWillUpdate (nextProps, nextState) { // https://reactjs.org/docs/react-component.html#unsafe_componentwillupdate
 		if (this.state.userId !== nextState.userId && equals(this.state.userSettings, nextState.userSettings)) {
 			this.setUserSettings(nextState.userId);
 		}
@@ -156,7 +161,7 @@ class AppContextProvider extends Component {
 		}
 
 		return settings;
-	}
+	};
 
 	getUserNames = () => {
 		const users = {};
@@ -165,7 +170,7 @@ class AppContextProvider extends Component {
 			users[userKey] = userSettings.name;
 		});
 		return users;
-	}
+	};
 
 	loadSavedUserSettings = (userId) => {
 		if (!this.loadUserSettings(userId)) {
@@ -177,19 +182,19 @@ class AppContextProvider extends Component {
 
 		// Apply a consistent (predictable) set of object keys for consumers, merging in new keys since their last visit
 		return mergeDeepRight(omit(['arrangements'], this.state.userSettings), userSettings);
-	}
+	};
 
 	loadUserSettings = (userId) => {
 		return JSON.parse((global.localStorage && global.localStorage.getItem(`user${userId}`)) || '{}') || this.getDefaultUserSettings(userId);
-	}
+	};
 
 	saveUserSettings = (userId, userSettings) => {
 		global.localStorage.setItem(`user${userId}`, JSON.stringify(userSettings));
-	}
+	};
 
 	deleteUserSettings = (userId) => {
 		global.localStorage.removeItem(`user${userId}`);
-	}
+	};
 
 	updateUserSettings = (key, value) => {
 		this.getAllSavedUserIds().forEach(userKey => {
@@ -199,7 +204,7 @@ class AppContextProvider extends Component {
 				this.saveUserSettings(userKey, assocPath(key, value, settings));
 			}
 		});
-	}
+	};
 
 	setUserSettings = (userId = this.state.userId, userSettings) => {
 		const settings = userSettings || this.loadSavedUserSettings(userId);
@@ -207,19 +212,19 @@ class AppContextProvider extends Component {
 		this.updateAppState((state) => {
 			state.userSettings = settings;
 		});
-	}
+	};
 
 	getAllSavedUserIds = () => {
 		// Read the user database and return just a list of the registered id numbers
 		return Object.keys(global.localStorage)
 			.filter(key => (key.indexOf('user') === 0))
 			.map(key => parseInt(key.replace('user', '')));
-	}
+	};
 
 	resetUserSettings = ({userId}) => {
 		this.deleteUserSettings(userId || this.state.userId);
 		this.setUserSettings(userId || this.state.userId);
-	}
+	};
 
 	resetAll = () => {
 		const userIds = this.getAllSavedUserIds();
@@ -231,13 +236,13 @@ class AppContextProvider extends Component {
 			state.navigation.navigating = false;
 			state.usersList = this.getUserNames();
 		});
-	}
+	};
 
 	repopulateUsersForDemo = () => {
 		for (const userId in userPresetsForDemo) {
 			this.saveUserSettings(userId.replace('user', ''), userPresetsForDemo[userId]);
 		}
-	}
+	};
 
 	setLocation = () => {
 		if (global.navigator && global.navigator.geolocation) {
@@ -258,24 +263,24 @@ class AppContextProvider extends Component {
 					this.setWeather(position.coords.latitude, position.coords.longitude);
 				}
 			}, (error) => {
-				console.error('Location error:', error);
+				console.error('Location error:', error); // eslint-disable-line no-console
 			},
 			{enableHighAccuracy: true});
 		}
-	}
+	};
 
 	unsetLocationMonitoring = () => {
 		if (global.navigator) {
 			global.navigator.geolocation.clearWatch(this.watchPositionId);
 		}
-	}
+	};
 
 	setWeather = async (latitude, longitude) => {
 		let weatherData;
 		try {
 			weatherData = await getWeather(latitude, longitude);
 		} catch (error) {
-			console.error('Weather error:', error);
+			console.error('Weather error:', error); // eslint-disable-line no-console
 			this.updateAppState((state) => {
 				state.weather.status = 'error';
 			});
@@ -287,13 +292,13 @@ class AppContextProvider extends Component {
 			state.weather = weatherData;
 			state.weather.status = {status: 'success'};
 		});
-	}
+	};
 
 	updateAppState = (cb) => {
 		this.setState(
 			produce(cb)
 		);
-	}
+	};
 
 	render () {
 		const context = {

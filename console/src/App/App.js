@@ -89,7 +89,29 @@ const AppBase = kind({
 	name: 'App',
 
 	propTypes: {
-		updateAppState: PropTypes.func.isRequired
+		updateAppState: PropTypes.func.isRequired,
+		accent: PropTypes.string,
+		defaultIndex: PropTypes.number,
+		endNavigation: PropTypes.func,
+		highlight: PropTypes.string,
+		index: PropTypes.number,
+		layoutArrangeable: PropTypes.func,
+		onSelect: PropTypes.func,
+		orientation: PropTypes.string,
+		prevIndex: PropTypes.number,
+		reloadApp: PropTypes.func,
+		resetCopilot: PropTypes.func,
+		resetPosition: PropTypes.func,
+		sendVideo: PropTypes.func,
+		showAppList: PropTypes.func,
+		showBasicPopup: PropTypes.func,
+		showDateTimePopup: PropTypes.func,
+		showDestinationReachedPopup: PropTypes.func,
+		showPopup: PropTypes.func,
+		showUserSelectionPopup: PropTypes.func,
+		showWelcomePopup: PropTypes.func,
+		skinName: PropTypes.string,
+		userId: PropTypes.number
 	},
 
 	styles: {
@@ -342,7 +364,11 @@ const AppBase = kind({
 
 const AppIndex = (Wrapped) => {
 	return class extends Component {
-		static displayName = 'AppIndex'
+		static displayName = 'AppIndex';
+
+		static propTypes = {
+			defaultIndex: PropTypes.number
+		};
 
 		constructor (props) {
 			super(props);

@@ -1,11 +1,18 @@
 import Button from '@enact/agate/Button';
 import kind from '@enact/core/kind';
 import {Row, Column, Cell} from '@enact/ui/Layout';
+import PropTypes from 'prop-types';
 
 import css from './Dialer.module.less';
 
 const Digit = kind({
 	name: 'Digit',
+
+	propTypes: {
+		onSelect: PropTypes.func,
+		onSelectDigit: PropTypes.func,
+		subtitle: PropTypes.string
+	},
 
 	handlers: {
 		onSelect: (ev, {children, onSelect}) => onSelect && onSelect({

@@ -29,7 +29,7 @@ const CallPopup = kind({
 	computed: {
 		title: ({contactName, phoneNumber}) => {
 			if (contactName && phoneNumber) {
-				return `${contactName} (${phoneNumber})`
+				return `${contactName} (${phoneNumber})`;
 			}
 
 			return phoneNumber;
