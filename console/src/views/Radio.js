@@ -51,11 +51,14 @@ const RadioBase = kind({
 	name: 'Radio',
 
 	propTypes: {
+		arrangeable: PropTypes.string,
+		arrangement: PropTypes.string,
 		band: PropTypes.string,
 		changeBand: PropTypes.func,
 		changeFrequency: PropTypes.func,
 		changePreset: PropTypes.func,
 		frequency: PropTypes.number,
+		onArrange: PropTypes.func,
 		onBandToggle: PropTypes.func,
 		onPresetClick: PropTypes.func,
 		onPresetDown: PropTypes.func,
@@ -205,15 +208,15 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 
 		changeBand = (band) => {
 			this.setState({band});
-		}
+		};
 
 		changePreset = (preset) => {
 			this.setState({preset});
-		}
+		};
 
 		changeFrequency = (frequency) => {
 			this.setState({frequency});
-		}
+		};
 
 		updatePresets = (frequency, index) => {
 			this.setState(({presets}) => {
@@ -227,7 +230,7 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 
 				return {presets: updatedPresets};
 			});
-		}
+		};
 
 		render () {
 			return (

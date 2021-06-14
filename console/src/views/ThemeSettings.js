@@ -4,6 +4,7 @@ import ColorPicker from '@enact/agate/ColorPicker';
 import {Row, Column, Cell} from '@enact/ui/Layout';
 import SliderButton from '@enact/agate/SliderButton';
 import Heading from '@enact/agate/Heading';
+import PropTypes from 'prop-types';
 
 import {getPanelIndexOf} from '../App';
 import AppContextConnect from '../App/AppContextConnect';
@@ -41,6 +42,11 @@ const swatchPalette = [
 
 const FormRow = kind({
 	name: 'FormRow',
+	propTypes: {
+		alignLabel: PropTypes.string,
+		css: PropTypes.object,
+		label: PropTypes.string
+	},
 	styles: {
 		css: componentCss,
 		className: 'formRow'
@@ -56,6 +62,13 @@ const FormRow = kind({
 const ColorPickerItem = kind({
 	name: 'ColorPickerItem',
 
+	propTypes: {
+		css: PropTypes.object,
+		label: PropTypes.string,
+		onSelect: PropTypes.func,
+		prevIndex: PropTypes.number
+	},
+
 	render: ({label, ...rest}) => (
 		<Cell style={{textAlign: 'center'}}>
 			<ColorPicker {...rest} />
@@ -66,6 +79,10 @@ const ColorPickerItem = kind({
 
 const SliderButtonItem = kind({
 	name: 'SliderButtonItem',
+	propTypes: {
+		alignLabel: PropTypes.string,
+		label: PropTypes.string
+	},
 	styles: {
 		css: componentCss,
 		className: 'sliderButtonRow'
@@ -82,6 +99,14 @@ const SliderButtonItem = kind({
 const ThemeSettings = kind({
 	name: 'ThemeSettings',
 
+	propTypes: {
+		alignLabel: PropTypes.string,
+		css: PropTypes.object,
+		label: PropTypes.string,
+		onSelect: PropTypes.func,
+		prevIndex: PropTypes.number
+	},
+
 	styles: {
 		css: componentCss,
 		className: 'settingsView'
@@ -96,57 +121,52 @@ const ThemeSettings = kind({
 		}
 	},
 
-	render: ({css, onSelect, onChange, prevIndex, onSendSkin, ...rest}) => {
-		return (
-			<Panel {...rest}>
-				<Row align=" start">
-					<Cell shrink>
-						<LabeledIconButton onClick={onSelect} labelPosition="after"
-										   data-tabindex={prevIndex != null ? prevIndex : getPanelIndexOf('settings')}
-										   icon="arrowlargeleft">
-							Back
-						</LabeledIconButton>
-					</Cell>
-				</Row>
-				<Row align=" center">
-					<Cell size="70%">
-						<Column className={css.content}>
-							<Cell
-								component={Heading}
-								shrink
-								showLine
-								spacing="medium"
-							>
-								Theme
-							</Cell>
-							<Cell shrink className={css.spacedItem}>
-								<FormRow align="start space-around" alignLabel="center" className={css.formRow}>
-									<AccentColorSetting label="Accent Color">{swatchPalette}</AccentColorSetting>
-									<HighlightColorSetting
-										label="Highlight Color">{swatchPalette}</HighlightColorSetting>
-								</FormRow>
-							</Cell>
-							<Cell shrink className={css.spacedItem}>
-								<SkinSetting onClick={onChange} label="Skin:" onSendSkin={onSendSkin}>
-									{skinNames}
-								</SkinSetting>
-							</Cell>
-							<Cell shrink className={css.spacedItem}>
-								<SkinVariantsSetting label="Variant:">
-									{skinVariantsNames}
-								</SkinVariantsSetting>
-							</Cell>
-							{/* <Cell shrink>
+	render: ({css, onSelect, onChange, prevIndex, onSendSkin, ...rest}) => (
+		<Panel {...rest}>
+			<Row align=" start">
+				<Cell shrink>
+					<LabeledIconButton onClick={onSelect} labelPosition="after" data-tabindex={prevIndex != null ? prevIndex : getPanelIndexOf('settings')} icon="arrowlargeleft">
+						Back
+					</LabeledIconButton>
+				</Cell>
+			</Row>
+			<Row align=" center">
+				<Cell size="70%">
+					<Column className={css.content}>
+						<Cell
+							component={Heading}
+							shrink
+							showLine
+							spacing="medium"
+						>
+							Theme
+						</Cell>
+						<Cell shrink className={css.spacedItem}>
+							<FormRow align="start space-around" alignLabel="center" className={css.formRow}>
+								<AccentColorSetting label="Accent Color">{swatchPalette}</AccentColorSetting>
+								<HighlightColorSetting label="Highlight Color">{swatchPalette}</HighlightColorSetting>
+							</FormRow>
+						</Cell>
+						<Cell shrink className={css.spacedItem}>
+							<SkinSetting onClick={onChange} label="Skin:" onSendSkin={onSendSkin}>
+								{skinNames}
+							</SkinSetting>
+						</Cell>
+						<Cell shrink className={css.spacedItem}>
+							<SkinVariantsSetting label="Variant:">
+								{skinVariantsNames}
+							</SkinVariantsSetting>
+						</Cell>
+						{/* <Cell shrink>
 							<FontSizeSetting label="Text Size:">
 								{['S', 'M', 'L', 'XL']}
 							</FontSizeSetting>
 						</Cell>*/}
-						</Column>
-					</Cell>
-				</Row>
-			</Panel>
-		)
-	}
+					</Column>
+				</Cell>
+			</Row>
+		</Panel>
+	)
 });
 
 // Example to show how to optimize rerenders.

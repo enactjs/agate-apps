@@ -6,6 +6,7 @@ import Picker from '@enact/agate/Picker';
 import {ResponsiveBox} from '@enact/agate/DropManager';
 import SliderButton from '@enact/agate/SliderButton';
 import ToggleButton from '@enact/agate/ToggleButton';
+import PropTypes from 'prop-types';
 
 import AppContextConnect from '../App/AppContextConnect';
 import CustomLayout, {SaveLayoutArrangement} from '../components/CustomLayout';
@@ -28,6 +29,28 @@ const ResponsiveLayout = ResponsiveBox(({containerShape, ...rest}) => {
 
 const HvacBase = kind({
 	name: 'HVAC',
+
+	propTypes: {
+		acSelected: PropTypes.bool,
+		arrangeable: PropTypes.string,
+		arrangement: PropTypes.selected,
+		autoSelected: PropTypes.bool,
+		fanSpeed: PropTypes.number,
+		leftHeat: PropTypes.bool,
+		leftTemp: PropTypes.number,
+		onArrange: PropTypes.func,
+		onToggleAc: PropTypes.func,
+		onToggleAuto: PropTypes.func,
+		onToggleLeftHeater: PropTypes.func,
+		onToggleRecirculation: PropTypes.func,
+		onToggleRightHeater: PropTypes.func,
+		onUpdateFanSpeed: PropTypes.func,
+		onUpdateLeftTemperature: PropTypes.func,
+		onUpdateRightTemperature: PropTypes.func,
+		recirculate: PropTypes.bool,
+		rightHeat: PropTypes.bool,
+		rightTemp: PropTypes.number
+	},
 
 	styles: {
 		css,

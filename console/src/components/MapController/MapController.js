@@ -39,19 +39,22 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 			locationSelection: PropTypes.bool,
 			navigating: PropTypes.bool,
 			navigation: PropTypes.object,
+			noExpandButton: PropTypes.bool,
+			noFollowButton: PropTypes.bool,
 			noStartStopToggle: PropTypes.bool,
+			onExpand: PropTypes.func,
 			position: propTypeLatLon, // The map's centering position
 			tools: PropTypes.node, // Buttons and tools for interacting with the map. (Slottable)
 			viewLockoutDuration: PropTypes.number,
 			zoomToSpeedScaleFactor: PropTypes.number
-		}
+		};
 
 		static defaultProps = {
 			centeringDuration: 2000,
 			follow: true,
 			viewLockoutDuration: 4000,
 			zoomToSpeedScaleFactor: 0.02
-		}
+		};
 
 		constructor (props) {
 			super(props);
@@ -63,39 +66,39 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 		}
 
 		handleSetDestination = ({selected}) => {
-			console.log('Proposing new destination index:', selected, '->', this.props.topLocations[selected]);
+			console.log('Proposing new destination index:', selected, '->', this.props.topLocations[selected]); // eslint-disable-line no-console
 			const loc = this.props.topLocations[selected];
 			this.updateDestination({
 				description: loc ? loc.description : '',
 				destination: loc ? [loc.coordinates] : null
 			});
-		}
+		};
 
 		startNavigation = ({selected}) => {
 			if (selected) {
-				console.log('MapController - start navigation to', this.props.topLocations, this.props.topLocations[this.state.destinationIndex], 'from index:', this.state.destinationIndex);
+				console.log('MapController - start navigation to', this.props.topLocations, this.props.topLocations[this.state.destinationIndex], 'from index:', this.state.destinationIndex); // eslint-disable-line no-console
 				this.updateDestination({
 					navigating: true
 				});
 			} else {
-				console.log('MapController - stopping navigation');
+				console.log('MapController - stopping navigation'); // eslint-disable-line no-console
 				this.updateDestination({
 					destination: null,
 					navigating: false
 				});
 			}
-		}
+		};
 
 		toggleAutonomous = () => {
 			this.props.updateAppState((state) => {
 				state.navigation.autonomous = !state.navigation.autonomous;
 			});
-		}
+		};
 		toggleFollow = () => {
 			this.props.updateAppState((state) => {
 				state.navigation.follow = !state.navigation.follow;
 			});
-		}
+		};
 		updateDestination = ({description, destination, navigating = false}) => {
 			this.props.updateAppState((state) => {
 				if (typeof destination !== 'undefined') {
@@ -106,7 +109,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 					state.navigation.navigating = navigating;
 				}
 			});
-		}
+		};
 		updateNavigation = ({duration, distance}) => {
 			this.props.updateAppState((state) => {
 				const startTime = new Date().getTime();
@@ -117,13 +120,13 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 				state.navigation.eta = eta;
 				state.navigation.distance = distance;
 			});
-		}
+		};
 
 		onExpand = () => {
 			if (this.props.onExpand) {
 				this.props.onExpand({view: 'map'});
 			}
-		}
+		};
 
 		render () {
 			const {

@@ -11,7 +11,8 @@ const CompactMapBase = kind({
 	name: 'CompactMap',
 
 	propTypes: {
-		follow: PropTypes.bool
+		follow: PropTypes.bool,
+		onExpand: PropTypes.func
 	},
 
 	styles: {

@@ -5,7 +5,7 @@ const AppStateConnect = (mapContextToProps) => (Wrapped) => {
 	const PureWrapped = memo(Wrapped);
 
 	return class extends Component {
-		static displayName = 'AppStateConnect'
+		static displayName = 'AppStateConnect';
 
 		render () {
 			return (

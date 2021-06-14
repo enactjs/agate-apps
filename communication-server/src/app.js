@@ -8,7 +8,7 @@ const io = require('socket.io')(http);
 // const adTimers = {};
 
 http.listen(3000, () => {
-	console.log('listening on *:3000');
+	console.log('listening on *:3000'); // eslint-disable-line no-console
 });
 
 io.on('connection', socket => {
