@@ -5,6 +5,7 @@ import kind from '@enact/core/kind';
 import LabeledItem from '@enact/agate/LabeledItem';
 // import PropTypes from 'prop-types';
 import {Component, Fragment} from 'react';
+import Skinnable from '@enact/agate/Skinnable';
 import ThemeDecorator from '@enact/agate/ThemeDecorator';
 
 import Communicator from '../../../components/Communicator';
@@ -43,7 +44,7 @@ const AppBase = kind({
 		className: 'app'
 	},
 
-	render: ({adContent, duration, eta, ipAddress, popupOpen, showAd, onSetScreen, onTogglePopup, url, skin,...rest}) => {
+	render: ({adContent, duration, eta, ipAddress, popupOpen, showAd, onSetScreen, onTogglePopup, url, skin, sendAppSkin,...rest}) => {
 		return (
 			<Column {...rest}>
 				{eta ? <Cell shrink>
@@ -75,6 +76,8 @@ const AppBase = kind({
 		);
 	}
 });
+
+const SkinnableApp = Skinnable(AppBase);
 
 // Set the initial state, but allow for overrides
 const getInitialState = ({popupOpen = true, screenId = 1} = {}) => ({
@@ -165,7 +168,6 @@ class App extends Component {
 			url,
 			skin
 		};
-		console.log(this.state.skin)
 		delete props.accent;
 		delete props.highlight;
 
@@ -180,9 +182,8 @@ class App extends Component {
 					onReload={this.reloadApp}
 					// onShowAd={this.onShowAdSpace}
 					onShowETA={this.onShowETA}
-					skin={skin}
 				/>
-				<AppBase
+				<SkinnableApp
 					{...props}
 					skin={skin}
 					onSetScreen={this.onSetScreen}
@@ -193,4 +194,4 @@ class App extends Component {
 	}
 }
 
-export default ThemeDecorator(NetworkInfo(App));
+export default ThemeDecorator(NetworkInfo(Skinnable(App)));
