@@ -273,6 +273,10 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			});
 		};
 
+		sendSkinSettings = (skin) => {
+			this.comm.current.sendSkinSettings(skin);
+		};
+
 		sendVideo = (args) => {
 			const {screenId, video: {snippet: {thumbnails}}} = args;
 			this.props.updateAppState((state) => {
@@ -284,12 +288,6 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		resetPosition = (coordinates) => {
 			this.connection.send('positionReset', coordinates);
 		};
-
-		sendSkin = (skin) => {
-			console.log('2. service layer send skin');
-			console.log(skin)
-			this.comm.current.sendSkin(skin);
-		}
 
 		resetCopilot = () => {
 			this.comm.current.resetCopilot();
@@ -359,17 +357,17 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 				<Fragment>
 					<ServiceLayerContext.Provider value={{getMap: this.getMap, onMapUnmount: this.onMapUnmount}}>
 						<Communicator
-							ref={this.comm}
-							onReload={this.handleReload}
 							host={appConfig.communicationServerHost}
+							onReload={this.handleReload}
+							ref={this.comm}
 						/>
 						<PureWrapped
 							{...rest}
-							sendVideo={this.sendVideo}
-							sendSkin={this.sendSkin}
-							resetPosition={this.resetPosition}
-							resetCopilot={this.resetCopilot}
 							reloadApp={this.reloadApp}
+							resetCopilot={this.resetCopilot}
+							resetPosition={this.resetPosition}
+							sendSkinSettings={this.sendSkinSettings}
+							sendVideo={this.sendVideo}
 						/>
 					</ServiceLayerContext.Provider>
 				</Fragment>
