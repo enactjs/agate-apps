@@ -18,10 +18,10 @@ const skinCollection = {
 	carbon: 'Carbon',
 	cobalt: 'Cobalt',
 	copper: 'Copper',
+	electro: 'Electro',
 	gallium: 'Gallium',
-	// electro: 'Electro',
-	// titanium: 'Titanium',
-	silicon: 'Silicon'
+	silicon: 'Silicon',
+	titanium: 'Titanium'
 };
 const skinList = Object.keys(skinCollection);
 const skinNames = skinList.map((skin) => skinCollection[skin]);  // Build the names list based on the skin list array, so the indexes always match up, in case the object keys don't return in the same order.

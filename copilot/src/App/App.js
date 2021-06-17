@@ -57,7 +57,6 @@ const AppBase = kind({
 	},
 
 	render: ({adContent, duration, eta, ipAddress, onSetScreen, onTogglePopup, popupOpen, showAd, url, ...rest}) => {
-		console.log(rest)
 		return (
 			<Column {...rest}>
 				{eta ? <Cell shrink>
@@ -90,7 +89,7 @@ const AppBase = kind({
 	}
 });
 
-const SkinnableApp = Skinnable(AppBase);
+const ThemedApp = ThemeDecorator(Skinnable(AppBase));
 
 // Set the initial state, but allow for overrides
 const getInitialState = ({popupOpen = true, screenId = 1} = {}) => ({
@@ -131,7 +130,6 @@ class App extends Component {
 	// };
 
 	onChangeSkinSettings = ({skinSettings}) => {
-		console.log(this.state)
 		this.setState({
 			accent: skinSettings.accent,
 			highlight: skinSettings.highlight,
@@ -211,7 +209,7 @@ class App extends Component {
 					onShowETA={this.onShowETA}
 					screenId={this.state.screenId}
 				/>
-				<SkinnableApp
+				<ThemedApp
 					{...props}
 					accent={accent}
 					highlight={highlight}
@@ -225,24 +223,4 @@ class App extends Component {
 	}
 }
 
-const Theme = ThemeDecorator({overlay: false}, App);
-
-const AppDecorator = kind({
-	name: 'AppDecorator',
-
-	propTypes: {
-		accent: PropTypes.string,
-		highlight: PropTypes.string
-	},
-
-	render: ({...props}) => {
-		console.log(props)
-		return (
-			<Theme>
-
-			</Theme>
-		);
-	}
-});
-
-export default NetworkInfo(AppDecorator);
+export default NetworkInfo(App);
