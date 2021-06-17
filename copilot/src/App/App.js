@@ -56,9 +56,10 @@ const AppBase = kind({
 		className: 'app'
 	},
 
-	render: ({adContent, duration, eta, ipAddress, popupOpen, showAd, onSetScreen, onTogglePopup, url, skin, sendAppSkin,...rest}) => {
+	render: ({adContent, duration, eta, ipAddress, onSetScreen, onTogglePopup, popupOpen, showAd, url, ...rest}) => {
+		console.log(rest)
 		return (
-			<Column {...rest}>
+			<Column {...rest} accent={rest.accent}>
 				{eta ? <Cell shrink>
 					<Row>
 						<Cell component={LabeledItem} label="Remaining" spotlightDisabled>{formatDuration(duration, durationIncrements)}</Cell>
@@ -93,14 +94,17 @@ const SkinnableApp = Skinnable(AppBase);
 
 // Set the initial state, but allow for overrides
 const getInitialState = ({popupOpen = true, screenId = 1} = {}) => ({
+	accent: '',
 	// adContent: this.props.adContent || 'Your Ad Here',
 	duration: null,
 	eta: null,
+	highlight: '',
 	popupOpen,
 	screenId,
 	// showAd: this.props.showAd || false,
-	url: '',
-	skin: ''
+	skin: '',
+	skinVariants: '',
+	url: ''
 });
 
 class App extends Component {
@@ -113,6 +117,7 @@ class App extends Component {
 	constructor (props) {
 		super(props);
 		this.state = getInitialState();
+
 		// Job to control hiding ads
 		// this.adTimer = new Job(this.onHideAdSpace);
 	}
@@ -125,8 +130,14 @@ class App extends Component {
 	// 	this.setState({adContent: '', showAd: false});
 	// };
 
-	onAddSkin = ({skin}) => {
-		this.setState({skin});
+	onChangeSkinSettings = ({skinSettings}) => {
+		console.log(this.state)
+		this.setState({
+			accent: skinSettings.accent,
+			highlight: skinSettings.highlight,
+			skin: skinSettings.skin,
+			skinVariants: skinSettings.skinVariants
+		});
 	};
 
 	onPlayVideo = ({url}) => {
@@ -169,41 +180,69 @@ class App extends Component {
 	};
 
 	render () {
-		const {duration, eta, popupOpen, showAd, url, skin} = this.state;
+		const {accent, duration, eta, highlight, popupOpen, showAd, skin, skinVariants, url} = this.state;
+
 		const props = {
 			...this.props,
+			accent,
 			// adContent,
 			duration,
 			eta,
+			highlight,
 			popupOpen,
 			showAd,
-			url,
-			skin
+			skin,
+			skinVariants,
+			url
 		};
 		delete props.accent;
 		delete props.highlight;
+		delete props.skinVariants;
 
 		return (
 			<Fragment>
 				<Communicator
 					host={appConfig.communicationServerHost}
-					screenId={this.state.screenId}
+					onChangeSkinSettings={this.onChangeSkinSettings}
 					onPlayVideo={this.onPlayVideo}
-					onAddSkin={this.onAddSkin}
-					onReset={this.resetApp}
 					onReload={this.reloadApp}
+					onReset={this.resetApp}
 					// onShowAd={this.onShowAdSpace}
 					onShowETA={this.onShowETA}
+					screenId={this.state.screenId}
 				/>
 				<SkinnableApp
 					{...props}
-					skin={skin}
+					accent={accent}
+					highlight={highlight}
 					onSetScreen={this.onSetScreen}
 					onTogglePopup={this.onTogglePopup}
+					skin={skin}
+					skinVariants={skinVariants}
 				/>
 			</Fragment>
 		);
 	}
 }
 
-export default ThemeDecorator(NetworkInfo(Skinnable(App)));
+const Theme = ThemeDecorator({overlay: false}, App);
+
+const AppDecorator = kind({
+	name: 'AppDecorator',
+
+	propTypes: {
+		accent: PropTypes.string,
+		highlight: PropTypes.string
+	},
+
+	render: ({...props}) => {
+		console.log(props)
+		return (
+			<Theme accent={props.accent}>
+
+			</Theme>
+		);
+	}
+});
+
+export default NetworkInfo(AppDecorator);

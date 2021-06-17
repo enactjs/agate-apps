@@ -199,7 +199,7 @@ const AppBase = kind({
 		resetCopilot,
 		resetPosition,
 		reloadApp,
-		sendSkin,
+		sendSkinSettings,
 		sendVideo,
 		showBasicPopup,
 		showDateTimePopup,
@@ -291,7 +291,7 @@ const AppBase = kind({
 						onReloadApp={reloadApp}
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
-					<ThemeSettings onSelect={onSelect} prevIndex={prevIndex} onSendSkin={sendSkin}/>
+					<ThemeSettings onSelect={onSelect} onSendSkinSettings={sendSkinSettings} prevIndex={prevIndex} />
 					<Weather />
 					<Dashboard
 						arrangeable={layoutArrangeable}

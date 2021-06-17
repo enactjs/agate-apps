@@ -5,6 +5,7 @@ import {Row, Column, Cell} from '@enact/ui/Layout';
 import SliderButton from '@enact/agate/SliderButton';
 import Heading from '@enact/agate/Heading';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 
 import {getPanelIndexOf} from '../App';
 import AppContextConnect from '../App/AppContextConnect';
@@ -94,9 +95,7 @@ const SliderButtonItem = kind({
 	)
 });
 
-
-
-const ThemeSettings = kind({
+const ThemeSettingsBase = kind({
 	name: 'ThemeSettings',
 
 	propTypes: {
@@ -116,16 +115,21 @@ const ThemeSettings = kind({
 		onSelect: (ev, {onSelect}) => {
 			onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
 		},
-		onChange: (e, {onSendSkin}) => {
-			onSendSkin(e.target.ariaValueText.toLowerCase());
-		}
+		onChange: (ev, props) => {
+			props.onSendSkinSettings(props);
+		},
 	},
 
-	render: ({css, onSelect, onChange, prevIndex, onSendSkin, ...rest}) => (
+	render: ({css, onChange, onSelect, onSendSkinSettings, prevIndex, ...rest}) => (
 		<Panel {...rest}>
 			<Row align=" start">
 				<Cell shrink>
-					<LabeledIconButton onClick={onSelect} labelPosition="after" data-tabindex={prevIndex != null ? prevIndex : getPanelIndexOf('settings')} icon="arrowlargeleft">
+					<LabeledIconButton
+						data-tabindex={prevIndex != null ? prevIndex : getPanelIndexOf('settings')}
+						icon="arrowlargeleft"
+						labelPosition="after"
+						onClick={onSelect}
+					>
 						Back
 					</LabeledIconButton>
 				</Cell>
@@ -143,17 +147,17 @@ const ThemeSettings = kind({
 						</Cell>
 						<Cell shrink className={css.spacedItem}>
 							<FormRow align="start space-around" alignLabel="center" className={css.formRow}>
-								<AccentColorSetting label="Accent Color">{swatchPalette}</AccentColorSetting>
-								<HighlightColorSetting label="Highlight Color">{swatchPalette}</HighlightColorSetting>
+								<AccentColorSetting label="Accent Color" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>{swatchPalette}</AccentColorSetting>
+								<HighlightColorSetting label="Highlight Color" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>{swatchPalette}</HighlightColorSetting>
 							</FormRow>
 						</Cell>
 						<Cell shrink className={css.spacedItem}>
-							<SkinSetting onClick={onChange} label="Skin:" onSendSkin={onSendSkin}>
+							<SkinSetting label="Skin:" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>
 								{skinNames}
 							</SkinSetting>
 						</Cell>
 						<Cell shrink className={css.spacedItem}>
-							<SkinVariantsSetting label="Variant:">
+							<SkinVariantsSetting label="Variant:" onClick={onChange} onSendSkinSettingsSettings={onSendSkinSettings}>
 								{skinVariantsNames}
 							</SkinVariantsSetting>
 						</Cell>
@@ -195,9 +199,6 @@ const SkinSetting = AppContextConnect(({userSettings, updateAppState}) => ({
 		updateAppState((state) => {
 			state.userSettings.skin = skinList[value].toLowerCase();
 		});
-		// console.log('1. theme settings change skin');
-		// console.log(skinList[value].toLowerCase());
-		// onSendSkin(skinList[value].toLowerCase())
 	}
 }))(SliderButtonItem);
 
@@ -210,5 +211,15 @@ const SkinVariantsSetting = AppContextConnect(({userSettings, updateAppState}) =
 	}
 }))(SliderButtonItem);
 
+const ThemeSettingsDecorator = compose(
+	AppContextConnect(({userSettings}) => ({
+		accent: userSettings.colorAccent,
+		highlight: userSettings.colorHighlight,
+		skin: userSettings.skin,
+		skinVariants: userSettings.skinVariants
+	}))
+);
+
+const ThemeSettings = ThemeSettingsDecorator(ThemeSettingsBase);
 
 export default ThemeSettings;
