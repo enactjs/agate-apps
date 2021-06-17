@@ -59,7 +59,7 @@ const AppBase = kind({
 	render: ({adContent, duration, eta, ipAddress, onSetScreen, onTogglePopup, popupOpen, showAd, url, ...rest}) => {
 		console.log(rest)
 		return (
-			<Column {...rest} accent={rest.accent}>
+			<Column {...rest}>
 				{eta ? <Cell shrink>
 					<Row>
 						<Cell component={LabeledItem} label="Remaining" spotlightDisabled>{formatDuration(duration, durationIncrements)}</Cell>
@@ -238,7 +238,7 @@ const AppDecorator = kind({
 	render: ({...props}) => {
 		console.log(props)
 		return (
-			<Theme accent={props.accent}>
+			<Theme>
 
 			</Theme>
 		);
