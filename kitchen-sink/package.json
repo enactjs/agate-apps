@@ -1,7 +1,7 @@
 {
 	"name": "kitchen-sink",
 	"version": "1.0.0",
-	"description": "A general template for an Enact Moonstone application.",
+	"description": "A general template for an Enact Agate application.",
 	"author": "",
 	"main": "src/index.js",
 	"scripts": {
@@ -19,7 +19,7 @@
 	"private": true,
 	"repository": "",
 	"enact": {
-		"theme": "moonstone"
+		"theme": "agate"
 	},
 	"eslintConfig": {
 		"extends": "enact"
@@ -30,14 +30,13 @@
 		"dist/*"
 	],
 	"dependencies": {
-		"@enact/agate": "github:enactjs/agate#1.0.0-alpha.0",
-		"@enact/core": "^2.0.0",
-		"@enact/i18n": "^2.0.0",
-		"@enact/moonstone": "^2.0.0",
-		"@enact/spotlight": "^2.0.0",
-		"@enact/ui": "^2.0.0",
-		"prop-types": "^15.6.2",
-		"react": "^16.7.0",
-		"react-dom": "^16.7.0"
+		"@enact/agate": "github:enactjs/agate#2.0.0-alpha.3",
+		"@enact/core": "^4.0.2",
+		"@enact/i18n": "^4.0.2",
+		"@enact/spotlight": "^4.0.2",
+		"@enact/ui": "^4.0.2",
+		"prop-types": "^15.7.2",
+		"react": "17.0.2",
+		"react-dom": "^17.0.2"
 	}
 }

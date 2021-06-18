@@ -1,6 +1,5 @@
 import kind from '@enact/core/kind';
-import Panels from '@enact/moonstone/Panels';
-import React from 'react';
+import Panels from '@enact/agate/Panels';
 import ThemeDecorator from '@enact/agate/ThemeDecorator';
 
 import MainPanel from '../views/MainPanel';
@@ -16,7 +15,7 @@ const App = kind({
 	},
 
 	render: (props) => (
-		<Panels {...props}>
+		<Panels noCloseButton {...props}>
 			<MainPanel />
 		</Panels>
 	)
