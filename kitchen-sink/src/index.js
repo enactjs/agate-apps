@@ -1,12 +1,11 @@
-import React from 'react';
 import {render} from 'react-dom';
 import App from './App';
 
 const appElement = (
 	<App
-		skin="cobalt"
-		accent="#FC7982"
-		highlight="#FFFFFF"
+		skin="gallium"
+		accent="#8b7efe"
+		highlight="#c6c0fe"
 	/>
 );
 
