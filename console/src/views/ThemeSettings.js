@@ -110,7 +110,7 @@ const ThemeSettings = kind({
 							showLine
 							spacing="medium"
 						>
-								Theme
+							Theme
 						</Cell>
 						<Cell shrink className={css.spacedItem}>
 							<FormRow align="start space-around" alignLabel="center" className={css.formRow}>
@@ -153,10 +153,10 @@ const SaveableSettings = (settingName, propName = 'value') => AppContextConnect(
 // Save the `colorAccent` user setting, read from the default prop (value), of the supplied ColorPickerItem
 const AccentColorSetting = SaveableSettings('colorAccent')(ColorPickerItem);
 
-// Save the `colorAccent` user setting, read from the default prop (value), of the supplied ColorPickerItem
+// Save the `colorHighlight` user setting, read from the default prop (value), of the supplied ColorPickerItem
 const HighlightColorSetting = SaveableSettings('colorHighlight')(ColorPickerItem);
 
-// Save the `colorAccent` user setting, read from the default prop (value), of the supplied SliderButtonItem
+// Save the `fontSize` user setting, read from the default prop (value), of the supplied SliderButtonItem
 // const FontSizeSetting = SaveableSettings('fontSize')(SliderButtonItem);
 
 // Make and apply a custom saver that can do additional operations (look ups from a list)

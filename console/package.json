@@ -32,11 +32,11 @@
 		"dist/*"
 	],
 	"dependencies": {
-		"@enact/agate": "enactjs/agate#1.0.0-alpha.3",
-		"@enact/core": "^3.0.0",
-		"@enact/i18n": "^3.0.0",
-		"@enact/spotlight": "^3.0.0",
-		"@enact/ui": "^3.0.0",
+		"@enact/agate": "^1.0.0",
+		"@enact/core": "^3.2.6",
+		"@enact/i18n": "^3.2.6",
+		"@enact/spotlight": "^3.2.6",
+		"@enact/ui": "^3.2.6",
 		"classnames": "^2.2.6",
 		"ilib": "^14.2.0",
 		"immer": "^1.8.0",
