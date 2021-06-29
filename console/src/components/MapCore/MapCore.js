@@ -698,6 +698,7 @@ class MapCoreBase extends Component {
 		delete rest.viewLockoutDuration;
 		delete rest.zoomLevel;
 		delete rest.zoomToSpeedScaleFactor;
+		delete rest.skinVariants;
 
 		return (
 			<div {...rest} className={classnames(className, css.map)}>

@@ -53,7 +53,7 @@ const UserSelectionPopupBase = kind({
 		resetUserSettings: PropTypes.func.isRequired,
 		updateAppState: PropTypes.func.isRequired,
 		userId: PropTypes.number,
-		usersList: PropTypes.array
+		usersList: PropTypes.object
 	},
 
 	defaultProps: {

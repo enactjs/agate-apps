@@ -1,6 +1,6 @@
 import Heading from '@enact/agate/Heading';
 import {Panel} from '@enact/agate/Panels';
-import GridListImageItem from '@enact/agate/GridListImageItem';
+import ImageItem from '@enact/agate/ImageItem';
 import ThumbnailItem from '@enact/agate/ThumbnailItem';
 import hoc from '@enact/core/hoc';
 // import {Job} from '@enact/core/util';
@@ -78,16 +78,15 @@ const ResponsiveVirtualList = kind({
 			}
 
 			return (
-				<GridListImageItem
+				<ImageItem
 					{...rest}
-					aspectRatio="16:9"
-					caption={size === 'full' ? videos[index].snippet.title : ''}
 					className={className}
-					source={videos[index].snippet.thumbnails.medium.url}
+					src={videos[index].snippet.thumbnails.medium.url}
 					onClick={onSelectVideo(videos[index])}
 					selectionOverlay={ListItemOverlay}
-					selectionOverlayShowing
-				/>
+				>
+					{size === 'full' ? videos[index].snippet.title : ''}
+				</ImageItem>
 			);
 		}
 	},

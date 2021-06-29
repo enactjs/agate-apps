@@ -1,6 +1,7 @@
 import Heading from '@enact/agate/Heading';
 import kind from '@enact/core/kind';
 import Button from '@enact/agate/Button';
+import {MarqueeDecorator} from '@enact/agate/Marquee';
 import Group from '@enact/ui/Group';
 import PropTypes from 'prop-types';
 import {equals} from 'ramda';
@@ -12,11 +13,13 @@ import css from './DestinationList.module.less';
 
 const DestinationButton = (props) => {
 	const {children, 'data-index': index, ...rest} = props;
-	return <Button size="small" {...rest} css={css}>
+	return <LocationButton size="small" {...rest} css={css}>
 		<Marker css={css}>{index + 1}</Marker>
 		{children}
-	</Button>;
+	</LocationButton>;
 };
+
+const LocationButton = MarqueeDecorator({className: css.marquee})(Button); // used in order to be able to overwrite `text-align` from marquee
 
 DestinationButton.propTypes = {
 	'data-index': PropTypes.number
