@@ -10,3 +10,23 @@
 		}
 	});
 }
+
+// Theme-specific rules
+.applySkins({
+	:global(.cobalt),
+	:global(.copper) {
+		.iconCell {
+			.label {
+				color: #424242;
+			}
+		}
+	}
+
+	:global(.carbon) {
+		.iconCell {
+			.label {
+				color: #4d4d4d;
+			}
+		}
+	}
+});

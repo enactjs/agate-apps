@@ -21,7 +21,7 @@ const WeatherItemBase = kind({
 	propTypes: {
 		description: PropTypes.string,
 		featured: PropTypes.bool,
-		high: PropTypes.bool,
+		high: PropTypes.number,
 		label: PropTypes.string,
 		low: PropTypes.bool,
 		status: PropTypes.number
