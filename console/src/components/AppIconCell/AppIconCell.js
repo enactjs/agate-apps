@@ -1,13 +1,19 @@
-import React from 'react';
 import kind from '@enact/core/kind';
 import {Cell} from '@enact/ui/Layout';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
 import Skinnable from '@enact/agate/Skinnable';
+import PropTypes from 'prop-types';
 
 import css from './AppIconCell.module.less';
 
 const AppIconCell = kind({
 	name: 'AppIconCell',
+
+	propTypes: {
+		align: PropTypes.string,
+		shrink: PropTypes.bool,
+		size: PropTypes.string
+	},
 
 	styles: {
 		css,

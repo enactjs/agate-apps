@@ -1,6 +1,6 @@
 import {adaptEvent, forward, handle} from '@enact/core/handle';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Component} from 'react';
 import openSocket from 'socket.io-client';
 
 const handleAddVideo = handle(
@@ -12,14 +12,16 @@ const handleAddVideo = handle(
 // );
 
 const handleShowETA = handle(
-	forward('onShowETA'),
+	forward('onShowETA')
 );
 
-class Communicator extends React.Component {
+class Communicator extends Component {
 
 	static propTypes = {
 		host: PropTypes.string,
 		noAutoConnect: PropTypes.bool,
+		onReload: PropTypes.func,
+		onReset: PropTypes.func,
 		screenId: PropTypes.number
 	};
 
@@ -66,7 +68,7 @@ class Communicator extends React.Component {
 			this.socket.on(`VIDEO_ADD_SCREEN/${screenId}`, this.handleAddVideo);
 			// this.socket.on('SHOW_AD', this.handleShowAd);
 			this.socket.on('SHOW_ETA', this.handleShowETA);
-			console.log('Connected to', this.props.host, 'and listening for events:', `VIDEO_ADD_SCREEN/${screenId}`, 'SHOW_ETA');
+			console.log('Connected to', this.props.host, 'and listening for events:', `VIDEO_ADD_SCREEN/${screenId}`, 'SHOW_ETA'); // eslint-disable-line no-console
 		}
 	}
 
@@ -93,7 +95,7 @@ class Communicator extends React.Component {
 			url: `https://www.youtube.com/embed/${video.id}?autoplay=1`
 		};
 
-		console.log('Sending to', this.props.host, ['SEND_DATA:', data, 'Sending VIDEO_SENT:', {id: screenId}]);
+		console.log('Sending to', this.props.host, ['SEND_DATA:', data, 'Sending VIDEO_SENT:', {id: screenId}]); // eslint-disable-line no-console
 		this.socket.emit('SEND_DATA', data);
 		this.socket.emit('VIDEO_SENT', {id: screenId});
 	};
@@ -101,12 +103,12 @@ class Communicator extends React.Component {
 	resetCopilot = () => {
 		const data = {route: 'RESET_COPILOT'};
 		this.socket.emit('SEND_DATA', data);
-	}
+	};
 
 	reloadApp = () => {
 		const data = {route: 'RELOAD_APP'};
 		this.socket.emit('SEND_DATA', data);
-	}
+	};
 
 	sendETA = ({eta, duration}) => {
 		const data = {
@@ -114,7 +116,7 @@ class Communicator extends React.Component {
 			eta,
 			duration
 		};
-		console.log('sendETA to', this.props.host, ['SEND_DATA:', data]);
+		console.log('sendETA to', this.props.host, ['SEND_DATA:', data]); // eslint-disable-line no-console
 		this.socket.emit('SEND_DATA', data);
 	};
 

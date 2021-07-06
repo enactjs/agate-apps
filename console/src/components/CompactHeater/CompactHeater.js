@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 // import ToggleButton from '@enact/agate/ToggleButton';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';

@@ -1,4 +1,3 @@
-import React from 'react';
 import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
 import {Row, Cell, Column} from '@enact/ui/Layout';
@@ -6,9 +5,15 @@ import Heading from '@enact/agate/Heading';
 import viewCSS from './WeatherPanel.module.less';
 import WeatherItem from '../components/WeatherItem';
 import AppStateConnect from '../App/AppContextConnect';
+import PropTypes from 'prop-types';
 
 const Weather = kind({
 	name: 'Weather',
+
+	propTypes: {
+		css: PropTypes.object,
+		weather: PropTypes.object
+	},
 
 	styles: {
 		css: viewCSS,

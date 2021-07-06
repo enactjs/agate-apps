@@ -3,11 +3,19 @@ import {adaptEvent, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import {Row, Cell} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 import Button from '@enact/agate/Button';
 
 import css from './CompactHeader.module.less';
+
+const TitleHeading = kind({
+	name: 'TitleHeading',
+
+	render ({...rest}) {
+		return (<Heading marqueeDisabled {...rest} />)
+	}
+});
+
 
 const CompactHeader = kind({
 	name: 'CompactHeader',
@@ -35,7 +43,7 @@ const CompactHeader = kind({
 	},
 
 	render: ({children, onExpand, noExpandButton, ...rest}) => (
-		<Row component={Heading} spacing="large" {...rest}>
+		<Row component={TitleHeading} spacing="large" {...rest}>
 			{children && <Cell className={css.title}>{children}</Cell>}
 			{!noExpandButton ? (
 				<Cell shrink>

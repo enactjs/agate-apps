@@ -11,7 +11,6 @@ import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
 import {ResponsiveBox} from '@enact/agate/DropManager';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 import CustomLayout, {SaveLayoutArrangement} from '../components/CustomLayout';
 import Dialer from '../components/Dialer';
@@ -85,6 +84,9 @@ const PhoneBase = kind({
 	},
 
 	propTypes: {
+		arrangeable: PropTypes.string,
+		arrangement: PropTypes.string,
+		onArrange: PropTypes.func,
 		onChange: PropTypes.func,
 		onTogglePopup: PropTypes.func,
 		showPopup: PropTypes.bool,

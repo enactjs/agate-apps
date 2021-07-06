@@ -1,7 +1,6 @@
 import {Panel} from '@enact/agate/Panels';
 import kind from '@enact/core/kind';
 import {Row, Column, Cell} from '@enact/ui/Layout';
-import React from 'react';
 import PropTypes from 'prop-types';
 
 import AppIconCell from '../components/AppIconCell';

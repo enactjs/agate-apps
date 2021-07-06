@@ -2,7 +2,6 @@ import GridListImageItem from '@enact/agate/GridListImageItem';
 import kind from '@enact/core/kind';
 import {Row, Cell} from '@enact/ui/Layout';
 import Button from '@enact/agate/Button';
-import React from 'react';
 
 import Widget from '../Widget';
 import albumArt from '../../../assets/music-album-art.jpg';

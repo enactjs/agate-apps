@@ -7,7 +7,6 @@ import ProgressBar from '@enact/agate/ProgressBar';
 import ToggleButton from '@enact/agate/ToggleButton';
 import kind from '@enact/core/kind';
 import Layout, {Cell, Column, Row} from '@enact/ui/Layout';
-import React from 'react';
 import PropTypes from 'prop-types';
 
 import AppContextConnect from '../App/AppContextConnect';
@@ -32,8 +31,11 @@ const ResponsiveLayout = ResponsiveBox(({containerShape, ...rest}) => {
 const DashboardBase = kind({
 	name: 'Dashboard',
 
-	proptypes: {
-		linearVelocity: PropTypes.number
+	propTypes: {
+		arrangeable: PropTypes.string,
+		arrangement: PropTypes.string,
+		linearVelocity: PropTypes.number,
+		onArrange: PropTypes.func
 	},
 
 	styles: {
@@ -71,12 +73,12 @@ const DashboardBase = kind({
 						<Cell size="20%">
 							<Column className={css.sideInfo} align="stretch space-between">
 								<Cell shrink>
-									<Item  label="23.1 psi" spotlightDisabled>
+									<Item label="23.1 psi" spotlightDisabled>
 										<Icon slot="slotBefore">compass</Icon>
 										Tire psi
 									</Item>
 								</Cell>
-								<Cell component={Heading} shrink showLine/>
+								<Cell component={Heading} shrink showLine />
 								<Cell shrink>
 									<Item label="23.1 psi" spotlightDisabled>
 										<Icon slot="slotBefore">compass</Icon>

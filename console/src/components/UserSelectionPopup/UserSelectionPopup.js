@@ -5,7 +5,6 @@ import kind from '@enact/core/kind';
 import Popup from '@enact/agate/Popup';
 import PropTypes from 'prop-types';
 import Item from '@enact/agate/Item';
-import React from 'react';
 
 import AppContextConnect from '../../App/AppContextConnect';
 import UserAvatar from '../UserAvatar';
@@ -53,7 +52,8 @@ const UserSelectionPopupBase = kind({
 		resetAll: PropTypes.func.isRequired,
 		resetUserSettings: PropTypes.func.isRequired,
 		updateAppState: PropTypes.func.isRequired,
-		userId: PropTypes.number
+		userId: PropTypes.number,
+		usersList: PropTypes.object
 	},
 
 	defaultProps: {

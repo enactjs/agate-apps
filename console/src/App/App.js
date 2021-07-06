@@ -7,7 +7,7 @@ import Button from '@enact/agate/Button';
 import Popup from '@enact/agate/Popup';
 import DateTimePicker from '@enact/agate/DateTimePicker';
 import {TabbedPanels} from '@enact/agate/Panels';
-import React from 'react';
+import {Component} from 'react';
 import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
 import ThemeDecorator from '@enact/agate/ThemeDecorator';
@@ -89,7 +89,29 @@ const AppBase = kind({
 	name: 'App',
 
 	propTypes: {
-		updateAppState: PropTypes.func.isRequired
+		updateAppState: PropTypes.func.isRequired,
+		accent: PropTypes.string,
+		defaultIndex: PropTypes.number,
+		endNavigation: PropTypes.func,
+		highlight: PropTypes.string,
+		index: PropTypes.number,
+		layoutArrangeable: PropTypes.bool,
+		onSelect: PropTypes.func,
+		orientation: PropTypes.string,
+		prevIndex: PropTypes.number,
+		reloadApp: PropTypes.func,
+		resetCopilot: PropTypes.func,
+		resetPosition: PropTypes.func,
+		sendVideo: PropTypes.func,
+		showAppList: PropTypes.bool,
+		showBasicPopup: PropTypes.bool,
+		showDateTimePopup: PropTypes.bool,
+		showDestinationReachedPopup: PropTypes.bool,
+		showPopup: PropTypes.bool,
+		showUserSelectionPopup: PropTypes.bool,
+		showWelcomePopup: PropTypes.bool,
+		skinName: PropTypes.string,
+		userId: PropTypes.number
 	},
 
 	styles: {
@@ -341,8 +363,12 @@ const AppBase = kind({
 });
 
 const AppIndex = (Wrapped) => {
-	return class extends React.Component {
-		static displayName = 'AppIndex'
+	return class extends Component {
+		static displayName = 'AppIndex';
+
+		static propTypes = {
+			defaultIndex: PropTypes.number
+		};
 
 		constructor (props) {
 			super(props);

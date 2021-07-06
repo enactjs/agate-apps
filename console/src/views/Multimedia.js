@@ -1,6 +1,6 @@
 import Heading from '@enact/agate/Heading';
 import {Panel} from '@enact/agate/Panels';
-import GridListImageItem from '@enact/agate/GridListImageItem';
+import ImageItem from '@enact/agate/ImageItem';
 import ThumbnailItem from '@enact/agate/ThumbnailItem';
 import hoc from '@enact/core/hoc';
 // import {Job} from '@enact/core/util';
@@ -9,7 +9,7 @@ import {Cell, Column, Row} from '@enact/ui/Layout';
 import ri from '@enact/ui/resolution';
 import {VirtualGridList, VirtualList} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Component, Fragment} from 'react';
 
 import appConfig from '../App/configLoader';
 import Communicator from '../../../components/Communicator';
@@ -78,16 +78,15 @@ const ResponsiveVirtualList = kind({
 			}
 
 			return (
-				<GridListImageItem
+				<ImageItem
 					{...rest}
-					aspectRatio="16:9"
-					caption={size === 'full' ? videos[index].snippet.title : ''}
 					className={className}
-					source={videos[index].snippet.thumbnails.medium.url}
+					src={videos[index].snippet.thumbnails.medium.url}
 					onClick={onSelectVideo(videos[index])}
 					selectionOverlay={ListItemOverlay}
-					selectionOverlayShowing
-				/>
+				>
+					{size === 'full' ? videos[index].snippet.title : ''}
+				</ImageItem>
 			);
 		}
 	},
@@ -194,7 +193,7 @@ const MultimediaBase = kind({
 		...rest
 	}) => {
 		return (
-			<React.Fragment>
+			<Fragment>
 				<ScreenSelectionPopup
 					onClose={onClosePopup}
 					onSelect={onSendVideo}
@@ -229,7 +228,7 @@ const MultimediaBase = kind({
 						</Row>
 					</CustomLayout>
 				</Panel>
-			</React.Fragment>
+			</Fragment>
 		);
 	}
 });
@@ -239,7 +238,7 @@ const defaultConfig = {
 };
 
 const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
-	return class extends React.Component {
+	return class extends Component {
 		static displayName = 'MultimediaDecorator';
 
 		static propTypes = {
@@ -247,7 +246,7 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 			onSendVideo: PropTypes.func,
 			screenIds: PropTypes.array
 			// showAd: PropTypes.bool
-		}
+		};
 
 		constructor (props) {
 			super(props);
@@ -323,7 +322,7 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 				videos
 			};
 			return (
-				<React.Fragment>
+				<Fragment>
 					<Communicator
 						host={appConfig.communicationServerHost}
 						onPlayVideo={this.onPlayVideo}
@@ -331,7 +330,7 @@ const MultimediaDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 						screenId={this.state.screenId}
 					/>
 					<Wrapped {...props} />
-				</React.Fragment>
+				</Fragment>
 			);
 		}
 	};

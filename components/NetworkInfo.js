@@ -1,10 +1,10 @@
 // import PropTypes from 'prop-types';
-import React from 'react';
+import {Component} from 'react';
 import hoc from '@enact/core/hoc';
 import {getIPv4} from 'webrtc-ips';
 
 const NetworkInfo = hoc((configHoc, Wrapped) => {
-	return class extends React.Component {
+	return class extends Component {
 		static displayName = 'NetworkInfo';
 
 		constructor (props) {
