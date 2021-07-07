@@ -5,6 +5,7 @@ import kind from '@enact/core/kind';
 import LabeledItem from '@enact/agate/LabeledItem';
 import PropTypes from 'prop-types';
 import {Component, Fragment} from 'react';
+import Skinnable from '@enact/agate/Skinnable';
 import ThemeDecorator from '@enact/agate/ThemeDecorator';
 
 import Communicator from '../../../components/Communicator';
@@ -55,7 +56,7 @@ const AppBase = kind({
 		className: 'app'
 	},
 
-	render: ({adContent, duration, eta, ipAddress, popupOpen, showAd, onSetScreen, onTogglePopup, url, ...rest}) => {
+	render: ({adContent, duration, eta, ipAddress, onSetScreen, onTogglePopup, popupOpen, showAd, url, ...rest}) => {
 		return (
 			<Column {...rest}>
 				{eta ? <Cell shrink>
@@ -88,14 +89,20 @@ const AppBase = kind({
 	}
 });
 
+const ThemedApp = ThemeDecorator(Skinnable(AppBase));
+
 // Set the initial state, but allow for overrides
 const getInitialState = ({popupOpen = true, screenId = 1} = {}) => ({
+	accent: '',
 	// adContent: this.props.adContent || 'Your Ad Here',
 	duration: null,
 	eta: null,
+	highlight: '',
 	popupOpen,
 	screenId,
 	// showAd: this.props.showAd || false,
+	skin: '',
+	skinVariants: '',
 	url: ''
 });
 
@@ -109,6 +116,7 @@ class App extends Component {
 	constructor (props) {
 		super(props);
 		this.state = getInitialState();
+
 		// Job to control hiding ads
 		// this.adTimer = new Job(this.onHideAdSpace);
 	}
@@ -120,6 +128,15 @@ class App extends Component {
 	// onHideAdSpace = () => {
 	// 	this.setState({adContent: '', showAd: false});
 	// };
+
+	onChangeSkinSettings = ({skinSettings}) => {
+		this.setState({
+			accent: skinSettings.accent,
+			highlight: skinSettings.highlight,
+			skin: skinSettings.skin,
+			skinVariants: skinSettings.skinVariants
+		});
+	};
 
 	onPlayVideo = ({url}) => {
 		this.setState({url});
@@ -152,7 +169,7 @@ class App extends Component {
 	};
 
 	resetApp = () => {
-		// If the popup was dismissed, leave it closed during a reset. (maintain popupOpen state throguh resets)
+		// If the popup was dismissed, leave it closed during a reset. (maintain popupOpen state through resets)
 		this.setState(({popupOpen}) => getInitialState({popupOpen}));
 	};
 
@@ -161,38 +178,49 @@ class App extends Component {
 	};
 
 	render () {
-		const {duration, eta, popupOpen, showAd, url} = this.state;
+		const {accent, duration, eta, highlight, popupOpen, showAd, skin, skinVariants, url} = this.state;
+
 		const props = {
 			...this.props,
+			accent,
 			// adContent,
 			duration,
 			eta,
+			highlight,
 			popupOpen,
 			showAd,
+			skin,
+			skinVariants,
 			url
 		};
 		delete props.accent;
 		delete props.highlight;
+		delete props.skinVariants;
 
 		return (
 			<Fragment>
 				<Communicator
 					host={appConfig.communicationServerHost}
-					screenId={this.state.screenId}
+					onChangeSkinSettings={this.onChangeSkinSettings}
 					onPlayVideo={this.onPlayVideo}
-					onReset={this.resetApp}
 					onReload={this.reloadApp}
+					onReset={this.resetApp}
 					// onShowAd={this.onShowAdSpace}
 					onShowETA={this.onShowETA}
+					screenId={this.state.screenId}
 				/>
-				<AppBase
+				<ThemedApp
 					{...props}
+					accent={accent}
+					highlight={highlight}
 					onSetScreen={this.onSetScreen}
 					onTogglePopup={this.onTogglePopup}
+					skin={skin}
+					skinVariants={skinVariants}
 				/>
 			</Fragment>
 		);
 	}
 }
 
-export default ThemeDecorator(NetworkInfo(App));
+export default NetworkInfo(App);

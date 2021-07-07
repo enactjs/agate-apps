@@ -8,6 +8,10 @@
 			margin-top: @agate-component-spacing;
 			margin-bottom: @agate-component-spacing;
 			height: 120px;
+
+			&:global(.silicon) {
+				height: 81px;
+			}
 		}
 
 		.userItem {
@@ -17,6 +21,13 @@
 			.avatar {
 				margin-right: @agate-component-spacing;
 				vertical-align: middle;
+
+				&:global(.silicon) {
+
+					.image {
+						padding: 0;
+					}
+				}
 			}
 
 			.content {
