@@ -57,8 +57,9 @@ const CompactHeaterBase = kind({
 						icon="heatseatleft"
 						onClick={onToggleLeftHeater}
 						selected={leftHeat}
+						size={rest.className.includes('silicon') ? 'small' : 'large'}
 					>
-						Left: {leftStatus}
+						Left:{leftStatus}
 					</LabeledIconButton>
 				</Cell>
 				<Cell shrink>
@@ -67,8 +68,9 @@ const CompactHeaterBase = kind({
 						icon="heatseatright"
 						onClick={onToggleRightHeater}
 						selected={rightHeat}
+						size={rest.className.includes('silicon') ? 'small' : 'large'}
 					>
-						Right: {rightStatus}
+						Right:{rightStatus}
 					</LabeledIconButton>
 				</Cell>
 			</Widget>

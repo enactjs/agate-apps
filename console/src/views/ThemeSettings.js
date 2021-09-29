@@ -5,6 +5,7 @@ import {Row, Column, Cell} from '@enact/ui/Layout';
 import SliderButton from '@enact/agate/SliderButton';
 import Heading from '@enact/agate/Heading';
 import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
 
 import {getPanelIndexOf} from '../App';
 import AppContextConnect from '../App/AppContextConnect';
@@ -17,9 +18,10 @@ const skinCollection = {
 	carbon: 'Carbon',
 	cobalt: 'Cobalt',
 	copper: 'Copper',
-	gallium: 'Gallium'
-	// electro: 'Electro',
-	// titanium: 'Titanium'
+	electro: 'Electro',
+	gallium: 'Gallium',
+	silicon: 'Silicon',
+	titanium: 'Titanium'
 };
 const skinList = Object.keys(skinCollection);
 const skinNames = skinList.map((skin) => skinCollection[skin]);  // Build the names list based on the skin list array, so the indexes always match up, in case the object keys don't return in the same order.
@@ -35,7 +37,8 @@ const swatchPalette = [
 	'#e0b094', '#ffffff', '#a47d66', '#be064d',
 	'#9cd920', '#559616', '#75d1f0', '#259aa7',
 	'#fc7982', '#8c81ff', '#cecacb', '#0359f0',
-	'#f08c21', '#f42c04', '#d636d9', '#aab3cb'
+	'#f08c21', '#f42c04', '#d636d9', '#aab3cb',
+	'#ff2d55', '#9e00d8'
 ];
 
 const FormRow = kind({
@@ -51,7 +54,7 @@ const FormRow = kind({
 	},
 	render: ({alignLabel, children, css, label, ...rest}) => (
 		<Row align="center" {...rest}>
-			<Cell component="label" className={css.label} align={alignLabel} size="20%">{label}</Cell>
+			<Cell component="label" className={css.label} align={alignLabel} size="15%">{label}</Cell>
 			{children}
 		</Row>
 	)
@@ -92,9 +95,7 @@ const SliderButtonItem = kind({
 	)
 });
 
-
-
-const ThemeSettings = kind({
+const ThemeSettingsBase = kind({
 	name: 'ThemeSettings',
 
 	propTypes: {
@@ -113,14 +114,23 @@ const ThemeSettings = kind({
 	handlers: {
 		onSelect: (ev, {onSelect}) => {
 			onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
-		}
+		},
+		onChange: (ev, props) => {
+			props.onSendSkinSettings(props);
+		},
 	},
 
-	render: ({css, onSelect, prevIndex, ...rest}) => (
+	render: ({css, onChange, onSelect, onSendSkinSettings, prevIndex, ...rest}) => (
 		<Panel {...rest}>
 			<Row align=" start">
 				<Cell shrink>
-					<LabeledIconButton onClick={onSelect} labelPosition="after" data-tabindex={prevIndex != null ? prevIndex : getPanelIndexOf('settings')} icon="arrowlargeleft">
+					<LabeledIconButton
+						data-tabindex={prevIndex != null ? prevIndex : getPanelIndexOf('settings')}
+						icon="arrowlargeleft"
+						labelPosition="after"
+						onClick={onSelect}
+						size={rest.skin === 'silicon' ? 'small' : 'large'}
+					>
 						Back
 					</LabeledIconButton>
 				</Cell>
@@ -138,17 +148,17 @@ const ThemeSettings = kind({
 						</Cell>
 						<Cell shrink className={css.spacedItem}>
 							<FormRow align="start space-around" alignLabel="center" className={css.formRow}>
-								<AccentColorSetting label="Accent Color">{swatchPalette}</AccentColorSetting>
-								<HighlightColorSetting label="Highlight Color">{swatchPalette}</HighlightColorSetting>
+								<AccentColorSetting label="Accent Color" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>{swatchPalette}</AccentColorSetting>
+								<HighlightColorSetting label="Highlight Color" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>{swatchPalette}</HighlightColorSetting>
 							</FormRow>
 						</Cell>
 						<Cell shrink className={css.spacedItem}>
-							<SkinSetting label="Skin:">
+							<SkinSetting label="Skin:" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>
 								{skinNames}
 							</SkinSetting>
 						</Cell>
 						<Cell shrink className={css.spacedItem}>
-							<SkinVariantsSetting label="Variant:">
+							<SkinVariantsSetting label="Variant:" onClick={onChange} onSendSkinSettingsSettings={onSendSkinSettings}>
 								{skinVariantsNames}
 							</SkinVariantsSetting>
 						</Cell>
@@ -202,5 +212,15 @@ const SkinVariantsSetting = AppContextConnect(({userSettings, updateAppState}) =
 	}
 }))(SliderButtonItem);
 
+const ThemeSettingsDecorator = compose(
+	AppContextConnect(({userSettings}) => ({
+		accent: userSettings.colorAccent,
+		highlight: userSettings.colorHighlight,
+		skin: userSettings.skin,
+		skinVariants: userSettings.skinVariants
+	}))
+);
+
+const ThemeSettings = ThemeSettingsDecorator(ThemeSettingsBase);
 
 export default ThemeSettings;

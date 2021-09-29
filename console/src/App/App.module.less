@@ -5,6 +5,13 @@
 	// This should prevent iOS from double-tap-to-zoom but... it doesn't completely.
 	touch-action: manipulation;
 
+	.tabbedPanels {
+		.applySkins({
+			// Adopting the same background color with a welcome popup.
+			background-color: @agate-fullscreenpopup-bg-color;
+		});
+	}
+
 	// General rules
 	.beforeTabs {
 		margin: 0 0.5em 0.5em 0.5em;

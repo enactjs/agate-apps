@@ -199,6 +199,7 @@ const AppBase = kind({
 		resetCopilot,
 		resetPosition,
 		reloadApp,
+		sendSkinSettings,
 		sendVideo,
 		showBasicPopup,
 		showDateTimePopup,
@@ -221,6 +222,7 @@ const AppBase = kind({
 		return (
 			<div {...rest}>
 				<TabbedPanels
+					className={css.tabbedPanels}
 					orientation={orientation}
 					tabs={[
 						{title: 'Home', icon: 'home'},
@@ -290,7 +292,7 @@ const AppBase = kind({
 						onReloadApp={reloadApp}
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
-					<ThemeSettings onSelect={onSelect} prevIndex={prevIndex} />
+					<ThemeSettings onSelect={onSelect} onSendSkinSettings={sendSkinSettings} prevIndex={prevIndex} />
 					<Weather />
 					<Dashboard
 						arrangeable={layoutArrangeable}

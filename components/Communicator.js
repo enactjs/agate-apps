@@ -3,6 +3,10 @@ import PropTypes from 'prop-types';
 import {Component} from 'react';
 import openSocket from 'socket.io-client';
 
+const handleChangeSkinSettings = handle(
+	forward('onChangeSkinSettings')
+);
+
 const handleAddVideo = handle(
 	adaptEvent(item => ({url: item.url}), forward('onPlayVideo'))
 );
@@ -32,6 +36,7 @@ class Communicator extends Component {
 	constructor (props) {
 		super(props);
 
+		handleChangeSkinSettings.bindAs(this, 'handleChangeSkinSettings');
 		handleAddVideo.bindAs(this, 'handleAddVideo');
 		// handleShowAd.bindAs(this, 'handleShowAd');
 		handleShowETA.bindAs(this, 'handleShowETA');
@@ -64,19 +69,22 @@ class Communicator extends Component {
 			this.socket.on('RELOAD_APP', this.props.onReload);
 		}
 
+		this.socket.on(`SKIN_SETTINGS`, this.handleChangeSkinSettings);
+
 		if (screenId != null) {
 			this.socket.on(`VIDEO_ADD_SCREEN/${screenId}`, this.handleAddVideo);
 			// this.socket.on('SHOW_AD', this.handleShowAd);
 			this.socket.on('SHOW_ETA', this.handleShowETA);
-			console.log('Connected to', this.props.host, 'and listening for events:', `VIDEO_ADD_SCREEN/${screenId}`, 'SHOW_ETA'); // eslint-disable-line no-console
+			console.log('Connected to', this.props.host, 'and listening for events:', 'SHOW_ETA', `VIDEO_ADD_SCREEN/${screenId}`); // eslint-disable-line no-console
 		}
 	}
 
 	_disconnect (screenId) {
 		if (this.socket) {
 			if (screenId != null) {
-				this.socket.removeAllListeners(`VIDEO_ADD_SCREEN/${screenId}`);
+				this.socket.removeAllListeners('SKIN_SETTINGS');
 				this.socket.removeAllListeners('SHOW_ETA');
+				this.socket.removeAllListeners(`VIDEO_ADD_SCREEN/${screenId}`);
 			}
 
 			this.socket.close();
@@ -86,6 +94,25 @@ class Communicator extends Component {
 	connect = () => this._connect(this.props.screenId);
 
 	disconnect = () => this._disconnect(this.props.screenId);
+
+	sendETA = ({eta, duration}) => {
+		const data = {
+			route: 'SHOW_ETA',
+			eta,
+			duration
+		};
+		console.log('sendETA to', this.props.host, ['SEND_DATA:', data]); // eslint-disable-line no-console
+		this.socket.emit('SEND_DATA', data);
+	};
+
+	sendSkinSettings = (skinSettings) => {
+		const data = {
+			route: 'SKIN_SETTINGS',
+			skinSettings
+		};
+		console.log('Sending skin settings to', this.props.host, ['SEND_DATA:', data]); // eslint-disable-line no-console
+		this.socket.emit('SEND_DATA', data);
+	};
 
 	sendVideo = ({screenId, video}) => {
 		const data = {
@@ -107,16 +134,6 @@ class Communicator extends Component {
 
 	reloadApp = () => {
 		const data = {route: 'RELOAD_APP'};
-		this.socket.emit('SEND_DATA', data);
-	};
-
-	sendETA = ({eta, duration}) => {
-		const data = {
-			route: 'SHOW_ETA',
-			eta,
-			duration
-		};
-		console.log('sendETA to', this.props.host, ['SEND_DATA:', data]); // eslint-disable-line no-console
 		this.socket.emit('SEND_DATA', data);
 	};
 
