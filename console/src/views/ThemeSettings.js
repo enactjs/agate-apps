@@ -129,6 +129,7 @@ const ThemeSettingsBase = kind({
 						icon="arrowlargeleft"
 						labelPosition="after"
 						onClick={onSelect}
+						size={rest.skin === 'silicon' ? 'small' : 'large'}
 					>
 						Back
 					</LabeledIconButton>

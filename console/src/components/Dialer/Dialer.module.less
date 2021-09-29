@@ -1,10 +1,26 @@
 // Dialer.module.less
 //
+@import "~@enact/agate/styles/mixins.less";
+@import "~@enact/agate/styles/skin.less";
 
 .dialer {
 	.row {
 		margin-top: 0.5em;
 		margin-bottom: 0.5em;
+
+		// Theme-specific rules
+		.digit:global(.silicon) {
+			height: 3.0rem;
+			line-height: 0.9em;
+
+			.applySkins({
+				color: @agate-black;
+				
+				.focus({
+					color: @agate-white;
+				})
+			});
+		}
 	}
 
 	[data-subtitle]::before {

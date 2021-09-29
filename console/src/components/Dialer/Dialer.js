@@ -45,30 +45,30 @@ const Dialer = kind({
 		<Column {...rest}>
 			<Cell shrink className={css.row}>
 				<Row align="center center">
-					<Digit onSelect={onSelectDigit}>1</Digit>
-					<Digit subtitle="ABC" onSelect={onSelectDigit}>2</Digit>
-					<Digit subtitle="DEF" onSelect={onSelectDigit}>3</Digit>
+					<Digit className={css.digit} onSelect={onSelectDigit}>1</Digit>
+					<Digit className={css.digit} subtitle="ABC" onSelect={onSelectDigit}>2</Digit>
+					<Digit className={css.digit} subtitle="DEF" onSelect={onSelectDigit}>3</Digit>
 				</Row>
 			</Cell>
 			<Cell shrink className={css.row}>
 				<Row align="center center">
-					<Digit subtitle="GHI" onSelect={onSelectDigit}>4</Digit>
-					<Digit subtitle="JKL" onSelect={onSelectDigit}>5</Digit>
-					<Digit subtitle="MNO" onSelect={onSelectDigit}>6</Digit>
+					<Digit className={css.digit} subtitle="GHI" onSelect={onSelectDigit}>4</Digit>
+					<Digit className={css.digit} subtitle="JKL" onSelect={onSelectDigit}>5</Digit>
+					<Digit className={css.digit} subtitle="MNO" onSelect={onSelectDigit}>6</Digit>
 				</Row>
 			</Cell>
 			<Cell shrink className={css.row}>
 				<Row align="center center">
-					<Digit subtitle="PQRS" onSelect={onSelectDigit}>7</Digit>
-					<Digit subtitle="TUV" onSelect={onSelectDigit}>8</Digit>
-					<Digit subtitle="WXYZ" onSelect={onSelectDigit}>9</Digit>
+					<Digit className={css.digit} subtitle="PQRS" onSelect={onSelectDigit}>7</Digit>
+					<Digit className={css.digit} subtitle="TUV" onSelect={onSelectDigit}>8</Digit>
+					<Digit className={css.digit} subtitle="WXYZ" onSelect={onSelectDigit}>9</Digit>
 				</Row>
 			</Cell>
 			<Cell shrink className={css.row}>
 				<Row align="center center">
-					<Digit onSelect={onSelectDigit}>*</Digit>
-					<Digit subtitle="+" onSelect={onSelectDigit}>0</Digit>
-					<Digit onSelect={onSelectDigit}>#</Digit>
+					<Digit className={css.digit} onSelect={onSelectDigit}>*</Digit>
+					<Digit className={css.digit} subtitle="+" onSelect={onSelectDigit}>0</Digit>
+					<Digit className={css.digit} onSelect={onSelectDigit}>#</Digit>
 				</Row>
 			</Cell>
 		</Column>

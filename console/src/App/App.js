@@ -222,6 +222,7 @@ const AppBase = kind({
 		return (
 			<div {...rest}>
 				<TabbedPanels
+					className={css.tabbedPanels}
 					orientation={orientation}
 					tabs={[
 						{title: 'Home', icon: 'home'},
