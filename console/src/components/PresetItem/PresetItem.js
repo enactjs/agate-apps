@@ -1,29 +1,19 @@
 import {forward} from '@enact/core/handle';
 import Spottable from '@enact/spotlight/Spottable';
 import Pure from '@enact/ui/internal/Pure';
-import SlotItem from '@enact/ui/SlotItem';
 import Touchable from '@enact/ui/Touchable';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import kind from '@enact/core/kind';
-import {ItemBase} from '@enact/agate/Item';
 import {LabeledItemBase} from '@enact/agate/LabeledItem';
-
-import componentCss from './PresetItem.module.less';
 
 const PresetItemBase = kind({
 	name: 'PresetItem',
 
 	propTypes:{
 		css: PropTypes.object,
-		disabled: PropTypes.bool,
 		label: PropTypes.string,
 		preset: PropTypes.number
-	},
-
-	styles: {
-		css: componentCss,
-		className: 'presetItem'
 	},
 
 	handlers: {
@@ -35,17 +25,10 @@ const PresetItemBase = kind({
 		}
 	},
 
-	render: ({children, css, disabled, label, ...rest}) => (
-		<SlotItem
-			component={ItemBase}
-			disabled={disabled}
-			css={css}
-			{...rest}
-		>
-			<LabeledItemBase label={label} labelPosition="before">
-				{children}
-			</LabeledItemBase>
-		</SlotItem>
+	render: ({children, label, ...rest}) => (
+		<LabeledItemBase {...rest} label={label} labelPosition="before">
+			{children}
+		</LabeledItemBase>
 	)
 });
 
