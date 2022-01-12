@@ -2,11 +2,10 @@ import {Panel} from '@enact/agate/Panels';
 import kind from '@enact/core/kind';
 import Repeater from '@enact/ui/Repeater';
 import {Row, Column, Cell} from '@enact/ui/Layout';
-import React from 'react';
 import PropTypes from 'prop-types';
 import Droppable, {Draggable} from '@enact/agate/DropManager';
 import {ToggleButtonBase} from '@enact/agate/ToggleButton';
-import Divider from '@enact/agate/Divider';
+import Heading from '@enact/agate/Heading';
 import Drawer from '@enact/agate/Drawer';
 
 import AppContextConnect from '../App/AppContextConnect';
@@ -76,7 +75,7 @@ const HomeLayouts = kind({
 		const widgetTray = (
 			<Drawer className={css.drawer} open={arrangeable} scrimType="none">
 				<header className={css.header}>
-					<Cell className={css.title} component={Divider} shrink>Additional Widgets</Cell>
+					<Cell className={css.title} component={Heading} shrink>Additional Widgets</Cell>
 				</header>
 				<WidgetTray>
 					{allSlotNames.filter(name => name.indexOf('tray') === 0).map(name => {
@@ -204,6 +203,7 @@ const Home = kind({
 	propTypes: {
 		arrangeable: PropTypes.bool,
 		onCompactExpand: PropTypes.func,
+		onSelect: PropTypes.func,
 		onSendVideo: PropTypes.func
 	},
 

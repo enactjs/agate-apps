@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 // import ToggleButton from '@enact/agate/ToggleButton';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
@@ -54,20 +53,24 @@ const CompactHeaterBase = kind({
 			<Widget {...rest} title="Heated Seats" description="Warm up the seats" view="hvac" align="center space-around" orientation="horizontal">
 				<Cell shrink>
 					<LabeledIconButton
+						css={css}
 						icon="heatseatleft"
 						onClick={onToggleLeftHeater}
 						selected={leftHeat}
+						size={rest.className.includes('silicon') ? 'small' : 'large'}
 					>
-						Left: {leftStatus}
+						Left:{leftStatus}
 					</LabeledIconButton>
 				</Cell>
 				<Cell shrink>
 					<LabeledIconButton
+						css={css}
 						icon="heatseatright"
 						onClick={onToggleRightHeater}
 						selected={rightHeat}
+						size={rest.className.includes('silicon') ? 'small' : 'large'}
 					>
-						Right: {rightStatus}
+						Right:{rightStatus}
 					</LabeledIconButton>
 				</Cell>
 			</Widget>

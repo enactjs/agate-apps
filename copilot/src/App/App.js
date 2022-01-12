@@ -1,11 +1,12 @@
-import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
 import {Cell, Column, Row} from '@enact/ui/Layout';
 // import Job from '@enact/core/util/Job';
 import kind from '@enact/core/kind';
 import LabeledItem from '@enact/agate/LabeledItem';
-// import PropTypes from 'prop-types';
-import React from 'react';
+import PropTypes from 'prop-types';
+import {Component, Fragment} from 'react';
+import Skinnable from '@enact/agate/Skinnable';
+import ThemeDecorator from '@enact/agate/ThemeDecorator';
 
 import Communicator from '../../../components/Communicator';
 import ScreenSelectionPopup from '../../../components/ScreenSelectionPopup';
@@ -33,6 +34,18 @@ const IFrame = kind({
 const AppBase = kind({
 	name: 'App',
 
+	propTypes: {
+		adContent: PropTypes.any,
+		duration: PropTypes.number || null,
+		eta: PropTypes.number || null,
+		ipAddress: PropTypes.string,
+		onSetScreen: PropTypes.func,
+		onTogglePopup: PropTypes.func,
+		popupOpen: PropTypes.bool,
+		showAd: PropTypes.bool,
+		url: PropTypes.string
+	},
+
 	defaultProps: {
 		eta: 0,
 		duration: 0
@@ -43,7 +56,7 @@ const AppBase = kind({
 		className: 'app'
 	},
 
-	render: ({adContent, duration, eta, ipAddress, popupOpen, showAd, onSetScreen, onTogglePopup, url, ...rest}) => {
+	render: ({adContent, duration, eta, ipAddress, onSetScreen, onTogglePopup, popupOpen, showAd, url, ...rest}) => {
 		return (
 			<Column {...rest}>
 				{eta ? <Cell shrink>
@@ -53,7 +66,7 @@ const AppBase = kind({
 					</Row>
 				</Cell> : null}
 				<Cell>
-					<Button style={{position: 'absolute', zIndex: 1, top: '60px'}} icon="plug" onClick={onTogglePopup} />
+					<Button style={{position: 'absolute', zIndex: 1, top: '60px'}} icon="setting" onClick={onTogglePopup} />
 					<Row className={css.bodyRow}>
 						<IFrame allow="autoplay" className={css.iframe} src={url} />
 						{!showAd ? null : <Cell className={css.adSpace} shrink>
@@ -76,27 +89,34 @@ const AppBase = kind({
 	}
 });
 
+const ThemedApp = ThemeDecorator(Skinnable(AppBase));
+
 // Set the initial state, but allow for overrides
 const getInitialState = ({popupOpen = true, screenId = 1} = {}) => ({
+	accent: '',
 	// adContent: this.props.adContent || 'Your Ad Here',
 	duration: null,
 	eta: null,
+	highlight: '',
 	popupOpen,
 	screenId,
 	// showAd: this.props.showAd || false,
+	skin: '',
+	skinVariants: '',
 	url: ''
 });
 
-class App extends React.Component {
+class App extends Component {
 
 	static propTypes = {
 		// adContent: PropTypes.string,
 		// showAd: PropTypes.bool
-	}
+	};
 
 	constructor (props) {
 		super(props);
 		this.state = getInitialState();
+
 		// Job to control hiding ads
 		// this.adTimer = new Job(this.onHideAdSpace);
 	}
@@ -108,6 +128,15 @@ class App extends React.Component {
 	// onHideAdSpace = () => {
 	// 	this.setState({adContent: '', showAd: false});
 	// };
+
+	onChangeSkinSettings = ({skinSettings}) => {
+		this.setState({
+			accent: skinSettings.accent,
+			highlight: skinSettings.highlight,
+			skin: skinSettings.skin,
+			skinVariants: skinSettings.skinVariants
+		});
+	};
 
 	onPlayVideo = ({url}) => {
 		this.setState({url});
@@ -140,47 +169,58 @@ class App extends React.Component {
 	};
 
 	resetApp = () => {
-		// If the popup was dismissed, leave it closed during a reset. (maintain popupOpen state throguh resets)
+		// If the popup was dismissed, leave it closed during a reset. (maintain popupOpen state through resets)
 		this.setState(({popupOpen}) => getInitialState({popupOpen}));
-	}
+	};
 
 	reloadApp = () => {
-		window.location.reload();
-	}
+		global.location.reload();
+	};
 
 	render () {
-		const {duration, eta, popupOpen, showAd, url} = this.state;
+		const {accent, duration, eta, highlight, popupOpen, showAd, skin, skinVariants, url} = this.state;
+
 		const props = {
 			...this.props,
+			accent,
 			// adContent,
 			duration,
 			eta,
+			highlight,
 			popupOpen,
 			showAd,
+			skin,
+			skinVariants,
 			url
 		};
 		delete props.accent;
 		delete props.highlight;
+		delete props.skinVariants;
 
 		return (
-			<React.Fragment>
+			<Fragment>
 				<Communicator
 					host={appConfig.communicationServerHost}
-					screenId={this.state.screenId}
+					onChangeSkinSettings={this.onChangeSkinSettings}
 					onPlayVideo={this.onPlayVideo}
-					onReset={this.resetApp}
 					onReload={this.reloadApp}
+					onReset={this.resetApp}
 					// onShowAd={this.onShowAdSpace}
 					onShowETA={this.onShowETA}
+					screenId={this.state.screenId}
 				/>
-				<AppBase
+				<ThemedApp
 					{...props}
+					accent={accent}
+					highlight={highlight}
 					onSetScreen={this.onSetScreen}
 					onTogglePopup={this.onTogglePopup}
+					skin={skin}
+					skinVariants={skinVariants}
 				/>
-			</React.Fragment>
+			</Fragment>
 		);
 	}
 }
 
-export default AgateDecorator(NetworkInfo(App));
+export default NetworkInfo(App);

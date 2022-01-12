@@ -1,12 +1,19 @@
-import React from 'react';
 import kind from '@enact/core/kind';
 import {Cell} from '@enact/ui/Layout';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
+import Skinnable from '@enact/agate/Skinnable';
+import PropTypes from 'prop-types';
 
 import css from './AppIconCell.module.less';
 
 const AppIconCell = kind({
 	name: 'AppIconCell',
+
+	propTypes: {
+		align: PropTypes.string,
+		shrink: PropTypes.bool,
+		size: PropTypes.string
+	},
 
 	styles: {
 		css,
@@ -16,9 +23,9 @@ const AppIconCell = kind({
 
 	render: ({align, children, className, shrink, size = 180, style, ...rest}) => (
 		<Cell align={align} size={size} shrink={shrink} className={className} style={style}>
-			<LabeledIconButton {...rest}>{children}</LabeledIconButton>
+			<LabeledIconButton css={css} size={className.includes('silicon') ? 'small' : 'large'} {...rest}>{children}</LabeledIconButton>
 		</Cell>
 	)
 });
 
-export default AppIconCell;
+export default Skinnable(AppIconCell);

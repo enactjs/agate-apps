@@ -1,25 +1,26 @@
-import React, {Component} from 'react';
+import {Component, createContext, Fragment, PureComponent} from 'react';
 import produce from 'immer';
+import PropTypes from 'prop-types';
 import {assocPath, equals, mergeDeepRight, omit, path} from 'ramda';
 
 import appConfig from '../App/configLoader';
 import userPresetsForDemo from './userPresetsForDemo';
 
-const Context = React.createContext();
+const Context = createContext();
 
 const getWeather = async (latitude, longitude) => {
 	const key = appConfig.weatherApiKey;
 	if (!key) {
-		console.error('Please set `weatherApiKey` key in your `config.js` file to your own openweathermap.org API key.');
+		console.error('Please set `weatherApiKey` key in your `config.js` file to your own openweathermap.org API key.'); // eslint-disable-line no-console
 	}
 
 	const currentUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${key}&units=imperial`;
 	const threeHourUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${key}&units=imperial`;
 
-	const response = await window.fetch(currentUrl);
+	const response = await global.fetch(currentUrl);
 	const json = await response.json();
 
-	const threeHoursResponse = await window.fetch(threeHourUrl);
+	const threeHoursResponse = await global.fetch(threeHourUrl);
 	const threeHourJson = await threeHoursResponse.json();
 
 	return {
@@ -54,11 +55,16 @@ const defaultUserSettings = {
 	colorHighlight: '#66aabb',
 	fontSize: 0,
 	name: '',
-	skin: 'carbon'
+	skin: 'carbon',
+	skinVariants: 'night'
 	// topLocations: []
 };
 
 class AppContextProvider extends Component {
+	static propTypes = {
+		defaultShowWelcomePopup: PropTypes.bool
+	};
+
 	constructor (props) {
 		super(props);
 		this.watchPositionId = null;  // Store the reference to the position watcher.
@@ -103,7 +109,7 @@ class AppContextProvider extends Component {
 		};
 	}
 
-	componentWillMount () {
+	UNSAFE_componentWillMount () { // https://reactjs.org/docs/react-component.html#unsafe_componentwillmount
 		// If there are no users in the list when we load for the first time, stamp some out and prepare the system.
 		if (this.getAllSavedUserIds().length <= 0) {
 			this.resetAll();
@@ -121,7 +127,7 @@ class AppContextProvider extends Component {
 		this.setWeather(37.7876092, -122.40091);
 	}
 
-	componentWillUpdate (nextProps, nextState) {
+	UNSAFE_componentWillUpdate (nextProps, nextState) { // https://reactjs.org/docs/react-component.html#unsafe_componentwillupdate
 		if (this.state.userId !== nextState.userId && equals(this.state.userSettings, nextState.userSettings)) {
 			this.setUserSettings(nextState.userId);
 		}
@@ -155,7 +161,7 @@ class AppContextProvider extends Component {
 		}
 
 		return settings;
-	}
+	};
 
 	getUserNames = () => {
 		const users = {};
@@ -164,7 +170,7 @@ class AppContextProvider extends Component {
 			users[userKey] = userSettings.name;
 		});
 		return users;
-	}
+	};
 
 	loadSavedUserSettings = (userId) => {
 		if (!this.loadUserSettings(userId)) {
@@ -176,19 +182,19 @@ class AppContextProvider extends Component {
 
 		// Apply a consistent (predictable) set of object keys for consumers, merging in new keys since their last visit
 		return mergeDeepRight(omit(['arrangements'], this.state.userSettings), userSettings);
-	}
+	};
 
 	loadUserSettings = (userId) => {
-		return JSON.parse(window.localStorage.getItem(`user${userId}`)) || this.getDefaultUserSettings(userId);
-	}
+		return JSON.parse((global.localStorage && global.localStorage.getItem(`user${userId}`)) || '{}') || this.getDefaultUserSettings(userId);
+	};
 
 	saveUserSettings = (userId, userSettings) => {
-		window.localStorage.setItem(`user${userId}`, JSON.stringify(userSettings));
-	}
+		global.localStorage.setItem(`user${userId}`, JSON.stringify(userSettings));
+	};
 
 	deleteUserSettings = (userId) => {
-		window.localStorage.removeItem(`user${userId}`);
-	}
+		global.localStorage.removeItem(`user${userId}`);
+	};
 
 	updateUserSettings = (key, value) => {
 		this.getAllSavedUserIds().forEach(userKey => {
@@ -198,7 +204,7 @@ class AppContextProvider extends Component {
 				this.saveUserSettings(userKey, assocPath(key, value, settings));
 			}
 		});
-	}
+	};
 
 	setUserSettings = (userId = this.state.userId, userSettings) => {
 		const settings = userSettings || this.loadSavedUserSettings(userId);
@@ -206,19 +212,19 @@ class AppContextProvider extends Component {
 		this.updateAppState((state) => {
 			state.userSettings = settings;
 		});
-	}
+	};
 
 	getAllSavedUserIds = () => {
 		// Read the user database and return just a list of the registered id numbers
-		return Object.keys(window.localStorage)
+		return Object.keys(global.localStorage)
 			.filter(key => (key.indexOf('user') === 0))
 			.map(key => parseInt(key.replace('user', '')));
-	}
+	};
 
 	resetUserSettings = ({userId}) => {
 		this.deleteUserSettings(userId || this.state.userId);
 		this.setUserSettings(userId || this.state.userId);
-	}
+	};
 
 	resetAll = () => {
 		const userIds = this.getAllSavedUserIds();
@@ -230,17 +236,17 @@ class AppContextProvider extends Component {
 			state.navigation.navigating = false;
 			state.usersList = this.getUserNames();
 		});
-	}
+	};
 
 	repopulateUsersForDemo = () => {
 		for (const userId in userPresetsForDemo) {
 			this.saveUserSettings(userId.replace('user', ''), userPresetsForDemo[userId]);
 		}
-	}
+	};
 
 	setLocation = () => {
-		if (window.navigator.geolocation) {
-			this.watchPositionId = window.navigator.geolocation.watchPosition((position) => {
+		if (global.navigator && global.navigator.geolocation) {
+			this.watchPositionId = global.navigator.geolocation.watchPosition((position) => {
 				// This code will only fire when the watchPosition changes, not necessarily when
 				// the app state's location changes. Dev Note: Find a way to trigger the weather to
 				// be set if the location changes and disable this watch in that case, but reconnect
@@ -257,22 +263,24 @@ class AppContextProvider extends Component {
 					this.setWeather(position.coords.latitude, position.coords.longitude);
 				}
 			}, (error) => {
-				console.error('Location error:', error);
+				console.error('Location error:', error); // eslint-disable-line no-console
 			},
 			{enableHighAccuracy: true});
 		}
-	}
+	};
 
 	unsetLocationMonitoring = () => {
-		window.navigator.geolocation.clearWatch(this.watchPositionId);
-	}
+		if (global.navigator) {
+			global.navigator.geolocation.clearWatch(this.watchPositionId);
+		}
+	};
 
 	setWeather = async (latitude, longitude) => {
 		let weatherData;
 		try {
 			weatherData = await getWeather(latitude, longitude);
 		} catch (error) {
-			console.error('Weather error:', error);
+			console.error('Weather error:', error); // eslint-disable-line no-console
 			this.updateAppState((state) => {
 				state.weather.status = 'error';
 			});
@@ -284,13 +292,13 @@ class AppContextProvider extends Component {
 			state.weather = weatherData;
 			state.weather.status = {status: 'success'};
 		});
-	}
+	};
 
 	updateAppState = (cb) => {
 		this.setState(
 			produce(cb)
 		);
-	}
+	};
 
 	render () {
 		const context = {
@@ -311,12 +319,12 @@ class AppContextProvider extends Component {
 	}
 }
 
-class PureFragment extends React.PureComponent {
+class PureFragment extends PureComponent {
 	render () {
 		return (
-			<React.Fragment>
+			<Fragment>
 				{this.props.children}
-			</React.Fragment>
+			</Fragment>
 		);
 	}
 }

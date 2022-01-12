@@ -1,14 +1,19 @@
-import React from 'react';
 import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
 import {Row, Cell, Column} from '@enact/ui/Layout';
-import Divider from '@enact/agate/Divider';
+import Heading from '@enact/agate/Heading';
 import viewCSS from './WeatherPanel.module.less';
 import WeatherItem from '../components/WeatherItem';
 import AppStateConnect from '../App/AppContextConnect';
+import PropTypes from 'prop-types';
 
 const Weather = kind({
 	name: 'Weather',
+
+	propTypes: {
+		css: PropTypes.object,
+		weather: PropTypes.object
+	},
 
 	styles: {
 		css: viewCSS,
@@ -54,7 +59,7 @@ const Weather = kind({
 		return (
 			<Panel {...rest}>
 				<Column align="center center">
-					<Cell component={Divider} shrink spacing="large">
+					<Cell component={Heading} shrink spacing="large">
 						{currentWeather.cityName} Weather
 					</Cell>
 					<Cell style={{width: '100%'}} shrink>

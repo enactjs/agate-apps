@@ -1,7 +1,6 @@
 import {Cell} from '@enact/ui/Layout';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
 import compose from 'ramda/src/compose';
 
 import {WidgetBase, WidgetDecorator} from '../Widget';
@@ -52,7 +51,7 @@ const CompactScreenMonitorBase = kind({
 			<WidgetBase
 				{...rest}
 				containerShape={containerShape}
-				icon="livezoom"
+				icon="carspeaker"
 				title="Now Playing"
 				view="multimedia"
 			>

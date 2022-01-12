@@ -1,7 +1,7 @@
 import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Component} from 'react';
 
 import css from './Clock.module.less';
 
@@ -50,19 +50,19 @@ const ClockBase = kind({
 });
 
 const Tick = hoc((config, Wrapped) => {
-	return class extends React.Component {
+	return class extends Component {
 		static displayName = 'Tick';
 		constructor (props) {
 			super(props);
 			this.state = {
 				date: new Date()
 			};
-			this.ticker = window.setInterval(this.update, 1000);
+			this.ticker = global.setInterval(this.update, 1000);
 		}
 		componentWillUnmount () {
-			window.clearInterval(this.ticker);
+			global.clearInterval(this.ticker);
 		}
-		update = () => this.setState({date: new Date()})
+		update = () => this.setState({date: new Date()});
 		render () {
 			return (
 				<Wrapped {...this.props} date={this.state.date} />

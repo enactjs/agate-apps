@@ -4,7 +4,26 @@
 	height: 100%;
 	letter-spacing: 12px;
 
+	:global(.silicon) {
+		letter-spacing: 6px;
+	}
+
 	.applySkins({
+		.labeledIconButton {
+			margin: 0 12px;
+			.label {
+				margin: 0;
+			}
+
+			&.labeledIcon {
+				.label { margin: 0 }
+			}
+		}
+
+		.widget {
+			.heading { margin-bottom: 0; }
+		}
+
 		.status {
 			font-weight: 900;
 			width: 3em;
@@ -14,6 +33,11 @@
 
 		.on {
 			color: @agate-highlight;
+		}
+
+		.label {
+			font-size: 23px;
+			margin-bottom: 55px;
 		}
 	});
 }

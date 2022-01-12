@@ -6,7 +6,7 @@ import LabeledIconButton from '@enact/agate/LabeledIconButton';
 import TabGroup from '@enact/agate/TabGroup';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Fragment} from 'react';
 import compose from 'ramda/src/compose';
 
 import UserAvatar from '../UserAvatar';
@@ -29,9 +29,11 @@ const ProfileDrawerBase = kind({
 		updateAppState: PropTypes.func.isRequired,
 		userId: PropTypes.number.isRequired,
 		css: PropTypes.object,
+		index: PropTypes.number,
 		layoutArrangeable: PropTypes.bool,
 		onProfileEditEnd: PropTypes.func,
 		onResetAll: PropTypes.func,
+		onResetCopilot: PropTypes.func,
 		onResetPosition: PropTypes.func,
 		orientation: PropTypes.string,
 		showUserSelectionPopup: PropTypes.bool,
@@ -44,7 +46,7 @@ const ProfileDrawerBase = kind({
 		tabPosition: 'before',
 		tabs: [
 			{title: 'Home', icon: 'home'},
-			{title: 'Settings', icon: 'gear'},
+			{title: 'Settings', icon: 'setting'},
 			{title: 'Theme', icon: 'display'}
 		]
 	},
@@ -109,7 +111,7 @@ const ProfileDrawerBase = kind({
 		delete rest.getPanelIndexOf;
 		delete rest.updateAppState;
 		return (
-			<React.Fragment>
+			<Fragment>
 				<Drawer {...rest} css={css} scrimType="none">
 					<TabGroup
 						onSelect={onSelect}
@@ -147,7 +149,7 @@ const ProfileDrawerBase = kind({
 									onClick={layoutArrangeableToggle}
 									selected={layoutArrangeable}
 									shrink
-									small
+									size="small"
 									toggleOffLabel="Edit Layout"
 									toggleOnLabel="Done"
 									type="grid"
@@ -164,7 +166,7 @@ const ProfileDrawerBase = kind({
 					onResetPosition={onResetPosition}
 					onResetCopilot={onResetCopilot}
 				/>
-			</React.Fragment>
+			</Fragment>
 		);
 	}
 });

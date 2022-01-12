@@ -1,7 +1,7 @@
-import IconItem from '@enact/agate/IconItem';
+import Item from '@enact/agate/Item';
+import Icon from '@enact/agate/Icon';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 import css from './ContactThumbnail.module.less';
 
@@ -31,7 +31,10 @@ const ContactThumbnail = kind({
 
 	render: ({contact, onSelect, ...props}) => (
 		<div {...props} css={css} onClick={onSelect}>
-			<IconItem icon="user" label={contact.number}>{contact.name}</IconItem>
+			<Item label={contact.number}>
+				<Icon slot="slotBefore">user</Icon>
+				{contact.name}
+			</Item>
 		</div>
 	)
 });

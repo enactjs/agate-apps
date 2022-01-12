@@ -3,15 +3,14 @@ import kind from '@enact/core/kind';
 import {add} from '@enact/core/keymap';
 import {adaptEvent, forward, handle} from '@enact/core/handle';
 import {Cell, Column, Row} from '@enact/ui/Layout';
-import AgateDecorator from '@enact/agate/AgateDecorator';
 import Button from '@enact/agate/Button';
-import IconButton from '@enact/agate/IconButton';
 import Popup from '@enact/agate/Popup';
 import DateTimePicker from '@enact/agate/DateTimePicker';
 import {TabbedPanels} from '@enact/agate/Panels';
-import React from 'react';
+import {Component} from 'react';
 import compose from 'ramda/src/compose';
 import PropTypes from 'prop-types';
+import ThemeDecorator from '@enact/agate/ThemeDecorator';
 
 // Data Services
 import ServiceLayer from '../data/ServiceLayer';
@@ -38,7 +37,6 @@ import AppContextConnect from './AppContextConnect';
 
 // CSS/LESS Styling
 import css from './App.module.less';
-
 
 add('backspace', 8);
 
@@ -81,9 +79,9 @@ const PanelSwitchingIconButton = kind({
 	},
 	render: ({onSelect, ...rest}) => {
 		delete rest.index;
-		return (
-			<IconButton {...rest} onClick={onSelect} />
-		);
+		delete rest.view;
+
+		return <Button {...rest} onClick={onSelect} />;
 	}
 });
 
@@ -91,7 +89,29 @@ const AppBase = kind({
 	name: 'App',
 
 	propTypes: {
-		updateAppState: PropTypes.func.isRequired
+		updateAppState: PropTypes.func.isRequired,
+		accent: PropTypes.string,
+		defaultIndex: PropTypes.number,
+		endNavigation: PropTypes.func,
+		highlight: PropTypes.string,
+		index: PropTypes.number,
+		layoutArrangeable: PropTypes.bool,
+		onSelect: PropTypes.func,
+		orientation: PropTypes.string,
+		prevIndex: PropTypes.number,
+		reloadApp: PropTypes.func,
+		resetCopilot: PropTypes.func,
+		resetPosition: PropTypes.func,
+		sendVideo: PropTypes.func,
+		showAppList: PropTypes.bool,
+		showBasicPopup: PropTypes.bool,
+		showDateTimePopup: PropTypes.bool,
+		showDestinationReachedPopup: PropTypes.bool,
+		showPopup: PropTypes.bool,
+		showUserSelectionPopup: PropTypes.bool,
+		showWelcomePopup: PropTypes.bool,
+		skinName: PropTypes.string,
+		userId: PropTypes.number
 	},
 
 	styles: {
@@ -179,6 +199,7 @@ const AppBase = kind({
 		resetCopilot,
 		resetPosition,
 		reloadApp,
+		sendSkinSettings,
 		sendVideo,
 		showBasicPopup,
 		showDateTimePopup,
@@ -196,11 +217,12 @@ const AppBase = kind({
 		delete rest.showAppList;
 		delete rest.updateAppState;
 
-		const copperSkinFamily = (skinName === 'copper' || skinName === 'copper-day' || skinName === 'cobalt' || skinName === 'cobalt-day');
+		const copperSkinFamily = (skinName === 'copper' || skinName === 'cobalt');
 
 		return (
 			<div {...rest}>
 				<TabbedPanels
+					className={css.tabbedPanels}
 					orientation={orientation}
 					tabs={[
 						{title: 'Home', icon: 'home'},
@@ -209,6 +231,7 @@ const AppBase = kind({
 						{title: 'Radio', icon: 'radio'},
 						{title: 'Apps', icon: 'apps'}
 					]}
+					noCloseButton
 					onSelect={onSelect}
 					index={index}
 				>
@@ -235,17 +258,15 @@ const AppBase = kind({
 											index={index}
 											onSelect={onSelect}
 											view="settings/theme"
-										>
-											edit
-										</PanelSwitchingIconButton>
+											icon="edit"
+										/>
 									</Cell>
 									<Cell shrink>
-										<IconButton
+										<Button
 											onClick={layoutArrangeableToggle}
 											selected={layoutArrangeable}
-										>
-											display
-										</IconButton>
+											icon="display"
+										/>
 									</Cell>
 								</Row>
 							</Cell>
@@ -271,7 +292,7 @@ const AppBase = kind({
 						onReloadApp={reloadApp}
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
-					<ThemeSettings onSelect={onSelect} prevIndex={prevIndex} />
+					<ThemeSettings onSelect={onSelect} onSendSkinSettings={sendSkinSettings} prevIndex={prevIndex} />
 					<Weather />
 					<Dashboard
 						arrangeable={layoutArrangeable}
@@ -344,8 +365,12 @@ const AppBase = kind({
 });
 
 const AppIndex = (Wrapped) => {
-	return class extends React.Component {
-		static displayName = 'AppIndex'
+	return class extends Component {
+		static displayName = 'AppIndex';
+
+		static propTypes = {
+			defaultIndex: PropTypes.number
+		};
 
 		constructor (props) {
 			super(props);
@@ -392,12 +417,13 @@ const AppDecorator = compose(
 		showUserSelectionPopup: appState.showUserSelectionPopup,
 		showWelcomePopup: appState.showWelcomePopup,
 		skin: userSettings.skin,
+		skinVariants: userSettings.skinVariants,
 		skinName: userSettings.skin,
 		updateAppState,
 		userId
 	})),
 	AppIndex,
-	AgateDecorator
+	ThemeDecorator
 );
 
 const App = AppDecorator(AppBase);

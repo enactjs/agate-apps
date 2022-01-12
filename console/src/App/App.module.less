@@ -5,6 +5,13 @@
 	// This should prevent iOS from double-tap-to-zoom but... it doesn't completely.
 	touch-action: manipulation;
 
+	.tabbedPanels {
+		.applySkins({
+			// Adopting the same background color with a welcome popup.
+			background-color: @agate-fullscreenpopup-bg-color;
+		});
+	}
+
 	// General rules
 	.beforeTabs {
 		margin: 0 0.5em 0.5em 0.5em;
@@ -31,9 +38,7 @@
 
 // Theme-specific rules
 :global(.cobalt),
-:global(.cobalt-day),
-:global(.copper),
-:global(.copper-day) {
+:global(.copper) {
 	.app {
 		.beforeTabs {
 			margin-left: 2em;
@@ -76,5 +81,5 @@
 
 * {
 	// Disable touch highlighting in Chrome
-	-webkit-tap-highlight-color:  rgba(255, 255, 255, 0);
+	-webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 }

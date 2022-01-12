@@ -18,7 +18,7 @@
 			"rightHeat": false,
 			"rightTemp": 0
 		},
-		"colorAccent": "#e0b094",
+		"colorAccent": "#fc7982",
 		"colorHighlight": "#ffffff",
 		"components": {
 			"welcome": {
@@ -28,7 +28,7 @@
 		},
 		"fontSize": 0,
 		"name": "Laura",
-		"skin": "copper",
+		"skin": "gallium",
 		"skinVariants": "night",
 		"topLocations": [
 			{
@@ -97,7 +97,7 @@
 			"rightHeat": false,
 			"rightTemp": 0
 		},
-		"colorAccent": "#fc7982",
+		"colorAccent": "#9e00d8",
 		"colorHighlight": "#ffffff",
 		"components": {
 			"welcome": {
@@ -107,7 +107,7 @@
 		},
 		"fontSize": 0,
 		"name": "Thomas",
-		"skin": "cobalt",
+		"skin": "silicon",
 		"skinVariants": "night",
 		"topLocations": [
 			{

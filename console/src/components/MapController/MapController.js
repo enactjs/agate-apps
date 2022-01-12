@@ -1,13 +1,12 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import {Component} from 'react';
 import hoc from '@enact/core/hoc';
 import Pure from '@enact/ui/internal/Pure';
 import classnames from 'classnames';
 import Group from '@enact/ui/Group';
 import {Cell, Column, Row} from '@enact/ui/Layout';
 import Button from '@enact/agate/Button';
-import Divider from '@enact/agate/Divider';
-import IconButton from '@enact/agate/IconButton';
+import Heading from '@enact/agate/Heading';
 import ToggleButton from '@enact/agate/ToggleButton';
 import Skinnable from '@enact/agate/Skinnable';
 
@@ -25,7 +24,7 @@ const StyledButton = ({style = {}, ...rest}) => {
 };
 
 const MapControllerHoc = hoc((configHoc, Wrapped) => {
-	return class extends React.Component {
+	return class extends Component {
 		static displayName = 'MapControllerHoc';
 
 		static propTypes = {
@@ -40,19 +39,22 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 			locationSelection: PropTypes.bool,
 			navigating: PropTypes.bool,
 			navigation: PropTypes.object,
+			noExpandButton: PropTypes.bool,
+			noFollowButton: PropTypes.bool,
 			noStartStopToggle: PropTypes.bool,
+			onExpand: PropTypes.func,
 			position: propTypeLatLon, // The map's centering position
 			tools: PropTypes.node, // Buttons and tools for interacting with the map. (Slottable)
 			viewLockoutDuration: PropTypes.number,
 			zoomToSpeedScaleFactor: PropTypes.number
-		}
+		};
 
 		static defaultProps = {
 			centeringDuration: 2000,
 			follow: true,
 			viewLockoutDuration: 4000,
 			zoomToSpeedScaleFactor: 0.02
-		}
+		};
 
 		constructor (props) {
 			super(props);
@@ -64,39 +66,39 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 		}
 
 		handleSetDestination = ({selected}) => {
-			console.log('Proposing new destination index:', selected, '->', this.props.topLocations[selected]);
+			console.log('Proposing new destination index:', selected, '->', this.props.topLocations[selected]); // eslint-disable-line no-console
 			const loc = this.props.topLocations[selected];
 			this.updateDestination({
 				description: loc ? loc.description : '',
 				destination: loc ? [loc.coordinates] : null
 			});
-		}
+		};
 
 		startNavigation = ({selected}) => {
 			if (selected) {
-				console.log('MapController - start navigation to', this.props.topLocations, this.props.topLocations[this.state.destinationIndex], 'from index:', this.state.destinationIndex);
+				console.log('MapController - start navigation to', this.props.topLocations, this.props.topLocations[this.state.destinationIndex], 'from index:', this.state.destinationIndex); // eslint-disable-line no-console
 				this.updateDestination({
 					navigating: true
 				});
 			} else {
-				console.log('MapController - stopping navigation');
+				console.log('MapController - stopping navigation'); // eslint-disable-line no-console
 				this.updateDestination({
 					destination: null,
 					navigating: false
 				});
 			}
-		}
+		};
 
 		toggleAutonomous = () => {
 			this.props.updateAppState((state) => {
 				state.navigation.autonomous = !state.navigation.autonomous;
 			});
-		}
+		};
 		toggleFollow = () => {
 			this.props.updateAppState((state) => {
 				state.navigation.follow = !state.navigation.follow;
 			});
-		}
+		};
 		updateDestination = ({description, destination, navigating = false}) => {
 			this.props.updateAppState((state) => {
 				if (typeof destination !== 'undefined') {
@@ -107,7 +109,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 					state.navigation.navigating = navigating;
 				}
 			});
-		}
+		};
 		updateNavigation = ({duration, distance}) => {
 			this.props.updateAppState((state) => {
 				const startTime = new Date().getTime();
@@ -118,13 +120,13 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 				state.navigation.eta = eta;
 				state.navigation.distance = distance;
 			});
-		}
+		};
 
 		onExpand = () => {
 			if (this.props.onExpand) {
 				this.props.onExpand({view: 'map'});
 			}
-		}
+		};
 
 		render () {
 			const {
@@ -167,31 +169,29 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 								{
 									noFollowButton ?
 										null :
-										<IconButton
-											size="smallest"
+										<Button
+											size="small"
 											alt="Follow Mode"
 											selected={follow}
 											onClick={this.toggleFollow}
-										>
-											compass
-										</IconButton>
+											icon="compass"
+										/>
 								}
 								{
 									noExpandButton ?
 										null :
-										<IconButton
-											size="smallest"
+										<Button
+											size="small"
 											alt="Fullscreen"
 											onClick={this.onExpand}
-										>
-											expand
-										</IconButton>
+											icon="expand"
+										/>
 								}
 							</Cell>
 							{
 								autonomousSelection && !(destination && navigating) ?
 									<Cell shrink={locationSelection} className={css.columnCell}>
-										<Divider spacing="medium" className={css.heading}>Self-driving</Divider>
+										<Heading spacing="medium" className={css.heading}>Self-driving</Heading>
 										<Row
 											component={Group}
 											childComponent={Cell}
@@ -220,7 +220,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 							{/* {
 								compact && destination && description &&
 								<Cell shrink className={css.columnCell}>
-									<Divider>Navigating To</Divider>
+									<Heading>Navigating To</Heading>
 									<Button
 										className={css.button}
 										small
@@ -260,7 +260,7 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 									className={css.columnCell}
 									component={ToggleButton}
 									css={css}
-									small
+									size="small"
 									// We want to be able to factor in the autonomous state, but
 									// perhaps that needs to happen in ServiceLayer, and not here.
 									selected={destination && navigating}

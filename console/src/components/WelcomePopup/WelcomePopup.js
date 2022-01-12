@@ -1,5 +1,5 @@
 import Button from '@enact/agate/Button';
-import Divider from '@enact/agate/Divider';
+import Heading from '@enact/agate/Heading';
 import FullscreenPopup from '@enact/agate/FullscreenPopup';
 // import {Panel, Panels} from '@enact/agate/Panels';
 import {Panel} from '@enact/agate/Panels';
@@ -11,7 +11,7 @@ import kind from '@enact/core/kind';
 import {Column, Row, Cell} from '@enact/ui/Layout';
 // import {fadeIn, fadeOut, reverse} from '@enact/ui/ViewManager/arrange';
 import PropTypes from 'prop-types';
-import React from 'react';
+import {Component, Fragment} from 'react';
 
 import AppContextConnect from '../../App/AppContextConnect';
 import CompactHeater from '../CompactHeater';
@@ -24,20 +24,20 @@ import UserAvatar from '../UserAvatar';
 import css from './WelcomePopup.module.less';
 
 const getCompactComponent = ({components, key, onSendVideo}) => {
-	let Component;
+	let CompactComponent; // name changed because of {Component} import above
 
 	switch (components[key]) {
 		case 'multimedia':
-			Component = (<CompactMultimedia className={css.widget} direction="horizontal" noExpandButton onSendVideo={onSendVideo} screenIds={[1]} />);
+			CompactComponent = (<CompactMultimedia className={css.widget} direction="horizontal" noExpandButton onSendVideo={onSendVideo} screenIds={[1]} />);
 			break;
 		case 'heater':
-			Component = (<CompactHeater className={css.widget} noExpandButton />);
+			CompactComponent = (<CompactHeater className={css.widget} noExpandButton />);
 			break;
 		default:
-			Component = (<CompactWeather className={css.widget} noExpandButton />);
+			CompactComponent = (<CompactWeather className={css.widget} noExpandButton />);
 	}
 
-	return Component;
+	return CompactComponent;
 };
 
 // const currentTime = () => new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
@@ -55,7 +55,7 @@ const getCompactComponent = ({components, key, onSendVideo}) => {
 // 	render: ({onSelectUser, users}) => {
 // 		return (
 // 			<WelcomePanel className={css.userSelectionPanel}>
-// 				<Divider slot="header" className={css.header}>Welcome</Divider>
+// 				<Heading slot="header" className={css.header}>Welcome</Heading>
 // 				<Row align="center space-around" className={css.bodyRow}>
 // 					{users.map((user, index) => (
 // 						<Cell shrink key={'userKey' + index}>
@@ -85,6 +85,7 @@ const WelcomePopupBase = kind({
 		// onShowWelcome: PropTypes.func,
 		profileName: PropTypes.string,
 		// updateUser: PropTypes.func,
+		setDestination: PropTypes.func,
 		userId: PropTypes.number
 	},
 
@@ -129,7 +130,7 @@ const WelcomePopupBase = kind({
 			const ampm = (h >= 12 ? 'pm' : 'am');
 			if (h > 12) h -= 12;
 			if (m < 10) m = '0' + m;
-			return <React.Fragment><em>{h}:{m}</em> {ampm}</React.Fragment>;
+			return <Fragment><em>{h}:{m}</em> {ampm}</Fragment>;
 		}
 	},
 
@@ -181,11 +182,11 @@ const WelcomePopupBase = kind({
 								<Cell shrink className={css.contentCell + ' ' + css.time}>
 									{time}
 								</Cell>
-								<Cell shrink className={css.contentCell + ' ' + css.divider} component={Divider} />
+								<Cell shrink className={css.contentCell + ' ' + css.heading} component={Heading} />
 								<Cell className={css.contentCell}>
 									{Small1Component}
 								</Cell>
-								<Cell shrink className={css.contentCell + ' ' + css.divider} component={Divider} />
+								<Cell shrink className={css.contentCell + ' ' + css.heading} component={Heading} />
 								<Cell className={css.contentCell}>
 									{Small2Component}
 								</Cell>
@@ -210,13 +211,14 @@ const WelcomePopupBase = kind({
 });
 
 const WelcomePopupState = hoc((configHoc, Wrapped) => {
-	return class extends React.Component {
+	return class extends Component {
 		static displayName = 'WelcomePopupState';
 
-		// static propTypes = {
-		// 	open: PropTypes.bool,
-		// 	skin: PropTypes.string
-		// }
+		static propTypes = {
+			// open: PropTypes.bool,
+			// skin: PropTypes.string
+			updateAppState: PropTypes.func
+		};
 
 		// constructor (props) {
 		// 	super(props);
@@ -246,7 +248,7 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 					state.navigation.navigating = true;
 				}
 			});
-		}
+		};
 
 		// handleShowWelcome = () => {
 		// 	this.setState(({index}) => index === 1 ? {index: ++index} : null);
@@ -256,7 +258,7 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 			this.props.updateAppState((state) => {
 				state.navigation.destination = destination;
 			});
-		}
+		};
 
 		// updateUser = ({selected}) => {
 		// 	this.props.updateAppState((state) => {

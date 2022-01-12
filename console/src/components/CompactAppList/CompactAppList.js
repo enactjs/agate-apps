@@ -1,7 +1,6 @@
 import kind from '@enact/core/kind';
 import {Row} from '@enact/ui/Layout';
 import Droppable, {ResponsiveBox} from '@enact/agate/DropManager';
-import React from 'react';
 import PropTypes from 'prop-types';
 
 import Widget from '../Widget';
@@ -43,7 +42,7 @@ const CompactAppList = kind({
 				<AppIconCell
 					shrink
 					size="50%"
-					icon="audio"
+					icon="music"
 					onKeyUp={onTabChange}
 					data-tabindex={getPanelIndexOf('radio')}
 					onClick={onTabChange}
@@ -63,7 +62,7 @@ const CompactAppList = kind({
 				<AppIconCell
 					shrink
 					size="50%"
-					icon="gear"
+					icon="setting"
 					data-tabindex={getPanelIndexOf('settings')}
 					onKeyUp={onTabChange}
 					onClick={onTabChange}

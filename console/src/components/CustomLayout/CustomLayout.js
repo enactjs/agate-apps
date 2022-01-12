@@ -2,7 +2,6 @@ import kind from '@enact/core/kind';
 import {Layout, Cell} from '@enact/ui/Layout';
 import Droppable, {Draggable} from '@enact/agate/DropManager';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 import AppContextConnect from '../../App/AppContextConnect';
 

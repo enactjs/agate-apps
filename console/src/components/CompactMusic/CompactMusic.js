@@ -1,8 +1,7 @@
 import GridListImageItem from '@enact/agate/GridListImageItem';
 import kind from '@enact/core/kind';
 import {Row, Cell} from '@enact/ui/Layout';
-import IconButton from '@enact/agate/IconButton';
-import React from 'react';
+import Button from '@enact/agate/Button';
 
 import Widget from '../Widget';
 import albumArt from '../../../assets/music-album-art.jpg';
@@ -19,13 +18,16 @@ const PlaybackControls = kind({
 
 	render: (props) => {
 		return (
-			<Row
-				{...props}
-				align="center center"
-			>
-				<Cell shrink><IconButton size="smallest">skipbackward</IconButton></Cell>
-				<Cell shrink><IconButton size="small">play</IconButton></Cell>
-				<Cell shrink><IconButton size="smallest">skipforward</IconButton></Cell>
+			<Row {...props} align="center center">
+				<Cell shrink>
+					<Button size="small" icon="arrowlargeleft" />
+				</Cell>
+				<Cell shrink>
+					<Button size="small" icon="ellipsis" />
+				</Cell>
+				<Cell shrink>
+					<Button size="small" icon="arrowlargeright" />
+				</Cell>
 			</Row>
 		);
 	}
@@ -41,7 +43,7 @@ const CompactMusicBase = kind({
 
 	render: (props) => {
 		return (
-			<Widget {...props} icon="audio" title="Listen" description="Listen to your favorite tunes" view="radio" align="center center">
+			<Widget {...props} icon="music" title="Listen" description="Listen to your favorite tunes" view="radio" align="center center">
 				<Cell shrink>
 					<GridListImageItem
 						caption="The Title"

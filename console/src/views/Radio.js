@@ -1,5 +1,5 @@
 import Button from '@enact/agate/Button';
-import Divider from '@enact/agate/Divider';
+import Heading from '@enact/agate/Heading';
 import {LabeledItemBase} from '@enact/agate/LabeledItem';
 import {Panel} from '@enact/agate/Panels';
 import ToggleButton from '@enact/agate/ToggleButton';
@@ -7,7 +7,7 @@ import {ResponsiveBox} from '@enact/agate/DropManager';
 import Layout, {Row, Cell} from '@enact/ui/Layout';
 import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
-import React, {Component} from 'react';
+import {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import PresetItem from '../components/PresetItem';
@@ -38,11 +38,11 @@ const ResponsiveTuner = ResponsiveBox(({containerShape, children, onUp, onDown, 
 	return (
 		<Layout align="center center" orientation={orientation} {...rest}>
 			{/* {(console.log({rest: rest}) ? 'test' : null)}*/}
-			<Cell shrink component={Button} onClick={vertical ? onUp : onDown} icon={vertical ? 'arrowsmallup' : 'arrowsmallleft'} />
+			<Cell shrink component={Button} onClick={vertical ? onUp : onDown} icon={vertical ? 'arrowlargeup' : 'arrowlargeleft'} />
 			<Cell shrink className={css.label}>
 				{children}
 			</Cell>
-			<Cell shrink component={Button} onClick={vertical ? onDown : onUp} icon={vertical ? 'arrowsmalldown' : 'arrowsmallright'} />
+			<Cell shrink component={Button} onClick={vertical ? onDown : onUp} icon={vertical ? 'arrowlargedown' : 'arrowlargeright'} />
 		</Layout>
 	);
 });
@@ -51,11 +51,14 @@ const RadioBase = kind({
 	name: 'Radio',
 
 	propTypes: {
+		arrangeable: PropTypes.string,
+		arrangement: PropTypes.string,
 		band: PropTypes.string,
 		changeBand: PropTypes.func,
 		changeFrequency: PropTypes.func,
 		changePreset: PropTypes.func,
 		frequency: PropTypes.number,
+		onArrange: PropTypes.func,
 		onBandToggle: PropTypes.func,
 		onPresetClick: PropTypes.func,
 		onPresetDown: PropTypes.func,
@@ -138,8 +141,8 @@ const RadioBase = kind({
 						<Row align="center space-around" wrap className={css.info}>
 							{/* Band Selector */}
 							<Cell shrink className={css.radioToggle}>
-								<ToggleButton onClick={onBandToggle} selected={band === 'AM'} small type="grid">AM</ToggleButton>|
-								<ToggleButton onClick={onBandToggle} selected={band === 'FM'} small type="grid">FM</ToggleButton>
+								<ToggleButton onClick={onBandToggle} selected={band === 'AM'} type="grid" underline>AM</ToggleButton>|
+								<ToggleButton onClick={onBandToggle} selected={band === 'FM'} type="grid" underline>FM</ToggleButton>
 							</Cell>
 							{/* Station Info */}
 							<Cell shrink className={css.title}>
@@ -161,9 +164,8 @@ const RadioBase = kind({
 					</topRight>
 
 					{/* List*/}
-					<div className={css.presetList}>
-						Presets
-						<Divider startSection />
+					<div>
+						<Heading showLine>Presets</Heading>
 						{['', '', '', '', ''].map((name, index) => (
 							<PresetItem
 								key={'preset' + index}
@@ -206,15 +208,15 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 
 		changeBand = (band) => {
 			this.setState({band});
-		}
+		};
 
 		changePreset = (preset) => {
 			this.setState({preset});
-		}
+		};
 
 		changeFrequency = (frequency) => {
 			this.setState({frequency});
-		}
+		};
 
 		updatePresets = (frequency, index) => {
 			this.setState(({presets}) => {
@@ -228,7 +230,7 @@ const RadioDecorator = hoc(defaultConfig, (configHoc, Wrapped) => {
 
 				return {presets: updatedPresets};
 			});
-		}
+		};
 
 		render () {
 			return (
