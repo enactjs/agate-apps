@@ -1,4 +1,4 @@
-import GridListImageItem from '@enact/agate/GridListImageItem';
+import ImageItem from '@enact/agate/ImageItem';
 import kind from '@enact/core/kind';
 import {adaptEvent, forward, handle} from '@enact/core/handle';
 import PropTypes from 'prop-types';
@@ -37,7 +37,7 @@ const UserAvatarBase = kind({
 
 	computed: {
 		className: ({size, styler}) => styler.append(size),
-		source: ({userId}) => (userAvatars[userId] || 'none'),
+		src: ({userId}) => (userAvatars[userId] || 'none'),
 		style: ({style, userId}) => ({
 			...style,
 			'--user-index': userId
@@ -48,11 +48,12 @@ const UserAvatarBase = kind({
 		delete rest.userId;
 		delete rest.size;
 		return (
-			<GridListImageItem
+			<ImageItem
 				{...rest}
 				css={css}
-				caption={children}
-			/>
+				sizing="fit"
+			>{children}
+			</ImageItem>
 		);
 	}
 });

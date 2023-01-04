@@ -84,8 +84,8 @@ const PhoneBase = kind({
 	},
 
 	propTypes: {
-		arrangeable: PropTypes.string,
-		arrangement: PropTypes.string,
+		arrangeable: PropTypes.bool,
+		arrangement: PropTypes.object,
 		onArrange: PropTypes.func,
 		onChange: PropTypes.func,
 		onTogglePopup: PropTypes.func,

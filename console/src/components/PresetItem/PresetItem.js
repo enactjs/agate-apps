@@ -5,7 +5,7 @@ import Touchable from '@enact/ui/Touchable';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 import kind from '@enact/core/kind';
-import {LabeledItemBase} from '@enact/agate/LabeledItem';
+import {ItemBase} from '@enact/agate/Item';
 
 const PresetItemBase = kind({
 	name: 'PresetItem',
@@ -26,9 +26,9 @@ const PresetItemBase = kind({
 	},
 
 	render: ({children, label, ...rest}) => (
-		<LabeledItemBase {...rest} label={label} labelPosition="before">
+		<ItemBase {...rest} label={label} labelPosition="before">
 			{children}
-		</LabeledItemBase>
+		</ItemBase>
 	)
 });
 

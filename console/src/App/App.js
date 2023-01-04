@@ -19,6 +19,7 @@ import ServiceLayer from '../data/ServiceLayer';
 import UserSelectionPopup from '../components/UserSelectionPopup';
 import UserAvatar from '../components/UserAvatar';
 import Clock from '../components/Clock';
+import ProfileDrawer from '../components/ProfileDrawer';
 import WelcomePopup from '../components/WelcomePopup';
 import AppList from '../views/AppList';
 import Home from '../views/Home';
@@ -125,11 +126,11 @@ const AppBase = kind({
 				state.userSettings.arrangements.arrangeable = !state.userSettings.arrangements.arrangeable;
 			});
 		},
-		// onToggleProfileEdit: (ev, {updateAppState}) => {
-		// 	updateAppState((state) => {
-		// 		state.appState.showProfileEdit = !state.appState.showProfileEdit;
-		// 	});
-		// },
+		onToggleProfileEdit: (ev, {updateAppState}) => {
+			updateAppState((state) => {
+				state.appState.showProfileEdit = !state.appState.showProfileEdit;
+			});
+		},
 		onToggleDateTimePopup: (ev, {updateAppState}) => {
 			updateAppState((state) => {
 				state.appState.showDateTimePopup = !state.appState.showDateTimePopup;
@@ -191,7 +192,7 @@ const AppBase = kind({
 		onToggleDateTimePopup,
 		onToggleDestinationReachedPopup,
 		onTogglePopup,
-		// onToggleProfileEdit,
+		onToggleProfileEdit,
 		onToggleUserSelectionPopup,
 		onToggleWelcomePopup,
 		orientation,
@@ -239,6 +240,7 @@ const AppBase = kind({
 						<div className={css.beforeTabs}>
 							<UserAvatar
 								className={css.avatar}
+								css={css}
 								userId={userId - 1}
 								onClick={onToggleUserSelectionPopup}
 							/>
@@ -307,7 +309,7 @@ const AppBase = kind({
 					onResetPosition={resetPosition}
 					onResetCopilot={resetCopilot}
 				/>
-				{/* <ProfileDrawer
+				 <ProfileDrawer
 					index={index}
 					getPanelIndexOf={getPanelIndexOf}
 					onProfileEditEnd={onToggleProfileEdit}
@@ -316,7 +318,7 @@ const AppBase = kind({
 					onResetCopilot={resetCopilot}
 					onSelect={onSelect}
 					showUserSelectionPopup={showUserSelectionPopup}
-				/>*/}
+				/>
 				<Popup
 					onClose={onToggleBasicPopup}
 					open={showBasicPopup}

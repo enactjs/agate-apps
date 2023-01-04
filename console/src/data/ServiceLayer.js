@@ -301,12 +301,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			global.location.reload();
 		};
 
-		setConnected = (connected) => {
-			this.props.updateAppState((state) => {
-				if (state.connections.serviceLayer === connected) return null;
-				state.connections.serviceLayer = connected;
-			});
-		};
+
 
 		setLocation = ({location}) => {
 			this.props.updateAppState((state) => {

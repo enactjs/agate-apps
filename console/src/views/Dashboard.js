@@ -32,7 +32,7 @@ const DashboardBase = kind({
 	name: 'Dashboard',
 
 	propTypes: {
-		arrangeable: PropTypes.string,
+		arrangeable: PropTypes.bool,
 		arrangement: PropTypes.string,
 		linearVelocity: PropTypes.number,
 		onArrange: PropTypes.func

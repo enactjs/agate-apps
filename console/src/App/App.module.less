@@ -1,4 +1,4 @@
-@import "~@enact/agate/styles/skin.less";
+@import "@enact/agate/styles/skin.less";
 
 .app {
 	// styles can be put here
@@ -8,7 +8,7 @@
 	.tabbedPanels {
 		.applySkins({
 			// Adopting the same background color with a welcome popup.
-			background-color: @agate-fullscreenpopup-bg-color;
+			background-color: @agate-popup-bg-color;
 		});
 	}
 
@@ -19,6 +19,10 @@
 
 		.avatar {
 			margin: 1em;
+
+			.image {
+				margin: 0 auto;
+			}
 		}
 	}
 	.afterTabs {

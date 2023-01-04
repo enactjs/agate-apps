@@ -1,7 +1,7 @@
 // UserAvatar.module.less
 //
-@import "~@enact/agate/styles/mixins.less";
-@import "~@enact/agate/styles/skin.less";
+@import "@enact/agate/styles/mixins.less";
+@import "@enact/agate/styles/skin.less";
 
 .userAvatar {
 	--user-index: 0;
@@ -14,11 +14,11 @@
 		@image-border-width: 6px;
 
 		.image {
-			width: 148px;
-			height: 148px;
+			width: 149px;
+			height: 149px;
 			background-clip: padding-box;
 			border: @image-border-width solid rgba(0, 0, 0, 0.1);
-			padding: ~"calc(50% * var(--agate-gridlistimageitem-aspect-ratio, 1) - " @image-border-width ~")" 0;
+			padding: 75px 0;
 		}
 	}
 
@@ -46,7 +46,7 @@
 			margin-top: 90px;
 			margin-bottom: 90px;
 			border: @image-border-width solid #594339;
-			padding: ~"calc(50% * var(--agate-gridlistimageitem-aspect-ratio, 1) - " @image-border-width ~")" 0;
+			padding: 75px 0;
 
 			&::before {
 				.position(-36px);

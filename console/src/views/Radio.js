@@ -1,6 +1,6 @@
 import Button from '@enact/agate/Button';
 import Heading from '@enact/agate/Heading';
-import {LabeledItemBase} from '@enact/agate/LabeledItem';
+import {ItemBase} from '@enact/agate/Item';
 import {Panel} from '@enact/agate/Panels';
 import ToggleButton from '@enact/agate/ToggleButton';
 import {ResponsiveBox} from '@enact/agate/DropManager';
@@ -51,7 +51,7 @@ const RadioBase = kind({
 	name: 'Radio',
 
 	propTypes: {
-		arrangeable: PropTypes.string,
+		arrangeable: PropTypes.bool,
 		arrangement: PropTypes.string,
 		band: PropTypes.string,
 		changeBand: PropTypes.func,
@@ -146,7 +146,7 @@ const RadioBase = kind({
 							</Cell>
 							{/* Station Info */}
 							<Cell shrink className={css.title}>
-								<LabeledItemBase label="Artist - Song">{frequency} MHZ</LabeledItemBase>
+								<ItemBase label="Artist - Song">{frequency} MHZ</ItemBase>
 							</Cell>
 						</Row>
 					</top>

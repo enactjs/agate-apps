@@ -2,7 +2,7 @@ import {Cell, Column, Row} from '@enact/ui/Layout';
 import Heading from '@enact/agate/Heading';
 import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
-import LabeledItem from '@enact/agate/LabeledItem';
+import Item from '@enact/agate/Item';
 import SwitchItem from '@enact/agate/SwitchItem';
 import PropTypes from 'prop-types';
 
@@ -115,7 +115,7 @@ const Settings = kind({
 						>
 							Reload Apps
 						</SwitchItemCell>
-						<LabeledItem label={ipAddress}>IP Address</LabeledItem>
+						<Item label={ipAddress}>IP Address</Item>
 					</Column>
 				</Cell>
 			</Row>
