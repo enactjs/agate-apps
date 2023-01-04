@@ -1,6 +1,6 @@
 import Button from '@enact/agate/Button';
 import Heading from '@enact/agate/Heading';
-import {ItemBase} from '@enact/agate/Item';
+import Item from '@enact/agate/Item';
 import {Panel} from '@enact/agate/Panels';
 import ToggleButton from '@enact/agate/ToggleButton';
 import {ResponsiveBox} from '@enact/agate/DropManager';
@@ -146,7 +146,7 @@ const RadioBase = kind({
 							</Cell>
 							{/* Station Info */}
 							<Cell shrink className={css.title}>
-								<ItemBase label="Artist - Song">{frequency} MHZ</ItemBase>
+								<Item label="Artist - Song">{frequency} MHZ</Item>
 							</Cell>
 						</Row>
 					</top>

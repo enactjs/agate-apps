@@ -1,7 +1,7 @@
 import ImageItem from '@enact/agate/ImageItem';
 import kind from '@enact/core/kind';
-import {Row, Cell} from '@enact/ui/Layout';
-import Button from '@enact/agate/Button';
+import {Cell} from '@enact/ui/Layout';
+// import Button from '@enact/agate/Button';
 
 import Widget from '../Widget';
 import albumArt from '../../../assets/music-album-art.jpg';

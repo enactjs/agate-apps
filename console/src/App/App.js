@@ -103,6 +103,7 @@ const AppBase = kind({
 		reloadApp: PropTypes.func,
 		resetCopilot: PropTypes.func,
 		resetPosition: PropTypes.func,
+		sendSkinSettings: PropTypes.func,
 		sendVideo: PropTypes.func,
 		showAppList: PropTypes.bool,
 		showBasicPopup: PropTypes.bool,
@@ -309,7 +310,7 @@ const AppBase = kind({
 					onResetPosition={resetPosition}
 					onResetCopilot={resetCopilot}
 				/>
-				 <ProfileDrawer
+				<ProfileDrawer
 					index={index}
 					getPanelIndexOf={getPanelIndexOf}
 					onProfileEditEnd={onToggleProfileEdit}

@@ -12,7 +12,7 @@ const TitleHeading = kind({
 	name: 'TitleHeading',
 
 	render ({...rest}) {
-		return (<Heading marqueeDisabled {...rest} />)
+		return (<Heading marqueeDisabled {...rest} />);
 	}
 });
 

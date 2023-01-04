@@ -112,7 +112,7 @@ const ProfileDrawerBase = kind({
 		delete rest.updateAppState;
 		return (
 			<Fragment>
-				<Drawer {...rest} css={css} scrimType="none">
+				<Drawer {...rest} css={css} scrimType="transparent">
 					<TabGroup
 						onSelect={onSelect}
 						orientation="vertical"

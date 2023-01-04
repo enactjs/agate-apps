@@ -2,7 +2,6 @@ import Button from '@enact/agate/Button';
 import Heading from '@enact/agate/Heading';
 import Popup from '@enact/agate/Popup';
 // import {Panel, Panels} from '@enact/agate/Panels';
-import {Panel} from '@enact/agate/Panels';
 // import Skinnable from '@enact/agate/Skinnable';
 // import {handle, forProp, forward, returnsTrue} from '@enact/core/handle';
 import {handle, forward} from '@enact/core/handle';
@@ -162,7 +161,7 @@ const WelcomePopupBase = kind({
 				{/* <Panels arranger={Arranger} index={index} enteringProp="hideChildren" onTransition={handleTransition}> */}
 				{/* <UserSelectionPanel users={usersList} onSelectUser={onSelectUser} /> */}
 				{/* <WelcomePanel /> */}
-				<div className={css.panel} css={css}>
+				<div className={css.panel}>
 					<Row className={css.welcome}>
 						<Cell className={css.left} size="33%">
 							<Column>

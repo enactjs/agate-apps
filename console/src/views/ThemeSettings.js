@@ -103,7 +103,9 @@ const ThemeSettingsBase = kind({
 		css: PropTypes.object,
 		label: PropTypes.string,
 		onSelect: PropTypes.func,
-		prevIndex: PropTypes.number
+		onSendSkinSettings: PropTypes.func,
+		prevIndex: PropTypes.number.name,
+		skin: PropTypes.string
 	},
 
 	styles: {
@@ -117,7 +119,7 @@ const ThemeSettingsBase = kind({
 		},
 		onChange: (ev, props) => {
 			props.onSendSkinSettings(props);
-		},
+		}
 	},
 
 	render: ({css, onChange, onSelect, onSendSkinSettings, prevIndex, ...rest}) => (
@@ -158,7 +160,7 @@ const ThemeSettingsBase = kind({
 							</SkinSetting>
 						</Cell>
 						<Cell shrink className={css.spacedItem}>
-							<SkinVariantsSetting label="Variant:" onClick={onChange} onSendSkinSettingsSettings={onSendSkinSettings}>
+							<SkinVariantsSetting label="Variant:" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>
 								{skinVariantsNames}
 							</SkinVariantsSetting>
 						</Cell>

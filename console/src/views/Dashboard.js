@@ -57,8 +57,8 @@ const DashboardBase = kind({
 							<Cell shrink className={css.speed}>
 								{speed}
 							</Cell>
-							<Cell shrink>
-								<Item spotlightDisabled inline>mph</Item>
+							<Cell shrink className={css.mph}>
+								mph
 							</Cell>
 						</Row>
 						{/*

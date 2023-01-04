@@ -73,7 +73,7 @@ const HomeLayouts = kind({
 		delete rest.arrangement;
 
 		const widgetTray = (
-			<Drawer className={css.drawer} open={arrangeable} scrimType="none">
+			<Drawer className={css.drawer} open={arrangeable} scrimType="transparent">
 				<header className={css.header}>
 					<Cell className={css.title} component={Heading} shrink>Additional Widgets</Cell>
 				</header>
