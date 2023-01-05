@@ -1,6 +1,7 @@
 /* eslint no-console: off */
-import ROSLIB from 'roslib';
 import {cap} from '@enact/core/util';
+import ROSLIB from 'roslib';
+
 import {getSimFromLatLong} from './conversion';
 
 function noop () {}

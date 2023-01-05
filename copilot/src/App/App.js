@@ -1,19 +1,20 @@
 import Button from '@enact/agate/Button';
-import {Cell, Column, Row} from '@enact/ui/Layout';
-// import Job from '@enact/core/util/Job';
-import kind from '@enact/core/kind';
-import LabeledItem from '@enact/agate/LabeledItem';
-import PropTypes from 'prop-types';
-import {Component, Fragment} from 'react';
+import Item from '@enact/agate/Item';
 import Skinnable from '@enact/agate/Skinnable';
 import ThemeDecorator from '@enact/agate/ThemeDecorator';
+import kind from '@enact/core/kind';
+// import Job from '@enact/core/util/Job';
+import {Cell, Column, Row} from '@enact/ui/Layout';
+import PropTypes from 'prop-types';
+import {Component, Fragment} from 'react';
 
 import Communicator from '../../../components/Communicator';
-import ScreenSelectionPopup from '../../../components/ScreenSelectionPopup';
-import NetworkInfo from '../../../components/NetworkInfo';
 import {formatDuration, formatTime} from '../../../components/Formatter';
+import NetworkInfo from '../../../components/NetworkInfo';
+import ScreenSelectionPopup from '../../../components/ScreenSelectionPopup';
 
 import appConfig from './configLoader';
+
 import css from './App.module.less';
 
 const screenIds = [1];
@@ -61,8 +62,8 @@ const AppBase = kind({
 			<Column {...rest}>
 				{eta ? <Cell shrink>
 					<Row>
-						<Cell component={LabeledItem} label="Remaining" spotlightDisabled>{formatDuration(duration, durationIncrements)}</Cell>
-						<Cell component={LabeledItem} label="ETA" spotlightDisabled>{formatTime(eta)}</Cell>
+						<Cell component={Item} label="Remaining" spotlightDisabled>{formatDuration(duration, durationIncrements)}</Cell>
+						<Cell component={Item} label="ETA" spotlightDisabled>{formatTime(eta)}</Cell>
 					</Row>
 				</Cell> : null}
 				<Cell>

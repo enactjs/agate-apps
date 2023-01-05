@@ -1,8 +1,8 @@
-import kind from '@enact/core/kind';
-import {Column, Cell} from '@enact/ui/Layout';
 import Heading from '@enact/agate/Heading';
 import Image from '@enact/agate/Image';
 import Skinnable from '@enact/agate/Skinnable';
+import kind from '@enact/core/kind';
+import {Column, Cell} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 
 import cloudy from '../../../assets/weather/cloudy.png';

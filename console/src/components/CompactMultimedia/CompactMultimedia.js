@@ -3,9 +3,9 @@ import {Cell, Column} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import {Fragment} from 'react';
 
-import {WidgetBase, WidgetDecorator} from '../Widget';
 import {ScreenSelectionPopup} from '../../../../components/ScreenSelectionPopup';
 import {MultimediaDecorator, ResponsiveVirtualList} from '../../views/Multimedia';
+import {WidgetBase, WidgetDecorator} from '../Widget';
 
 import componentCss from './CompactMultimedia.module.less';
 

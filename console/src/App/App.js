@@ -1,42 +1,36 @@
-// External
-import kind from '@enact/core/kind';
-import {add} from '@enact/core/keymap';
-import {adaptEvent, forward, handle} from '@enact/core/handle';
-import {Cell, Column, Row} from '@enact/ui/Layout';
 import Button from '@enact/agate/Button';
-import Popup from '@enact/agate/Popup';
 import DateTimePicker from '@enact/agate/DateTimePicker';
 import {TabbedPanels} from '@enact/agate/Panels';
-import {Component} from 'react';
-import compose from 'ramda/src/compose';
-import PropTypes from 'prop-types';
+import Popup from '@enact/agate/Popup';
 import ThemeDecorator from '@enact/agate/ThemeDecorator';
+import {adaptEvent, forward, handle} from '@enact/core/handle';
+import {add} from '@enact/core/keymap';
+import kind from '@enact/core/kind';
+import {Cell, Column, Row} from '@enact/ui/Layout';
+import PropTypes from 'prop-types';
+import compose from 'ramda/src/compose';
+import {Component} from 'react';
 
-// Data Services
-import ServiceLayer from '../data/ServiceLayer';
-
-// Components
-import UserSelectionPopup from '../components/UserSelectionPopup';
-import UserAvatar from '../components/UserAvatar';
 import Clock from '../components/Clock';
 import ProfileDrawer from '../components/ProfileDrawer';
+import UserAvatar from '../components/UserAvatar';
+import UserSelectionPopup from '../components/UserSelectionPopup';
 import WelcomePopup from '../components/WelcomePopup';
+import ServiceLayer from '../data/ServiceLayer';
 import AppList from '../views/AppList';
+import Dashboard from '../views/Dashboard';
 import Home from '../views/Home';
 import Hvac from '../views/HVAC';
 import MapView from '../views/Map';
+import Multimedia from '../views/Multimedia';
 import Phone from '../views/Phone';
 import Radio from '../views/Radio';
 import Settings from '../views/Settings';
 import ThemeSettings from '../views/ThemeSettings';
 import Weather from '../views/WeatherPanel';
-import Dashboard from '../views/Dashboard';
-import Multimedia from '../views/Multimedia';
 
-// Local Components
 import AppContextConnect from './AppContextConnect';
 
-// CSS/LESS Styling
 import css from './App.module.less';
 
 add('backspace', 8);

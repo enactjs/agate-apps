@@ -1,10 +1,10 @@
 import Heading from '@enact/agate/Heading';
-import {Panel} from '@enact/agate/Panels';
 import ImageItem from '@enact/agate/ImageItem';
+import {Panel} from '@enact/agate/Panels';
 import ThumbnailItem from '@enact/agate/ThumbnailItem';
 import hoc from '@enact/core/hoc';
-// import {Job} from '@enact/core/util';
 import kind from '@enact/core/kind';
+// import {Job} from '@enact/core/util';
 import {Cell, Column, Row} from '@enact/ui/Layout';
 import ri from '@enact/ui/resolution';
 import {VirtualGridList, VirtualList} from '@enact/ui/VirtualList';
@@ -13,10 +13,8 @@ import {Component, Fragment} from 'react';
 
 import appConfig from '../App/configLoader';
 import Communicator from '../../../components/Communicator';
-import ScreenSelectionPopup from '../../../components/ScreenSelectionPopup';
-
 import CustomLayout from '../components/CustomLayout';
-
+import ScreenSelectionPopup from '../../../components/ScreenSelectionPopup';
 import youtubeVideos from '../data/youtubeapi.json';
 
 import css from './Multimedia.module.less';

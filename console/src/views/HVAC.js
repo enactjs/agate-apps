@@ -1,11 +1,11 @@
+import {ResponsiveBox} from '@enact/agate/DropManager';
 import Heading from '@enact/agate/Heading';
-import kind from '@enact/core/kind';
-import Layout, {Cell, Row} from '@enact/ui/Layout';
 import {Panel} from '@enact/agate/Panels';
 import Picker from '@enact/agate/Picker';
-import {ResponsiveBox} from '@enact/agate/DropManager';
 import SliderButton from '@enact/agate/SliderButton';
 import ToggleButton from '@enact/agate/ToggleButton';
+import kind from '@enact/core/kind';
+import Layout, {Cell, Row} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 
 import AppContextConnect from '../App/AppContextConnect';

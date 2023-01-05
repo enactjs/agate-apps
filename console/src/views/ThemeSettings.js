@@ -1,15 +1,15 @@
-import kind from '@enact/core/kind';
-import {Panel} from '@enact/agate/Panels';
 import ColorPicker from '@enact/agate/ColorPicker';
-import {Row, Column, Cell} from '@enact/ui/Layout';
-import SliderButton from '@enact/agate/SliderButton';
 import Heading from '@enact/agate/Heading';
+import LabeledIconButton from '@enact/agate/LabeledIconButton';
+import {Panel} from '@enact/agate/Panels';
+import SliderButton from '@enact/agate/SliderButton';
+import kind from '@enact/core/kind';
+import {Row, Column, Cell} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 
 import {getPanelIndexOf} from '../App';
 import AppContextConnect from '../App/AppContextConnect';
-import LabeledIconButton from '@enact/agate/LabeledIconButton';
 
 import componentCss from './Settings.module.less';
 

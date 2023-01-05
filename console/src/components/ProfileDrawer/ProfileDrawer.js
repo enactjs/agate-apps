@@ -1,16 +1,16 @@
 import Drawer from '@enact/agate/Drawer';
-import {ToggleButtonBase} from '@enact/agate/ToggleButton';
-import {Cell, Column} from '@enact/ui/Layout';
-import {adaptEvent, forward, handle} from '@enact/core/handle';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
 import TabGroup from '@enact/agate/TabGroup';
+import {ToggleButtonBase} from '@enact/agate/ToggleButton';
+import {adaptEvent, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
+import {Cell, Column} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
-import {Fragment} from 'react';
 import compose from 'ramda/src/compose';
+import {Fragment} from 'react';
 
-import UserAvatar from '../UserAvatar';
 import AppContextConnect from '../../App/AppContextConnect';
+import UserAvatar from '../UserAvatar';
 import UserSelectionPopup from '../UserSelectionPopup';
 
 import componentCss from './ProfileDrawer.module.less';

@@ -1,9 +1,9 @@
-import PropTypes from 'prop-types';
-// import ToggleButton from '@enact/agate/ToggleButton';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
 import Skinnable from '@enact/agate/Skinnable';
+// import ToggleButton from '@enact/agate/ToggleButton';
 import kind from '@enact/core/kind';
 import {Cell} from '@enact/ui/Layout';
+import PropTypes from 'prop-types';
 
 import AppStateConnect from '../../App/AppContextConnect';
 import Widget from '../Widget';

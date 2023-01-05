@@ -1,14 +1,14 @@
 import Button from '@enact/agate/Button';
+import {ResponsiveBox} from '@enact/agate/DropManager';
 import Heading from '@enact/agate/Heading';
 import Item from '@enact/agate/Item';
 import {Panel} from '@enact/agate/Panels';
 import ToggleButton from '@enact/agate/ToggleButton';
-import {ResponsiveBox} from '@enact/agate/DropManager';
-import Layout, {Row, Cell} from '@enact/ui/Layout';
 import kind from '@enact/core/kind';
 import hoc from '@enact/core/hoc';
-import {Component} from 'react';
+import Layout, {Row, Cell} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
+import {Component} from 'react';
 
 import PresetItem from '../components/PresetItem';
 import CustomLayout, {SaveLayoutArrangement} from '../components/CustomLayout';

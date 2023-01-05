@@ -1,8 +1,8 @@
-import PropTypes from 'prop-types';
-import kind from '@enact/core/kind';
-import {Row, Cell} from '@enact/ui/Layout';
 import Picker from '@enact/agate/Picker';
 import ToggleButton from '@enact/agate/ToggleButton';
+import kind from '@enact/core/kind';
+import {Row, Cell} from '@enact/ui/Layout';
+import PropTypes from 'prop-types';
 
 // import AppStateConnect from '../../App/AppContextConnect';
 import Widget from '../Widget';

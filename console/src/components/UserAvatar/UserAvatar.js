@@ -1,6 +1,6 @@
 import ImageItem from '@enact/agate/ImageItem';
-import kind from '@enact/core/kind';
 import {adaptEvent, forward, handle} from '@enact/core/handle';
+import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 
 import lauraAvatar from '../../../assets/laura.png';
@@ -51,7 +51,6 @@ const UserAvatarBase = kind({
 			<ImageItem
 				{...rest}
 				css={css}
-				sizing="fit"
 			>{children}
 			</ImageItem>
 		);

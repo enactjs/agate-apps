@@ -1,20 +1,20 @@
-import PropTypes from 'prop-types';
-import {Component} from 'react';
-import hoc from '@enact/core/hoc';
-import Pure from '@enact/ui/internal/Pure';
-import classnames from 'classnames';
-import Group from '@enact/ui/Group';
-import {Cell, Column, Row} from '@enact/ui/Layout';
 import Button from '@enact/agate/Button';
 import Heading from '@enact/agate/Heading';
-import ToggleButton from '@enact/agate/ToggleButton';
 import Skinnable from '@enact/agate/Skinnable';
+import ToggleButton from '@enact/agate/ToggleButton';
+import hoc from '@enact/core/hoc';
+import Group from '@enact/ui/Group';
+import Pure from '@enact/ui/internal/Pure';
+import {Cell, Column, Row} from '@enact/ui/Layout';
+import classnames from 'classnames';
+import PropTypes from 'prop-types';
+import {Component} from 'react';
 
 import AppContextConnect from '../../App/AppContextConnect';
-import MapCore from '../MapCore';
-import DestinationList from '../DestinationList';
-import {propTypeLatLon, propTypeLatLonList} from '../../data/proptypes';
 import {formatDuration, formatTime} from '../../../../components/Formatter';
+import {propTypeLatLon, propTypeLatLonList} from '../../data/proptypes';
+import DestinationList from '../DestinationList';
+import MapCore from '../MapCore';
 
 import css from './MapController.module.less';
 
@@ -157,8 +157,8 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 				<Wrapped
 					{...rest}
 					className={classnames(className, css.map)}
-					follow={follow}
 					destination={destination}
+					follow={follow}
 					points={topLocations}
 					updateDestination={this.updateDestination}
 					updateNavigation={this.updateNavigation}
@@ -277,14 +277,13 @@ const MapControllerHoc = hoc((configHoc, Wrapped) => {
 	};
 });
 
-
 const ConnectedMap = AppContextConnect(({location, userSettings, navigation, updateAppState}) => ({
+	destination: navigation.destination,
 	follow: navigation.follow,
-	topLocations: userSettings.topLocations,
 	location,
 	navigation,
 	navigating: navigation.navigating,
-	destination: navigation.destination,
+	topLocations: userSettings.topLocations,
 	updateAppState
 }));
 

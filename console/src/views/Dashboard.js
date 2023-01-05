@@ -1,7 +1,7 @@
-import Heading from '@enact/agate/Heading';
-import Item from '@enact/agate/Item';
-import Icon from '@enact/agate/Icon';
 import {ResponsiveBox} from '@enact/agate/DropManager';
+import Heading from '@enact/agate/Heading';
+import Icon from '@enact/agate/Icon';
+import Item from '@enact/agate/Item';
 import {Panel} from '@enact/agate/Panels';
 import ProgressBar from '@enact/agate/ProgressBar';
 import ToggleButton from '@enact/agate/ToggleButton';
@@ -9,9 +9,9 @@ import kind from '@enact/core/kind';
 import Layout, {Cell, Column, Row} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 
+import CarPng from '../../assets/car.png';
 import AppContextConnect from '../App/AppContextConnect';
 import CustomLayout, {SaveLayoutArrangement} from '../components/CustomLayout';
-import CarPng from '../../assets/car.png';
 
 import css from './Dashboard.module.less';
 

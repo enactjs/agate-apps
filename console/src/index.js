@@ -34,15 +34,12 @@ if (typeof window !== 'undefined') {
 		</AppContextProvider>
 	);
 
-	// In a browser environment, render the app to the document.
-	if (typeof window !== 'undefined') {
-		const container = document.getElementById('root');
+	const container = document.getElementById('root');
 
-		if (ENACT_PACK_ISOMORPHIC) {
-			hydrateRoot(container, appElement);
-		} else {
-			createRoot(container).render(appElement);
-		}
+	if (ENACT_PACK_ISOMORPHIC) {
+		hydrateRoot(container, appElement);
+	} else {
+		createRoot(container).render(appElement);
 	}
 }
 

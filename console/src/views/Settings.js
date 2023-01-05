@@ -1,14 +1,15 @@
-import {Cell, Column, Row} from '@enact/ui/Layout';
 import Heading from '@enact/agate/Heading';
-import kind from '@enact/core/kind';
-import {Panel} from '@enact/agate/Panels';
 import Item from '@enact/agate/Item';
+import {Panel} from '@enact/agate/Panels';
 import SwitchItem from '@enact/agate/SwitchItem';
+import kind from '@enact/core/kind';
+import {Cell, Column, Row} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 
-import NetworkInfo from '../../../components/NetworkInfo';
-import viewCss from './Settings.module.less';
 import {getPanelIndexOf} from '../App';
+import NetworkInfo from '../../../components/NetworkInfo';
+
+import viewCss from './Settings.module.less';
 
 const SwitchItemCell =  kind({
 	name: 'SwitchItemCell',

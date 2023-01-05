@@ -1,6 +1,6 @@
+import hoc from '@enact/core/hoc';
 // import PropTypes from 'prop-types';
 import {Component} from 'react';
-import hoc from '@enact/core/hoc';
 import {getIPv4} from 'webrtc-ips';
 
 const NetworkInfo = hoc((configHoc, Wrapped) => {
@@ -20,7 +20,6 @@ const NetworkInfo = hoc((configHoc, Wrapped) => {
 		awaitIp = async () => {
 			const ip = await getIPv4();
 			this.setState({ip});
-			// console.log('ips:', ips);
 		};
 
 		render () {

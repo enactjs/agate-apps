@@ -1,18 +1,18 @@
 import Button from '@enact/agate/Button';
-import classnames from 'classnames';
-import {equals} from 'ramda';
 import {Job} from '@enact/core/util';
+import ri from '@enact/ui/resolution';
+import Slottable from '@enact/ui/Slottable';
+import classnames from 'classnames';
+// import convert from 'color-convert';
 import mapboxgl from 'mapbox-gl';
 import PropTypes from 'prop-types';
+import {equals} from 'ramda';
 import {Component} from 'react';
-import Slottable from '@enact/ui/Slottable';
-import ri from '@enact/ui/resolution';
-// import convert from 'color-convert';
 
 import AppContextConnect from '../../App/AppContextConnect';
 import appConfig from '../../App/configLoader';
-import {propTypeLatLon, propTypeLatLonList} from '../../data/proptypes';
 import CarPng from '../../../assets/car.png';
+import {propTypeLatLon, propTypeLatLonList} from '../../data/proptypes';
 import {ServiceLayerContext} from '../../data/ServiceLayer';
 
 import css from './MapCore.module.less';
@@ -578,7 +578,6 @@ class MapCoreBase extends Component {
 				this.showFullRouteOnMap(route.geometry.coordinates);
 				this.fullRouteShown = true;
 			}
-
 
 			// this.showFullRouteOnMap(data.routes[0].geometry.coordinates);
 			// const startTime = new Date().getTime();

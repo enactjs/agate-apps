@@ -1,6 +1,6 @@
 // import Button from '@enact/agate/Button';
-import kind from '@enact/core/kind';
 import {Panel} from '@enact/agate/Panels';
+import kind from '@enact/core/kind';
 
 import MapController from '../components/MapController';
 

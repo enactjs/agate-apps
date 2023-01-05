@@ -157,7 +157,7 @@ const WelcomePopupBase = kind({
 		// delete rest.updateUser;
 
 		return (
-			<Popup position="fullscreen" {...rest}>
+			<Popup position="fullscreen" css={css} {...rest}>
 				{/* <Panels arranger={Arranger} index={index} enteringProp="hideChildren" onTransition={handleTransition}> */}
 				{/* <UserSelectionPanel users={usersList} onSelectUser={onSelectUser} /> */}
 				{/* <WelcomePanel /> */}

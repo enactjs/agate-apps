@@ -1,4 +1,3 @@
-import {Row, Cell} from '@enact/ui/Layout';
 import Button from '@enact/agate/Button';
 import ColorPicker from '@enact/agate/ColorPicker';
 import DateTimePicker from '@enact/agate/DateTimePicker';
@@ -19,6 +18,7 @@ import SliderButton from '@enact/agate/SliderButton';
 import SwitchItem from '@enact/agate/SwitchItem';
 import ToggleButton from '@enact/agate/ToggleButton';
 import kind from '@enact/core/kind';
+import {Row, Cell} from '@enact/ui/Layout';
 
 const MainPanel = kind({
 	name: 'MainPanel',
