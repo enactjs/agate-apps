@@ -51,7 +51,8 @@ const UserAvatarBase = kind({
 			<ImageItem
 				{...rest}
 				css={css}
-			>{children}
+			>
+				{children}
 			</ImageItem>
 		);
 	}
