@@ -12,7 +12,7 @@ import compose from 'ramda/src/compose';
 import {Component} from 'react';
 
 import Clock from '../components/Clock';
-import ProfileDrawer from '../components/ProfileDrawer';
+// import ProfileDrawer from '../components/ProfileDrawer';
 import UserAvatar from '../components/UserAvatar';
 import UserSelectionPopup from '../components/UserSelectionPopup';
 import WelcomePopup from '../components/WelcomePopup';
@@ -304,7 +304,7 @@ const AppBase = kind({
 					onResetPosition={resetPosition}
 					onResetCopilot={resetCopilot}
 				/>
-				<ProfileDrawer
+				{/* <ProfileDrawer
 					index={index}
 					getPanelIndexOf={getPanelIndexOf}
 					onProfileEditEnd={onToggleProfileEdit}
@@ -313,7 +313,7 @@ const AppBase = kind({
 					onResetCopilot={resetCopilot}
 					onSelect={onSelect}
 					showUserSelectionPopup={showUserSelectionPopup}
-				/>
+				/>*/}
 				<Popup
 					onClose={onToggleBasicPopup}
 					open={showBasicPopup}
