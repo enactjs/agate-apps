@@ -187,7 +187,7 @@ const AppBase = kind({
 		onToggleDateTimePopup,
 		onToggleDestinationReachedPopup,
 		onTogglePopup,
-		onToggleProfileEdit,
+		// onToggleProfileEdit,
 		onToggleUserSelectionPopup,
 		onToggleWelcomePopup,
 		orientation,
