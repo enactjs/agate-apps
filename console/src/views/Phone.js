@@ -6,10 +6,10 @@ import {Panel} from '@enact/agate/Panels';
 import {adaptEvent, forKey, forward, handle, oneOf} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Changeable from '@enact/ui/Changeable';
-import Toggleable from '@enact/ui/Toggleable';
-import VirtualList from '@enact/ui/VirtualList';
 import {Column, Cell} from '@enact/ui/Layout';
 import ri from '@enact/ui/resolution';
+import Toggleable from '@enact/ui/Toggleable';
+import VirtualList from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 
 import CallPopup from '../components/CallPopup';

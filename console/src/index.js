@@ -1,8 +1,8 @@
 /* eslint-disable react/jsx-no-bind */
 /* global ENACT_PACK_ISOMORPHIC */
+import 'mapbox-gl/dist/mapbox-gl.css';
 import qs from 'query-string';
 import {createRoot, hydrateRoot} from 'react-dom/client';
-import 'mapbox-gl/dist/mapbox-gl.css';
 
 import App from './App';
 import AppContextProvider from './App/AppContextProvider';

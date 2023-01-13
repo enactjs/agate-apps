@@ -33,7 +33,7 @@ const HvacBase = kind({
 	propTypes: {
 		acSelected: PropTypes.bool,
 		arrangeable: PropTypes.bool,
-		arrangement: PropTypes.any,
+		arrangement: PropTypes.object,
 		autoSelected: PropTypes.bool,
 		fanSpeed: PropTypes.number,
 		leftHeat: PropTypes.bool,
