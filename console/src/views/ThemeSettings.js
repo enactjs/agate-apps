@@ -104,7 +104,7 @@ const ThemeSettingsBase = kind({
 		label: PropTypes.string,
 		onSelect: PropTypes.func,
 		onSendSkinSettings: PropTypes.func,
-		prevIndex: PropTypes.number.name,
+		prevIndex: PropTypes.number,
 		skin: PropTypes.string
 	},
 

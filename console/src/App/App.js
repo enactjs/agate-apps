@@ -121,11 +121,11 @@ const AppBase = kind({
 				state.userSettings.arrangements.arrangeable = !state.userSettings.arrangements.arrangeable;
 			});
 		},
-		onToggleProfileEdit: (ev, {updateAppState}) => {
-			updateAppState((state) => {
-				state.appState.showProfileEdit = !state.appState.showProfileEdit;
-			});
-		},
+		// onToggleProfileEdit: (ev, {updateAppState}) => {
+		// 	updateAppState((state) => {
+		// 		state.appState.showProfileEdit = !state.appState.showProfileEdit;
+		// 	});
+		// },
 		onToggleDateTimePopup: (ev, {updateAppState}) => {
 			updateAppState((state) => {
 				state.appState.showDateTimePopup = !state.appState.showDateTimePopup;
