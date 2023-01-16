@@ -1,11 +1,13 @@
-import kind from '@enact/core/kind';
-import {Panel} from '@enact/agate/Panels';
-import {Row, Cell, Column} from '@enact/ui/Layout';
 import Heading from '@enact/agate/Heading';
-import viewCSS from './WeatherPanel.module.less';
+import {Panel} from '@enact/agate/Panels';
+import kind from '@enact/core/kind';
+import {Row, Cell, Column} from '@enact/ui/Layout';
+import PropTypes from 'prop-types';
+
 import WeatherItem from '../components/WeatherItem';
 import AppStateConnect from '../App/AppContextConnect';
-import PropTypes from 'prop-types';
+
+import viewCSS from './WeatherPanel.module.less';
 
 const Weather = kind({
 	name: 'Weather',

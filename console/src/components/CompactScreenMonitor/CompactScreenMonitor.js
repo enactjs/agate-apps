@@ -1,5 +1,5 @@
-import {Cell} from '@enact/ui/Layout';
 import kind from '@enact/core/kind';
+import {Cell} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
 
@@ -10,19 +10,23 @@ import css from './CompactScreenMonitor.module.less';
 
 const CompactScreenMonitorBase = kind({
 	name: 'CompactScreenMonitor',
+
 	propTypes: {
 		nowPlaying: PropTypes.array.isRequired,
 		containerShape: PropTypes.object,
 		screenId: PropTypes.number,
 		screenImage: PropTypes.oneOfType([PropTypes.node, PropTypes.string])
 	},
+
 	defaultProps: {
 		screenId: 1
 	},
+
 	styles: {
 		css,
 		className: 'compactScreenMonitor'
 	},
+
 	computed: {
 		className: ({containerShape: {size: {relative = 'small'}}, styler}) => {
 			return styler.append(relative && css[relative]);
@@ -42,6 +46,7 @@ const CompactScreenMonitorBase = kind({
 			return `https://www.youtube.com/embed/${videoId}`;
 		}
 	},
+
 	render: ({containerShape, imgUrl, videoUrl, ...rest}) => {
 		delete rest.nowPlaying;
 		delete rest.screenId;

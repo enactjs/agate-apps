@@ -1,11 +1,11 @@
+import Droppable, {ResponsiveBox} from '@enact/agate/DropManager';
 import kind from '@enact/core/kind';
 import {Row} from '@enact/ui/Layout';
-import Droppable, {ResponsiveBox} from '@enact/agate/DropManager';
 import PropTypes from 'prop-types';
 
-import Widget from '../Widget';
-import AppIconCell from '../AppIconCell';
 import {getPanelIndexOf} from '../../App';
+import AppIconCell from '../AppIconCell';
+import Widget from '../Widget';
 
 const DropReadyRow = ({...props}) => {
 	return (<Row {...props} />);

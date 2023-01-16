@@ -1,10 +1,10 @@
 import Heading from '@enact/agate/Heading';
-import {Panel} from '@enact/agate/Panels';
 import ImageItem from '@enact/agate/ImageItem';
+import {Panel} from '@enact/agate/Panels';
 import ThumbnailItem from '@enact/agate/ThumbnailItem';
 import hoc from '@enact/core/hoc';
-// import {Job} from '@enact/core/util';
 import kind from '@enact/core/kind';
+// import {Job} from '@enact/core/util';
 import {Cell, Column, Row} from '@enact/ui/Layout';
 import ri from '@enact/ui/resolution';
 import {VirtualGridList, VirtualList} from '@enact/ui/VirtualList';
@@ -13,11 +13,8 @@ import {Component, Fragment} from 'react';
 
 import appConfig from '../App/configLoader';
 import Communicator from '../../../components/Communicator';
-import ScreenSelectionPopup from '../../../components/ScreenSelectionPopup';
-
-import Button from '@enact/agate/Button';
 import CustomLayout from '../components/CustomLayout';
-
+import ScreenSelectionPopup from '../../../components/ScreenSelectionPopup';
 import youtubeVideos from '../data/youtubeapi.json';
 
 import css from './Multimedia.module.less';
@@ -32,16 +29,6 @@ const IFrame = kind({
 			/>
 		);
 	}
-});
-
-const ListItemOverlay = kind({
-	name: 'ListItemOverlay',
-
-	render: () => (
-		<Column align="center center">
-			<Button size="small" icon="arrowlargeright" />
-		</Column>
-	)
 });
 
 const ResponsiveVirtualList = kind({
@@ -83,7 +70,6 @@ const ResponsiveVirtualList = kind({
 					className={className}
 					src={videos[index].snippet.thumbnails.medium.url}
 					onClick={onSelectVideo(videos[index])}
-					selectionOverlay={ListItemOverlay}
 				>
 					{size === 'full' ? videos[index].snippet.title : ''}
 				</ImageItem>

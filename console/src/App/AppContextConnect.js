@@ -1,4 +1,5 @@
 import {Component, memo} from 'react';
+
 import {AppContext} from './AppContextProvider';
 
 const AppStateConnect = (mapContextToProps) => (Wrapped) => {

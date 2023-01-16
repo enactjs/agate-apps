@@ -1,8 +1,7 @@
 import Button from '@enact/agate/Button';
 import Heading from '@enact/agate/Heading';
-import FullscreenPopup from '@enact/agate/FullscreenPopup';
+import Popup from '@enact/agate/Popup';
 // import {Panel, Panels} from '@enact/agate/Panels';
-import {Panel} from '@enact/agate/Panels';
 // import Skinnable from '@enact/agate/Skinnable';
 // import {handle, forProp, forward, returnsTrue} from '@enact/core/handle';
 import {handle, forward} from '@enact/core/handle';
@@ -158,11 +157,11 @@ const WelcomePopupBase = kind({
 		// delete rest.updateUser;
 
 		return (
-			<FullscreenPopup {...rest}>
+			<Popup css={css} position="fullscreen" {...rest}>
 				{/* <Panels arranger={Arranger} index={index} enteringProp="hideChildren" onTransition={handleTransition}> */}
 				{/* <UserSelectionPanel users={usersList} onSelectUser={onSelectUser} /> */}
 				{/* <WelcomePanel /> */}
-				<Panel className={css.panel} css={css}>
+				<div className={css.panel}>
 					<Row className={css.welcome}>
 						<Cell className={css.left} size="33%">
 							<Column>
@@ -203,9 +202,9 @@ const WelcomePopupBase = kind({
 							/>
 						</Cell>
 					</Row>
-				</Panel>
+				</div>
 				{/* </Panels> */}
-			</FullscreenPopup>
+			</Popup>
 		);
 	}
 });

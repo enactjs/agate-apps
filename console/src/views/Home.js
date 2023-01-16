@@ -1,12 +1,12 @@
-import {Panel} from '@enact/agate/Panels';
-import kind from '@enact/core/kind';
-import Repeater from '@enact/ui/Repeater';
-import {Row, Column, Cell} from '@enact/ui/Layout';
-import PropTypes from 'prop-types';
-import Droppable, {Draggable} from '@enact/agate/DropManager';
-import {ToggleButtonBase} from '@enact/agate/ToggleButton';
-import Heading from '@enact/agate/Heading';
 import Drawer from '@enact/agate/Drawer';
+import Droppable, {Draggable} from '@enact/agate/DropManager';
+import Heading from '@enact/agate/Heading';
+import {Panel} from '@enact/agate/Panels';
+import {ToggleButtonBase} from '@enact/agate/ToggleButton';
+import kind from '@enact/core/kind';
+import {Row, Column, Cell} from '@enact/ui/Layout';
+import Repeater from '@enact/ui/Repeater';
+import PropTypes from 'prop-types';
 
 import AppContextConnect from '../App/AppContextConnect';
 import CompactAppList from '../components/CompactAppList';
@@ -73,7 +73,7 @@ const HomeLayouts = kind({
 		delete rest.arrangement;
 
 		const widgetTray = (
-			<Drawer className={css.drawer} open={arrangeable} scrimType="none">
+			<Drawer className={css.drawer} open={arrangeable} scrimType="transparent">
 				<header className={css.header}>
 					<Cell className={css.title} component={Heading} shrink>Additional Widgets</Cell>
 				</header>

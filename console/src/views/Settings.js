@@ -1,14 +1,15 @@
-import {Cell, Column, Row} from '@enact/ui/Layout';
 import Heading from '@enact/agate/Heading';
-import kind from '@enact/core/kind';
+import Item from '@enact/agate/Item';
 import {Panel} from '@enact/agate/Panels';
-import LabeledItem from '@enact/agate/LabeledItem';
 import SwitchItem from '@enact/agate/SwitchItem';
+import kind from '@enact/core/kind';
+import {Cell, Column, Row} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 
-import NetworkInfo from '../../../components/NetworkInfo';
-import viewCss from './Settings.module.less';
 import {getPanelIndexOf} from '../App';
+import NetworkInfo from '../../../components/NetworkInfo';
+
+import viewCss from './Settings.module.less';
 
 const SwitchItemCell =  kind({
 	name: 'SwitchItemCell',
@@ -115,7 +116,7 @@ const Settings = kind({
 						>
 							Reload Apps
 						</SwitchItemCell>
-						<LabeledItem label={ipAddress}>IP Address</LabeledItem>
+						<Item label={ipAddress}>IP Address</Item>
 					</Column>
 				</Cell>
 			</Row>

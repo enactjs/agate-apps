@@ -1,5 +1,5 @@
-import Item from '@enact/agate/Item';
 import Icon from '@enact/agate/Icon';
+import Item from '@enact/agate/Item';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 
@@ -30,7 +30,7 @@ const ContactThumbnail = kind({
 	},
 
 	render: ({contact, onSelect, ...props}) => (
-		<div {...props} css={css} onClick={onSelect}>
+		<div {...props} onClick={onSelect}>
 			<Item label={contact.number}>
 				<Icon slot="slotBefore">user</Icon>
 				{contact.name}

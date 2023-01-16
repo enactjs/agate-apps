@@ -1,21 +1,19 @@
 // Service Connection HOC
 //
-// External
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
-import {Component, createContext, createRef, Fragment, memo} from 'react';
-import compose from 'ramda/src/compose';
-import {equals} from 'ramda';
 import PropTypes from 'prop-types';
+import {equals} from 'ramda';
+import compose from 'ramda/src/compose';
+import {Component, createContext, createRef, Fragment, memo} from 'react';
 
-// Data Services
-import {propTypeLatLon, propTypeLatLonList} from './proptypes';
-import connect from './connector';
-import {getLatLongFromSim, radiansToDegrees, distanceApart} from './conversion';
+import AppStateConnect from '../App/AppContextConnect';
 import appConfig from '../App/configLoader';
 import Communicator from '../../../components/Communicator';
 
-import AppStateConnect from '../App/AppContextConnect';
+import connect from './connector';
+import {getLatLongFromSim, radiansToDegrees, distanceApart} from './conversion';
+import {propTypeLatLon, propTypeLatLonList} from './proptypes';
 
 const ServiceLayerContext = createContext();
 
@@ -301,12 +299,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			global.location.reload();
 		};
 
-		setConnected = (connected) => {
-			this.props.updateAppState((state) => {
-				if (state.connections.serviceLayer === connected) return null;
-				state.connections.serviceLayer = connected;
-			});
-		};
+
 
 		setLocation = ({location}) => {
 			this.props.updateAppState((state) => {

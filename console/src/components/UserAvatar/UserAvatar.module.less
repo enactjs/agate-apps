@@ -1,7 +1,7 @@
 // UserAvatar.module.less
 //
-@import "~@enact/agate/styles/mixins.less";
-@import "~@enact/agate/styles/skin.less";
+@import "@enact/agate/styles/mixins.less";
+@import "@enact/agate/styles/skin.less";
 
 .userAvatar {
 	--user-index: 0;
@@ -14,11 +14,11 @@
 		@image-border-width: 6px;
 
 		.image {
-			width: 148px;
-			height: 148px;
+			width: 150px;
+			height: 150px;
 			background-clip: padding-box;
 			border: @image-border-width solid rgba(0, 0, 0, 0.1);
-			padding: ~"calc(50% * var(--agate-gridlistimageitem-aspect-ratio, 1) - " @image-border-width ~")" 0;
+			padding: 75px 0;
 		}
 	}
 
@@ -46,7 +46,7 @@
 			margin-top: 90px;
 			margin-bottom: 90px;
 			border: @image-border-width solid #594339;
-			padding: ~"calc(50% * var(--agate-gridlistimageitem-aspect-ratio, 1) - " @image-border-width ~")" 0;
+			padding: 75px 0;
 
 			&::before {
 				.position(-36px);
@@ -54,11 +54,22 @@
 				content: '';
 				border: 3px solid #594339;
 				opacity: 0.5;
-				border-top: 0px;
-				border-left: 0px;
+				border-top: 0;
+				border-left: 0;
 				border-radius: 50%;
 				transform: rotate(calc(var(--user-index, 0) * 225deg));
 			}
 		}
 	}
+
+	.applySkins({
+		.focus({
+			background-color: transparent;
+
+			.image {
+				border-color: @agate-imageitem-focus-border-color;
+			}
+		});
+	});
+
 }

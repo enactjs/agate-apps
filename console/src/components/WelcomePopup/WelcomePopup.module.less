@@ -1,7 +1,7 @@
 // WelcomePopup.module.less
 //
 
-@import "~@enact/agate/styles/skin.less";
+@import "@enact/agate/styles/skin.less";
 
 // @guide-border-color: rgba(255, 255, 255, 0.5);
 .welcomePopup {
@@ -10,10 +10,6 @@
 	.applySkins({
 		// suppress any transitioning for the popup
 		transition-property: none;
-
-		.panel {
-			padding: 0 9px 0 0;
-		}
 
 		em {
 			color: @agate-highlight;
@@ -66,5 +62,12 @@
 			text-transform: uppercase;
 		}
 
+		&.popup {
+			padding: 0;
+		}
+
+		.content {
+			width: auto;
+		}
 	});
 }

@@ -1,10 +1,10 @@
 import Button from '@enact/agate/Button';
-import Group from '@enact/ui/Group';
-import {Row, Cell} from '@enact/ui/Layout';
-import kind from '@enact/core/kind';
-import Popup from '@enact/agate/Popup';
-import PropTypes from 'prop-types';
 import Item from '@enact/agate/Item';
+import Popup from '@enact/agate/Popup';
+import Group from '@enact/ui/Group';
+import {Row} from '@enact/ui/Layout';
+import kind from '@enact/core/kind';
+import PropTypes from 'prop-types';
 
 import AppContextConnect from '../../App/AppContextConnect';
 import UserAvatar from '../UserAvatar';
@@ -103,7 +103,6 @@ const UserSelectionPopupBase = kind({
 				{...rest}
 			>
 				<title>User Selection</title>
-
 				<Group
 					childComponent={UserItem}
 					defaultSelected={userId - 1}
@@ -113,12 +112,11 @@ const UserSelectionPopupBase = kind({
 				>
 					{usersList}
 				</Group>
-
 				<buttons>
 					<Row align="center space-around">
-						<Cell shrink component={Button} size="small" className={css.button} onClick={resetUserSettings}>Reset Current User</Cell>
-						<Cell shrink component={Button} size="small" className={css.button} onClick={onResetAll}>Restart Demo</Cell>
-						<Cell shrink component={Button} size="small" className={css.button} onClick={onResetPosition}>Reset Position</Cell>
+						<Button className={css.button} onClick={resetUserSettings} size="small">Reset Current User</Button>
+						<Button className={css.button} onClick={onResetAll} size="small">Restart Demo</Button>
+						<Button className={css.button} onClick={onResetPosition} size="small">Reset Position</Button>
 					</Row>
 				</buttons>
 			</Popup>
@@ -133,7 +131,6 @@ const UserSelectionPopup = AppContextConnect(({userId, resetUserSettings, resetA
 	resetAll,
 	updateAppState
 }))(UserSelectionPopupBase);
-
 
 export default UserSelectionPopup;
 export {

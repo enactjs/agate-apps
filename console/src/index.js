@@ -1,8 +1,8 @@
 /* eslint-disable react/jsx-no-bind */
-
-import qs from 'query-string';
-import {render} from 'react-dom';
+/* global ENACT_PACK_ISOMORPHIC */
 import 'mapbox-gl/dist/mapbox-gl.css';
+import qs from 'query-string';
+import {createRoot, hydrateRoot} from 'react-dom/client';
 
 import App from './App';
 import AppContextProvider from './App/AppContextProvider';
@@ -34,7 +34,13 @@ if (typeof window !== 'undefined') {
 		</AppContextProvider>
 	);
 
-	render(appElement, document.getElementById('root'));
+	const container = document.getElementById('root');
+
+	if (ENACT_PACK_ISOMORPHIC) {
+		hydrateRoot(container, appElement);
+	} else {
+		createRoot(container).render(appElement);
+	}
 }
 
 export default appElement;

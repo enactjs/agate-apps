@@ -1,21 +1,22 @@
 import Button from '@enact/agate/Button';
+import {ResponsiveBox} from '@enact/agate/DropManager';
 import Icon from '@enact/agate/Icon';
 import Input from '@enact/agate/Input';
-import Changeable from '@enact/ui/Changeable';
-import Toggleable from '@enact/ui/Toggleable';
-import VirtualList from '@enact/ui/VirtualList';
-import ri from '@enact/ui/resolution';
-import {Column, Cell} from '@enact/ui/Layout';
+import {Panel} from '@enact/agate/Panels';
 import {adaptEvent, forKey, forward, handle, oneOf} from '@enact/core/handle';
 import kind from '@enact/core/kind';
-import {Panel} from '@enact/agate/Panels';
-import {ResponsiveBox} from '@enact/agate/DropManager';
+import Changeable from '@enact/ui/Changeable';
+import {Column, Cell} from '@enact/ui/Layout';
+import ri from '@enact/ui/resolution';
+import Toggleable from '@enact/ui/Toggleable';
+import VirtualList from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
 
-import CustomLayout, {SaveLayoutArrangement} from '../components/CustomLayout';
-import Dialer from '../components/Dialer';
 import CallPopup from '../components/CallPopup';
 import ContactThumbnail from '../components/ContactThumbnail';
+import CustomLayout, {SaveLayoutArrangement} from '../components/CustomLayout';
+import Dialer from '../components/Dialer';
+
 import css from './Phone.module.less';
 
 const contacts = [
@@ -84,8 +85,8 @@ const PhoneBase = kind({
 	},
 
 	propTypes: {
-		arrangeable: PropTypes.string,
-		arrangement: PropTypes.string,
+		arrangeable: PropTypes.bool,
+		arrangement: PropTypes.object,
 		onArrange: PropTypes.func,
 		onChange: PropTypes.func,
 		onTogglePopup: PropTypes.func,

@@ -1,10 +1,10 @@
-import PropTypes from 'prop-types';
 import kind from '@enact/core/kind';
 import {Cell} from '@enact/ui/Layout';
+import PropTypes from 'prop-types';
 
-import Widget from '../Widget';
-import WeatherItem from '../WeatherItem';
 import AppStateConnect from '../../App/AppContextConnect';
+import WeatherItem from '../WeatherItem';
+import Widget from '../Widget';
 
 import css from './CompactWeather.module.less';
 
@@ -37,7 +37,6 @@ const CompactWeatherBase = kind({
 		);
 	}
 });
-
 
 const CompactWeather = AppStateConnect(({weather}) => {
 	const weatherObj = {};

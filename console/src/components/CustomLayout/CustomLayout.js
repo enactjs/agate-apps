@@ -1,6 +1,6 @@
+import Droppable, {Draggable} from '@enact/agate/DropManager';
 import kind from '@enact/core/kind';
 import {Layout, Cell} from '@enact/ui/Layout';
-import Droppable, {Draggable} from '@enact/agate/DropManager';
 import PropTypes from 'prop-types';
 
 import AppContextConnect from '../../App/AppContextConnect';
@@ -83,7 +83,6 @@ const SaveLayoutArrangement = (layoutName) => AppContextConnect(({userSettings, 
 		});
 	}
 }));
-
 
 const CustomLayout = Droppable({arrangingProp: 'arranging', slots: allSlotNames},
 	CustomLayoutBase

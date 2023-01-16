@@ -1,17 +1,12 @@
 // UserSelectionPopup.module.less
 //
-@import "~@enact/agate/styles/skin.less";
+@import "@enact/agate/styles/skin.less";
 
 .userSelectionPopup {
 	.applySkins({
 		.button {
 			margin-top: @agate-component-spacing;
 			margin-bottom: @agate-component-spacing;
-			height: 120px;
-
-			&:global(.silicon) {
-				height: 81px;
-			}
 		}
 
 		.userItem {
@@ -19,11 +14,12 @@
 			padding: @agate-component-spacing;
 
 			.avatar {
+				display: inline-flex;
+				line-height: initial;
 				margin-right: @agate-component-spacing;
 				vertical-align: middle;
 
 				&:global(.silicon) {
-
 					.image {
 						padding: 0;
 					}
