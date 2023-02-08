@@ -130,6 +130,7 @@ const HvacBase = kind({
 					<Cell
 						className={css.picker}
 						component={Picker}
+						css={css}
 						onChange={onUpdateLeftTemperature}
 						orientation="vertical"
 						shrink
@@ -162,6 +163,7 @@ const HvacBase = kind({
 					<Cell
 						className={css.picker}
 						component={Picker}
+						css={css}
 						onChange={onUpdateRightTemperature}
 						orientation="vertical"
 						shrink

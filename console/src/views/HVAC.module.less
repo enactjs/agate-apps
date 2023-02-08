@@ -1,9 +1,12 @@
+@import '~@enact/agate/styles/mixins.less';
+@import '~@enact/agate/styles/skin.less';
+
 .hvac {
 	padding: 24px;
 
-	.picker, .button {
-		min-width: 159px;
+	.button {
 		display: block;
+		min-width: 159px;
 	}
 
 	.stackedButtons .button {
@@ -28,4 +31,10 @@
 		margin-top: 12px;
 		margin-bottom: 12px;
 	}
+}
+
+.picker {
+	.applySkins({
+		min-width: 159px;
+	})
 }
