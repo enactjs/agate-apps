@@ -131,5 +131,66 @@
 				"coordinates": {"lat": 37.785684, "lon": -122.401035}
 			}
 		]
+	},
+	"user3": {
+		"arrangements": {
+			"arrangeable": true,
+			"dashboard": {},
+			"home": {
+				"large": "medium",
+				"medium": "large",
+				"small1": "tray3",
+				"tray1": "",
+				"tray2": "",
+				"tray3": "small1"
+			},
+			"hvac": {},
+			"phone": {},
+			"radio": {}
+		},
+		"climate": {
+			"acSelected": false,
+			"autoSelected": false,
+			"fanSpeed": 1,
+			"leftHeat": true,
+			"leftTemp": 5,
+			"recirculate": false,
+			"rightHeat": false,
+			"rightTemp": 0
+		},
+		"colorAccent": "#e0b094",
+		"colorHighlight": "#ffffff",
+		"components": {
+			"welcome": {
+				"small1": "heater",
+				"small2": "multimedia"
+			}
+		},
+		"fontSize": 0,
+		"name": "William",
+		"skin": "silicon",
+		"skinVariants": "night",
+		"topLocations": [
+			{
+				"description": "Home",
+				"coordinates": {"lat": 37.78877, "lon": -122.39647}
+			},
+			{
+				"description": "Philz Coffee",
+				"coordinates": {"lat": 37.78895, "lon": -122.3931}
+			},
+			{
+				"description": "School",
+				"coordinates": {"lat": 37.793424, "lon": -122.401124}
+			},
+			{
+				"description": "Work",
+				"coordinates": {"lat": 37.783902, "lon": -122.396148}
+			},
+			{
+				"description": "MOMA",
+				"coordinates": {"lat": 37.785684, "lon": -122.401035}
+			}
+		]
 	}
 }
