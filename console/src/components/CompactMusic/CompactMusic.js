@@ -1,4 +1,3 @@
-// import Button from '@enact/agate/Button';
 import MediaPlayer from '@enact/agate/MediaPlayer';
 import kind from '@enact/core/kind';
 import {Cell} from '@enact/ui/Layout';
@@ -6,31 +5,6 @@ import {Cell} from '@enact/ui/Layout';
 import Widget from '../Widget';
 
 import css from './CompactMusic.module.less';
-
-// const PlaybackControls = kind({
-// 	name: 'PlaybackControls',
-//
-// 	styles: {
-// 		css,
-// 		className: 'playbackControls'
-// 	},
-//
-// 	render: (props) => {
-// 		return (
-// 			<Row {...props} align="center center">
-// 				<Cell shrink>
-// 					<Button size="small" icon="arrowlargeleft" />
-// 				</Cell>
-// 				<Cell shrink>
-// 					<Button size="small" icon="ellipsis" />
-// 				</Cell>
-// 				<Cell shrink>
-// 					<Button size="small" icon="arrowlargeright" />
-// 				</Cell>
-// 			</Row>
-// 		);
-// 	}
-// });
 
 const CompactMusicBase = kind({
 	name: 'CompactMusic',
@@ -53,7 +27,7 @@ const CompactMusicBase = kind({
 		const source = audioFiles.map((audioFile, index) => (<source key={index} src={audioFile} type="audio/mp3" />));
 
 		return (
-			<Widget {...props} icon="music" title="Listen" description="Listen to your favorite tunes" view="radio" align="center center">
+			<Widget {...props} align="center center" description="Listen to your favorite tunes" icon="music" title="Listen" view="radio">
 				<Cell shrink>
 					<MediaPlayer type="tiny">{source}</MediaPlayer>
 				</Cell>
@@ -64,6 +38,5 @@ const CompactMusicBase = kind({
 
 export default CompactMusicBase;
 export {
-	CompactMusicBase as CompactMusic,
 	CompactMusicBase
 };
