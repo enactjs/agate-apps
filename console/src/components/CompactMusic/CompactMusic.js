@@ -1,10 +1,8 @@
 // import Button from '@enact/agate/Button';
-// import ImageItem from '@enact/agate/ImageItem';
-import MediaPlayer from '@enact/agate/MediaPlayer'
+import MediaPlayer from '@enact/agate/MediaPlayer';
 import kind from '@enact/core/kind';
 import {Cell} from '@enact/ui/Layout';
 
-// import albumArt from '../../../assets/music-album-art.jpg';
 import Widget from '../Widget';
 
 import css from './CompactMusic.module.less';
@@ -57,14 +55,7 @@ const CompactMusicBase = kind({
 		return (
 			<Widget {...props} icon="music" title="Listen" description="Listen to your favorite tunes" view="radio" align="center center">
 				<Cell shrink>
-					<MediaPlayer
-						// caption="The Title"
-						// className={css.album}
-						// css={css}
-						// selectionOverlayShowing
-						type="tiny"
-						// subCaption="The Album"
-					>{source}</MediaPlayer>
+					<MediaPlayer type="tiny">{source}</MediaPlayer>
 				</Cell>
 			</Widget>
 		);
