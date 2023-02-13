@@ -217,9 +217,9 @@ const Home = kind({
 			<HomeLayout arrangeable={arrangeable}>
 				<tray1><CompactHvac onExpand={onCompactExpand} /></tray1>
 				<tray2><CompactAppList onExpand={onCompactExpand} onSelect={onSelect} /></tray2>
-				<tray3><CompactMusic onExpand={onCompactExpand} /></tray3>
+				<tray3><CompactWeather onExpand={onCompactExpand} /></tray3>
 
-				<small1><CompactWeather onExpand={onCompactExpand} /></small1>
+				<small1><CompactMusic onExpand={onCompactExpand} /></small1>
 				<small2><CompactScreenMonitor onExpand={onCompactExpand} /></small2>
 				<medium><CompactMultimedia onExpand={onCompactExpand} onSendVideo={onSendVideo} screenIds={[1]} /></medium>
 				<large><CompactMap onExpand={onCompactExpand} /></large>
