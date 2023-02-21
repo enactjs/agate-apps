@@ -5,10 +5,11 @@ import PropTypes from 'prop-types';
 
 import lauraAvatar from '../../../assets/laura.png';
 import thomasAvatar from '../../../assets/thomas.png';
+import williamAvatar from '../../../assets/william.png';
 
 import componentCss from './UserAvatar.module.less';
 
-const userAvatars = [lauraAvatar, thomasAvatar];
+const userAvatars = [lauraAvatar, thomasAvatar, williamAvatar];
 
 const UserAvatarBase = kind({
 	name: 'UserAvatar',
