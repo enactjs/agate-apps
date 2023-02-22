@@ -38,7 +38,7 @@
 		"@enact/spotlight": "^4.6.0",
 		"@enact/ui": "^4.6.0",
 		"classnames": "^2.3.2",
-		"ilib": "^14.16.0",
+		"ilib": "^14.15.1",
 		"immer": "^9.0.19",
 		"mapbox-gl": "^0.54.1",
 		"prop-types": "^15.8.1",
