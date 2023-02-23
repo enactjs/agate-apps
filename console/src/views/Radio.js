@@ -52,7 +52,7 @@ const RadioBase = kind({
 
 	propTypes: {
 		arrangeable: PropTypes.bool,
-		arrangement: PropTypes.string,
+		arrangement: PropTypes.object,
 		band: PropTypes.string,
 		changeBand: PropTypes.func,
 		changeFrequency: PropTypes.func,
@@ -124,7 +124,7 @@ const RadioBase = kind({
 		return (
 			<Panel {...rest}>
 				<CustomLayout arrangeable={arrangeable} arrangement={arrangement} onArrange={onArrange}>
-					<topLeft>
+					<topLeft is="custom">
 						{/* Tune */}
 						<ResponsiveTuner onUp={onTuneUp} onDown={onTuneDown} className={css.tune}>
 							Tune
@@ -136,7 +136,7 @@ const RadioBase = kind({
 						</ResponsiveLayout>*/}
 					</topLeft>
 
-					<top>
+					<top is="custom">
 						{/* Radio TextInfo */}
 						<Row align="center space-around" wrap className={css.info}>
 							{/* Band Selector */}
@@ -151,7 +151,7 @@ const RadioBase = kind({
 						</Row>
 					</top>
 
-					<topRight>
+					<topRight is="custom">
 						{/* Scan */}
 						<ResponsiveTuner onUp={onScanUp} onDown={onScanDown} className={css.scan}>
 							Scan

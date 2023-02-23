@@ -81,7 +81,7 @@ const HvacBase = kind({
 	}) => (
 		<Panel {...rest}>
 			<CustomLayout arrangeable={arrangeable} arrangement={arrangement} onArrange={onArrange}>
-				<top>
+				<top is="custom">
 					<Heading>
 						Fan Speed
 					</Heading>
@@ -170,7 +170,7 @@ const HvacBase = kind({
 						{temps}
 					</Cell>
 				</Row>
-				<bottom>
+				<bottom is="custom">
 					<ResponsiveLayout wrap>
 						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="airdown" />
 						<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="airup" />

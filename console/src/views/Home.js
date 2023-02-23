@@ -98,7 +98,7 @@ const HomeLayouts = kind({
 							component={ToggleButtonBase}
 							onClick={layoutArrangeableEnd}
 							selected
-							small
+							size="small"
 							toggleOffLabel="Edit Layout"
 							toggleOnLabel="Done"
 							type="grid"

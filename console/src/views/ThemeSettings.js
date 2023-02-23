@@ -122,7 +122,7 @@ const ThemeSettingsBase = kind({
 		}
 	},
 
-	render: ({css, onChange, onSelect, onSendSkinSettings, prevIndex, ...rest}) => (
+	render: ({css, onChange, onSelect, prevIndex, ...rest}) => (
 		<Panel {...rest}>
 			<Row align=" start">
 				<Cell shrink>
@@ -150,17 +150,17 @@ const ThemeSettingsBase = kind({
 						</Cell>
 						<Cell shrink className={css.spacedItem}>
 							<FormRow align="start space-around" alignLabel="center" className={css.formRow}>
-								<AccentColorSetting label="Accent Color" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>{swatchPalette}</AccentColorSetting>
-								<HighlightColorSetting label="Highlight Color" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>{swatchPalette}</HighlightColorSetting>
+								<AccentColorSetting label="Accent Color" onClick={onChange}>{swatchPalette}</AccentColorSetting>
+								<HighlightColorSetting label="Highlight Color" onClick={onChange}>{swatchPalette}</HighlightColorSetting>
 							</FormRow>
 						</Cell>
 						<Cell shrink className={css.spacedItem}>
-							<SkinSetting label="Skin:" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>
+							<SkinSetting label="Skin:" onClick={onChange}>
 								{skinNames}
 							</SkinSetting>
 						</Cell>
 						<Cell shrink className={css.spacedItem}>
-							<SkinVariantsSetting label="Variant:" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>
+							<SkinVariantsSetting label="Variant:" onClick={onChange}>
 								{skinVariantsNames}
 							</SkinVariantsSetting>
 						</Cell>
