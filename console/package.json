@@ -39,15 +39,15 @@
 		"@enact/ui": "^4.6.0",
 		"classnames": "^2.3.2",
 		"ilib": "^14.15.1",
-		"immer": "^9.0.15",
-		"mapbox-gl": "^0.51.0",
+		"immer": "^9.0.19",
+		"mapbox-gl": "^0.54.1",
 		"prop-types": "^15.8.1",
-		"query-string": "^6.2.0",
+		"query-string": "^6.14.1",
 		"ramda": "^0.28.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"roslib": "^0.20.0",
-		"socket.io-client": "^2.1.1"
+		"socket.io-client": "^2.3.1"
 	},
 	"devDependencies": {
 		"cpy-cli": "^2.0.0"
