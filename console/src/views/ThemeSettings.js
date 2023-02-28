@@ -9,6 +9,7 @@ import kind from '@enact/core/kind';
 import {Row, Column, Cell} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
+import {useState} from 'react';
 
 import {getPanelIndexOf} from '../App';
 import AppContextConnect from '../App/AppContextConnect';
@@ -115,6 +116,8 @@ const ThemeSettingsBase = kind({
 		className: 'settingsView'
 	},
 
+	functional: true,
+
 	handlers: {
 		onSelect: (ev, {onSelect}) => {
 			onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
@@ -124,78 +127,104 @@ const ThemeSettingsBase = kind({
 		}
 	},
 
-	render: ({css, onChange, onSelect, onSendSkinSettings, prevIndex, ...rest}) => (
-		<Panel {...rest}>
-			<Row align=" start">
-				<Cell shrink>
-					<LabeledIconButton
-						data-tabindex={prevIndex != null ? prevIndex : getPanelIndexOf('settings')}
-						icon="arrowlargeleft"
-						labelPosition="after"
-						onClick={onSelect}
-						size={rest.skin === 'silicon' ? 'small' : 'large'}
-					>
-						Back
-					</LabeledIconButton>
-				</Cell>
-			</Row>
-			<Row align=" center">
-				<Cell size="70%">
-					<Column className={css.content}>
-						<Cell
-							component={Heading}
-							shrink
-							showLine
-							spacing="medium"
+	render: ({css, onChange, onSelect, onSendSkinSettings, prevIndex, ...rest}) => {
+		// eslint-disable-next-line react-hooks/rules-of-hooks
+		const [dynamicColor, setDynamicColor] = useState(false);
+
+		const changeDynamicColor = () => {
+			setDynamicColor(!dynamicColor);
+		}
+
+		console.log(dynamicColor);
+		return(
+			<Panel {...rest}>
+				<Row align=" start">
+					<Cell shrink>
+						<LabeledIconButton
+							data-tabindex={prevIndex != null ? prevIndex : getPanelIndexOf('settings')}
+							icon="arrowlargeleft"
+							labelPosition="after"
+							onClick={onSelect}
+							size={rest.skin === 'silicon' ? 'small' : 'large'}
 						>
-							Theme
-						</Cell>
-						<Cell shrink className={css.spacedItem}>
-							<FormRow align="start space-around" alignLabel="center" className={css.formRow}>
-								<AccentColorSetting label="Accent Color" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>{swatchPalette}</AccentColorSetting>
-								<HighlightColorSetting label="Highlight Color" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>{swatchPalette}</HighlightColorSetting>
-							</FormRow>
-						</Cell>
-						<Cell shrink className={css.spacedItem}>
-							<SkinSetting label="Skin:" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>
-								{skinNames}
-							</SkinSetting>
-						</Cell>
-						<Cell shrink className={css.spacedItem}>
-							<SkinVariantsSetting label="Variant:" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>
-								{skinVariantsNames}
-							</SkinVariantsSetting>
-						</Cell>
-						{/* <Cell shrink>
+							Back
+						</LabeledIconButton>
+					</Cell>
+				</Row>
+				<Row align=" center">
+					<Cell size="70%">
+						<Column className={css.content}>
+							<Cell
+								component={Heading}
+								shrink
+								showLine
+								spacing="medium"
+							>
+								Theme
+							</Cell>
+							<Cell shrink className={css.spacedItem}>
+								<FormRow align="start space-around" alignLabel="center" className={css.formRow}>
+									<AccentColorSetting label="Accent Color" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>{swatchPalette}</AccentColorSetting>
+									<HighlightColorSetting label="Highlight Color" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>{swatchPalette}</HighlightColorSetting>
+								</FormRow>
+							</Cell>
+							<Cell shrink className={css.spacedItem}>
+								<SkinSetting label="Skin:" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>
+									{skinNames}
+								</SkinSetting>
+							</Cell>
+							<Cell shrink className={css.spacedItem}>
+								<SkinVariantsSetting label="Variant:" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>
+									{skinVariantsNames}
+								</SkinVariantsSetting>
+							</Cell>
+							{/* <Cell shrink>
 							<FontSizeSetting label="Text Size:">
 								{['S', 'M', 'L', 'XL']}
 							</FontSizeSetting>
 						</Cell>*/}
-						<Cell shrink className={css.spacedItem}>
-							<CheckboxItem>Dynamic color change</CheckboxItem>
-						</Cell>
-						<Cell shrink className={css.spacedItem}>
-							<Slider
-								max={1440}
-								min={0}
-							/>
-						</Cell>
-					</Column>
-				</Cell>
-			</Row>
-		</Panel>
-	)
+							<Cell shrink className={css.spacedItem}>
+								<CheckboxItem selected={dynamicColor} onClick={changeDynamicColor}>Dynamic color change</CheckboxItem>
+							</Cell>
+							<Cell shrink className={css.spacedItem}>
+								<Slider
+									max={1440}
+									min={0}
+								/>
+							</Cell>
+						</Column>
+					</Cell>
+				</Row>
+			</Panel>
+		)
+	}
 });
 
 // Example to show how to optimize rerenders.
 const SaveableSettings = (settingName, propName = 'value') => AppContextConnect(({userSettings, updateAppState}) => ({
 	[propName]: userSettings[settingName],
 	onChange: ({value}) => {
+		console.log(value);
 		updateAppState((state) => {
 			state.userSettings[settingName] = value;
 		});
 	}
 }));
+
+function changeColor(i) {
+	document.body.style.backgroundColor = 'hsl(' + i + ', 100%, 50%)';
+
+	const HEXColor1 = setTimeout(function() {
+		let RGBColors = document.body.style.backgroundColor.match(/\d+/g);
+
+		const [r, g, b] = RGBColors;
+		const HEXColor =  '#' + ((1 << 24) + (Number(r) << 16) + (Number(g) << 8) + Number(b)).toString(16).slice(1);
+		SaveableSettings('colorAccent')(HEXColor);
+		console.log(HEXColor);
+		changeColor(++i)
+	}, 1000);
+}
+//changeColor(0);
 
 // Save the `colorAccent` user setting, read from the default prop (value), of the supplied ColorPickerItem
 const AccentColorSetting = SaveableSettings('colorAccent')(ColorPickerItem);
