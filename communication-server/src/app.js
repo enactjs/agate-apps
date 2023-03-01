@@ -5,7 +5,7 @@ const io = require('socket.io')(http, {
 	cors: {
 		origin: ['http://localhost:8080', "http://localhost:8081"],
 		credentials: true
-	},
+	}
 });
 
 // const adDuration = 10000; // 10 s
