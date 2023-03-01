@@ -172,7 +172,7 @@ const ThemeSettingsBase = kind({
 							</FontSizeSetting>
 						</Cell>*/}
 						<Cell shrink className={css.spacedItem}>
-							<CheckboxItem>Dynamic color change</CheckboxItem>
+							<DynamicColorSetting label="Dynamic color change" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>{['true', 'false']}</DynamicColorSetting>
 						</Cell>
 						<Cell shrink className={css.spacedItem}>
 							<Slider
@@ -197,6 +197,17 @@ const SaveableSettings = (settingName, propName = 'value') => AppContextConnect(
 	}
 }));
 
+const DynamicColorSetting = AppContextConnect(({userSettings, updateAppState}) => ({
+	value: userSettings.dynamicColor,
+	onChange: ({value}) => {
+		console.log('aici dynamic color', value)
+		updateAppState((state) => {
+			state.userSettings.dynamicColor = value;
+		});
+	}
+}))(SliderButtonItem);
+
+
 // Save the `colorAccent` user setting, read from the default prop (value), of the supplied ColorPickerItem
 const AccentColorSetting = SaveableSettings('colorAccent')(ColorPickerItem);
 
@@ -210,6 +221,7 @@ const HighlightColorSetting = SaveableSettings('colorHighlight')(ColorPickerItem
 const SkinSetting = AppContextConnect(({userSettings, updateAppState}) => ({
 	value: skinList.indexOf(userSettings.skin),
 	onChange: ({value}) => {
+		console.log('aici')
 		updateAppState((state) => {
 			state.userSettings.skin = skinList[value].toLowerCase();
 		});
@@ -229,6 +241,7 @@ const ThemeSettingsDecorator = compose(
 	AppContextConnect(({userSettings}) => ({
 		accent: userSettings.colorAccent,
 		highlight: userSettings.colorHighlight,
+		dynamicColor: userSettings.dynamicColor,
 		skin: userSettings.skin,
 		skinVariants: userSettings.skinVariants
 	}))

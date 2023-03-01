@@ -404,6 +404,7 @@ const AppDecorator = compose(
 	AppContextConnect(({appState, userSettings, userId, updateAppState}) => ({
 		accent: userSettings.colorAccent,
 		highlight: userSettings.colorHighlight,
+		dynamicColor: userSettings.dynamicColor,
 		layoutArrangeable: userSettings.arrangements.arrangeable,
 		orientation: (userSettings.skin !== 'carbon') ? 'horizontal' : 'vertical',
 		showAppList: appState.showAppList,

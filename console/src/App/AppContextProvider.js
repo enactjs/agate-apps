@@ -54,6 +54,7 @@ const defaultUserSettings = {
 	},
 	colorAccent: '#cccccc',
 	colorHighlight: '#66aabb',
+	dynamicColor: false,
 	fontSize: 0,
 	name: '',
 	skin: 'carbon',
