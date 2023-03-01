@@ -97,6 +97,19 @@ const SliderButtonItem = kind({
 	)
 });
 
+const ColorCheckboxItem = kind({
+	name: 'ColorCheckboxItem',
+	styles: {
+		css: componentCss,
+		className: 'colorCheckboxItemRow'
+	},
+	render: ({...rest}) => (
+		<FormRow>
+			<Cell><CheckboxItem {...rest} /></Cell>
+		</FormRow>
+	)
+});
+
 const ThemeSettingsBase = kind({
 	name: 'ThemeSettings',
 
@@ -121,10 +134,13 @@ const ThemeSettingsBase = kind({
 		},
 		onChange: (ev, props) => {
 			props.onSendSkinSettings(props);
+		},
+		onToggle: (ev) => {
+			ev.currentTarget.selected = !ev.currentTarget.selected;
 		}
 	},
 
-	render: ({css, onChange, onSelect, onSendSkinSettings, prevIndex, ...rest}) => (
+	render: ({css, onChange, onSelect, onToggle, onSendSkinSettings, prevIndex, ...rest}) => (
 		<Panel {...rest}>
 			<Row align=" start">
 				<Cell shrink>
@@ -172,7 +188,7 @@ const ThemeSettingsBase = kind({
 							</FontSizeSetting>
 						</Cell>*/}
 						<Cell shrink className={css.spacedItem}>
-							<DynamicColorSetting label="Dynamic color change" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>{['true', 'false']}</DynamicColorSetting>
+							<DynamicColorSetting onToggle={onToggle} onSendSkinSettings={onSendSkinSettings}>Dynamic color change</DynamicColorSetting>
 						</Cell>
 						<Cell shrink className={css.spacedItem}>
 							<Slider
@@ -197,16 +213,27 @@ const SaveableSettings = (settingName, propName = 'value') => AppContextConnect(
 	}
 }));
 
+// const SaveableSettings2 = (settingName, propName = 'selected') => AppContextConnect(({userSettings, updateAppState}) => ({
+// 	[propName]: userSettings[settingName],
+// 	onToggle: ({selected}) => {
+// 		console.log('aici', selected)
+// 		updateAppState((state) => {
+// 			state.userSettings[settingName] = selected;
+// 		});
+// 	}
+// }));
+
+// const DynamicColorSetting = SaveableSettings2('dynamicColor')(ColorCheckboxItem);
+
 const DynamicColorSetting = AppContextConnect(({userSettings, updateAppState}) => ({
-	value: userSettings.dynamicColor,
-	onChange: ({value}) => {
-		console.log('aici dynamic color', value)
+	selected: userSettings.dynamicColor,
+	onToggle: ({selected}) => {
+		console.log('dynamic color', selected)
 		updateAppState((state) => {
-			state.userSettings.dynamicColor = value;
+			state.userSettings.dynamicColor = !state.userSettings.dynamicColor;
 		});
 	}
-}))(SliderButtonItem);
-
+}))(ColorCheckboxItem);
 
 // Save the `colorAccent` user setting, read from the default prop (value), of the supplied ColorPickerItem
 const AccentColorSetting = SaveableSettings('colorAccent')(ColorPickerItem);
