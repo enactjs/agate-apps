@@ -15,6 +15,7 @@ import {getPanelIndexOf} from '../App';
 import AppContextConnect from '../App/AppContextConnect';
 
 import componentCss from './Settings.module.less';
+import AppContextProvider from "../App/AppContextProvider";
 
 // Skin setup area
 const skinCollection = {
@@ -132,7 +133,16 @@ const ThemeSettingsBase = kind({
 		const [dynamicColor, setDynamicColor] = useState(false);
 
 		const changeDynamicColor = () => {
-			setDynamicColor(!dynamicColor);
+			console.log(dynamicColor)
+			if(!dynamicColor) {
+				SaveableSettings('dynamicColor')(true);
+				changeColor(0);
+				setDynamicColor(!dynamicColor);
+			} else {
+				SaveableSettings('dynamicColor')(false);
+				setDynamicColor(!dynamicColor);
+			}
+
 		}
 
 		console.log(dynamicColor);
@@ -184,7 +194,7 @@ const ThemeSettingsBase = kind({
 							</FontSizeSetting>
 						</Cell>*/}
 							<Cell shrink className={css.spacedItem}>
-								<CheckboxItem selected={dynamicColor} onClick={changeDynamicColor}>Dynamic color change</CheckboxItem>
+								<DynamicColorSetting onClick={onChange}>Dynamic color change</DynamicColorSetting>
 							</Cell>
 							<Cell shrink className={css.spacedItem}>
 								<Slider
@@ -204,7 +214,7 @@ const ThemeSettingsBase = kind({
 const SaveableSettings = (settingName, propName = 'value') => AppContextConnect(({userSettings, updateAppState}) => ({
 	[propName]: userSettings[settingName],
 	onChange: ({value}) => {
-		console.log(value);
+		console.log(settingName, value);
 		updateAppState((state) => {
 			state.userSettings[settingName] = value;
 		});
@@ -214,14 +224,17 @@ const SaveableSettings = (settingName, propName = 'value') => AppContextConnect(
 function changeColor(i) {
 	document.body.style.backgroundColor = 'hsl(' + i + ', 100%, 50%)';
 
-	const HEXColor1 = setTimeout(function() {
+	setTimeout(function() {
 		let RGBColors = document.body.style.backgroundColor.match(/\d+/g);
 
 		const [r, g, b] = RGBColors;
 		const HEXColor =  '#' + ((1 << 24) + (Number(r) << 16) + (Number(g) << 8) + Number(b)).toString(16).slice(1);
-		SaveableSettings('colorAccent')(HEXColor);
 		console.log(HEXColor);
-		changeColor(++i)
+		console.log(AppContextProvider.userSettings);
+		if(this.userSettings.dynamicColor)
+		{
+			changeColor(++i);
+		}
 	}, 1000);
 }
 //changeColor(0);
@@ -231,6 +244,8 @@ const AccentColorSetting = SaveableSettings('colorAccent')(ColorPickerItem);
 
 // Save the `colorAccent` user setting, read from the default prop (value), of the supplied ColorPickerItem
 const HighlightColorSetting = SaveableSettings('colorHighlight')(ColorPickerItem);
+
+const DynamicColorSetting = SaveableSettings('dynamicColor')(CheckboxItem);
 
 // Save the `colorAccent` user setting, read from the default prop (value), of the supplied SliderButtonItem
 // const FontSizeSetting = SaveableSettings('fontSize')(SliderButtonItem);
@@ -257,6 +272,7 @@ const SkinVariantsSetting = AppContextConnect(({userSettings, updateAppState}) =
 const ThemeSettingsDecorator = compose(
 	AppContextConnect(({userSettings}) => ({
 		accent: userSettings.colorAccent,
+		dynamicColor: userSettings.dynamicColor,
 		highlight: userSettings.colorHighlight,
 		skin: userSettings.skin,
 		skinVariants: userSettings.skinVariants

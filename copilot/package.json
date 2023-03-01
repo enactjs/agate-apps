@@ -31,7 +31,7 @@
 		"dist/*"
 	],
 	"dependencies": {
-		"@enact/agate": "^2.0.3",
+		"@enact/agate": "^2.0.4",
 		"@enact/core": "^4.6.0",
 		"@enact/i18n": "^4.6.0",
 		"@enact/ui": "^4.6.0",
