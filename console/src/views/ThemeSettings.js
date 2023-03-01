@@ -188,7 +188,7 @@ const ThemeSettingsBase = kind({
 							</FontSizeSetting>
 						</Cell>*/}
 						<Cell shrink className={css.spacedItem}>
-							<DynamicColorSetting onToggle={onToggle} onSendSkinSettings={onSendSkinSettings}>Dynamic color change</DynamicColorSetting>
+							<DynamicColorSetting onToggle={onToggle}>Dynamic color change</DynamicColorSetting>
 						</Cell>
 						<Cell shrink className={css.spacedItem}>
 							<Slider
@@ -228,9 +228,9 @@ const SaveableSettings = (settingName, propName = 'value') => AppContextConnect(
 const DynamicColorSetting = AppContextConnect(({userSettings, updateAppState}) => ({
 	selected: userSettings.dynamicColor,
 	onToggle: ({selected}) => {
-		console.log('dynamic color', selected)
+		console.log('aici dynamic color', selected)
 		updateAppState((state) => {
-			state.userSettings.dynamicColor = !state.userSettings.dynamicColor;
+			state.userSettings.dynamicColor = selected;
 		});
 	}
 }))(ColorCheckboxItem);
