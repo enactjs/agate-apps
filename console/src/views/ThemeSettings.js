@@ -4,7 +4,6 @@ import ColorPicker from '@enact/agate/ColorPicker';
 import Heading from '@enact/agate/Heading';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
 import {Panel} from '@enact/agate/Panels';
-import Slider from '@enact/agate/Slider';
 import SliderButton from '@enact/agate/SliderButton';
 import kind from '@enact/core/kind';
 import {Row, Column, Cell} from '@enact/ui/Layout';
@@ -210,12 +209,6 @@ const ThemeSettingsBase = (props) => {
 							>
 								{['false', 'true']}
 							</DynamicColorSetting>
-						</Cell>
-						<Cell shrink className={componentCss.spacedItem}>
-							<Slider
-								max={1440}
-								min={0}
-							/>
 						</Cell>
 					</Column>
 				</Cell>
