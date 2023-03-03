@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-no-bind */
-
 import ColorPicker from '@enact/agate/ColorPicker';
 import Heading from '@enact/agate/Heading';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
@@ -9,11 +7,11 @@ import kind from '@enact/core/kind';
 import {Row, Column, Cell} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {useContext, useEffect} from 'react';
+import {useCallback, useContext, useEffect} from 'react';
 
 import {getPanelIndexOf} from '../App';
 import AppContextConnect from '../App/AppContextConnect';
-import {AppContext} from "../App/AppContextProvider";
+import {AppContext} from '../App/AppContextProvider';
 
 import componentCss from './Settings.module.less';
 
@@ -106,9 +104,13 @@ const ThemeSettingsBase = (props) => {
 	const {onSendSkinSettings, prevIndex, ... rest} = props;
 	const context = useContext(AppContext);
 
-	const handleSelect =  (ev, {onSelect}) => {
+	const handleSelect = useCallback((ev, {onSelect}) => {
 		onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
-	};
+	}, []);
+
+	const onChange = useCallback(() => {
+		props.onSendSkinSettings(props);
+	}, [props]);
 
 	useEffect (() => {
 		let changeAccentColor, changeHighlightColor;
@@ -150,10 +152,6 @@ const ThemeSettingsBase = (props) => {
 			indexHighlight = 1000;
 		};
 	}, [context.userSettings.dynamicColor]); // eslint-disable-line react-hooks/exhaustive-deps
-
-	const onChange =  () => {
-		props.onSendSkinSettings(props);
-	};
 
 	return (
 		<Panel {...rest} className={componentCss.settingsView}>
