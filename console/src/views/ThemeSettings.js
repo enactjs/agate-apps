@@ -1,17 +1,17 @@
-import CheckboxItem from '@enact/agate/CheckboxItem';
 import ColorPicker from '@enact/agate/ColorPicker';
 import Heading from '@enact/agate/Heading';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
 import {Panel} from '@enact/agate/Panels';
-import Slider from '@enact/agate/Slider';
 import SliderButton from '@enact/agate/SliderButton';
 import kind from '@enact/core/kind';
 import {Row, Column, Cell} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
+import {useCallback, useContext, useEffect} from 'react';
 
 import {getPanelIndexOf} from '../App';
 import AppContextConnect from '../App/AppContextConnect';
+import {AppContext} from '../App/AppContextProvider';
 
 import componentCss from './Settings.module.less';
 
@@ -42,6 +42,9 @@ const swatchPalette = [
 	'#f08c21', '#f42c04', '#d636d9', '#aab3cb',
 	'#ff2d55', '#9e00d8'
 ];
+
+let indexAccent = 0;
+let indexHighlight = 1000;
 
 const FormRow = kind({
 	name: 'FormRow',
@@ -97,42 +100,68 @@ const SliderButtonItem = kind({
 	)
 });
 
-const ThemeSettingsBase = kind({
-	name: 'ThemeSettings',
+const ThemeSettingsBase = (props) => {
+	const {onSendSkinSettings, prevIndex, ... rest} = props;
+	const context = useContext(AppContext);
 
-	propTypes: {
-		alignLabel: PropTypes.string,
-		css: PropTypes.object,
-		label: PropTypes.string,
-		onSelect: PropTypes.func,
-		onSendSkinSettings: PropTypes.func,
-		prevIndex: PropTypes.number,
-		skin: PropTypes.string
-	},
+	const handleSelect = useCallback((ev, {onSelect}) => {
+		onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
+	}, []);
 
-	styles: {
-		css: componentCss,
-		className: 'settingsView'
-	},
+	const onChange = useCallback(() => {
+		props.onSendSkinSettings(props);
+	}, [props]);
 
-	handlers: {
-		onSelect: (ev, {onSelect}) => {
-			onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
-		},
-		onChange: (ev, props) => {
-			props.onSendSkinSettings(props);
+	useEffect (() => {
+		let changeAccentColor, changeHighlightColor;
+
+		if (context.userSettings.dynamicColor) {
+			changeAccentColor = setInterval(function () {
+				document.body.style.backgroundColor = 'hsl(' + indexAccent + ', 100%, 50%)';
+				let RGBColors = document.body.style.backgroundColor.match(/\d+/g);
+
+				const [r, g, b] = RGBColors;
+				const HEXColor =  '#' + ((1 << 24) + (Number(r) << 16) + (Number(g) << 8) + Number(b)).toString(16).slice(1);
+
+				context.updateAppState((state) => {
+					state.userSettings.colorAccent = HEXColor;
+				});
+
+				indexAccent++;
+			}, 100);
+
+			changeHighlightColor = setInterval(function () {
+				document.body.style.backgroundColor = 'hsl(' + indexHighlight + ', 100%, 50%)';
+				let RGBColors = document.body.style.backgroundColor.match(/\d+/g);
+
+				const [r, g, b] = RGBColors;
+				const HEXColor =  '#' + ((1 << 24) + (Number(r) << 16) + (Number(g) << 8) + Number(b)).toString(16).slice(1);
+
+				context.updateAppState((state) => {
+					state.userSettings.colorHighlight = HEXColor;
+				});
+
+				indexHighlight++;
+			}, 100);
 		}
-	},
 
-	render: ({css, onChange, onSelect, onSendSkinSettings, prevIndex, ...rest}) => (
-		<Panel {...rest}>
+		return () => {
+			clearInterval(changeAccentColor);
+			clearInterval(changeHighlightColor);
+			indexAccent = 0;
+			indexHighlight = 1000;
+		};
+	}, [context.userSettings.dynamicColor]); // eslint-disable-line react-hooks/exhaustive-deps
+
+	return (
+		<Panel {...rest} className={componentCss.settingsView}>
 			<Row align=" start">
 				<Cell shrink>
 					<LabeledIconButton
 						data-tabindex={prevIndex != null ? prevIndex : getPanelIndexOf('settings')}
 						icon="arrowlargeleft"
 						labelPosition="after"
-						onClick={onSelect}
+						onClick={handleSelect}
 						size={rest.skin === 'silicon' ? 'small' : 'large'}
 					>
 						Back
@@ -141,7 +170,7 @@ const ThemeSettingsBase = kind({
 			</Row>
 			<Row align=" center">
 				<Cell size="70%">
-					<Column className={css.content}>
+					<Column className={componentCss.content}>
 						<Cell
 							component={Heading}
 							shrink
@@ -150,18 +179,18 @@ const ThemeSettingsBase = kind({
 						>
 							Theme
 						</Cell>
-						<Cell shrink className={css.spacedItem}>
-							<FormRow align="start space-around" alignLabel="center" className={css.formRow}>
+						<Cell shrink className={componentCss.spacedItem}>
+							<FormRow align="start space-around" alignLabel="center" className={componentCss.formRow}>
 								<AccentColorSetting label="Accent Color" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>{swatchPalette}</AccentColorSetting>
 								<HighlightColorSetting label="Highlight Color" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>{swatchPalette}</HighlightColorSetting>
 							</FormRow>
 						</Cell>
-						<Cell shrink className={css.spacedItem}>
+						<Cell shrink className={componentCss.spacedItem}>
 							<SkinSetting label="Skin:" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>
 								{skinNames}
 							</SkinSetting>
 						</Cell>
-						<Cell shrink className={css.spacedItem}>
+						<Cell shrink className={componentCss.spacedItem}>
 							<SkinVariantsSetting label="Variant:" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>
 								{skinVariantsNames}
 							</SkinVariantsSetting>
@@ -171,21 +200,41 @@ const ThemeSettingsBase = kind({
 								{['S', 'M', 'L', 'XL']}
 							</FontSizeSetting>
 						</Cell>*/}
-						<Cell shrink className={css.spacedItem}>
-							<CheckboxItem>Dynamic color change</CheckboxItem>
-						</Cell>
-						<Cell shrink className={css.spacedItem}>
-							<Slider
-								max={1440}
-								min={0}
-							/>
+						<Cell shrink className={componentCss.spacedItem}>
+							<DynamicColorSetting
+								label="Dynamic color change"
+								onSendSkinSettings={onSendSkinSettings}
+							>
+								{['false', 'true']}
+							</DynamicColorSetting>
 						</Cell>
 					</Column>
 				</Cell>
 			</Row>
 		</Panel>
-	)
-});
+	);
+};
+
+ThemeSettingsBase.propTypes = {
+	alignLabel: PropTypes.string,
+	css: PropTypes.object,
+	label: PropTypes.string,
+	onSelect: PropTypes.func,
+	onSendSkinSettings: PropTypes.func,
+	prevIndex: PropTypes.number,
+	skin: PropTypes.string
+};
+
+ThemeSettingsBase.displayName = 'ThemeSettings';
+
+const DynamicColorSetting = AppContextConnect(({userSettings, updateAppState}) => ({
+	value: userSettings.dynamicColor,
+	onChange: ({value}) => {
+		updateAppState((state) => {
+			state.userSettings.dynamicColor = value;
+		});
+	}
+}))(SliderButtonItem);
 
 // Example to show how to optimize rerenders.
 const SaveableSettings = (settingName, propName = 'value') => AppContextConnect(({userSettings, updateAppState}) => ({
@@ -228,6 +277,7 @@ const SkinVariantsSetting = AppContextConnect(({userSettings, updateAppState}) =
 const ThemeSettingsDecorator = compose(
 	AppContextConnect(({userSettings}) => ({
 		accent: userSettings.colorAccent,
+		dynamicColor: userSettings.dynamicColor,
 		highlight: userSettings.colorHighlight,
 		skin: userSettings.skin,
 		skinVariants: userSettings.skinVariants
