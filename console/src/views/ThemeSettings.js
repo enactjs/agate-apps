@@ -1,4 +1,5 @@
-import CheckboxItem from '@enact/agate/CheckboxItem';
+/* eslint-disable react/jsx-no-bind */
+
 import ColorPicker from '@enact/agate/ColorPicker';
 import Heading from '@enact/agate/Heading';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
@@ -45,7 +46,8 @@ const swatchPalette = [
 	'#ff2d55', '#9e00d8'
 ];
 
-let index = 0;
+let indexAccent = 0;
+let indexHighlight = 1000;
 
 const FormRow = kind({
 	name: 'FormRow',
@@ -105,36 +107,56 @@ const ThemeSettingsBase = (props) => {
 	const {onSendSkinSettings, prevIndex, ... rest} = props;
 	const context = useContext(AppContext);
 
-	const onSelect =  (ev, {onSelect}) => {
+	const handleSelect =  (ev, {onSelect}) => {
 		onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
 	};
 
 	useEffect (() => {
-		let changeColor;
+		let changeAccentColor, changeHighlightColor;
 
-		if(context.userSettings.dynamicColor) {
-			changeColor = setInterval(function() {
-				document.body.style.backgroundColor = 'hsl(' + index + ', 100%, 50%)';
+		if (context.userSettings.dynamicColor) {
+			changeAccentColor = setInterval(function () {
+				document.body.style.backgroundColor = 'hsl(' + indexAccent + ', 100%, 50%)';
 				let RGBColors = document.body.style.backgroundColor.match(/\d+/g);
 
 				const [r, g, b] = RGBColors;
 				const HEXColor =  '#' + ((1 << 24) + (Number(r) << 16) + (Number(g) << 8) + Number(b)).toString(16).slice(1);
-				console.log(HEXColor)
-				index++;
-			}, 1000);
+
+				context.updateAppState((state) => {
+					state.userSettings.colorAccent = HEXColor;
+				});
+
+				indexAccent++;
+			}, 100);
+
+			changeHighlightColor = setInterval(function () {
+				document.body.style.backgroundColor = 'hsl(' + indexHighlight + ', 100%, 50%)';
+				let RGBColors = document.body.style.backgroundColor.match(/\d+/g);
+
+				const [r, g, b] = RGBColors;
+				const HEXColor =  '#' + ((1 << 24) + (Number(r) << 16) + (Number(g) << 8) + Number(b)).toString(16).slice(1);
+
+				context.updateAppState((state) => {
+					state.userSettings.colorHighlight = HEXColor;
+				});
+
+				indexHighlight++;
+			}, 100);
 		}
 
- return () => {
-	 clearInterval(changeColor);
-	 index=0;
- }
-	}, [context.userSettings.dynamicColor]);
+		return () => {
+			clearInterval(changeAccentColor);
+			clearInterval(changeHighlightColor);
+			indexAccent = 0;
+			indexHighlight = 1000;
+		};
+	}, [context.userSettings.dynamicColor]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	const onChange =  () => {
 		props.onSendSkinSettings(props);
-	}
+	};
 
-	return(
+	return (
 		<Panel {...rest} className={componentCss.settingsView}>
 			<Row align=" start">
 				<Cell shrink>
@@ -142,7 +164,7 @@ const ThemeSettingsBase = (props) => {
 						data-tabindex={prevIndex != null ? prevIndex : getPanelIndexOf('settings')}
 						icon="arrowlargeleft"
 						labelPosition="after"
-						onClick={onSelect}
+						onClick={handleSelect}
 						size={rest.skin === 'silicon' ? 'small' : 'large'}
 					>
 						Back
@@ -184,7 +206,6 @@ const ThemeSettingsBase = (props) => {
 						<Cell shrink className={componentCss.spacedItem}>
 							<DynamicColorSetting
 								label="Dynamic color change"
-								//onClick={onDynamicColorChange}
 								onSendSkinSettings={onSendSkinSettings}
 							>
 								{['false', 'true']}
@@ -200,7 +221,7 @@ const ThemeSettingsBase = (props) => {
 				</Cell>
 			</Row>
 		</Panel>
-	)
+	);
 };
 
 ThemeSettingsBase.propTypes = {
