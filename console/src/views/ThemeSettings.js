@@ -122,58 +122,62 @@ const ThemeSettingsBase = kind({
 		}
 	},
 
-	render: ({css, onChange, onSelect, onSendSkinSettings, prevIndex, ...rest}) => (
-		<Panel {...rest}>
-			<Row align=" start">
-				<Cell shrink>
-					<LabeledIconButton
-						data-tabindex={prevIndex != null ? prevIndex : getPanelIndexOf('settings')}
-						icon="arrowlargeleft"
-						labelPosition="after"
-						onClick={onSelect}
-						size={rest.skin === 'silicon' ? 'small' : 'large'}
-					>
-						Back
-					</LabeledIconButton>
-				</Cell>
-			</Row>
-			<Row align=" center">
-				<Cell size="70%">
-					<Column className={css.content}>
-						<Cell
-							component={Heading}
-							shrink
-							showLine
-							spacing="medium"
+	render: ({css, onChange, onSelect, prevIndex, ...rest}) => {
+		delete rest.onSendSkinSettings;
+
+		return (
+			<Panel {...rest}>
+				<Row align=" start">
+					<Cell shrink>
+						<LabeledIconButton
+							data-tabindex={prevIndex != null ? prevIndex : getPanelIndexOf('settings')}
+							icon="arrowlargeleft"
+							labelPosition="after"
+							onClick={onSelect}
+							size={rest.skin === 'silicon' ? 'small' : 'large'}
 						>
-							Theme
-						</Cell>
-						<Cell shrink className={css.spacedItem}>
-							<FormRow align="start space-around" alignLabel="center" className={css.formRow}>
-								<AccentColorSetting label="Accent Color" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>{swatchPalette}</AccentColorSetting>
-								<HighlightColorSetting label="Highlight Color" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>{swatchPalette}</HighlightColorSetting>
-							</FormRow>
-						</Cell>
-						<Cell shrink className={css.spacedItem}>
-							<SkinSetting label="Skin:" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>
-								{skinNames}
-							</SkinSetting>
-						</Cell>
-						<Cell shrink className={css.spacedItem}>
-							<SkinVariantsSetting label="Variant:" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>
-								{skinVariantsNames}
-							</SkinVariantsSetting>
-						</Cell>
-						{/* <Cell shrink>
+							Back
+						</LabeledIconButton>
+					</Cell>
+				</Row>
+				<Row align=" center">
+					<Cell size="70%">
+						<Column className={css.content}>
+							<Cell
+								component={Heading}
+								shrink
+								showLine
+								spacing="medium"
+							>
+								Theme
+							</Cell>
+							<Cell shrink className={css.spacedItem}>
+								<FormRow align="start space-around" alignLabel="center" className={css.formRow}>
+									<AccentColorSetting label="Accent Color" onClick={onChange}>{swatchPalette}</AccentColorSetting>
+									<HighlightColorSetting label="Highlight Color" onClick={onChange}>{swatchPalette}</HighlightColorSetting>
+								</FormRow>
+							</Cell>
+							<Cell shrink className={css.spacedItem}>
+								<SkinSetting label="Skin:" onClick={onChange}>
+									{skinNames}
+								</SkinSetting>
+							</Cell>
+							<Cell shrink className={css.spacedItem}>
+								<SkinVariantsSetting label="Variant:" onClick={onChange}>
+									{skinVariantsNames}
+								</SkinVariantsSetting>
+							</Cell>
+							{/* <Cell shrink>
 							<FontSizeSetting label="Text Size:">
 								{['S', 'M', 'L', 'XL']}
 							</FontSizeSetting>
 						</Cell>*/}
-					</Column>
-				</Cell>
-			</Row>
-		</Panel>
-	)
+						</Column>
+					</Cell>
+				</Row>
+			</Panel>
+		);
+	}
 });
 
 // Example to show how to optimize rerenders.

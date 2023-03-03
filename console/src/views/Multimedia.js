@@ -193,7 +193,7 @@ const MultimediaBase = kind({
 						arrangement={arrangement}
 						onArrange={onArrange}
 					>
-						<left>
+						<left is="custom">
 							<Column>
 								<Cell shrink component={Heading} className={css.heading}>Recommended Videos</Cell>
 								<Cell>
