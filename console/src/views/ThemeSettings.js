@@ -232,7 +232,6 @@ ThemeSettingsBase.displayName = 'ThemeSettings';
 const DynamicColorSetting = AppContextConnect(({userSettings, updateAppState}) => ({
 	value: userSettings.dynamicColor,
 	onChange: ({value}) => {
-		console.log('aici dynamic color', value);
 		updateAppState((state) => {
 			state.userSettings.dynamicColor = value;
 		});
@@ -243,7 +242,6 @@ const DynamicColorSetting = AppContextConnect(({userSettings, updateAppState}) =
 const SaveableSettings = (settingName, propName = 'value') => AppContextConnect(({userSettings, updateAppState}) => ({
 	[propName]: userSettings[settingName],
 	onChange: ({value}) => {
-		console.log(settingName, value);
 		updateAppState((state) => {
 			state.userSettings[settingName] = value;
 		});

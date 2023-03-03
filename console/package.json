@@ -24,7 +24,7 @@
 		"template": "html-template.ejs"
 	},
 	"eslintConfig": {
-		"extends": "enact-proxy/strict"
+		"extends": "enact/strict"
 	},
 	"eslintIgnore": [
 		"node_modules/*",
@@ -50,7 +50,6 @@
 		"socket.io-client": "^2.3.1"
 	},
 	"devDependencies": {
-		"cpy-cli": "^2.0.0",
-		"eslint-config-enact-proxy": "^1.0.5"
+		"cpy-cli": "^2.0.0"
 	}
 }
