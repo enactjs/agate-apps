@@ -105,8 +105,8 @@ const Settings = kind({
 						</SwitchItemCell>
 						<SwitchItemCell
 							icon="heatseatright"
-							offText="disarmed"
-							onText="armed"
+							switchOffLabel="disarmed"
+							switchOnLabel="armed"
 						>
 							Ejection Seat
 						</SwitchItemCell>

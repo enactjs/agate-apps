@@ -187,7 +187,8 @@ class AppContextProvider extends Component {
 	};
 
 	loadUserSettings = (userId) => {
-		return JSON.parse((global.localStorage && global.localStorage.getItem(`user${userId}`)) || '{}') || this.getDefaultUserSettings(userId);
+		const user = JSON.parse((global.localStorage && global.localStorage.getItem(`user${userId}`)) || '{}');
+		return Object.keys(user).length !== 0 ? user : this.getDefaultUserSettings(userId);
 	};
 
 	saveUserSettings = (userId, userSettings) => {
