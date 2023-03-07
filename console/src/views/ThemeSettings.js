@@ -1,3 +1,4 @@
+import CheckboxItem from '@enact/agate/CheckboxItem';
 import ColorPicker from '@enact/agate/ColorPicker';
 import Heading from '@enact/agate/Heading';
 import LabeledIconButton from '@enact/agate/LabeledIconButton';
@@ -201,12 +202,9 @@ const ThemeSettingsBase = (props) => {
 							</FontSizeSetting>
 						</Cell>*/}
 						<Cell shrink className={componentCss.spacedItem}>
-							<DynamicColorSetting
-								label="Dynamic color change"
-								onSendSkinSettings={onSendSkinSettings}
-							>
-								{['false', 'true']}
-							</DynamicColorSetting>
+							<DynamicColorSetting2>
+								Dynamic color change
+							</DynamicColorSetting2>
 						</Cell>
 					</Column>
 				</Cell>
@@ -227,6 +225,19 @@ ThemeSettingsBase.propTypes = {
 
 ThemeSettingsBase.displayName = 'ThemeSettings';
 
+const ColorCheckboxItem = kind({
+	name: 'ColorCheckboxItem',
+	styles: {
+		css: componentCss,
+		className: 'colorCheckboxItemRow'
+	},
+	render: ({...rest}) => (
+		<FormRow>
+			<Cell><CheckboxItem {...rest} /></Cell>
+		</FormRow>
+	)
+});
+
 const DynamicColorSetting = AppContextConnect(({userSettings, updateAppState}) => ({
 	value: userSettings.dynamicColor,
 	onChange: ({value}) => {
@@ -235,6 +246,16 @@ const DynamicColorSetting = AppContextConnect(({userSettings, updateAppState}) =
 		});
 	}
 }))(SliderButtonItem);
+
+const DynamicColorSetting2 = AppContextConnect(({userSettings, updateAppState}) => ({
+	selected: userSettings.dynamicColor,
+	onToggle: ({selected}) => {
+		console.log('aici dynamic color', selected)
+		updateAppState((state) => {
+			state.userSettings.dynamicColor = selected;
+		});
+	}
+}))(ColorCheckboxItem);
 
 // Example to show how to optimize rerenders.
 const SaveableSettings = (settingName, propName = 'value') => AppContextConnect(({userSettings, updateAppState}) => ({
