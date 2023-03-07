@@ -102,8 +102,10 @@ const SliderButtonItem = kind({
 });
 
 const ThemeSettingsBase = (props) => {
-	const {onSendSkinSettings, prevIndex, ... rest} = props;
+	const {prevIndex, ... rest} = props;
 	const context = useContext(AppContext);
+
+	delete rest.onSendSkinSettings;
 
 	const handleSelect = useCallback((ev, {onSelect}) => {
 		onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
@@ -117,6 +119,11 @@ const ThemeSettingsBase = (props) => {
 		let changeAccentColor, changeHighlightColor;
 
 		if (context.userSettings.dynamicColor) {
+			context.updateAppState((state) => {
+				state.userSettings.colorAccentManual = state.userSettings.colorAccent;
+				state.userSettings.colorHighlightManual = state.userSettings.colorHighlight;
+			});
+
 			changeAccentColor = setInterval(function () {
 				document.body.style.backgroundColor = 'hsl(' + indexAccent + ', 100%, 50%)';
 				let RGBColors = document.body.style.backgroundColor.match(/\d+/g);
@@ -144,11 +151,18 @@ const ThemeSettingsBase = (props) => {
 
 				indexHighlight++;
 			}, 100);
+		} else if (!context.userSettings.dynamicColor) {
+
+			context.updateAppState((state) => {
+				state.userSettings.colorAccent = context.userSettings.colorAccentManual;
+				state.userSettings.colorHighlight = context.userSettings.colorHighlightManual;
+			});
 		}
 
 		return () => {
 			clearInterval(changeAccentColor);
 			clearInterval(changeHighlightColor);
+
 			indexAccent = 0;
 			indexHighlight = 1000;
 		};
@@ -182,17 +196,17 @@ const ThemeSettingsBase = (props) => {
 						</Cell>
 						<Cell shrink className={componentCss.spacedItem}>
 							<FormRow align="start space-around" alignLabel="center" className={componentCss.formRow}>
-								<AccentColorSetting label="Accent Color" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>{swatchPalette}</AccentColorSetting>
-								<HighlightColorSetting label="Highlight Color" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>{swatchPalette}</HighlightColorSetting>
+								<AccentColorSetting disabled={context.userSettings.dynamicColor} label="Accent Color" onClick={onChange}>{swatchPalette}</AccentColorSetting>
+								<HighlightColorSetting disabled={context.userSettings.dynamicColor} label="Highlight Color" onClick={onChange}>{swatchPalette}</HighlightColorSetting>
 							</FormRow>
 						</Cell>
 						<Cell shrink className={componentCss.spacedItem}>
-							<SkinSetting label="Skin:" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>
+							<SkinSetting label="Skin:" onClick={onChange}>
 								{skinNames}
 							</SkinSetting>
 						</Cell>
 						<Cell shrink className={componentCss.spacedItem}>
-							<SkinVariantsSetting label="Variant:" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>
+							<SkinVariantsSetting disabled={context.userSettings.dynamicColor} label="Variant:" onClick={onChange}>
 								{skinVariantsNames}
 							</SkinVariantsSetting>
 						</Cell>
@@ -202,9 +216,9 @@ const ThemeSettingsBase = (props) => {
 							</FontSizeSetting>
 						</Cell>*/}
 						<Cell shrink className={componentCss.spacedItem}>
-							<DynamicColorSetting2>
+							<DynamicColorSetting>
 								Dynamic color change
-							</DynamicColorSetting2>
+							</DynamicColorSetting>
 						</Cell>
 					</Column>
 				</Cell>
@@ -227,10 +241,12 @@ ThemeSettingsBase.displayName = 'ThemeSettings';
 
 const ColorCheckboxItem = kind({
 	name: 'ColorCheckboxItem',
+
 	styles: {
 		css: componentCss,
-		className: 'colorCheckboxItemRow'
+		className: 'colorCheckboxItem'
 	},
+
 	render: ({...rest}) => (
 		<FormRow>
 			<Cell><CheckboxItem {...rest} /></Cell>
@@ -239,18 +255,8 @@ const ColorCheckboxItem = kind({
 });
 
 const DynamicColorSetting = AppContextConnect(({userSettings, updateAppState}) => ({
-	value: userSettings.dynamicColor,
-	onChange: ({value}) => {
-		updateAppState((state) => {
-			state.userSettings.dynamicColor = value;
-		});
-	}
-}))(SliderButtonItem);
-
-const DynamicColorSetting2 = AppContextConnect(({userSettings, updateAppState}) => ({
 	selected: userSettings.dynamicColor,
 	onToggle: ({selected}) => {
-		console.log('aici dynamic color', selected)
 		updateAppState((state) => {
 			state.userSettings.dynamicColor = selected;
 		});
