@@ -304,7 +304,7 @@ const SkinVariantsSetting = AppContextConnect(({userSettings, updateAppState}) =
 const ThemeSettingsDecorator = compose(
 	AppContextConnect(({userSettings}) => ({
 		accent: userSettings.colorAccent,
-		dynamicColor: userSettings.dynamicColor,
+		//dynamicColor: userSettings.dynamicColor,
 		highlight: userSettings.colorHighlight,
 		skin: userSettings.skin,
 		skinVariants: userSettings.skinVariants
