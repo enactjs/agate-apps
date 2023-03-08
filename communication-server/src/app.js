@@ -1,7 +1,12 @@
 const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+const io = require('socket.io')(http, {
+	cors: {
+		origin: ['http://localhost:8080', 'http://localhost:8081'],
+		credentials: true
+	}
+});
 
 // const adDuration = 10000; // 10 s
 // const adInterval = 300000; // 5 m
