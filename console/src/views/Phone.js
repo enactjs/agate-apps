@@ -153,7 +153,7 @@ const PhoneBase = kind({
 						open={showPopup}
 						phoneNumber={value}
 					/>
-					<bottom>
+					<bottom is="custom">
 						<div className={css.scrollableContainer}>
 							<ResponsiveVirtualList
 								className={css.contactsList}

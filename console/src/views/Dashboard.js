@@ -33,7 +33,7 @@ const DashboardBase = kind({
 
 	propTypes: {
 		arrangeable: PropTypes.bool,
-		arrangement: PropTypes.string,
+		arrangement: PropTypes.object,
 		linearVelocity: PropTypes.number,
 		onArrange: PropTypes.func
 	},
@@ -52,7 +52,7 @@ const DashboardBase = kind({
 		return (
 			<Panel {...rest}>
 				<CustomLayout arrangeable={arrangeable} arrangement={arrangement} onArrange={onArrange}>
-					<top>
+					<top is="custom">
 						<Row align="center center" wrap>
 							<Cell shrink className={css.speed}>
 								{speed}
@@ -111,7 +111,7 @@ const DashboardBase = kind({
 						</Cell>
 					</Row>
 
-					<bottomLeft>
+					<bottomLeft is="custom">
 						<ResponsiveLayout style={{height: '100%'}}>
 							<Cell>
 								<Item label="temp" spotlightDisabled>
@@ -122,14 +122,14 @@ const DashboardBase = kind({
 						</ResponsiveLayout>
 					</bottomLeft>
 
-					<bottom>
+					<bottom is="custom">
 						<ResponsiveLayout wrap>
 							<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="defrosterback" />
 							<Cell component={ToggleButton} className={css.spacedToggles} shrink icon="defrosterfront" />
 						</ResponsiveLayout>
 					</bottom>
 
-					<bottomRight>
+					<bottomRight is="custom">
 						<ResponsiveLayout style={{height: '100%'}}>
 							<Cell>
 								<Item label="fuel" spotlightDisabled>
