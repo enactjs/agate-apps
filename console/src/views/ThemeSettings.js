@@ -13,6 +13,7 @@ import {useCallback, useContext, useEffect} from 'react';
 import {getPanelIndexOf} from '../App';
 import AppContextConnect from '../App/AppContextConnect';
 import {AppContext} from '../App/AppContextProvider';
+import {generateRandomColor, generateTimestamps} from '../utils';
 
 import componentCss from './Settings.module.less';
 
@@ -131,6 +132,25 @@ const ThemeSettingsBase = (props) => {
 	const onChange = useCallback(() => {
 		props.onSendSkinSettings(props);
 	}, [props]);
+
+	let accentColors = {};
+	let highlightColors = {};
+	let randomAccentColors = [];
+	let randomHighlightColors = [];
+	const timestamps = generateTimestamps(5);
+
+	for (let i = 0; i < 288; i++) {
+		randomAccentColors.push(generateRandomColor());
+		randomHighlightColors.push(generateRandomColor());
+	}
+
+	timestamps.forEach((element, index) => {
+		accentColors[element] = randomAccentColors[index];
+	});
+
+	timestamps.forEach((element, index) => {
+		highlightColors[element] = randomHighlightColors[index];
+	});
 
 	useEffect (() => {
 		let changeAccentColor, changeHighlightColor;
