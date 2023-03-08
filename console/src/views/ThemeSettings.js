@@ -151,8 +151,7 @@ const ThemeSettingsBase = (props) => {
 
 				indexHighlight++;
 			}, 100);
-		} else if (!context.userSettings.dynamicColor) {
-
+		} else {
 			context.updateAppState((state) => {
 				state.userSettings.colorAccent = context.userSettings.colorAccentManual;
 				state.userSettings.colorHighlight = context.userSettings.colorHighlightManual;
