@@ -101,8 +101,9 @@ const SliderButtonItem = kind({
 });
 
 const ThemeSettingsBase = (props) => {
-	const {onSendSkinSettings, prevIndex, ... rest} = props;
+	const {prevIndex, ... rest} = props;
 	const context = useContext(AppContext);
+	delete rest.onSendSkinSettings;
 
 	const handleSelect = useCallback((ev, {onSelect}) => {
 		onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
@@ -181,17 +182,17 @@ const ThemeSettingsBase = (props) => {
 						</Cell>
 						<Cell shrink className={componentCss.spacedItem}>
 							<FormRow align="start space-around" alignLabel="center" className={componentCss.formRow}>
-								<AccentColorSetting label="Accent Color" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>{swatchPalette}</AccentColorSetting>
-								<HighlightColorSetting label="Highlight Color" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>{swatchPalette}</HighlightColorSetting>
+								<AccentColorSetting label="Accent Color" onClick={onChange}>{swatchPalette}</AccentColorSetting>
+								<HighlightColorSetting label="Highlight Color" onClick={onChange}>{swatchPalette}</HighlightColorSetting>
 							</FormRow>
 						</Cell>
 						<Cell shrink className={componentCss.spacedItem}>
-							<SkinSetting label="Skin:" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>
+							<SkinSetting label="Skin:" onClick={onChange}>
 								{skinNames}
 							</SkinSetting>
 						</Cell>
 						<Cell shrink className={componentCss.spacedItem}>
-							<SkinVariantsSetting label="Variant:" onClick={onChange} onSendSkinSettings={onSendSkinSettings}>
+							<SkinVariantsSetting label="Variant:" onClick={onChange}>
 								{skinVariantsNames}
 							</SkinVariantsSetting>
 						</Cell>
@@ -203,7 +204,6 @@ const ThemeSettingsBase = (props) => {
 						<Cell shrink className={componentCss.spacedItem}>
 							<DynamicColorSetting
 								label="Dynamic color change"
-								onSendSkinSettings={onSendSkinSettings}
 							>
 								{['false', 'true']}
 							</DynamicColorSetting>
@@ -277,7 +277,6 @@ const SkinVariantsSetting = AppContextConnect(({userSettings, updateAppState}) =
 const ThemeSettingsDecorator = compose(
 	AppContextConnect(({userSettings}) => ({
 		accent: userSettings.colorAccent,
-		dynamicColor: userSettings.dynamicColor,
 		highlight: userSettings.colorHighlight,
 		skin: userSettings.skin,
 		skinVariants: userSettings.skinVariants
