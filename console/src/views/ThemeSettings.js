@@ -101,11 +101,28 @@ const SliderButtonItem = kind({
 	)
 });
 
+const ColorCheckboxItem = kind({
+	name: 'ColorCheckboxItem',
+
+	styles: {
+		css: componentCss,
+		className: 'colorCheckboxItem'
+	},
+
+	render: ({...rest}) => (
+		<FormRow>
+			<Cell><CheckboxItem {...rest} /></Cell>
+		</FormRow>
+	)
+});
+
 const ThemeSettingsBase = (props) => {
 	const {prevIndex, ... rest} = props;
 	const context = useContext(AppContext);
 
 	delete rest.onSendSkinSettings;
+
+	const dynamicColorActive = context.userSettings.dynamicColor;
 
 	const handleSelect = useCallback((ev, {onSelect}) => {
 		onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
@@ -118,7 +135,7 @@ const ThemeSettingsBase = (props) => {
 	useEffect (() => {
 		let changeAccentColor, changeHighlightColor;
 
-		if (context.userSettings.dynamicColor) {
+		if (dynamicColorActive) {
 			context.updateAppState((state) => {
 				state.userSettings.colorAccentManual = state.userSettings.colorAccent;
 				state.userSettings.colorHighlightManual = state.userSettings.colorHighlight;
@@ -195,8 +212,8 @@ const ThemeSettingsBase = (props) => {
 						</Cell>
 						<Cell shrink className={componentCss.spacedItem}>
 							<FormRow align="start space-around" alignLabel="center" className={componentCss.formRow}>
-								<AccentColorSetting disabled={context.userSettings.dynamicColor} label="Accent Color" onClick={onChange}>{swatchPalette}</AccentColorSetting>
-								<HighlightColorSetting disabled={context.userSettings.dynamicColor} label="Highlight Color" onClick={onChange}>{swatchPalette}</HighlightColorSetting>
+								<AccentColorSetting disabled={dynamicColorActive} label="Accent Color" onClick={onChange}>{swatchPalette}</AccentColorSetting>
+								<HighlightColorSetting disabled={dynamicColorActive} label="Highlight Color" onClick={onChange}>{swatchPalette}</HighlightColorSetting>
 							</FormRow>
 						</Cell>
 						<Cell shrink className={componentCss.spacedItem}>
@@ -205,7 +222,7 @@ const ThemeSettingsBase = (props) => {
 							</SkinSetting>
 						</Cell>
 						<Cell shrink className={componentCss.spacedItem}>
-							<SkinVariantsSetting disabled={context.userSettings.dynamicColor} label="Variant:" onClick={onChange}>
+							<SkinVariantsSetting disabled={dynamicColorActive} label="Variant:" onClick={onChange}>
 								{skinVariantsNames}
 							</SkinVariantsSetting>
 						</Cell>
@@ -237,30 +254,6 @@ ThemeSettingsBase.propTypes = {
 };
 
 ThemeSettingsBase.displayName = 'ThemeSettings';
-
-const ColorCheckboxItem = kind({
-	name: 'ColorCheckboxItem',
-
-	styles: {
-		css: componentCss,
-		className: 'colorCheckboxItem'
-	},
-
-	render: ({...rest}) => (
-		<FormRow>
-			<Cell><CheckboxItem {...rest} /></Cell>
-		</FormRow>
-	)
-});
-
-const DynamicColorSetting = AppContextConnect(({userSettings, updateAppState}) => ({
-	selected: userSettings.dynamicColor,
-	onToggle: ({selected}) => {
-		updateAppState((state) => {
-			state.userSettings.dynamicColor = selected;
-		});
-	}
-}))(ColorCheckboxItem);
 
 // Example to show how to optimize rerenders.
 const SaveableSettings = (settingName, propName = 'value') => AppContextConnect(({userSettings, updateAppState}) => ({
@@ -299,6 +292,15 @@ const SkinVariantsSetting = AppContextConnect(({userSettings, updateAppState}) =
 		});
 	}
 }))(SliderButtonItem);
+
+const DynamicColorSetting = AppContextConnect(({userSettings, updateAppState}) => ({
+	selected: userSettings.dynamicColor,
+	onToggle: ({selected}) => {
+		updateAppState((state) => {
+			state.userSettings.dynamicColor = selected;
+		});
+	}
+}))(ColorCheckboxItem);
 
 const ThemeSettingsDecorator = compose(
 	AppContextConnect(({userSettings}) => ({
