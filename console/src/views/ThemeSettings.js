@@ -13,7 +13,7 @@ import {useCallback, useContext, useEffect} from 'react';
 import {getPanelIndexOf} from '../App';
 import AppContextConnect from '../App/AppContextConnect';
 import {AppContext} from '../App/AppContextProvider';
-import {generateRandomColor, generateTimestamps} from '../utils';
+import {generateTimestamps, getColorsDayMode, getColorsNightMode} from '../utils';
 
 import componentCss from './Settings.module.less';
 
@@ -124,6 +124,8 @@ const ThemeSettingsBase = (props) => {
 	delete rest.onSendSkinSettings;
 
 	const dynamicColorActive = context.userSettings.dynamicColor;
+	const accentColor = context.userSettings.colorAccent;
+	const highlightColor = context.userSettings.colorHighlight;
 
 	const handleSelect = useCallback((ev, {onSelect}) => {
 		onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
@@ -133,23 +135,37 @@ const ThemeSettingsBase = (props) => {
 		props.onSendSkinSettings(props);
 	}, [props]);
 
-	let accentColors = {};
-	let highlightColors = {};
-	let randomAccentColors = [];
-	let randomHighlightColors = [];
+	const accentColors = {};
+	const highlightColors = {};
+
+	let accentDayColorsArray = getColorsDayMode(accentColor, 72);
+	let reverseDayAccentColorsArray = [...accentDayColorsArray].reverse();
+	accentDayColorsArray = [...accentDayColorsArray, ...reverseDayAccentColorsArray];
+
+	let accentNightColorsArray = getColorsNightMode(accentColor, 72);
+	let reverseNightAccentColorsArray = [...accentNightColorsArray].reverse();
+	accentNightColorsArray = [...accentNightColorsArray, ...reverseNightAccentColorsArray];
+
+	let accentColorsArray = [...accentDayColorsArray, ...accentNightColorsArray];
+
+	let highlightDayColorsArray = getColorsDayMode(highlightColor, 72);
+	let reverseDayHighlightColorsArray = [...highlightDayColorsArray].reverse();
+	highlightDayColorsArray = [...highlightDayColorsArray, ...reverseDayHighlightColorsArray];
+
+	let highlightNightColorsArray = getColorsNightMode(highlightColor, 72);
+	let reverseNightHighlightColorsArray = [...highlightNightColorsArray].reverse();
+	highlightNightColorsArray = [...highlightNightColorsArray, ...reverseNightHighlightColorsArray];
+
+	let highlightColorsArray = [...highlightDayColorsArray, ...highlightNightColorsArray];
+
 	const timestamps = generateTimestamps(5);
 
-	for (let i = 0; i < 288; i++) {
-		randomAccentColors.push(generateRandomColor());
-		randomHighlightColors.push(generateRandomColor());
-	}
-
 	timestamps.forEach((element, index) => {
-		accentColors[element] = randomAccentColors[index];
+		accentColors[element] = accentColorsArray[index];
 	});
 
 	timestamps.forEach((element, index) => {
-		highlightColors[element] = randomHighlightColors[index];
+		highlightColors[element] = highlightColorsArray[index];
 	});
 
 	useEffect (() => {
