@@ -19,7 +19,9 @@
 			"rightTemp": 0
 		},
 		"colorAccent": "#e0b094",
+		"colorAccentManual": "#e0b094",
 		"colorHighlight": "#ffffff",
+		"colorHighlightManual": "#ffffff",
 		"components": {
 			"welcome": {
 				"small1": "heater",
@@ -98,7 +100,9 @@
 			"rightTemp": 0
 		},
 		"colorAccent": "#fc7982",
+		"colorAccentManual": "#e0b094",
 		"colorHighlight": "#ffffff",
+		"colorHighlightManual": "#ffffff",
 		"components": {
 			"welcome": {
 				"small1": "weather",
@@ -159,7 +163,9 @@
 			"rightTemp": 0
 		},
 		"colorAccent": "#e0b094",
+		"colorAccentManual": "#e0b094",
 		"colorHighlight": "#ffffff",
+		"colorHighlightManual": "#ffffff",
 		"components": {
 			"welcome": {
 				"small1": "heater",

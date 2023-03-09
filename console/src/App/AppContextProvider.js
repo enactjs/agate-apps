@@ -53,7 +53,9 @@ const defaultUserSettings = {
 		welcome: {}
 	},
 	colorAccent: '#cccccc',
+	colorAccentManual: '#cccccc',
 	colorHighlight: '#66aabb',
+	colorHighlightManual: '#66aabb',
 	dynamicColor: false,
 	fontSize: 0,
 	name: '',
