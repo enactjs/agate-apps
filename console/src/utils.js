@@ -9,7 +9,7 @@ export const generateTimestamps = (step) => {
 	return timestamps;
 }
 
-function hexToHSL(hex) {
+const hexToHSL = (hex) => {
 	// Convert hex to RGB first
 	let r = 0, g = 0, b = 0;
 	if (hex.length === 4) {
@@ -58,7 +58,7 @@ function hexToHSL(hex) {
 	return {h, s, l};
 }
 
-function HSLToHex({h,s,l}) {
+const HSLToHex = ({h,s,l}) => {
 	s /= 100;
 	l /= 100;
 
@@ -104,39 +104,38 @@ function HSLToHex({h,s,l}) {
 }
 
 export function getColorsDayMode(baseColor, numColors) {
-	// Convert the base color to HSL format
-	let hslBaseColor = hexToHSL(baseColor);
-
 	// Create an array to hold the colors
-	let colors = [];
+	let colors = [baseColor];
 
-	// Calculate the step size for increasing saturation
-	let saturationStep = hslBaseColor.s / (numColors - 1);
+	// Calculate the step size for increasing saturation and luminosity
+	let step = 0.3;
 
 	// Loop through the number of colors requested
-	for (let i = 0; i < numColors; i++) {
+	for (let i = 0; i < numColors - 1; i++) {
+		// Convert the base color to HSL format
+		const currentColor = hexToHSL(colors[i]);
+
 		// Calculate the saturation for this color
 		let luminosity,
 			saturation;
-
 		if (i%2) {
-			luminosity = hslBaseColor.l - i/2 ? (i/2 - 1) * saturationStep : 0;
-			saturation = hslBaseColor.s + (i/2 * saturationStep);
+			luminosity = currentColor.l - i/2 * step;
+			saturation = currentColor.s;
 		} else {
-			luminosity = hslBaseColor.l - (i/2 * saturationStep);
-			saturation = hslBaseColor.s + i/2 ? (i/2 - 1) * saturationStep : 0;
+			luminosity = currentColor.l;
+			saturation = currentColor.s + i/2 * step;
 		}
 
 		let hslColor;
 		// Create the color in HSL format
 		if (saturation <= 100 && luminosity >= 10) {
-			hslColor = {h: hslBaseColor.h, s: saturation, l: luminosity};
+			hslColor = {h: currentColor.h, s: saturation, l: luminosity};
 		} else if (saturation > 100 && luminosity >= 10) {
-			hslColor = {h: hslBaseColor.h, s: 100, l: luminosity};
+			hslColor = {h: currentColor.h, s: 100, l: luminosity};
 		} else if (saturation <= 100 && luminosity < 10) {
-			hslColor = {h: hslBaseColor.h, s: saturation, l: 10};
+			hslColor = {h: currentColor.h, s: saturation, l: 10};
 		} else if (saturation > 100 && luminosity < 10) {
-			hslColor = {h: hslBaseColor.h, s: 100, l: 10};
+			hslColor = {h: currentColor.h, s: 100, l: 10};
 		}
 
 		// Convert the color back to hex format and add it to the array
@@ -148,39 +147,39 @@ export function getColorsDayMode(baseColor, numColors) {
 }
 
 export function getColorsNightMode(baseColor, numColors) {
-	// Convert the base color to HSL format
-	let hslBaseColor = hexToHSL(baseColor);
-
 	// Create an array to hold the colors
-	let colors = [];
+	let colors = [baseColor];
 
-	// Calculate the step size for increasing saturation
-	let saturationStep = hslBaseColor.s / (numColors - 1);
+	// Calculate the step size for increasing saturation and luminosity
+	let step = 0.3;
 
 	// Loop through the number of colors requested
-	for (let i = 0; i < numColors; i++) {
+	for (let i = 0; i < numColors - 1; i++) {
+		// Convert the base color to HSL format
+		const currentColor = hexToHSL(colors[i]);
+
 		// Calculate the saturation for this color
 		let luminosity,
 			saturation;
 
 		if (i%2) {
-			luminosity = hslBaseColor.l + i/2 ? (i/2 - 1) * saturationStep : 0;
-			saturation = hslBaseColor.s - (i/2 * saturationStep);
+			luminosity = currentColor.l + i/2 * step;
+			saturation = currentColor.s;
 		} else {
-			luminosity = hslBaseColor.l + (i/2 * saturationStep);
-			saturation = hslBaseColor.s - i/2 ? (i/2 - 1) * saturationStep : 0;
+			luminosity = currentColor.l;
+			saturation = currentColor.s - i/2 * step;
 		}
 
 		let hslColor;
 		// Create the color in HSL format
 		if (saturation >= 25 && luminosity <= 80) {
-			hslColor = {h: hslBaseColor.h, s: saturation, l: luminosity};
+			hslColor = {h: currentColor.h, s: saturation, l: luminosity};
 		} else if (saturation < 25 && luminosity <= 80) {
-			hslColor = {h: hslBaseColor.h, s: 25, l: luminosity};
+			hslColor = {h: currentColor.h, s: 25, l: luminosity};
 		} else if (saturation >= 25 && luminosity > 80) {
-			hslColor = {h: hslBaseColor.h, s: saturation, l: 80};
+			hslColor = {h: currentColor.h, s: saturation, l: 80};
 		} else if (saturation < 25 && luminosity > 80) {
-			hslColor = {h: hslBaseColor.h, s: 25, l: 80};
+			hslColor = {h: currentColor.h, s: 25, l: 80};
 		}
 
 		// Convert the color back to hex format and add it to the array
