@@ -7,7 +7,7 @@ export const generateTimestamps = (step) => {
 	}
 
 	return timestamps;
-}
+};
 
 const hexToHSL = (hex) => {
 	// Convert hex to RGB first
@@ -26,12 +26,10 @@ const hexToHSL = (hex) => {
 	r /= 255;
 	g /= 255;
 	b /= 255;
-	let cmin = Math.min(r,g,b),
-		cmax = Math.max(r,g,b),
+	let cmin = Math.min(r, g, b),
+		cmax = Math.max(r, g, b),
 		delta = cmax - cmin,
-		h = 0,
-		s = 0,
-		l = 0;
+		h, s, l;
 
 	if (delta === 0) {
 		h = 0;
@@ -56,15 +54,15 @@ const hexToHSL = (hex) => {
 	l = +(l * 100).toFixed(1);
 
 	return {h, s, l};
-}
+};
 
-const HSLToHex = ({h,s,l}) => {
+const HSLToHex = ({h, s, l}) => {
 	s /= 100;
 	l /= 100;
 
 	let c = (1 - Math.abs(2 * l - 1)) * s,
 		x = c * (1 - Math.abs((h / 60) % 2 - 1)),
-		m = l - c/2,
+		m = l - c / 2,
 		r = 0,
 		g = 0,
 		b = 0;
@@ -101,9 +99,9 @@ const HSLToHex = ({h,s,l}) => {
 	}
 
 	return "#" + r + g + b;
-}
+};
 
-export function getColorsDayMode(baseColor, numColors) {
+export function getColorsDayMode (baseColor, numColors) {
 	// Create an array to hold the colors
 	let colors = [baseColor];
 
@@ -118,12 +116,12 @@ export function getColorsDayMode(baseColor, numColors) {
 		// Calculate the saturation for this color
 		let luminosity,
 			saturation;
-		if (i%2) {
-			luminosity = currentColor.l - i/2 * step;
+		if (i % 2) {
+			luminosity = currentColor.l - i / 2 * step;
 			saturation = currentColor.s;
 		} else {
 			luminosity = currentColor.l;
-			saturation = currentColor.s + i/2 * step;
+			saturation = currentColor.s + i / 2 * step;
 		}
 
 		let hslColor;
@@ -146,7 +144,7 @@ export function getColorsDayMode(baseColor, numColors) {
 	return colors;
 }
 
-export function getColorsNightMode(baseColor, numColors) {
+export function getColorsNightMode (baseColor, numColors) {
 	// Create an array to hold the colors
 	let colors = [baseColor];
 
@@ -162,12 +160,12 @@ export function getColorsNightMode(baseColor, numColors) {
 		let luminosity,
 			saturation;
 
-		if (i%2) {
-			luminosity = currentColor.l + i/2 * step;
+		if (i % 2) {
+			luminosity = currentColor.l + i / 2 * step;
 			saturation = currentColor.s;
 		} else {
 			luminosity = currentColor.l;
-			saturation = currentColor.s - i/2 * step;
+			saturation = currentColor.s - i / 2 * step;
 		}
 
 		let hslColor;
@@ -195,7 +193,7 @@ export const getIndex = () => {
 	let hour = parseInt(new Date().toLocaleTimeString('en-US', {hour12: false}).substring(0, 8));
 	let index;
 
-	while(minute % 5 !== 0) minute++;
+	while (minute % 5 !== 0) minute++;
 	if (minute >= 60) {
 		minute = 0;
 		hour++;
@@ -215,4 +213,4 @@ export const getIndex = () => {
 	}
 
 	return index;
-}
+};
