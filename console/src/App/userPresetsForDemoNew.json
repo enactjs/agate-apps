@@ -32,6 +32,7 @@
 		"name": "Laura",
 		"skin": "gallium",
 		"skinVariants": "night",
+		"skinVariantsManual": "night",
 		"topLocations": [
 			{
 				"description": "Home",
@@ -113,6 +114,7 @@
 		"name": "Thomas",
 		"skin": "silicon",
 		"skinVariants": "night",
+		"skinVariantsManual": "night",
 		"topLocations": [
 			{
 				"description": "Home",

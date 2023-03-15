@@ -2,7 +2,7 @@ export const generateTimestamps = (step) => {
 	const dt = new Date(1970, 0, 1);
 	const timestamps = [];
 	while (dt.getDate() === 1) {
-		timestamps.push(dt.toLocaleTimeString('en-US', {hour12: false}));
+		timestamps.push(dt.toLocaleTimeString('en-US', {hour12: false}).substring(0, 5));
 		dt.setMinutes(dt.getMinutes() + step);
 	}
 
@@ -188,4 +188,31 @@ export function getColorsNightMode(baseColor, numColors) {
 	}
 
 	return colors;
+}
+
+export const getIndex = () => {
+	let minute = parseInt(new Date().toLocaleTimeString('en-US', {hour12: false}).substring(0, 5).slice(3));
+	let hour = parseInt(new Date().toLocaleTimeString('en-US', {hour12: false}).substring(0, 8));
+	let index;
+
+	while(minute % 5 !== 0) minute++;
+	if (minute >= 60) {
+		minute = 0;
+		hour++;
+	}
+	if (hour > 24) {
+		hour = 1;
+	}
+	if (hour < 10) {
+		index = '0' + hour + ':';
+	} else {
+		index = hour + ':';
+	}
+	if (minute < 10) {
+		index = index + '0' + minute;
+	} else {
+		index = index + minute;
+	}
+
+	return index;
 }

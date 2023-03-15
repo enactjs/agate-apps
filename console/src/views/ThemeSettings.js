@@ -8,12 +8,12 @@ import kind from '@enact/core/kind';
 import {Row, Column, Cell} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {useCallback, useContext, useEffect} from 'react';
+import {useCallback, useContext, useEffect, useMemo, useState} from 'react';
 
 import {getPanelIndexOf} from '../App';
 import AppContextConnect from '../App/AppContextConnect';
 import {AppContext} from '../App/AppContextProvider';
-import {generateTimestamps, getColorsDayMode, getColorsNightMode} from '../utils';
+import {generateTimestamps, getColorsDayMode, getColorsNightMode, getIndex} from '../utils';
 
 import componentCss from './Settings.module.less';
 
@@ -29,7 +29,7 @@ const skinCollection = {
 };
 const skinList = Object.keys(skinCollection);
 const skinNames = skinList.map((skin) => skinCollection[skin]);  // Build the names list based on the skin list array, so the indexes always match up, in case the object keys don't return in the same order.
-
+let fakeIndex = 0;
 const skinVariantsCollection = {
 	'': 'Day',
 	night: 'Night'
@@ -44,9 +44,7 @@ const swatchPalette = [
 	'#f08c21', '#f42c04', '#d636d9', '#aab3cb',
 	'#ff2d55', '#9e00d8'
 ];
-
-let indexAccent = 0;
-let indexHighlight = 1000;
+const timestamps = generateTimestamps(5);
 
 const FormRow = kind({
 	name: 'FormRow',
@@ -118,14 +116,17 @@ const ColorCheckboxItem = kind({
 });
 
 const ThemeSettingsBase = (props) => {
+	const [realTime, setRealTime] = useState(false);
 	const {prevIndex, ... rest} = props;
 	const context = useContext(AppContext);
 
 	delete rest.onSendSkinSettings;
 
 	const dynamicColorActive = context.userSettings.dynamicColor;
-	const accentColor = context.userSettings.colorAccent;
-	const highlightColor = context.userSettings.colorHighlight;
+
+	const handleRealState = useCallback(() => {
+		setRealTime(value => !value);
+	}, [setRealTime]);
 
 	const handleSelect = useCallback((ev, {onSelect}) => {
 		onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
@@ -138,27 +139,17 @@ const ThemeSettingsBase = (props) => {
 	const accentColors = {};
 	const highlightColors = {};
 
-	let accentDayColorsArray = getColorsDayMode(accentColor, 72);
-	let reverseDayAccentColorsArray = [...accentDayColorsArray].reverse();
-	accentDayColorsArray = [...accentDayColorsArray, ...reverseDayAccentColorsArray];
+	const accentColorsArray = useMemo(() => {
+		const dayColorArray = getColorsDayMode(context.userSettings.colorAccentManual, 72);
+		const nightColorArray = getColorsNightMode(context.userSettings.colorAccentManual, 72);
+		return [...dayColorArray, ...dayColorArray.reverse(), ...nightColorArray, ...nightColorArray.reverse()];
+	}, [context.userSettings.colorAccentManual]);
 
-	let accentNightColorsArray = getColorsNightMode(accentColor, 72);
-	let reverseNightAccentColorsArray = [...accentNightColorsArray].reverse();
-	accentNightColorsArray = [...accentNightColorsArray, ...reverseNightAccentColorsArray];
-
-	let accentColorsArray = [...accentDayColorsArray, ...accentNightColorsArray];
-
-	let highlightDayColorsArray = getColorsDayMode(highlightColor, 72);
-	let reverseDayHighlightColorsArray = [...highlightDayColorsArray].reverse();
-	highlightDayColorsArray = [...highlightDayColorsArray, ...reverseDayHighlightColorsArray];
-
-	let highlightNightColorsArray = getColorsNightMode(highlightColor, 72);
-	let reverseNightHighlightColorsArray = [...highlightNightColorsArray].reverse();
-	highlightNightColorsArray = [...highlightNightColorsArray, ...reverseNightHighlightColorsArray];
-
-	let highlightColorsArray = [...highlightDayColorsArray, ...highlightNightColorsArray];
-
-	const timestamps = generateTimestamps(5);
+	const highlightColorsArray = useMemo(() => {
+		const dayColorArray = getColorsDayMode(context.userSettings.colorHighlightManual, 72);
+		const nightColorArray = getColorsNightMode(context.userSettings.colorHighlightManual, 72);
+		return [...nightColorArray, ...nightColorArray.reverse(), ...dayColorArray, ...dayColorArray.reverse()];
+	}, [context.userSettings.colorHighlightManual]);
 
 	timestamps.forEach((element, index) => {
 		accentColors[element] = accentColorsArray[index];
@@ -169,56 +160,70 @@ const ThemeSettingsBase = (props) => {
 	});
 
 	useEffect (() => {
-		let changeAccentColor, changeHighlightColor;
+		let changeColor;
 
 		if (dynamicColorActive) {
+			// Remove this when fake timers will no longer be used
+			context.updateAppState((state) => {
+				state.userSettings.colorAccent = context.userSettings.colorAccentManual;
+				state.userSettings.colorHighlight = context.userSettings.colorHighlightManual;
+				state.userSettings.skinVariants = context.userSettings.skinVariantsManual;
+			});
+
 			context.updateAppState((state) => {
 				state.userSettings.colorAccentManual = state.userSettings.colorAccent;
 				state.userSettings.colorHighlightManual = state.userSettings.colorHighlight;
+				state.userSettings.skinVariantsManual = state.userSettings.skinVariants;
 			});
 
-			changeAccentColor = setInterval(function () {
-				document.body.style.backgroundColor = 'hsl(' + indexAccent + ', 100%, 50%)';
-				let RGBColors = document.body.style.backgroundColor.match(/\d+/g);
+			changeColor = setInterval(() => {
+				if (realTime) {
+					const index = getIndex();
+					let skinVariant;
+					if (index >= '06:00' && index < '18:00') {
+						skinVariant = '';
+					} else {
+						skinVariant = 'night';
+					}
 
-				const [r, g, b] = RGBColors;
-				const HEXColor =  '#' + ((1 << 24) + (Number(r) << 16) + (Number(g) << 8) + Number(b)).toString(16).slice(1);
+					context.updateAppState((state) => {
+						state.userSettings.colorAccent = `${accentColors[index]}`;
+						state.userSettings.colorHighlight = `${highlightColors[index]}`;
+						state.userSettings.skinVariants = skinVariant;
+					});
+				} else {
+					let skinVariant;
+					if (fakeIndex < 121) {
+						skinVariant = '';
+					} else {
+						skinVariant = 'night';
+					}
 
-				context.updateAppState((state) => {
-					state.userSettings.colorAccent = HEXColor;
-				});
-
-				indexAccent++;
-			}, 100);
-
-			changeHighlightColor = setInterval(function () {
-				document.body.style.backgroundColor = 'hsl(' + indexHighlight + ', 100%, 50%)';
-				let RGBColors = document.body.style.backgroundColor.match(/\d+/g);
-
-				const [r, g, b] = RGBColors;
-				const HEXColor =  '#' + ((1 << 24) + (Number(r) << 16) + (Number(g) << 8) + Number(b)).toString(16).slice(1);
-
-				context.updateAppState((state) => {
-					state.userSettings.colorHighlight = HEXColor;
-				});
-
-				indexHighlight++;
-			}, 100);
+					context.updateAppState((state) => {
+						state.userSettings.colorAccent = `${accentColorsArray[fakeIndex]}`;
+						state.userSettings.colorHighlight = `${highlightColorsArray[fakeIndex]}`;
+						state.userSettings.skinVariants = skinVariant;
+					});
+					if (fakeIndex < 243) {
+						fakeIndex++;
+					} else {
+						fakeIndex = 0;
+					}
+				}
+			}, realTime ? 1000 : 100);
 		} else {
 			context.updateAppState((state) => {
 				state.userSettings.colorAccent = context.userSettings.colorAccentManual;
 				state.userSettings.colorHighlight = context.userSettings.colorHighlightManual;
+				state.userSettings.skinVariants = context.userSettings.skinVariantsManual;
 			});
 		}
 
 		return () => {
-			clearInterval(changeAccentColor);
-			clearInterval(changeHighlightColor);
-
-			indexAccent = 0;
-			indexHighlight = 1000;
+			clearInterval(changeColor);
+			fakeIndex = 0;
 		};
-	}, [context.userSettings.dynamicColor]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [context.userSettings.dynamicColor, realTime]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return (
 		<Panel {...rest} className={componentCss.settingsView}>
@@ -271,6 +276,9 @@ const ThemeSettingsBase = (props) => {
 							<DynamicColorSetting>
 								Dynamic color change
 							</DynamicColorSetting>
+							<ColorCheckboxItem onToggle={handleRealState} value={realTime}>
+								Use real time
+							</ColorCheckboxItem>
 						</Cell>
 					</Column>
 				</Cell>
@@ -297,6 +305,7 @@ const SaveableSettings = (settingName, propName = 'value') => AppContextConnect(
 	onChange: ({value}) => {
 		updateAppState((state) => {
 			state.userSettings[settingName] = value;
+			state.userSettings[settingName + 'Manual'] = value;
 		});
 	}
 }));
@@ -325,6 +334,7 @@ const SkinVariantsSetting = AppContextConnect(({userSettings, updateAppState}) =
 	onChange: ({value}) => {
 		updateAppState((state) => {
 			state.userSettings.skinVariants = skinVariantsList[value].toLowerCase();
+			state.userSettings.skinVariantsManual = skinVariantsList[value].toLowerCase();
 		});
 	}
 }))(SliderButtonItem);
