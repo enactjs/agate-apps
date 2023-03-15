@@ -142,13 +142,13 @@ const ThemeSettingsBase = (props) => {
 	const accentColorsArray = useMemo(() => {
 		const dayColorArray = getColorsDayMode(context.userSettings.colorAccentManual, 72);
 		const nightColorArray = getColorsNightMode(context.userSettings.colorAccentManual, 72);
-		return [...dayColorArray, ...dayColorArray.reverse(), ...nightColorArray, ...nightColorArray.reverse()];
+		return [...nightColorArray.reverse(), ...dayColorArray, ...dayColorArray.reverse(), ...nightColorArray.reverse()];
 	}, [context.userSettings.colorAccentManual]);
 
 	const highlightColorsArray = useMemo(() => {
 		const dayColorArray = getColorsDayMode(context.userSettings.colorHighlightManual, 72);
 		const nightColorArray = getColorsNightMode(context.userSettings.colorHighlightManual, 72);
-		return [...nightColorArray, ...nightColorArray.reverse(), ...dayColorArray, ...dayColorArray.reverse()];
+		return [...dayColorArray.reverse(), ...nightColorArray, ...nightColorArray.reverse(), ...dayColorArray.reverse()];
 	}, [context.userSettings.colorHighlightManual]);
 
 	timestamps.forEach((element, index) => {
@@ -193,7 +193,7 @@ const ThemeSettingsBase = (props) => {
 					});
 				} else {
 					let skinVariant;
-					if (fakeIndex < 121) {
+					if (72 <= fakeIndex && fakeIndex < 144) {
 						skinVariant = '';
 					} else {
 						skinVariant = 'night';
@@ -204,7 +204,7 @@ const ThemeSettingsBase = (props) => {
 						state.userSettings.colorHighlight = `${highlightColorsArray[fakeIndex]}`;
 						state.userSettings.skinVariants = skinVariant;
 					});
-					if (fakeIndex < 243) {
+					if (fakeIndex < 287) {
 						fakeIndex++;
 					} else {
 						fakeIndex = 0;
