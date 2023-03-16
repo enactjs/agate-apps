@@ -216,7 +216,7 @@ const ThemeSettingsBase = (props) => {
 						fakeIndex = 0;
 					}
 				}
-			}, realTime ? 1000 : 100);
+			}, realTime ? 30 * 1000 : 100);
 		} else {
 			context.updateAppState((state) => {
 				state.userSettings.colorAccent = context.userSettings.colorAccentManual;
