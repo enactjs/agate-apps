@@ -60,7 +60,8 @@ const defaultUserSettings = {
 	fontSize: 0,
 	name: '',
 	skin: 'carbon',
-	skinVariants: 'night'
+	skinVariants: 'night',
+	skinVariantsManual: 'night'
 	// topLocations: []
 };
 
