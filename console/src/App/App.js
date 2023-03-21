@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+
 import Button from '@enact/agate/Button';
 import DateTimePicker from '@enact/agate/DateTimePicker';
 import {TabbedPanels} from '@enact/agate/Panels';
@@ -9,7 +11,7 @@ import kind from '@enact/core/kind';
 import {Cell, Column, Row} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {Component} from 'react';
+import {Component, useContext, useEffect, useMemo, useState} from 'react';
 
 import Clock from '../components/Clock';
 // import ProfileDrawer from '../components/ProfileDrawer';
@@ -28,8 +30,10 @@ import Radio from '../views/Radio';
 import Settings from '../views/Settings';
 import ThemeSettings from '../views/ThemeSettings';
 import Weather from '../views/WeatherPanel';
+import {generateTimestamps, getColorsDayMode, getColorsNightMode, getIndex} from "../utils";
 
 import AppContextConnect from './AppContextConnect';
+import {AppContext} from "./AppContextProvider";
 
 import css from './App.module.less';
 
@@ -53,6 +57,9 @@ const panelIndexMap = [
 ];
 // Look up a panel index by name, using the above list as the directory listing.
 const getPanelIndexOf = (panelName) => panelIndexMap.indexOf(panelName);
+
+const timestamps = generateTimestamps(5);
+let fakeIndex = 0;
 
 const PanelSwitchingIconButton = kind({
 	name: 'PanelSwitchingIconButton',
@@ -82,6 +89,8 @@ const PanelSwitchingIconButton = kind({
 
 const AppBase = kind({
 	name: 'App',
+
+	functional: true,
 
 	propTypes: {
 		updateAppState: PropTypes.func.isRequired,
@@ -136,6 +145,11 @@ const AppBase = kind({
 				state.appState.showDestinationReachedPopup = !state.appState.showDestinationReachedPopup;
 			});
 		},
+		onToggleDynamicColor: (ev, {updateAppState}) => {
+			updateAppState((state) => {
+				state.userSettings.dynamicColor = ev.selected;
+			});
+		},
 		onToggleWelcomePopup: (ev, {updateAppState}) => {
 			updateAppState((state) => {
 				state.appState.showWelcomePopup = !state.appState.showWelcomePopup;
@@ -186,6 +200,7 @@ const AppBase = kind({
 		onToggleBasicPopup,
 		onToggleDateTimePopup,
 		onToggleDestinationReachedPopup,
+		onToggleDynamicColor,
 		onTogglePopup,
 		// onToggleProfileEdit,
 		onToggleUserSelectionPopup,
@@ -214,6 +229,105 @@ const AppBase = kind({
 		delete rest.updateAppState;
 
 		const copperSkinFamily = (skinName === 'copper' || skinName === 'cobalt');
+
+		const context = useContext(AppContext);
+		const [realTime] = useState(false);
+		const dynamicColorActive = context.userSettings.dynamicColor;
+
+		const accentColors = {};
+		const highlightColors = {};
+
+		const accentColorsArray = useMemo(() => {
+			const dayColorArray = getColorsDayMode(context.userSettings.colorAccentManual, 72);
+			const nightColorArray = getColorsNightMode(context.userSettings.colorAccentManual, 72);
+			const array = [...nightColorArray.reverse(), ...dayColorArray, ...dayColorArray.reverse(), ...nightColorArray.reverse()];
+			const offset = array.splice(0, 12);
+
+			return [...array, ...offset];
+		}, [context.userSettings.colorAccentManual]);
+
+		const highlightColorsArray = useMemo(() => {
+			const dayColorArray = getColorsDayMode(context.userSettings.colorHighlightManual, 72);
+			const nightColorArray = getColorsNightMode(context.userSettings.colorHighlightManual, 72);
+			const array = [...dayColorArray.reverse(), ...nightColorArray, ...nightColorArray.reverse(), ...dayColorArray.reverse()];
+			const offset = array.splice(0, 12);
+
+			return [...array, ...offset];
+		}, [context.userSettings.colorHighlightManual]);
+
+		timestamps.forEach((element, ElIndex) => {
+			accentColors[element] = accentColorsArray[ElIndex];
+		});
+
+		timestamps.forEach((element, ElIndex) => {
+			highlightColors[element] = highlightColorsArray[ElIndex];
+		});
+
+		useEffect (() => {
+			let changeColor;
+
+			if (dynamicColorActive) {
+				// Remove this when fake timers will no longer be used
+				context.updateAppState((state) => {
+					state.userSettings.colorAccent = context.userSettings.colorAccentManual;
+					state.userSettings.colorHighlight = context.userSettings.colorHighlightManual;
+					state.userSettings.skinVariants = context.userSettings.skinVariantsManual;
+				});
+
+				context.updateAppState((state) => {
+					state.userSettings.colorAccentManual = state.userSettings.colorAccent;
+					state.userSettings.colorHighlightManual = state.userSettings.colorHighlight;
+					state.userSettings.skinVariantsManual = state.userSettings.skinVariants;
+				});
+
+				changeColor = setInterval(() => {
+					if (realTime) {
+						const timeIndex = getIndex();
+						let skinVariant;
+						if (timeIndex >= '06:00' && timeIndex < '18:00') {
+							skinVariant = '';
+						} else {
+							skinVariant = 'night';
+						}
+
+						context.updateAppState((state) => {
+							state.userSettings.colorAccent = `${accentColors[timeIndex]}`;
+							state.userSettings.colorHighlight = `${highlightColors[timeIndex]}`;
+							state.userSettings.skinVariants = skinVariant;
+						});
+					} else {
+						let skinVariant;
+						if (60 <= fakeIndex && fakeIndex <= 203) {
+							skinVariant = '';
+						} else {
+							skinVariant = 'night';
+						}
+
+						context.updateAppState((state) => {
+							state.userSettings.colorAccent = `${accentColorsArray[fakeIndex]}`;
+							state.userSettings.colorHighlight = `${highlightColorsArray[fakeIndex]}`;
+							state.userSettings.skinVariants = skinVariant;
+						});
+						if (fakeIndex < 287) {
+							fakeIndex++;
+						} else {
+							fakeIndex = 0;
+						}
+					}
+				}, realTime ? 30 * 1000 : 100);
+			} else {
+				context.updateAppState((state) => {
+					state.userSettings.colorAccent = context.userSettings.colorAccentManual;
+					state.userSettings.colorHighlight = context.userSettings.colorHighlightManual;
+					state.userSettings.skinVariants = context.userSettings.skinVariantsManual;
+				});
+			}
+
+			return () => {
+				clearInterval(changeColor);
+				fakeIndex = 0;
+			};
+		}, [context.userSettings.dynamicColor, realTime]); // eslint-disable-line react-hooks/exhaustive-deps
 
 		return (
 			<div {...rest}>
@@ -289,7 +403,7 @@ const AppBase = kind({
 						onReloadApp={reloadApp}
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
-					<ThemeSettings onSelect={onSelect} onSendSkinSettings={sendSkinSettings} prevIndex={prevIndex} />
+					<ThemeSettings onSelect={onSelect} onSendSkinSettings={sendSkinSettings} onToggleDynamicColor={onToggleDynamicColor} prevIndex={prevIndex} />
 					<Weather />
 					<Dashboard
 						arrangeable={layoutArrangeable}
