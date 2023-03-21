@@ -11,7 +11,7 @@ import kind from '@enact/core/kind';
 import {Cell, Column, Row} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {Component, useContext, useEffect, useMemo, useState} from 'react';
+import {Component, useCallback, useContext, useEffect, useMemo, useState} from 'react';
 
 import Clock from '../components/Clock';
 // import ProfileDrawer from '../components/ProfileDrawer';
@@ -231,8 +231,12 @@ const AppBase = kind({
 		const copperSkinFamily = (skinName === 'copper' || skinName === 'cobalt');
 
 		const context = useContext(AppContext);
-		const [realTime] = useState(false);
+		const [realTime, setRealTime] = useState(false);
 		const dynamicColorActive = context.userSettings.dynamicColor;
+
+		const handleRealState = useCallback(() => {
+			setRealTime(value => !value);
+		}, [setRealTime]);
 
 		const accentColors = {};
 		const highlightColors = {};
@@ -403,7 +407,7 @@ const AppBase = kind({
 						onReloadApp={reloadApp}
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
-					<ThemeSettings onSelect={onSelect} onSendSkinSettings={sendSkinSettings} onToggleDynamicColor={onToggleDynamicColor} prevIndex={prevIndex} />
+					<ThemeSettings onSelect={onSelect} onSendSkinSettings={sendSkinSettings} onToggleDynamicColor={onToggleDynamicColor} onToggleRealTime={handleRealState} realTime={realTime} prevIndex={prevIndex} />
 					<Weather />
 					<Dashboard
 						arrangeable={layoutArrangeable}

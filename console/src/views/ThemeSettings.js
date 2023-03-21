@@ -8,7 +8,7 @@ import kind from '@enact/core/kind';
 import {Row, Column, Cell} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {useCallback, useContext, useState} from 'react';
+import {useCallback, useContext} from 'react';
 
 import {getPanelIndexOf} from '../App';
 import AppContextConnect from '../App/AppContextConnect';
@@ -113,17 +113,12 @@ const ColorCheckboxItem = kind({
 });
 
 const ThemeSettingsBase = (props) => {
-	const [realTime, setRealTime] = useState(false);
-	const {onToggleDynamicColor, prevIndex,  ... rest} = props;
+	const {onToggleDynamicColor, onToggleRealTime, prevIndex, realTime,  ... rest} = props;
 	const context = useContext(AppContext);
 
 	delete rest.onSendSkinSettings;
 
 	const dynamicColorActive = context.userSettings.dynamicColor;
-
-	const handleRealState = useCallback(() => {
-		setRealTime(value => !value);
-	}, [setRealTime]);
 
 	const handleSelect = useCallback((ev, {onSelect}) => {
 		onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
@@ -184,7 +179,7 @@ const ThemeSettingsBase = (props) => {
 							<DynamicColorSetting onToggle={onToggleDynamicColor}>
 								Dynamic color change
 							</DynamicColorSetting>
-							<ColorCheckboxItem onToggle={handleRealState} value={realTime}>
+							<ColorCheckboxItem onToggle={onToggleRealTime} value={realTime}>
 								Use real time
 							</ColorCheckboxItem>
 						</Cell>
@@ -202,6 +197,7 @@ ThemeSettingsBase.propTypes = {
 	onSelect: PropTypes.func,
 	onSendSkinSettings: PropTypes.func,
 	onToggleDynamicColor: PropTypes.func,
+	onToggleRealTime: PropTypes.func,
 	prevIndex: PropTypes.number,
 	skin: PropTypes.string
 };
