@@ -298,7 +298,7 @@ const AppBase = kind({
 							state.userSettings.colorAccent = `${accentColors[timeIndex]}`;
 							state.userSettings.colorHighlight = `${highlightColors[timeIndex]}`;
 							state.userSettings.skinVariants = skinVariant;
-							sendSkinSettings({accent: `${accentColorsArray[fakeIndex]}`, highlight: `${highlightColorsArray[fakeIndex]}`, skinVariants: skinVariant});
+							sendSkinSettings({accent: `${accentColorsArray[fakeIndex]}`, highlight: `${highlightColorsArray[fakeIndex]}`, skin: context.userSettings.skin, skinVariants: skinVariant});
 						});
 					} else {
 						let skinVariant;
@@ -312,7 +312,7 @@ const AppBase = kind({
 							state.userSettings.colorAccent = `${accentColorsArray[fakeIndex]}`;
 							state.userSettings.colorHighlight = `${highlightColorsArray[fakeIndex]}`;
 							state.userSettings.skinVariants = skinVariant;
-							sendSkinSettings({accent: `${accentColorsArray[fakeIndex]}`, highlight: `${highlightColorsArray[fakeIndex]}`, skinVariants: skinVariant});
+							sendSkinSettings({accent: `${accentColorsArray[fakeIndex]}`, highlight: `${highlightColorsArray[fakeIndex]}`, skin: context.userSettings.skin, skinVariants: skinVariant});
 						});
 						if (fakeIndex < 287) {
 							fakeIndex++;
@@ -326,7 +326,7 @@ const AppBase = kind({
 					state.userSettings.colorAccent = context.userSettings.colorAccentManual;
 					state.userSettings.colorHighlight = context.userSettings.colorHighlightManual;
 					state.userSettings.skinVariants = context.userSettings.skinVariantsManual;
-					sendSkinSettings({accent: context.userSettings.colorAccentManual, highlight: context.userSettings.colorHighlightManual, skinVariants: context.userSettings.skinVariantsManual});
+					sendSkinSettings({accent: context.userSettings.colorAccentManual, highlight: context.userSettings.colorHighlightManual, skin: context.userSettings.skin, skinVariants: context.userSettings.skinVariantsManual});
 				});
 			}
 
