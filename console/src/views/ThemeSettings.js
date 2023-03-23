@@ -199,6 +199,7 @@ ThemeSettingsBase.propTypes = {
 	onToggleDynamicColor: PropTypes.func,
 	onToggleRealTime: PropTypes.func,
 	prevIndex: PropTypes.number,
+	realTime: PropTypes.bool,
 	skin: PropTypes.string
 };
 

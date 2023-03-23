@@ -30,10 +30,10 @@ import Radio from '../views/Radio';
 import Settings from '../views/Settings';
 import ThemeSettings from '../views/ThemeSettings';
 import Weather from '../views/WeatherPanel';
-import {generateTimestamps, getColorsDayMode, getColorsNightMode, getIndex} from "../utils";
+import {generateTimestamps, getColorsDayMode, getColorsNightMode, getIndex} from '../utils';
 
 import AppContextConnect from './AppContextConnect';
-import {AppContext} from "./AppContextProvider";
+import {AppContext} from './AppContextProvider';
 
 import css from './App.module.less';
 
