@@ -410,7 +410,7 @@ const AppBase = kind({
 						onReloadApp={reloadApp}
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
-					<ThemeSettings onSelect={onSelect} onSendSkinSettings={sendSkinSettings} onToggleDynamicColor={onToggleDynamicColor} onToggleRealTime={handleRealState} realTime={realTime} prevIndex={prevIndex} />
+					<ThemeSettings onSelect={onSelect} onSendSkinSettings={sendSkinSettings} onToggleDynamicColor={onToggleDynamicColor} onToggleRealTime={handleRealState} prevIndex={prevIndex} realTime={realTime} />
 					<Weather />
 					<Dashboard
 						arrangeable={layoutArrangeable}
