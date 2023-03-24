@@ -2,6 +2,7 @@
 
 import Button from '@enact/agate/Button';
 import DateTimePicker from '@enact/agate/DateTimePicker';
+import useLinearSkinColor from '@enact/agate/LinearSkinColor';
 import {TabbedPanels} from '@enact/agate/Panels';
 import Popup from '@enact/agate/Popup';
 import ThemeDecorator from '@enact/agate/ThemeDecorator';
@@ -192,6 +193,8 @@ const AppBase = kind({
 	},
 
 	render: ({
+		accent,
+		highlight,
 		index,
 		layoutArrangeable,
 		layoutArrangeableToggle,
@@ -219,122 +222,36 @@ const AppBase = kind({
 		showUserSelectionPopup,
 		showWelcomePopup,
 		skinName,
+		skinVariants,
 		userId,
 		...rest
 	}) => {
-		delete rest.accent;
 		delete rest.endNavigation;
-		delete rest.highlight;
 		delete rest.showAppList;
 		delete rest.updateAppState;
-
+console.log(accent)
 		const copperSkinFamily = (skinName === 'copper' || skinName === 'cobalt');
 
 		const context = useContext(AppContext);
 		const [realTime, setRealTime] = useState(false);
-		const dynamicColorActive = context.userSettings.dynamicColor;
 
 		const handleRealState = useCallback(() => {
 			setRealTime(value => !value);
 		}, [setRealTime]);
 
-		const accentColors = {};
-		const highlightColors = {};
-
-		const accentColorsArray = useMemo(() => {
-			const dayColorArray = getColorsDayMode(context.userSettings.colorAccentManual, 72);
-			const nightColorArray = getColorsNightMode(context.userSettings.colorAccentManual, 72);
-			const array = [...nightColorArray.reverse(), ...dayColorArray, ...dayColorArray.reverse(), ...nightColorArray.reverse()];
-			const offset = array.splice(0, 12);
-
-			return [...array, ...offset];
-		}, [context.userSettings.colorAccentManual]);
-
-		const highlightColorsArray = useMemo(() => {
-			const dayColorArray = getColorsDayMode(context.userSettings.colorHighlightManual, 72);
-			const nightColorArray = getColorsNightMode(context.userSettings.colorHighlightManual, 72);
-			const array = [...dayColorArray.reverse(), ...nightColorArray, ...nightColorArray.reverse(), ...dayColorArray.reverse()];
-			const offset = array.splice(0, 12);
-
-			return [...array, ...offset];
-		}, [context.userSettings.colorHighlightManual]);
-
-		timestamps.forEach((element, ElIndex) => {
-			accentColors[element] = accentColorsArray[ElIndex];
-		});
-
-		timestamps.forEach((element, ElIndex) => {
-			highlightColors[element] = highlightColorsArray[ElIndex];
-		});
-
 		useEffect (() => {
-			let changeColor;
+			console.log("insideUseEffect")
+			context.updateAppState((state) => {
+				state.userSettings.colorAccent = accent;
+				state.userSettings.colorHighlight = highlight
+				state.userSettings.skinVariants = skinVariants;
+				sendSkinSettings({accent: accent, highlight: highlight, skinVariants: skinVariants});
+			});
 
-			if (dynamicColorActive) {
-				// Remove this when fake timers will no longer be used
-				context.updateAppState((state) => {
-					state.userSettings.colorAccent = context.userSettings.colorAccentManual;
-					state.userSettings.colorHighlight = context.userSettings.colorHighlightManual;
-					state.userSettings.skinVariants = context.userSettings.skinVariantsManual;
-				});
 
-				context.updateAppState((state) => {
-					state.userSettings.colorAccentManual = state.userSettings.colorAccent;
-					state.userSettings.colorHighlightManual = state.userSettings.colorHighlight;
-					state.userSettings.skinVariantsManual = state.userSettings.skinVariants;
-				});
-
-				changeColor = setInterval(() => {
-					if (realTime) {
-						const timeIndex = getIndex();
-						let skinVariant;
-						if (timeIndex >= '06:00' && timeIndex < '18:00') {
-							skinVariant = '';
-						} else {
-							skinVariant = 'night';
-						}
-
-						context.updateAppState((state) => {
-							state.userSettings.colorAccent = `${accentColors[timeIndex]}`;
-							state.userSettings.colorHighlight = `${highlightColors[timeIndex]}`;
-							state.userSettings.skinVariants = skinVariant;
-							sendSkinSettings({accent: `${accentColorsArray[fakeIndex]}`, highlight: `${highlightColorsArray[fakeIndex]}`, skin: context.userSettings.skin, skinVariants: skinVariant});
-						});
-					} else {
-						let skinVariant;
-						if (60 <= fakeIndex && fakeIndex <= 203) {
-							skinVariant = '';
-						} else {
-							skinVariant = 'night';
-						}
-
-						context.updateAppState((state) => {
-							state.userSettings.colorAccent = `${accentColorsArray[fakeIndex]}`;
-							state.userSettings.colorHighlight = `${highlightColorsArray[fakeIndex]}`;
-							state.userSettings.skinVariants = skinVariant;
-							sendSkinSettings({accent: `${accentColorsArray[fakeIndex]}`, highlight: `${highlightColorsArray[fakeIndex]}`, skin: context.userSettings.skin, skinVariants: skinVariant});
-						});
-						if (fakeIndex < 287) {
-							fakeIndex++;
-						} else {
-							fakeIndex = 0;
-						}
-					}
-				}, realTime ? 30 * 1000 : 100);
-			} else {
-				context.updateAppState((state) => {
-					state.userSettings.colorAccent = context.userSettings.colorAccentManual;
-					state.userSettings.colorHighlight = context.userSettings.colorHighlightManual;
-					state.userSettings.skinVariants = context.userSettings.skinVariantsManual;
-					sendSkinSettings({accent: context.userSettings.colorAccentManual, highlight: context.userSettings.colorHighlightManual, skin: context.userSettings.skin, skinVariants: context.userSettings.skinVariantsManual});
-				});
-			}
-
-			return () => {
-				clearInterval(changeColor);
-				fakeIndex = 0;
-			};
-		}, [context.userSettings.dynamicColor, realTime]); // eslint-disable-line react-hooks/exhaustive-deps
+			// return () => {
+			// };
+		}, [accent, highlight, skinVariants]); // eslint-disable-line react-hooks/exhaustive-deps
 
 		return (
 			<div {...rest}>
@@ -523,8 +440,8 @@ const AppIndex = (Wrapped) => {
 const AppDecorator = compose(
 	ServiceLayer,
 	AppContextConnect(({appState, userSettings, userId, updateAppState}) => ({
-		accent: userSettings.colorAccent,
-		highlight: userSettings.colorHighlight,
+		//accent: userSettings.colorAccent,
+		//highlight: userSettings.colorHighlight,
 		layoutArrangeable: userSettings.arrangements.arrangeable,
 		orientation: (userSettings.skin !== 'carbon') ? 'horizontal' : 'vertical',
 		showAppList: appState.showAppList,
@@ -535,7 +452,7 @@ const AppDecorator = compose(
 		showUserSelectionPopup: appState.showUserSelectionPopup,
 		showWelcomePopup: appState.showWelcomePopup,
 		skin: userSettings.skin,
-		skinVariants: userSettings.skinVariants,
+		//skinVariants: userSettings.skinVariants,
 		skinName: userSettings.skin,
 		updateAppState,
 		userId
@@ -544,10 +461,30 @@ const AppDecorator = compose(
 	ThemeDecorator
 );
 
-const App = AppDecorator(AppBase);
+//const App = AppDecorator(AppBase);
 
-export default App;
+const config = {
+	accent: '#68da58',
+	highlight: '#ce40d3',
+	skinVariants: ''
+}
+
+const ThemedAppBase = (props) => {
+	const {accent, highlight, skinVariants, ...rest} = props;
+
+
+	//const {accent, highlight, skinVariants} = config;
+	const [newAccent, newHighlight, newSkinVariants] = useLinearSkinColor(config.accent, config.highlight, config.skinVariants);
+	 console.log('aaa', newAccent);
+	 //console.log('bbb', newHighlight);
+
+	return (<AppBase accent={newAccent} highlight={newHighlight} skinVariants={newSkinVariants} {...rest} />)
+};
+
+const ThemedApp = AppDecorator(ThemedAppBase);
+
+export default ThemedApp;
 export {
-	App,
+	ThemedApp,
 	getPanelIndexOf
 };

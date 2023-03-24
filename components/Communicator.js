@@ -110,7 +110,6 @@ class Communicator extends Component {
 			route: 'SKIN_SETTINGS',
 			skinSettings
 		};
-		console.log('Sending skin settings to', this.props.host, ['SEND_DATA:', data]); // eslint-disable-line no-console
 		this.socket.emit('SEND_DATA', data);
 	};
 
