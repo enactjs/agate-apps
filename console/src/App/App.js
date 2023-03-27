@@ -2,7 +2,7 @@
 
 import Button from '@enact/agate/Button';
 import DateTimePicker from '@enact/agate/DateTimePicker';
-import useLinearSkinColor from '@enact/agate/LinearSkinColor';
+import useLinearSkinColor from '@enact/agate/useLinearSkinColor';
 import {TabbedPanels} from '@enact/agate/Panels';
 import Popup from '@enact/agate/Popup';
 import ThemeDecorator from '@enact/agate/ThemeDecorator';
@@ -12,7 +12,7 @@ import kind from '@enact/core/kind';
 import {Cell, Column, Row} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {Component, useCallback, useContext, useEffect, useMemo, useState} from 'react';
+import {Component, useContext, useEffect} from 'react';
 
 import Clock from '../components/Clock';
 // import ProfileDrawer from '../components/ProfileDrawer';
@@ -31,7 +31,6 @@ import Radio from '../views/Radio';
 import Settings from '../views/Settings';
 import ThemeSettings from '../views/ThemeSettings';
 import Weather from '../views/WeatherPanel';
-import {generateTimestamps, getColorsDayMode, getColorsNightMode, getIndex} from '../utils';
 
 import AppContextConnect from './AppContextConnect';
 import {AppContext} from './AppContextProvider';
@@ -59,8 +58,6 @@ const panelIndexMap = [
 // Look up a panel index by name, using the above list as the directory listing.
 const getPanelIndexOf = (panelName) => panelIndexMap.indexOf(panelName);
 
-const timestamps = generateTimestamps(5);
-let fakeIndex = 0;
 
 const PanelSwitchingIconButton = kind({
 	name: 'PanelSwitchingIconButton',
@@ -229,32 +226,23 @@ const AppBase = kind({
 		delete rest.endNavigation;
 		delete rest.showAppList;
 		delete rest.updateAppState;
-console.log(accent)
+
 		const copperSkinFamily = (skinName === 'copper' || skinName === 'cobalt');
 
 		const context = useContext(AppContext);
-		const [realTime, setRealTime] = useState(false);
-
-		const handleRealState = useCallback(() => {
-			setRealTime(value => !value);
-		}, [setRealTime]);
 
 		useEffect (() => {
-			console.log("insideUseEffect")
 			context.updateAppState((state) => {
 				state.userSettings.colorAccent = accent;
 				state.userSettings.colorHighlight = highlight
 				state.userSettings.skinVariants = skinVariants;
 				sendSkinSettings({accent: accent, highlight: highlight, skinVariants: skinVariants});
 			});
-
-
-			// return () => {
-			// };
 		}, [accent, highlight, skinVariants]); // eslint-disable-line react-hooks/exhaustive-deps
 
 		return (
-			<div {...rest}>
+			// eslint-disable-next-line react/no-unknown-property
+			<div accent={accent} highlight={highlight} {...rest}>
 				<TabbedPanels
 					className={css.tabbedPanels}
 					orientation={orientation}
@@ -327,7 +315,7 @@ console.log(accent)
 						onReloadApp={reloadApp}
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
-					<ThemeSettings onSelect={onSelect} onSendSkinSettings={sendSkinSettings} onToggleDynamicColor={onToggleDynamicColor} onToggleRealTime={handleRealState} realTime={realTime} prevIndex={prevIndex} />
+					<ThemeSettings onSelect={onSelect} onSendSkinSettings={sendSkinSettings} onToggleDynamicColor={onToggleDynamicColor} prevIndex={prevIndex} />
 					<Weather />
 					<Dashboard
 						arrangeable={layoutArrangeable}
@@ -440,8 +428,8 @@ const AppIndex = (Wrapped) => {
 const AppDecorator = compose(
 	ServiceLayer,
 	AppContextConnect(({appState, userSettings, userId, updateAppState}) => ({
-		//accent: userSettings.colorAccent,
-		//highlight: userSettings.colorHighlight,
+		accent: userSettings.colorAccent,
+		highlight: userSettings.colorHighlight,
 		layoutArrangeable: userSettings.arrangements.arrangeable,
 		orientation: (userSettings.skin !== 'carbon') ? 'horizontal' : 'vertical',
 		showAppList: appState.showAppList,
@@ -452,7 +440,7 @@ const AppDecorator = compose(
 		showUserSelectionPopup: appState.showUserSelectionPopup,
 		showWelcomePopup: appState.showWelcomePopup,
 		skin: userSettings.skin,
-		//skinVariants: userSettings.skinVariants,
+		skinVariants: userSettings.skinVariants,
 		skinName: userSettings.skin,
 		updateAppState,
 		userId
@@ -461,22 +449,10 @@ const AppDecorator = compose(
 	ThemeDecorator
 );
 
-//const App = AppDecorator(AppBase);
-
-const config = {
-	accent: '#68da58',
-	highlight: '#ce40d3',
-	skinVariants: ''
-}
-
 const ThemedAppBase = (props) => {
 	const {accent, highlight, skinVariants, ...rest} = props;
 
-
-	//const {accent, highlight, skinVariants} = config;
-	const [newAccent, newHighlight, newSkinVariants] = useLinearSkinColor(config.accent, config.highlight, config.skinVariants);
-	 console.log('aaa', newAccent);
-	 //console.log('bbb', newHighlight);
+	const [newAccent, newHighlight, newSkinVariants] = useLinearSkinColor(accent, highlight, skinVariants, false);
 
 	return (<AppBase accent={newAccent} highlight={newHighlight} skinVariants={newSkinVariants} {...rest} />)
 };
