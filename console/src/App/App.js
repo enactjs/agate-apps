@@ -115,6 +115,7 @@ const AppBase = kind({
 		showUserSelectionPopup: PropTypes.bool,
 		showWelcomePopup: PropTypes.bool,
 		skinName: PropTypes.string,
+		skinVariants: PropTypes.string,
 		useFakeTime: PropTypes.bool,
 		userId: PropTypes.number
 	},
@@ -231,7 +232,7 @@ const AppBase = kind({
 		userId,
 		...rest
 	}) => {
-		delete rest.dynamicColor
+		delete rest.dynamicColor;
 		delete rest.endNavigation;
 		delete rest.showAppList;
 		delete rest.updateAppState;
@@ -243,18 +244,18 @@ const AppBase = kind({
 		const dynamicColorActive = context.userSettings.dynamicColor;
 
 		useEffect (() => {
-				context.updateAppState((state) => {
-					state.userSettings.colorAccentManual = context.userSettings.colorAccent;
-					state.userSettings.colorHighlightManual = context.userSettings.colorHighlight;
-					state.userSettings.skinVariantsManual = context.userSettings.skinVariants;
-				});
+			context.updateAppState((state) => {
+				state.userSettings.colorAccentManual = context.userSettings.colorAccent;
+				state.userSettings.colorHighlightManual = context.userSettings.colorHighlight;
+				state.userSettings.skinVariantsManual = context.userSettings.skinVariants;
+			});
 		}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 		useEffect (() => {
-			if(dynamicColorActive) {
+			if (dynamicColorActive) {
 				context.updateAppState((state) => {
 					state.userSettings.colorAccent = accent;
-					state.userSettings.colorHighlight = highlight
+					state.userSettings.colorHighlight = highlight;
 					state.userSettings.skinVariants = skinVariants;
 					sendSkinSettings({accent: accent, highlight: highlight, skin: context.userSettings.skin, skinVariants: skinVariants});
 				});
@@ -481,12 +482,18 @@ const AppDecorator = compose(
 );
 
 const ThemedAppBase = (props) => {
-	console.log(props);
 	const {accent, highlight, skinVariants, useFakeTime, ...rest} = props;
 
 	const [newAccent, newHighlight, newSkinVariants] = useLinearSkinColor(accent, highlight, skinVariants, useFakeTime);
 
-	return (<AppBase accent={newAccent} highlight={newHighlight} skinVariants={newSkinVariants} {...rest} />)
+	return (<AppBase accent={newAccent} highlight={newHighlight} skinVariants={newSkinVariants} {...rest} />);
+};
+
+ThemedAppBase.propTypes = {
+	accent: PropTypes.string,
+	highlight: PropTypes.string,
+	skinVariants: PropTypes.string,
+	useFakeTime: PropTypes.bool
 };
 
 const ThemedApp = AppDecorator(ThemedAppBase);
