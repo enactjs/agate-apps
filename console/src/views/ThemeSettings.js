@@ -113,7 +113,7 @@ const ColorCheckboxItem = kind({
 });
 
 const ThemeSettingsBase = (props) => {
-	const {onToggleDynamicColor, onToggleFakeTime, prevIndex, useFakeTime,  ... rest} = props;
+	const {onToggleDynamicColor, onToggleFakeTime, prevIndex, ... rest} = props;
 	const context = useContext(AppContext);
 
 	delete rest.onSendSkinSettings;
@@ -179,9 +179,9 @@ const ThemeSettingsBase = (props) => {
 							<DynamicColorSetting onToggle={onToggleDynamicColor}>
 								Dynamic color change
 							</DynamicColorSetting>
-							<ColorCheckboxItem onToggle={onToggleFakeTime} value={useFakeTime}>
+							<FakeTimeSetting onToggle={onToggleFakeTime}>
 								Use fake time
-							</ColorCheckboxItem>
+							</FakeTimeSetting>
 						</Cell>
 					</Column>
 				</Cell>
@@ -199,8 +199,7 @@ ThemeSettingsBase.propTypes = {
 	onToggleDynamicColor: PropTypes.func,
 	onToggleFakeTime: PropTypes.func,
 	prevIndex: PropTypes.number,
-	skin: PropTypes.string,
-	useFakeTime: PropTypes.bool
+	skin: PropTypes.string
 };
 
 ThemeSettingsBase.displayName = 'ThemeSettings';
@@ -247,6 +246,10 @@ const SkinVariantsSetting = AppContextConnect(({userSettings, updateAppState}) =
 
 const DynamicColorSetting = AppContextConnect(({userSettings}) => ({
 	selected: userSettings.dynamicColor
+}))(ColorCheckboxItem);
+
+const FakeTimeSetting = AppContextConnect(({userSettings}) => ({
+	selected: userSettings.useFakeTime
 }))(ColorCheckboxItem);
 
 const ThemeSettingsDecorator = compose(
