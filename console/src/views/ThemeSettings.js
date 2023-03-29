@@ -116,8 +116,8 @@ const ColorCheckboxItem = kind({
 });
 
 const ThemeSettingsBase = (props) => {
-	const [realTime, setRealTime] = useState(false);
-	const {prevIndex, ... rest} = props;
+	const [fakeTime, setFakeTime] = useState(false);
+	const {prevIndex, onSelect, ... rest} = props;
 	const context = useContext(AppContext);
 
 	delete rest.onSendSkinSettings;
@@ -125,12 +125,12 @@ const ThemeSettingsBase = (props) => {
 	const dynamicColorActive = context.userSettings.dynamicColor;
 
 	const handleRealState = useCallback(() => {
-		setRealTime(value => !value);
-	}, [setRealTime]);
+		setFakeTime(value => !value);
+	}, [setFakeTime]);
 
-	const handleSelect = useCallback((ev, {onSelect}) => {
+	const handleSelect = useCallback((ev) => {
 		onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
-	}, []);
+	}, [onSelect]);
 
 	const onChange = useCallback(() => {
 		props.onSendSkinSettings(props);
@@ -183,7 +183,7 @@ const ThemeSettingsBase = (props) => {
 			});
 
 			changeColor = setInterval(() => {
-				if (realTime) {
+				if (!fakeTime) {
 					const index = getIndex();
 					let skinVariant;
 					if (index >= '06:00' && index < '18:00') {
@@ -216,7 +216,7 @@ const ThemeSettingsBase = (props) => {
 						fakeIndex = 0;
 					}
 				}
-			}, realTime ? 30 * 1000 : 100);
+			}, fakeTime ? 100: 30 * 1000 );
 		} else {
 			context.updateAppState((state) => {
 				state.userSettings.colorAccent = context.userSettings.colorAccentManual;
@@ -229,7 +229,7 @@ const ThemeSettingsBase = (props) => {
 			clearInterval(changeColor);
 			fakeIndex = 0;
 		};
-	}, [context.userSettings.dynamicColor, realTime]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [context.userSettings.dynamicColor, fakeTime]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return (
 		<Panel {...rest} className={componentCss.settingsView}>
@@ -282,8 +282,8 @@ const ThemeSettingsBase = (props) => {
 							<DynamicColorSetting>
 								Dynamic color change
 							</DynamicColorSetting>
-							<ColorCheckboxItem onToggle={handleRealState} value={realTime}>
-								Use real time
+							<ColorCheckboxItem onToggle={handleRealState} value={fakeTime}>
+								Use fake time
 							</ColorCheckboxItem>
 						</Cell>
 					</Column>
