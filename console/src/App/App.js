@@ -94,6 +94,7 @@ const AppBase = kind({
 		updateAppState: PropTypes.func.isRequired,
 		accent: PropTypes.string,
 		defaultIndex: PropTypes.number,
+		dynamicColor: PropTypes.bool,
 		endNavigation: PropTypes.func,
 		highlight: PropTypes.string,
 		index: PropTypes.number,
@@ -114,6 +115,7 @@ const AppBase = kind({
 		showUserSelectionPopup: PropTypes.bool,
 		showWelcomePopup: PropTypes.bool,
 		skinName: PropTypes.string,
+		useFakeTime: PropTypes.bool,
 		userId: PropTypes.number
 	},
 
@@ -146,6 +148,11 @@ const AppBase = kind({
 		onToggleDynamicColor: (ev, {updateAppState}) => {
 			updateAppState((state) => {
 				state.userSettings.dynamicColor = ev.selected;
+			});
+		},
+		onToggleFakeTime: (ev, {updateAppState}) => {
+			updateAppState((state) => {
+				state.userSettings.useFakeTime = ev.selected;
 			});
 		},
 		onToggleWelcomePopup: (ev, {updateAppState}) => {
@@ -201,6 +208,7 @@ const AppBase = kind({
 		onToggleDateTimePopup,
 		onToggleDestinationReachedPopup,
 		onToggleDynamicColor,
+		onToggleFakeTime,
 		onTogglePopup,
 		// onToggleProfileEdit,
 		onToggleUserSelectionPopup,
@@ -223,6 +231,7 @@ const AppBase = kind({
 		userId,
 		...rest
 	}) => {
+		delete rest.dynamicColor
 		delete rest.endNavigation;
 		delete rest.showAppList;
 		delete rest.updateAppState;
@@ -231,14 +240,34 @@ const AppBase = kind({
 
 		const context = useContext(AppContext);
 
+		const dynamicColorActive = context.userSettings.dynamicColor;
+
 		useEffect (() => {
-			context.updateAppState((state) => {
-				state.userSettings.colorAccent = accent;
-				state.userSettings.colorHighlight = highlight
-				state.userSettings.skinVariants = skinVariants;
-				sendSkinSettings({accent: accent, highlight: highlight, skinVariants: skinVariants});
-			});
-		}, [accent, highlight, skinVariants]); // eslint-disable-line react-hooks/exhaustive-deps
+				context.updateAppState((state) => {
+					state.userSettings.colorAccentManual = context.userSettings.colorAccent;
+					state.userSettings.colorHighlightManual = context.userSettings.colorHighlight;
+					state.userSettings.skinVariantsManual = context.userSettings.skinVariants;
+				});
+		}, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+		useEffect (() => {
+			if(dynamicColorActive) {
+				context.updateAppState((state) => {
+					state.userSettings.colorAccent = accent;
+					state.userSettings.colorHighlight = highlight
+					state.userSettings.skinVariants = skinVariants;
+					sendSkinSettings({accent: accent, highlight: highlight, skin: context.userSettings.skin, skinVariants: skinVariants});
+				});
+			} else {
+				context.updateAppState((state) => {
+					state.userSettings.colorAccent = state.userSettings.colorAccentManual;
+					state.userSettings.colorHighlight = state.userSettings.colorHighlightManual;
+					state.userSettings.skinVariants = state.userSettings.skinVariantsManual;
+					sendSkinSettings({accent: state.userSettings.colorAccentManual, highlight: state.userSettings.colorHighlightManual, skin: context.userSettings.skin, skinVariants: state.userSettings.skinVariantsManual});
+				});
+			}
+
+		}, [accent, context.userSettings.dynamicColor, highlight, skinVariants]); // eslint-disable-line react-hooks/exhaustive-deps
 
 		return (
 			// eslint-disable-next-line react/no-unknown-property
@@ -315,7 +344,7 @@ const AppBase = kind({
 						onReloadApp={reloadApp}
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
-					<ThemeSettings onSelect={onSelect} onSendSkinSettings={sendSkinSettings} onToggleDynamicColor={onToggleDynamicColor} prevIndex={prevIndex} />
+					<ThemeSettings onSelect={onSelect} onSendSkinSettings={sendSkinSettings} onToggleDynamicColor={onToggleDynamicColor} onToggleFakeTime={onToggleFakeTime} prevIndex={prevIndex} useFakeTime={context.userSettings.useFakeTime} />
 					<Weather />
 					<Dashboard
 						arrangeable={layoutArrangeable}
@@ -429,6 +458,7 @@ const AppDecorator = compose(
 	ServiceLayer,
 	AppContextConnect(({appState, userSettings, userId, updateAppState}) => ({
 		accent: userSettings.colorAccent,
+		dynamicColor: userSettings.dynamicColor,
 		highlight: userSettings.colorHighlight,
 		layoutArrangeable: userSettings.arrangements.arrangeable,
 		orientation: (userSettings.skin !== 'carbon') ? 'horizontal' : 'vertical',
@@ -442,6 +472,7 @@ const AppDecorator = compose(
 		skin: userSettings.skin,
 		skinVariants: userSettings.skinVariants,
 		skinName: userSettings.skin,
+		useFakeTime: userSettings.useFakeTime,
 		updateAppState,
 		userId
 	})),
@@ -450,9 +481,10 @@ const AppDecorator = compose(
 );
 
 const ThemedAppBase = (props) => {
-	const {accent, highlight, skinVariants, ...rest} = props;
+	console.log(props);
+	const {accent, highlight, skinVariants, useFakeTime, ...rest} = props;
 
-	const [newAccent, newHighlight, newSkinVariants] = useLinearSkinColor(accent, highlight, skinVariants, false);
+	const [newAccent, newHighlight, newSkinVariants] = useLinearSkinColor(accent, highlight, skinVariants, useFakeTime);
 
 	return (<AppBase accent={newAccent} highlight={newHighlight} skinVariants={newSkinVariants} {...rest} />)
 };
