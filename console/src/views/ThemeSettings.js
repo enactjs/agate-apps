@@ -113,7 +113,7 @@ const ColorCheckboxItem = kind({
 });
 
 const ThemeSettingsBase = (props) => {
-	const {onToggleDynamicColor, onToggleFakeTime, onSelect, prevIndex, fakeTime,  ... rest} = props;
+	const {fakeTime, onToggleDynamicColor, onToggleFakeTime, onSelect, prevIndex, ... rest} = props;
 	const context = useContext(AppContext);
 
 	delete rest.onSendSkinSettings;
@@ -193,13 +193,13 @@ const ThemeSettingsBase = (props) => {
 ThemeSettingsBase.propTypes = {
 	alignLabel: PropTypes.string,
 	css: PropTypes.object,
+	fakeTime: PropTypes.bool,
 	label: PropTypes.string,
 	onSelect: PropTypes.func,
 	onSendSkinSettings: PropTypes.func,
 	onToggleDynamicColor: PropTypes.func,
 	onToggleFakeTime: PropTypes.func,
 	prevIndex: PropTypes.number,
-	fakeTime: PropTypes.bool,
 	skin: PropTypes.string
 };
 
