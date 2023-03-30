@@ -36,11 +36,11 @@
 		"@enact/i18n": "^4.6.0",
 		"@enact/ui": "^4.6.0",
 		"prop-types": "^15.8.1",
-		"query-string": "^6.14.1",
+		"query-string": "^8.1.0",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0"
 	},
 	"devDependencies": {
-		"cpy-cli": "^2.0.0"
+		"cpy-cli": "^4.2.0"
 	}
 }
