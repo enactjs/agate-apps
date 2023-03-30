@@ -179,7 +179,7 @@ const ThemeSettingsBase = (props) => {
 							<DynamicColorSetting onToggle={onToggleDynamicColor}>
 								Dynamic color change
 							</DynamicColorSetting>
-							<ColorCheckboxItem onToggle={onToggleFakeTime} value={fakeTime}>
+							<ColorCheckboxItem onToggle={onToggleFakeTime} selected={fakeTime}>
 								Use fake time
 							</ColorCheckboxItem>
 						</Cell>
