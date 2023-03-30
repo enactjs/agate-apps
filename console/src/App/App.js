@@ -231,12 +231,12 @@ const AppBase = kind({
 		const copperSkinFamily = (skinName === 'copper' || skinName === 'cobalt');
 
 		const context = useContext(AppContext);
-		const [realTime, setRealTime] = useState(false);
+		const [fakeTime, setFakeTime] = useState(false);
 		const dynamicColorActive = context.userSettings.dynamicColor;
 
-		const handleRealState = useCallback(() => {
-			setRealTime(value => !value);
-		}, [setRealTime]);
+		const handleFakeState = useCallback(() => {
+			setFakeTime(value => !value);
+		}, [setFakeTime]);
 
 		const accentColors = {};
 		const highlightColors = {};
@@ -285,7 +285,7 @@ const AppBase = kind({
 				});
 
 				changeColor = setInterval(() => {
-					if (realTime) {
+					if (!fakeTime) {
 						const timeIndex = getIndex();
 						let skinVariant;
 						if (timeIndex >= '06:00' && timeIndex < '18:00') {
@@ -320,7 +320,7 @@ const AppBase = kind({
 							fakeIndex = 0;
 						}
 					}
-				}, realTime ? 30 * 1000 : 100);
+				}, fakeTime ? 100 : 30 * 1000);
 			} else {
 				context.updateAppState((state) => {
 					state.userSettings.colorAccent = context.userSettings.colorAccentManual;
@@ -334,7 +334,7 @@ const AppBase = kind({
 				clearInterval(changeColor);
 				fakeIndex = 0;
 			};
-		}, [context.userSettings.dynamicColor, realTime]); // eslint-disable-line react-hooks/exhaustive-deps
+		}, [context.userSettings.dynamicColor, fakeTime]); // eslint-disable-line react-hooks/exhaustive-deps
 
 		return (
 			<div {...rest}>
@@ -410,7 +410,7 @@ const AppBase = kind({
 						onReloadApp={reloadApp}
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
-					<ThemeSettings onSelect={onSelect} onSendSkinSettings={sendSkinSettings} onToggleDynamicColor={onToggleDynamicColor} onToggleRealTime={handleRealState} prevIndex={prevIndex} realTime={realTime} />
+					<ThemeSettings onSelect={onSelect} onSendSkinSettings={sendSkinSettings} onToggleDynamicColor={onToggleDynamicColor} onToggleFakeTime={handleFakeState} prevIndex={prevIndex} fakeTime={fakeTime} />
 					<Weather />
 					<Dashboard
 						arrangeable={layoutArrangeable}

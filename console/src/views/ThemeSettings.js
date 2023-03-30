@@ -113,16 +113,16 @@ const ColorCheckboxItem = kind({
 });
 
 const ThemeSettingsBase = (props) => {
-	const {onToggleDynamicColor, onToggleRealTime, prevIndex, realTime,  ... rest} = props;
+	const {onToggleDynamicColor, onToggleFakeTime, onSelect, prevIndex, fakeTime,  ... rest} = props;
 	const context = useContext(AppContext);
 
 	delete rest.onSendSkinSettings;
 
 	const dynamicColorActive = context.userSettings.dynamicColor;
 
-	const handleSelect = useCallback((ev, {onSelect}) => {
+	const handleSelect = useCallback((ev) => {
 		onSelect({index: parseInt(ev.currentTarget.dataset.tabindex)});
-	}, []);
+	}, [onSelect]);
 
 	const onChange = useCallback(() => {
 		props.onSendSkinSettings(props);
@@ -179,7 +179,7 @@ const ThemeSettingsBase = (props) => {
 							<DynamicColorSetting onToggle={onToggleDynamicColor}>
 								Dynamic color change
 							</DynamicColorSetting>
-							<ColorCheckboxItem onToggle={onToggleRealTime} value={realTime}>
+							<ColorCheckboxItem onToggle={onToggleFakeTime} value={fakeTime}>
 								Use real time
 							</ColorCheckboxItem>
 						</Cell>
@@ -197,9 +197,9 @@ ThemeSettingsBase.propTypes = {
 	onSelect: PropTypes.func,
 	onSendSkinSettings: PropTypes.func,
 	onToggleDynamicColor: PropTypes.func,
-	onToggleRealTime: PropTypes.func,
+	onToggleFakeTime: PropTypes.func,
 	prevIndex: PropTypes.number,
-	realTime: PropTypes.bool,
+	fakeTime: PropTypes.bool,
 	skin: PropTypes.string
 };
 
