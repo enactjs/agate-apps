@@ -164,10 +164,10 @@
 			"rightHeat": false,
 			"rightTemp": 0
 		},
-		"colorAccent": "#e0b094",
-		"colorAccentManual": "#e0b094",
-		"colorHighlight": "#ffffff",
-		"colorHighlightManual": "#ffffff",
+		"colorAccent": "#ff2d55",
+		"colorAccentManual": "#ff2d55",
+		"colorHighlight": "#9e00d8",
+		"colorHighlightManual": "#9e00d8",
 		"components": {
 			"welcome": {
 				"small1": "heater",
