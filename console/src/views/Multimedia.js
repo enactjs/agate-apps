@@ -5,7 +5,7 @@ import ThumbnailItem from '@enact/agate/ThumbnailItem';
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 // import {Job} from '@enact/core/util';
-import {Cell, Column, Row} from '@enact/ui/Layout';
+import {Cell, Row} from '@enact/ui/Layout';
 import ri from '@enact/ui/resolution';
 import {VirtualGridList, VirtualList} from '@enact/ui/VirtualList';
 import PropTypes from 'prop-types';
@@ -71,7 +71,7 @@ const ResponsiveVirtualList = kind({
 					src={videos[index].snippet.thumbnails.medium.url}
 					onClick={onSelectVideo(videos[index])}
 				>
-					{size === 'full' ? videos[index].snippet.title : ''}
+					{size === 'full' || size === 'medium' ? videos[index].snippet.title : ''}
 				</ImageItem>
 			);
 		}
@@ -194,20 +194,22 @@ const MultimediaBase = kind({
 						onArrange={onArrange}
 					>
 						<left is="custom">
-							<Column>
-								<Cell shrink component={Heading} className={css.heading}>Recommended Videos</Cell>
-								<Cell>
+							<Cell size={url ? "20%" : "100%"} shrink component={Heading} className={css.heading}>Recommended Videos</Cell>
+							<Row className={css.bodyRow}>
+								<Cell size={url ? "80%" : "0%"}>
+									<IFrame allow="autoplay; fullscreen" className={css.iframe} src={url} />
+								</Cell>
+								<Cell size={url ? "20%" : "100%"}>
 									<ResponsiveVirtualList
 										dataSize={videos.length}
 										onSelectVideo={onSelectVideo}
-										size="full"
+										size={url ? "medium" : "full"}
 										videos={videos}
 									/>
 								</Cell>
-							</Column>
+							</Row>
 						</left>
 						<Row className={css.bodyRow}>
-							<IFrame allow="autoplay" className={css.iframe} src={url} />
 							{/* {showAd ? <Cell className={css.adSpace} shrink>
 								{adContent}
 							</Cell> : null}*/}
