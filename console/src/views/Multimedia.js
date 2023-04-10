@@ -194,7 +194,7 @@ const MultimediaBase = kind({
 						onArrange={onArrange}
 					>
 						<left is="custom">
-							<Cell size={url ? "20%" : "100%"} shrink component={Heading} className={css.heading}>Recommended Videos</Cell>
+							<Cell shrink component={Heading} className={css.heading}>Recommended Videos</Cell>
 							<Row className={css.bodyRow}>
 								<Cell size={url ? "80%" : "0%"}>
 									<IFrame allow="autoplay; fullscreen" className={css.iframe} src={url} />
