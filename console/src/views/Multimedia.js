@@ -103,7 +103,7 @@ const ResponsiveVirtualList = kind({
 				spacing = ri.scale(24);
 				itemSize = {
 					minWidth: ri.scale(180),
-					minHeight: ri.scale(100)
+					minHeight: ri.scale(135)
 				};
 				break;
 			}
