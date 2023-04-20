@@ -30,6 +30,7 @@ import ThemeSettings from '../views/ThemeSettings';
 import Weather from '../views/WeatherPanel';
 
 import AppContextConnect from './AppContextConnect';
+import screenTypes from '../../screenTypes.json';
 
 import css from './App.module.less';
 
@@ -419,11 +420,10 @@ const AppDecorator = compose(
 		updateAppState,
 		userId
 	})),
-	AppIndex,
-	ThemeDecorator
+	AppIndex
 );
 
-const App = AppDecorator(AppBase);
+const App = AppDecorator(ThemeDecorator({ri: {screenTypes}}, AppBase));
 
 export default App;
 export {
