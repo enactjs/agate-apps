@@ -54,7 +54,7 @@ const FormRow = kind({
 	},
 	render: ({alignLabel, children, css, label, ...rest}) => (
 		<Row align="center" {...rest}>
-			<Cell component="label" className={css.label} align={alignLabel} size="15%">{label}</Cell>
+			<Cell component="label" className={css.label} align={alignLabel} size="10%">{label}</Cell>
 			{children}
 		</Row>
 	)
@@ -122,7 +122,7 @@ const ThemeSettingsBase = kind({
 		}
 	},
 
-	render: ({css, onChange, onSelect, prevIndex, ...rest}) => {
+	render: ({css, onChange, onSelect, prevIndex, skin, ...rest}) => {
 		delete rest.onSendSkinSettings;
 
 		return (
@@ -134,14 +134,14 @@ const ThemeSettingsBase = kind({
 							icon="arrowlargeleft"
 							labelPosition="after"
 							onClick={onSelect}
-							size={rest.skin === 'silicon' ? 'small' : 'large'}
+							size={skin === 'silicon' ? 'small' : 'large'}
 						>
 							Back
 						</LabeledIconButton>
 					</Cell>
 				</Row>
 				<Row align=" center">
-					<Cell size="70%">
+					<Cell size="80%">
 						<Column className={css.content}>
 							<Cell
 								component={Heading}
@@ -157,7 +157,7 @@ const ThemeSettingsBase = kind({
 									<HighlightColorSetting label="Highlight Color" onClick={onChange}>{swatchPalette}</HighlightColorSetting>
 								</FormRow>
 							</Cell>
-							<Cell shrink className={css.spacedItem}>
+							<Cell className={css.spacedItem}>
 								<SkinSetting label="Skin:" onClick={onChange}>
 									{skinNames}
 								</SkinSetting>
