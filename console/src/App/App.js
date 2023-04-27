@@ -2,7 +2,6 @@
 
 import Button from '@enact/agate/Button';
 import DateTimePicker from '@enact/agate/DateTimePicker';
-import useLinearSkinColor from '../useLinearSkinColor/useLinearSkinColor';
 import {TabbedPanels} from '@enact/agate/Panels';
 import Popup from '@enact/agate/Popup';
 import ThemeDecorator from '@enact/agate/ThemeDecorator';
@@ -34,6 +33,7 @@ import Weather from '../views/WeatherPanel';
 
 import AppContextConnect from './AppContextConnect';
 import {AppContext} from './AppContextProvider';
+import useLinearSkinColor from '../useLinearSkinColor/useLinearSkinColor';
 
 import css from './App.module.less';
 
