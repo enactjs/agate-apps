@@ -29,11 +29,11 @@ import Phone from '../views/Phone';
 import Radio from '../views/Radio';
 import Settings from '../views/Settings';
 import ThemeSettings from '../views/ThemeSettings';
+import useLinearSkinColor from '../useLinearSkinColor/useLinearSkinColor';
 import Weather from '../views/WeatherPanel';
 
 import AppContextConnect from './AppContextConnect';
 import {AppContext} from './AppContextProvider';
-import useLinearSkinColor from '../useLinearSkinColor/useLinearSkinColor';
 
 import css from './App.module.less';
 
