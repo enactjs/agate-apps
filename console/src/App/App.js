@@ -193,6 +193,7 @@ const AppBase = kind({
 	},
 
 	render: ({
+		fakeTimeEnabled,
 		index,
 		layoutArrangeable,
 		layoutArrangeableToggle,
@@ -221,7 +222,6 @@ const AppBase = kind({
 		showWelcomePopup,
 		skinName,
 		userId,
-		fakeTimeEnabled,
 		...rest
 	}) => {
 		delete rest.accent;
