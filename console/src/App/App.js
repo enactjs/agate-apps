@@ -19,6 +19,7 @@ import UserAvatar from '../components/UserAvatar';
 import UserSelectionPopup from '../components/UserSelectionPopup';
 import WelcomePopup from '../components/WelcomePopup';
 import ServiceLayer from '../data/ServiceLayer';
+import useLinearSkinColor from '../useLinearSkinColor/useLinearSkinColor';
 import AppList from '../views/AppList';
 import Dashboard from '../views/Dashboard';
 import Home from '../views/Home';
@@ -29,7 +30,6 @@ import Phone from '../views/Phone';
 import Radio from '../views/Radio';
 import Settings from '../views/Settings';
 import ThemeSettings from '../views/ThemeSettings';
-import useLinearSkinColor from '../useLinearSkinColor/useLinearSkinColor';
 import Weather from '../views/WeatherPanel';
 
 import AppContextConnect from './AppContextConnect';
