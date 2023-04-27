@@ -11,7 +11,7 @@ import kind from '@enact/core/kind';
 import {Cell, Column, Row} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {Component, useCallback, useContext, useEffect, useMemo, useState} from 'react';
+import {Component, useContext, useEffect, useMemo, useState} from 'react';
 
 import Clock from '../components/Clock';
 // import ProfileDrawer from '../components/ProfileDrawer';
@@ -97,6 +97,7 @@ const AppBase = kind({
 		accent: PropTypes.string,
 		defaultIndex: PropTypes.number,
 		endNavigation: PropTypes.func,
+		fakeTimeEnabled: PropTypes.bool,
 		highlight: PropTypes.string,
 		index: PropTypes.number,
 		layoutArrangeable: PropTypes.bool,
@@ -220,6 +221,7 @@ const AppBase = kind({
 		showWelcomePopup,
 		skinName,
 		userId,
+		fakeTimeEnabled,
 		...rest
 	}) => {
 		delete rest.accent;
@@ -233,10 +235,6 @@ const AppBase = kind({
 		const context = useContext(AppContext);
 		const [fakeTime, setFakeTime] = useState(false);
 		const dynamicColorActive = context.userSettings.dynamicColor;
-
-		const handleFakeState = useCallback(() => {
-			setFakeTime(value => !value);
-		}, [setFakeTime]);
 
 		const accentColors = {};
 		const highlightColors = {};
@@ -266,6 +264,10 @@ const AppBase = kind({
 		timestamps.forEach((element, ElIndex) => {
 			highlightColors[element] = highlightColorsArray[ElIndex];
 		});
+
+		useEffect(() => {
+			setFakeTime(fakeTimeEnabled);
+		}, [fakeTimeEnabled]);
 
 		useEffect (() => {
 			let changeColor;
@@ -410,7 +412,7 @@ const AppBase = kind({
 						onReloadApp={reloadApp}
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
-					<ThemeSettings fakeTime={fakeTime} onSelect={onSelect} onSendSkinSettings={sendSkinSettings} onToggleDynamicColor={onToggleDynamicColor} onToggleFakeTime={handleFakeState} prevIndex={prevIndex} />
+					<ThemeSettings fakeTime={fakeTime} onSelect={onSelect} onSendSkinSettings={sendSkinSettings} onToggleDynamicColor={onToggleDynamicColor} prevIndex={prevIndex} />
 					<Weather />
 					<Dashboard
 						arrangeable={layoutArrangeable}

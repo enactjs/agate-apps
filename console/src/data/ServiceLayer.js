@@ -42,6 +42,10 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			this.destinationReached = false;
 		}
 
+		state = {
+			fakeTimeEnabled: false
+		}
+
 		componentDidMount () {
 			this.initializeConnection();
 			// this.generateFakeLocations(); // Fake locations generator (for testing only)
@@ -336,6 +340,10 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 			this.maps.delete(map);
 		};
 
+		enableFakeTime = (enabled) => {
+			this.setState({fakeTimeEnabled: enabled})
+		}
+
 		render () {
 			const {...rest} = this.props;
 			delete rest.autonomous;
@@ -350,8 +358,10 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 				<Fragment>
 					<ServiceLayerContext.Provider value={{getMap: this.getMap, onMapUnmount: this.onMapUnmount}}>
 						<Communicator
+							fakeTimeHost={appConfig.fakeTimeServerHost}
 							host={appConfig.communicationServerHost}
 							onReload={this.handleReload}
+							enableFakeTime={this.enableFakeTime}
 							ref={this.comm}
 						/>
 						<PureWrapped
@@ -361,6 +371,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 							resetPosition={this.resetPosition}
 							sendSkinSettings={this.sendSkinSettings}
 							sendVideo={this.sendVideo}
+							fakeTimeEnabled={this.state.fakeTimeEnabled}
 						/>
 					</ServiceLayerContext.Provider>
 				</Fragment>
