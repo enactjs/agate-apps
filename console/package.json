@@ -7,7 +7,7 @@
 	"scripts": {
 		"prepare-config": "cpy --no-overwrite --rename=config.js config.sample.js .",
 		"serve": "npm run prepare-config && enact serve",
-		"serve:fakeTime": "set REACT_APP_FAKE_TIME=true&& npm run serve",
+		"serve-fakeTime": "set REACT_APP_FAKE_TIME=true&& npm run serve",
 		"pack": "npm run prepare-config && enact pack",
 		"pack-p": "npm run prepare-config && enact pack -p",
 		"watch": "npm run prepare-config && enact pack --watch",

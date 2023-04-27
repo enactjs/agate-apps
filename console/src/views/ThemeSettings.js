@@ -190,12 +190,10 @@ const ThemeSettingsBase = (props) => {
 ThemeSettingsBase.propTypes = {
 	alignLabel: PropTypes.string,
 	css: PropTypes.object,
-	fakeTime: PropTypes.bool,
 	label: PropTypes.string,
 	onSelect: PropTypes.func,
 	onSendSkinSettings: PropTypes.func,
 	onToggleDynamicColor: PropTypes.func,
-	onToggleFakeTime: PropTypes.func,
 	prevIndex: PropTypes.number,
 	skin: PropTypes.string
 };
