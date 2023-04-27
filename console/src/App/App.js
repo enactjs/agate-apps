@@ -11,7 +11,7 @@ import kind from '@enact/core/kind';
 import {Cell, Column, Row} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {Component, useCallback, useContext, useEffect, useMemo, useState} from 'react';
+import {Component, useContext, useEffect, useMemo} from 'react';
 
 import Clock from '../components/Clock';
 // import ProfileDrawer from '../components/ProfileDrawer';
@@ -229,14 +229,10 @@ const AppBase = kind({
 		delete rest.updateAppState;
 
 		const copperSkinFamily = (skinName === 'copper' || skinName === 'cobalt');
+		const fakeTime = process.env.REACT_APP_FAKE_TIME === 'true';
 
 		const context = useContext(AppContext);
-		const [fakeTime, setFakeTime] = useState(false);
 		const dynamicColorActive = context.userSettings.dynamicColor;
-
-		const handleFakeState = useCallback(() => {
-			setFakeTime(value => !value);
-		}, [setFakeTime]);
 
 		const accentColors = {};
 		const highlightColors = {};
@@ -410,7 +406,7 @@ const AppBase = kind({
 						onReloadApp={reloadApp}
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
-					<ThemeSettings fakeTime={fakeTime} onSelect={onSelect} onSendSkinSettings={sendSkinSettings} onToggleDynamicColor={onToggleDynamicColor} onToggleFakeTime={handleFakeState} prevIndex={prevIndex} />
+					<ThemeSettings onSelect={onSelect} onSendSkinSettings={sendSkinSettings} onToggleDynamicColor={onToggleDynamicColor} prevIndex={prevIndex} />
 					<Weather />
 					<Dashboard
 						arrangeable={layoutArrangeable}

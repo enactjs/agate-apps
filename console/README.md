@@ -40,9 +40,9 @@ information on licenses, please see the [npm documentation](https://docs.npmjs.c
 
 In the project directory, you can run:
 
-### `npm run serve`
+### `npm run serve` and `npm run serve:fakeTime`
 
-Builds and serves the app in the development mode.<br>
+Builds and serves the app in the development mode, and with the `:fakeTime`, application will use the fake-time option.<br>
 Open [http://localhost:8080](http://localhost:8080) to view it in the browser.
 
 The page will reload if you make edits.<br>
