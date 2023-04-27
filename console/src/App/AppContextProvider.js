@@ -61,7 +61,8 @@ const defaultUserSettings = {
 	name: '',
 	skin: 'carbon',
 	skinVariants: 'night',
-	skinVariantsManual: 'night'
+	skinVariantsManual: 'night',
+	useFakeTime: false
 	// topLocations: []
 };
 
