@@ -17,6 +17,7 @@ import UserAvatar from '../components/UserAvatar';
 import UserSelectionPopup from '../components/UserSelectionPopup';
 import WelcomePopup from '../components/WelcomePopup';
 import ServiceLayer from '../data/ServiceLayer';
+import screenTypes from '../../screenTypes.json';
 import AppList from '../views/AppList';
 import Dashboard from '../views/Dashboard';
 import Home from '../views/Home';
@@ -30,7 +31,6 @@ import ThemeSettings from '../views/ThemeSettings';
 import Weather from '../views/WeatherPanel';
 
 import AppContextConnect from './AppContextConnect';
-import screenTypes from '../../screenTypes.json';
 
 import css from './App.module.less';
 
