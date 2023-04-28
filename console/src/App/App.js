@@ -95,6 +95,7 @@ const AppBase = kind({
 		defaultIndex: PropTypes.number,
 		dynamicColor: PropTypes.bool,
 		endNavigation: PropTypes.func,
+		fakeTime: PropTypes.number,
 		highlight: PropTypes.string,
 		index: PropTypes.number,
 		layoutArrangeable: PropTypes.bool,
@@ -198,6 +199,7 @@ const AppBase = kind({
 
 	render: ({
 		accent,
+		fakeTime,
 		highlight,
 		index,
 		layoutArrangeable,
@@ -293,7 +295,14 @@ const AppBase = kind({
 								userId={userId - 1}
 								onClick={onToggleUserSelectionPopup}
 							/>
-							{copperSkinFamily ? <Clock className={css.clock} /> : null}
+							{copperSkinFamily ?
+								<Clock
+									className={css.clock}
+									dynamicColor={context.userSettings.dynamicColor}
+									fakeTime={context.userSettings.useFakeTime}
+									fakeTimeIndex={fakeTime}
+								/>
+							: null}
 						</div>
 					</beforeTabs>
 					<afterTabs>
@@ -301,7 +310,13 @@ const AppBase = kind({
 							className={css.afterTabs}
 							align={(copperSkinFamily ? 'start center' : 'center space-around')}
 						>
-							{copperSkinFamily ? null : <Cell shrink><Clock /></Cell>}
+							{copperSkinFamily ? null : <Cell shrink>
+								<Clock
+									dynamicColor={context.userSettings.dynamicColor}
+									fakeTime={context.userSettings.useFakeTime}
+									fakeTimeIndex={fakeTime}
+								/>
+							</Cell>}
 							<Cell shrink className={css.buttons}>
 								<Row align={(copperSkinFamily ? 'center start' : 'center space-around')}>
 									<Cell shrink>
@@ -482,9 +497,9 @@ const AppDecorator = compose(
 const ThemedAppBase = (props) => {
 	const {accent, highlight, skinVariants, useFakeTime, ...rest} = props;
 
-	const [newAccent, newHighlight, newSkinVariants] = useLinearSkinColor(accent, highlight, skinVariants, useFakeTime);
+	const [fakeTime, newAccent, newHighlight, newSkinVariants] = useLinearSkinColor(accent, highlight, skinVariants, useFakeTime);
 
-	return (<AppBase accent={newAccent} highlight={newHighlight} skinVariants={newSkinVariants} {...rest} />);
+	return (<AppBase accent={newAccent} fakeTime={fakeTime} highlight={newHighlight} skinVariants={newSkinVariants} {...rest} />);
 };
 
 ThemedAppBase.propTypes = {

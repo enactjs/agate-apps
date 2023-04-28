@@ -15,7 +15,10 @@ const ClockBase = kind({
 
 	propTypes: {
 		date: PropTypes.object.isRequired,
-		orientation: PropTypes.string
+		dynamicColor: PropTypes.bool,
+		fakeTime: PropTypes.bool,
+		fakeTimeIndex: PropTypes.number,
+		orientation: PropTypes.string,
 	},
 
 	defaultProps: {
@@ -31,13 +34,30 @@ const ClockBase = kind({
 	computed: {
 		dayOfWeek: ({date}) => dayNames[date.getDay()],
 		month: ({date}) => monthNames[date.getMonth()],
-		time: ({date}) => {
-			let hour = date.getHours() % 12 || 12,
-				min = zeroPad(date.getMinutes()),
-				// sec = zeroPad(date.getSeconds()),
-				ampm = (date.getHours() >= 12 ? 'pm' : 'am');
+		time: ({date, dynamicColor, fakeTime, fakeTimeIndex}) => {
+			if (dynamicColor && fakeTime) {
+				let hour = Math.floor(fakeTimeIndex / 12);
+				let min = fakeTimeIndex % 12 * 5  || '00';
+				let ampm;
+				if (min === 5) min = '0' + min;
+				if (hour >= 12)
+				{
+					ampm = 'pm';
+					hour -= 12;
+				} else
+				{
+					ampm = 'am';
+				}
 
-			return `${hour}:${min} ${ampm}`;
+				return `${hour + 1}:${min} ${ampm}`;
+			} else {
+				let hour = date.getHours() % 12 || 12,
+					min = zeroPad(date.getMinutes()),
+					// sec = zeroPad(date.getSeconds()),
+					ampm = (date.getHours() >= 12 ? 'pm' : 'am');
+
+				return `${hour}:${min} ${ampm}`;
+			}
 		}
 	},
 
