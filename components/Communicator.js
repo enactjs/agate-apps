@@ -22,6 +22,8 @@ const handleShowETA = handle(
 class Communicator extends Component {
 
 	static propTypes = {
+		enableFakeTime: PropTypes.func,
+		fakeTimeHost: PropTypes.string,
 		host: PropTypes.string,
 		noAutoConnect: PropTypes.bool,
 		onReload: PropTypes.func,
@@ -30,7 +32,8 @@ class Communicator extends Component {
 	};
 
 	static defaultProps = {
-		host: 'localhost:3000'
+		host: 'localhost:3000',
+		fakeTimeHost: 'localhost:3002'
 	};
 
 	constructor (props) {
@@ -61,12 +64,17 @@ class Communicator extends Component {
 
 	_connect (screenId) {
 		this.socket = openSocket(`ws://${this.props.host}`);
+		let fakeTimeSocket = openSocket(`ws://${this.props.fakeTimeHost}`);
 		if (this.props.onReset) {
 			this.socket.on('RESET_COPILOT', this.props.onReset);
 		}
 
 		if (this.props.onReload) {
 			this.socket.on('RELOAD_APP', this.props.onReload);
+		}
+
+		if (this.props.enableFakeTime) {
+			fakeTimeSocket.on('FAKE_TIME', this.props.enableFakeTime);
 		}
 
 		this.socket.on(`SKIN_SETTINGS`, this.handleChangeSkinSettings);

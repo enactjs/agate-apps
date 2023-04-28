@@ -16,5 +16,9 @@ export default {
 	// A "host" is the combination of the hostname (like localhost) and a port number.
 	// Most likely, this will be running on the same machine as this console app, but not mandatory.
 	// Ex: localhost:3000
-	communicationServerHost: 'localhost:3000'
+	communicationServerHost: 'localhost:3000',
+
+	// The host for the server that allows the console to enable the fake-time option at the runtime
+	// Ex: localhost:3002
+	fakeTimeServerHost: 'localhost:3002'
 };

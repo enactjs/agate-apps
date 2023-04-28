@@ -47,6 +47,11 @@ Open [http://localhost:8080](http://localhost:8080) to view it in the browser.
 
 The page will reload if you make edits.<br>
 
+
+### `npm run fakeTime`
+
+Can be run after `npm run serve`. This will allow to enable/disable the fake-time in the application at the runtime.
+
 ### `npm run pack` and `npm run pack-p`
 
 Builds the project in the working directory. Specifically, `pack` builds in development mode with code un-minified and with debug code included, whereas `pack-p` builds in production mode, with everything minified and optimized for performance. Be sure to avoid shipping or performance testing on development mode builds.

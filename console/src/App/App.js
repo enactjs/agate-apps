@@ -95,7 +95,7 @@ const AppBase = kind({
 		defaultIndex: PropTypes.number,
 		dynamicColor: PropTypes.bool,
 		endNavigation: PropTypes.func,
-		fakeTime: PropTypes.number,
+		fakeTimeEnabled: PropTypes.bool,
 		highlight: PropTypes.string,
 		index: PropTypes.number,
 		layoutArrangeable: PropTypes.bool,
@@ -151,11 +151,6 @@ const AppBase = kind({
 				state.userSettings.dynamicColor = ev.selected;
 			});
 		},
-		onToggleFakeTime: (ev, {updateAppState}) => {
-			updateAppState((state) => {
-				state.userSettings.useFakeTime = ev.selected;
-			});
-		},
 		onToggleWelcomePopup: (ev, {updateAppState}) => {
 			updateAppState((state) => {
 				state.appState.showWelcomePopup = !state.appState.showWelcomePopup;
@@ -199,7 +194,7 @@ const AppBase = kind({
 
 	render: ({
 		accent,
-		fakeTime,
+		fakeTimeEnabled,
 		highlight,
 		index,
 		layoutArrangeable,
@@ -210,7 +205,6 @@ const AppBase = kind({
 		onToggleDateTimePopup,
 		onToggleDestinationReachedPopup,
 		onToggleDynamicColor,
-		onToggleFakeTime,
 		onTogglePopup,
 		// onToggleProfileEdit,
 		onToggleUserSelectionPopup,
@@ -241,8 +235,13 @@ const AppBase = kind({
 		const copperSkinFamily = (skinName === 'copper' || skinName === 'cobalt');
 
 		const context = useContext(AppContext);
-
 		const dynamicColorActive = context.userSettings.dynamicColor;
+
+		useEffect(() => {
+			context.updateAppState((state) => {
+				state.userSettings.useFakeTime = fakeTimeEnabled;
+			});
+		}, [fakeTimeEnabled]); // eslint-disable-line react-hooks/exhaustive-deps
 
 		useEffect (() => {
 			context.updateAppState((state) => {
@@ -251,6 +250,7 @@ const AppBase = kind({
 				state.userSettings.skinVariantsManual = context.userSettings.skinVariants;
 			});
 		}, []); // eslint-disable-line react-hooks/exhaustive-deps
+
 		useEffect(() => {
 			if (dynamicColorActive) {
 				context.updateAppState((state) => {
@@ -358,7 +358,7 @@ const AppBase = kind({
 						onReloadApp={reloadApp}
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
-					<ThemeSettings onSelect={onSelect} onSendSkinSettings={sendSkinSettings} onToggleDynamicColor={onToggleDynamicColor} onToggleFakeTime={onToggleFakeTime} prevIndex={prevIndex} />
+					<ThemeSettings onSelect={onSelect} onSendSkinSettings={sendSkinSettings} onToggleDynamicColor={onToggleDynamicColor} prevIndex={prevIndex} />
 					<Weather />
 					<Dashboard
 						arrangeable={layoutArrangeable}
