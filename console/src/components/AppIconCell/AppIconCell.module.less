@@ -4,6 +4,7 @@
 	// styles can be put here
 	margin: 0;
 	min-width: 99px;
+
 	.applySkins({
 		.label {
 			font-size: 24px;
@@ -13,6 +14,14 @@
 
 // Theme-specific rules
 .applySkins({
+	:global(.silicon) {
+		.iconCell {
+			.labeledIconButton {
+				min-width: 96px;
+			}
+		}
+	}
+
 	:global(.cobalt),
 	:global(.copper) {
 		.iconCell {

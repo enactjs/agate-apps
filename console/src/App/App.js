@@ -17,6 +17,7 @@ import UserAvatar from '../components/UserAvatar';
 import UserSelectionPopup from '../components/UserSelectionPopup';
 import WelcomePopup from '../components/WelcomePopup';
 import ServiceLayer from '../data/ServiceLayer';
+import screenTypes from '../../screenTypes.json';
 import AppList from '../views/AppList';
 import Dashboard from '../views/Dashboard';
 import Home from '../views/Home';
@@ -419,11 +420,10 @@ const AppDecorator = compose(
 		updateAppState,
 		userId
 	})),
-	AppIndex,
-	ThemeDecorator
+	AppIndex
 );
 
-const App = AppDecorator(AppBase);
+const App = AppDecorator(ThemeDecorator({ri: {screenTypes}}, AppBase));
 
 export default App;
 export {
