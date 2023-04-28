@@ -44,7 +44,7 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 
 		state = {
 			fakeTimeEnabled: false
-		}
+		};
 
 		componentDidMount () {
 			this.initializeConnection();

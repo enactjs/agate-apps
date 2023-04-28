@@ -39,11 +39,11 @@ const runTerminal = () => {
 		if (input === '\u0003') { // Handle CTRL+C
 			process.exit();
 		} else if (input === '\u001B[A') { // Handle UP arrow
-			selectedOption = selectedOption === undefined ? options.length - 1 : (selectedOption - 1 + options.length) % options.length;
+			selectedOption = selectedOption === undefined ? options.length - 1 : (selectedOption - 1 + options.length) % options.length; // eslint-disable-line no-undefined
 			clearScreen();
 			displayOptions();
 		} else if (input === '\u001B[B') { // Handle DOWN arrow
-			selectedOption = selectedOption === undefined ? 0 : (selectedOption + 1) % options.length;
+			selectedOption = selectedOption === undefined ? 0 : (selectedOption + 1) % options.length; // eslint-disable-line no-undefined
 			clearScreen();
 			displayOptions();
 		}

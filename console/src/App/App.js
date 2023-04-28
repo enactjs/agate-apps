@@ -303,8 +303,7 @@ const AppBase = kind({
 									dynamicColor={context.userSettings.dynamicColor}
 									fakeTime={fakeTimeEnabled}
 									fakeTimeIndex={fakeTime}
-								/>
-							: null}
+								/> : null}
 						</div>
 					</beforeTabs>
 					<afterTabs>
