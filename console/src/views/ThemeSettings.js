@@ -157,7 +157,7 @@ const ThemeSettingsBase = kind({
 									<HighlightColorSetting label="Highlight Color" onClick={onChange}>{swatchPalette}</HighlightColorSetting>
 								</FormRow>
 							</Cell>
-							<Cell className={css.spacedItem}>
+							<Cell className={css.spacedItem} shrink>
 								<SkinSetting label="Skin:" onClick={onChange}>
 									{skinNames}
 								</SkinSetting>
