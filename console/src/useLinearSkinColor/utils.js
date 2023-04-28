@@ -101,7 +101,7 @@ const HSLToHex = ({h, s, l}) => {
 	return "#" + r + g + b;
 };
 
-export function getColorsDayMode (baseColor, numColors) {
+export const generateColorsDayMode = (baseColor, numColors) => {
 	// Create an array to hold the colors
 	let colors = [baseColor];
 
@@ -142,9 +142,9 @@ export function getColorsDayMode (baseColor, numColors) {
 	}
 
 	return colors;
-}
+};
 
-export function getColorsNightMode (baseColor, numColors) {
+export const generateColorsNightMode = (baseColor, numColors) => {
 	// Create an array to hold the colors
 	let colors = [baseColor];
 
@@ -186,7 +186,7 @@ export function getColorsNightMode (baseColor, numColors) {
 	}
 
 	return colors;
-}
+};
 
 export const getIndex = () => {
 	let minute = parseInt(new Date().toLocaleTimeString('en-US', {hour12: false}).substring(0, 5).slice(3));
