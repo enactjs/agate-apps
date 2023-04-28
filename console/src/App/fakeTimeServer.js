@@ -12,14 +12,14 @@ let enabled = true;
 let selectedOption = 0;
 
 const options = [
-	{ name: 'Yes', value: 0 },
-	{ name: 'No', value: 1 }
+	{name: 'Yes', value: 0},
+	{name: 'No', value: 1}
 ];
 
 const clearScreen = () => {
 	process.stdout.moveCursor(0, -5);
 	process.stdout.clearScreenDown();
-}
+};
 
 const displayOptions = () => {
 	enabled = selectedOption === 0;
@@ -29,7 +29,7 @@ const displayOptions = () => {
 		const isSelected = index === selectedOption;
 		process.stdout.write(`${isSelected ? '>' : ' '} ${option.name}\n`);
 	});
-}
+};
 
 const runTerminal = () => {
 	process.stdin.setRawMode(true);
@@ -48,7 +48,7 @@ const runTerminal = () => {
 			displayOptions();
 		}
 	});
-}
+};
 
 http.listen(3002, () => {
 	runTerminal();
@@ -57,5 +57,5 @@ http.listen(3002, () => {
 io.on('connection', socket => {
 	setInterval(() => {
 		socket.emit('FAKE_TIME', enabled);
-	}, 1000)
+	}, 1000);
 });

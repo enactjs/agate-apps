@@ -341,8 +341,8 @@ const ServiceLayerBase = hoc((configHoc, Wrapped) => {
 		};
 
 		enableFakeTime = (enabled) => {
-			this.setState({fakeTimeEnabled: enabled})
-		}
+			this.setState({fakeTimeEnabled: enabled});
+		};
 
 		render () {
 			const {...rest} = this.props;
