@@ -300,7 +300,7 @@ const AppBase = kind({
 									className={css.clock}
 									dynamicColor={context.userSettings.dynamicColor}
 									fakeTime={context.userSettings.useFakeTime}
-									fakeTimeIndex={fakeTime}
+									fakeTimeIndex={fakeTimeEnabled}
 								/>
 							: null}
 						</div>
@@ -314,7 +314,7 @@ const AppBase = kind({
 								<Clock
 									dynamicColor={context.userSettings.dynamicColor}
 									fakeTime={context.userSettings.useFakeTime}
-									fakeTimeIndex={fakeTime}
+									fakeTimeIndex={fakeTimeEnabled}
 								/>
 							</Cell>}
 							<Cell shrink className={css.buttons}>
