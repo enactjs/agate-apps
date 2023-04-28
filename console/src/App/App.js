@@ -95,6 +95,7 @@ const AppBase = kind({
 		defaultIndex: PropTypes.number,
 		dynamicColor: PropTypes.bool,
 		endNavigation: PropTypes.func,
+		fakeTime: PropTypes.number,
 		fakeTimeEnabled: PropTypes.bool,
 		highlight: PropTypes.string,
 		index: PropTypes.number,
@@ -194,6 +195,7 @@ const AppBase = kind({
 
 	render: ({
 		accent,
+		fakeTime,
 		fakeTimeEnabled,
 		highlight,
 		index,
@@ -299,8 +301,8 @@ const AppBase = kind({
 								<Clock
 									className={css.clock}
 									dynamicColor={context.userSettings.dynamicColor}
-									fakeTime={context.userSettings.useFakeTime}
-									fakeTimeIndex={fakeTimeEnabled}
+									fakeTime={fakeTimeEnabled}
+									fakeTimeIndex={fakeTime}
 								/>
 							: null}
 						</div>
@@ -313,8 +315,8 @@ const AppBase = kind({
 							{copperSkinFamily ? null : <Cell shrink>
 								<Clock
 									dynamicColor={context.userSettings.dynamicColor}
-									fakeTime={context.userSettings.useFakeTime}
-									fakeTimeIndex={fakeTimeEnabled}
+									fakeTime={fakeTimeEnabled}
+									fakeTimeIndex={fakeTime}
 								/>
 							</Cell>}
 							<Cell shrink className={css.buttons}>
