@@ -101,7 +101,7 @@ const useLinearSkinColor = (accentColor, highlightColor, skinVariants, useFakeTi
 					fakeIndex = 0;
 				}
 			}
-		}, useFakeTime ? 100 : 30 * 1000);
+		}, useFakeTime ? 500 : 30 * 1000);
 
 		return () => {
 			clearInterval(changeColor);
@@ -109,7 +109,7 @@ const useLinearSkinColor = (accentColor, highlightColor, skinVariants, useFakeTi
 		};
 	}, [useFakeTime]); // eslint-disable-line react-hooks/exhaustive-deps
 
-	return [linearAccentColor, linearHighlightColor, linearSkinVariants];
+	return [fakeIndex, linearAccentColor, linearHighlightColor, linearSkinVariants];
 };
 
 export default useLinearSkinColor;
