@@ -105,7 +105,6 @@ const useLinearSkinColor = (accentColor, highlightColor, skinVariants, useFakeTi
 
 		return () => {
 			clearInterval(changeColor);
-			fakeIndex = 0;
 		};
 	}, [accentColorsArray, highlightColorsArray, useFakeTime]);
 
