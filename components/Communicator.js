@@ -32,8 +32,8 @@ class Communicator extends Component {
 	};
 
 	static defaultProps = {
-		host: 'localhost:3000',
-		fakeTimeHost: 'localhost:3002'
+		fakeTimeHost: 'localhost:3002',
+		host: 'localhost:3000'
 	};
 
 	constructor (props) {

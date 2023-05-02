@@ -18,7 +18,7 @@ const ClockBase = kind({
 		dynamicColor: PropTypes.bool,
 		fakeTime: PropTypes.bool,
 		fakeTimeIndex: PropTypes.number,
-		orientation: PropTypes.string,
+		orientation: PropTypes.string
 	},
 
 	defaultProps: {
@@ -40,12 +40,10 @@ const ClockBase = kind({
 				let min = fakeTimeIndex % 12 * 5  || '00';
 				let ampm;
 				if (min === 5) min = '0' + min;
-				if (hour >= 12)
-				{
+				if (hour >= 12) {
 					ampm = 'pm';
 					hour -= 12;
-				} else
-				{
+				} else {
 					ampm = 'am';
 				}
 
