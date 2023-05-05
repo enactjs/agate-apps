@@ -45,7 +45,7 @@ const useLinearSkinColor = (accentColor, highlightColor, skinVariants, useFakeTi
 	useEffect(() => {
 		setLinearAccentColor(accentColors[index]);
 		setLinearHighlightColor(highlightColors[index]);
-	}, []);
+	}, [index]);
 
 	useEffect(() => {
 		let changeColor = setInterval(() => {
@@ -85,7 +85,7 @@ const useLinearSkinColor = (accentColor, highlightColor, skinVariants, useFakeTi
 		return () => {
 			clearInterval(changeColor);
 		};
-	}, [accentColorsArray, highlightColorsArray, useFakeTime]);
+	}, [accentColorsArray, highlightColorsArray, index, useFakeTime]);
 
 	return [fakeIndex, linearAccentColor, linearHighlightColor, linearSkinVariants];
 };
