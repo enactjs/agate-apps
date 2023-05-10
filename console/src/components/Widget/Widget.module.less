@@ -1,4 +1,5 @@
 @import "@enact/agate/styles/variables.less";
+@import "@enact/agate/styles/skin.less";
 
 .widget {
     height: 100%;
@@ -6,3 +7,32 @@
     box-sizing: border-box;
     padding: @agate-app-keepout * 2;
 }
+
+.applySkins({
+    :global(.silicon) {
+        .iconLabel {
+            padding-bottom: (@agate-labelediconbutton-small-icon-button-height / 2);
+        }
+
+        .labeledIconButton {
+            &.large {
+                padding: 0;
+                &.below {
+                    max-width: @agate-labelediconbutton-smallest-max-width;
+                    min-width: @agate-labelediconbutton-smallest-min-width;
+                }
+
+                .button {
+                    height: @agate-labelediconbutton-small-icon-button-height;
+                    width: @agate-labelediconbutton-small-icon-button-height;
+
+                    .icon {
+                        font-size: @agate-labelediconbutton-small-icon-font-size;
+                        height: @agate-labelediconbutton-small-icon-height;
+                        line-height: @agate-labelediconbutton-small-icon-height;
+                    }
+                }
+            }
+        }
+    }
+});

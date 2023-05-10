@@ -69,12 +69,16 @@ const WidgetBase = kind({
 		delete rest.medium;
 		delete rest.small;
 
+		console.log(css)
+
 		const relativeSize = (containerShape && containerShape.size && containerShape.size.relative);
 		switch (relativeSize) {
 			case 'list': return (
 				<Row align="center">
-					<Cell component={LabeledIconButton} css={css} icon={icon} shrink />
-					<Cell>{title}</Cell>
+					<Cell shrink>
+						<LabeledIconButton css={css} icon={icon}/>
+					</Cell>
+					<Cell className={css.iconLabel}>{title}</Cell>
 				</Row>
 			);
 			default: return (
