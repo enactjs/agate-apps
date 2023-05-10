@@ -1,5 +1,5 @@
 // HOC that receives 2 colors (accent and highlight) and returns 2 different colors
-import {useEffect, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 
 import {generateColorsDayMode, generateColorsNightMode, generateTimestamps, getIndex} from './utils';
 
@@ -7,39 +7,31 @@ import {generateColorsDayMode, generateColorsNightMode, generateTimestamps, getI
 let fakeIndex = 0;
 let accentColors = {};
 let highlightColors = {};
-const index = getIndex();
+const timestamps = generateTimestamps(5);
+
+const generateColors = (color) => {
+	const dayColorsArray = generateColorsDayMode(color, 72);
+	const nightColorsArray = generateColorsNightMode(color, 72);
+	const array = [...nightColorsArray.reverse(), ...dayColorsArray, ...dayColorsArray.reverse(), ...nightColorsArray.reverse()];
+	const offset = array.splice(0, 12);
+
+	return [...array, ...offset];
+}
 
 const useLinearSkinColor = (accentColor, highlightColor, skinVariants, useFakeTime = false) => {
 	const [linearAccentColor, setLinearAccentColor] = useState(accentColor);
 	const [linearHighlightColor, setLinearHighlightColor] = useState(highlightColor);
 	const [linearSkinVariants, setLinearSkinVariants] = useState(skinVariants);
+	const index = getIndex();
 
-	const timestamps = generateTimestamps(5);
-
-	const accentColorsArray = () => {
-		const dayColorsArray = generateColorsDayMode(linearAccentColor, 72);
-		const nightColorsArray = generateColorsNightMode(linearAccentColor, 72);
-		const array = [...nightColorsArray.reverse(), ...dayColorsArray, ...dayColorsArray.reverse(), ...nightColorsArray.reverse()];
-		const offset = array.splice(0, 12);
-
-		return [...array, ...offset];
-	};
-
-	const highlightColorsArray = () => {
-		const dayColorsArray = generateColorsDayMode(linearHighlightColor, 72);
-		const nightColorsArray = generateColorsNightMode(linearHighlightColor, 72);
-		const array = [...dayColorsArray.reverse(), ...nightColorsArray, ...nightColorsArray.reverse(), ...dayColorsArray.reverse()];
-		const offset = array.splice(0, 12);
-
-		return [...array, ...offset];
-	};
-
+	const accentColorsArray = useMemo(() => generateColors(accentColor), [accentColor]);
 	timestamps.forEach((element, index) => {	// eslint-disable-line
-		accentColors[element] = accentColorsArray()[index];
+		accentColors[element] = accentColorsArray[index];
 	});
 
+	const highlightColorsArray = useMemo(() => generateColors(highlightColor), [highlightColor]);
 	timestamps.forEach((element, index) => {	// eslint-disable-line
-		highlightColors[element] = highlightColorsArray()[index];
+		highlightColors[element] = highlightColorsArray[index];
 	});
 
 	useEffect(() => {
@@ -53,20 +45,7 @@ const useLinearSkinColor = (accentColor, highlightColor, skinVariants, useFakeTi
 	useEffect(() => {
 		setLinearAccentColor(accentColors[index]);
 		setLinearHighlightColor(highlightColors[index]);
-	}, []);
-
-	useEffect(() => {
-		if (!useFakeTime) {
-			let skinVariant;
-			if (index >= '06:00' && index < '18:00') {
-				skinVariant = '';
-				setLinearSkinVariants(skinVariant);
-			} else {
-				skinVariant = 'night';
-				setLinearSkinVariants(skinVariant);
-			}
-		}
-	}, [useFakeTime]);
+	}, [index]);
 
 	useEffect(() => {
 		let changeColor = setInterval(() => {
@@ -92,8 +71,8 @@ const useLinearSkinColor = (accentColor, highlightColor, skinVariants, useFakeTi
 					setLinearSkinVariants(skinVariant);
 				}
 
-				setLinearAccentColor(accentColorsArray()[fakeIndex]);
-				setLinearHighlightColor(highlightColorsArray()[fakeIndex]);
+				setLinearAccentColor(accentColorsArray[fakeIndex]);
+				setLinearHighlightColor(highlightColorsArray[fakeIndex]);
 
 				if (fakeIndex < 287) {
 					fakeIndex++;
@@ -101,13 +80,12 @@ const useLinearSkinColor = (accentColor, highlightColor, skinVariants, useFakeTi
 					fakeIndex = 0;
 				}
 			}
-		}, useFakeTime ? 500 : 30 * 1000);
+		}, useFakeTime ? 1500 : 30 * 1000);
 
 		return () => {
 			clearInterval(changeColor);
-			fakeIndex = 0;
 		};
-	}, [useFakeTime]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [accentColorsArray, highlightColorsArray, index, useFakeTime]);
 
 	return [fakeIndex, linearAccentColor, linearHighlightColor, linearSkinVariants];
 };
