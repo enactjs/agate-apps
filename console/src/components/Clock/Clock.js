@@ -60,6 +60,8 @@ const ClockBase = kind({
 	},
 
 	render: ({date, dayOfWeek, month, time, ...rest}) => {
+		delete rest.dynamicColor;
+		delete rest.fakeTime;
 		delete rest.fakeTimeIndex;
 
 		return (
