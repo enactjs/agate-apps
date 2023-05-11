@@ -16,7 +16,7 @@ const generateColors = (color) => {
 	const offset = array.splice(0, 12);
 
 	return [...array, ...offset];
-}
+};
 
 const useLinearSkinColor = (accentColor, highlightColor, skinVariants, useFakeTime = false) => {
 	const [fakeIndexVar, setFakeIndexVar] = useState(fakeIndex); // eslint-disable-line
