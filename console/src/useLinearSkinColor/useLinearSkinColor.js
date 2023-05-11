@@ -19,6 +19,7 @@ const generateColors = (color) => {
 }
 
 const useLinearSkinColor = (accentColor, highlightColor, skinVariants, useFakeTime = false) => {
+	const [fakeIndexVar, setFakeIndexVar] = useState(fakeIndex); // eslint-disable-line
 	const [linearAccentColor, setLinearAccentColor] = useState(accentColor);
 	const [linearHighlightColor, setLinearHighlightColor] = useState(highlightColor);
 	const [linearSkinVariants, setLinearSkinVariants] = useState(skinVariants);
@@ -76,11 +77,13 @@ const useLinearSkinColor = (accentColor, highlightColor, skinVariants, useFakeTi
 
 				if (fakeIndex < 287) {
 					fakeIndex++;
+					setFakeIndexVar(fakeIndex);
 				} else {
 					fakeIndex = 0;
+					setFakeIndexVar(fakeIndex);
 				}
 			}
-		}, useFakeTime ? 1500 : 30 * 1000);
+		}, useFakeTime ? 500 : 30 * 1000);
 
 		return () => {
 			clearInterval(changeColor);
