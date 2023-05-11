@@ -59,12 +59,16 @@ const ClockBase = kind({
 		}
 	},
 
-	render: ({date, dayOfWeek, month, time, ...rest}) => (
-		<div {...rest}>
-			{dayOfWeek}, {month} {date.getDate()} <wbr />
-			{time}
-		</div>
-	)
+	render: ({date, dayOfWeek, month, time, ...rest}) => {
+		delete rest.fakeTimeIndex;
+
+		return (
+			<div {...rest}>
+				{dayOfWeek}, {month} {date.getDate()} <wbr />
+				{time}
+			</div>
+		);
+	}
 });
 
 const Tick = hoc((config, Wrapped) => {
