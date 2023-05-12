@@ -106,7 +106,7 @@ export const generateColorsDayMode = (baseColor, numColors) => {
 	let colors = [baseColor];
 
 	// Calculate the step size for increasing saturation and luminosity
-	let step = 0.05;
+	let step = 0.02;
 
 	// Loop through the number of colors requested
 	for (let i = 0; i < numColors - 1; i++) {
@@ -149,7 +149,7 @@ export const generateColorsNightMode = (baseColor, numColors) => {
 	let colors = [baseColor];
 
 	// Calculate the step size for increasing saturation and luminosity
-	let step = 0.01;
+	let step = 0.03;
 
 	// Loop through the number of colors requested
 	for (let i = 0; i < numColors - 1; i++) {
@@ -170,14 +170,14 @@ export const generateColorsNightMode = (baseColor, numColors) => {
 
 		let hslColor;
 		// Create the color in HSL format
-		if (saturation >= 30 && luminosity <= 55) {
+		if (saturation >= 30 && luminosity <= 65) {
 			hslColor = {h: currentColor.h, s: saturation, l: luminosity};
-		} else if (saturation < 30 && luminosity <= 55) {
+		} else if (saturation < 30 && luminosity <= 65) {
 			hslColor = {h: currentColor.h, s: 30, l: luminosity};
-		} else if (saturation >= 30 && luminosity > 55) {
-			hslColor = {h: currentColor.h, s: saturation, l: 55};
-		} else if (saturation < 30 && luminosity > 55) {
-			hslColor = {h: currentColor.h, s: 30, l: 55};
+		} else if (saturation >= 30 && luminosity > 65) {
+			hslColor = {h: currentColor.h, s: saturation, l: 65};
+		} else if (saturation < 30 && luminosity > 65) {
+			hslColor = {h: currentColor.h, s: 30, l: 65};
 		}
 
 		// Convert the color back to hex format and add it to the array
