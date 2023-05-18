@@ -92,7 +92,6 @@ const AppBase = kind({
 	propTypes: {
 		updateAppState: PropTypes.func.isRequired,
 		accent: PropTypes.string,
-		automaticSkinVariant: PropTypes.bool,
 		defaultIndex: PropTypes.number,
 		dynamicColor: PropTypes.bool,
 		endNavigation: PropTypes.func,
