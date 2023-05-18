@@ -11,7 +11,7 @@ import kind from '@enact/core/kind';
 import {Cell, Column, Row} from '@enact/ui/Layout';
 import PropTypes from 'prop-types';
 import compose from 'ramda/src/compose';
-import {Component, useContext, useEffect} from 'react';
+import {Component, useCallback, useContext, useEffect, useState} from 'react';
 
 import Clock from '../components/Clock';
 // import ProfileDrawer from '../components/ProfileDrawer';
@@ -92,6 +92,7 @@ const AppBase = kind({
 	propTypes: {
 		updateAppState: PropTypes.func.isRequired,
 		accent: PropTypes.string,
+		automaticSkinVariant: PropTypes.bool,
 		defaultIndex: PropTypes.number,
 		dynamicColor: PropTypes.bool,
 		endNavigation: PropTypes.func,
@@ -236,8 +237,13 @@ const AppBase = kind({
 
 		const copperSkinFamily = (skinName === 'copper' || skinName === 'cobalt');
 
+		const [automaticSkinVariant, setAutomaticSkinVariant] = useState(true);
 		const context = useContext(AppContext);
 		const dynamicColorActive = context.userSettings.dynamicColor;
+
+		const handleAutomaticSkinVariant = useCallback(() => {
+			setAutomaticSkinVariant(value => !value);
+		}, [setAutomaticSkinVariant]);
 
 		useEffect(() => {
 			context.updateAppState((state) => {
@@ -258,8 +264,8 @@ const AppBase = kind({
 				context.updateAppState((state) => {
 					state.userSettings.colorAccent = accent;
 					state.userSettings.colorHighlight = highlight;
-					state.userSettings.skinVariants = skinVariants;
-					sendSkinSettings({accent: accent, highlight: highlight, skin: context.userSettings.skin, skinVariants: skinVariants});
+					state.userSettings.skinVariants = automaticSkinVariant ? skinVariants : state.userSettings.skinVariantsManual;
+					sendSkinSettings({accent: accent, highlight: highlight, skin: context.userSettings.skin, skinVariants: state.userSettings.skinVariants});
 				});
 			} else {
 				context.updateAppState((state) => {
@@ -270,7 +276,7 @@ const AppBase = kind({
 				});
 			}
 
-		}, [accent, context.userSettings.dynamicColor, highlight, skinVariants]); // eslint-disable-line react-hooks/exhaustive-deps
+		}, [accent, automaticSkinVariant, context.userSettings.dynamicColor, highlight, skinVariants]); // eslint-disable-line react-hooks/exhaustive-deps
 
 		return (
 			// eslint-disable-next-line react/no-unknown-property
@@ -360,7 +366,14 @@ const AppBase = kind({
 						onReloadApp={reloadApp}
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
-					<ThemeSettings onSelect={onSelect} onSendSkinSettings={sendSkinSettings} onToggleDynamicColor={onToggleDynamicColor} prevIndex={prevIndex} />
+					<ThemeSettings
+						automaticSkinVariant={automaticSkinVariant}
+						onSelect={onSelect}
+						onSendSkinSettings={sendSkinSettings}
+						onToggleAutomaticSkinVariant={handleAutomaticSkinVariant}
+						onToggleDynamicColor={onToggleDynamicColor}
+						prevIndex={prevIndex}
+					/>
 					<Weather />
 					<Dashboard
 						arrangeable={layoutArrangeable}
