@@ -112,8 +112,23 @@ const ColorCheckboxItem = kind({
 	)
 });
 
+const SkinVariantCheckboxItem = kind({
+	name: 'SkinVariantCheckboxItem',
+
+	styles: {
+		css: componentCss,
+		className: 'skinVariantCheckboxItem'
+	},
+
+	render: ({...rest}) => (
+		<FormRow>
+			<Cell><CheckboxItem {...rest} /></Cell>
+		</FormRow>
+	)
+});
+
 const ThemeSettingsBase = (props) => {
-	const {onToggleDynamicColor, onSelect, prevIndex, ... rest} = props;
+	const {automaticSkinVariant, onToggleAutomaticSkinVariant, onToggleDynamicColor, onSelect, prevIndex, ... rest} = props;
 	const context = useContext(AppContext);
 
 	delete rest.onSendSkinSettings;
@@ -166,7 +181,7 @@ const ThemeSettingsBase = (props) => {
 							</SkinSetting>
 						</Cell>
 						<Cell shrink className={componentCss.spacedItem}>
-							<SkinVariantsSetting disabled={dynamicColorActive} label="Variant:" onClick={onChange}>
+							<SkinVariantsSetting disabled={dynamicColorActive && automaticSkinVariant} label="Variant:" onClick={onChange}>
 								{skinVariantsNames}
 							</SkinVariantsSetting>
 						</Cell>
@@ -179,6 +194,11 @@ const ThemeSettingsBase = (props) => {
 							<DynamicColorSetting onToggle={onToggleDynamicColor}>
 								Dynamic color change
 							</DynamicColorSetting>
+							{dynamicColorActive &&
+								<SkinVariantCheckboxItem selected={automaticSkinVariant} onToggle={onToggleAutomaticSkinVariant}>
+									Automatic skin variant
+								</SkinVariantCheckboxItem>
+							}
 						</Cell>
 					</Column>
 				</Cell>
@@ -189,10 +209,12 @@ const ThemeSettingsBase = (props) => {
 
 ThemeSettingsBase.propTypes = {
 	alignLabel: PropTypes.string,
+	automaticSkinVariant: PropTypes.bool,
 	css: PropTypes.object,
 	label: PropTypes.string,
 	onSelect: PropTypes.func,
 	onSendSkinSettings: PropTypes.func,
+	onToggleAutomaticSkinVariant: PropTypes.func,
 	onToggleDynamicColor: PropTypes.func,
 	prevIndex: PropTypes.number,
 	skin: PropTypes.string
