@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "@enact/core": "^4.6.0",
-    "@enact/agate": "^2.0.4",
+    "@enact/agate": "https://github.com/enactjs/agate.git#feature/WRP-15612",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "query-string": "^8.1.0",
