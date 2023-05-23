@@ -92,6 +92,7 @@ const AppBase = kind({
 	propTypes: {
 		updateAppState: PropTypes.func.isRequired,
 		accent: PropTypes.string,
+		background: PropTypes.string,
 		defaultIndex: PropTypes.number,
 		dynamicColor: PropTypes.bool,
 		endNavigation: PropTypes.func,
@@ -195,6 +196,7 @@ const AppBase = kind({
 
 	render: ({
 		accent,
+		background,
 		fakeTime,
 		fakeTimeEnabled,
 		highlight,
@@ -262,20 +264,22 @@ const AppBase = kind({
 			if (dynamicColorActive) {
 				context.updateAppState((state) => {
 					state.userSettings.colorAccent = accent;
+					state.userSettings.colorBackground = background;
 					state.userSettings.colorHighlight = highlight;
-					state.userSettings.skinVariants = automaticSkinVariant ? skinVariants : state.userSettings.skinVariantsManual;
-					sendSkinSettings({accent: accent, highlight: highlight, skin: context.userSettings.skin, skinVariants: state.userSettings.skinVariants});
+					state.userSettings.skinVariants = automaticSkinVariant ? skinVariants ? skinVariants : '' : state.userSettings.skinVariantsManual;
+					sendSkinSettings({accent: accent, background: background, highlight: highlight, skin: context.userSettings.skin, skinVariants: state.userSettings.skinVariants});
 				});
 			} else {
 				context.updateAppState((state) => {
 					state.userSettings.colorAccent = state.userSettings.colorAccentManual;
+					state.userSettings.colorBackground = null;
 					state.userSettings.colorHighlight = state.userSettings.colorHighlightManual;
 					state.userSettings.skinVariants = state.userSettings.skinVariantsManual;
-					sendSkinSettings({accent: state.userSettings.colorAccentManual, highlight: state.userSettings.colorHighlightManual, skin: context.userSettings.skin, skinVariants: state.userSettings.skinVariantsManual});
+					sendSkinSettings({accent: state.userSettings.colorAccentManual, background: null, highlight: state.userSettings.colorHighlightManual, skin: context.userSettings.skin, skinVariants: state.userSettings.skinVariantsManual});
 				});
 			}
 
-		}, [accent, automaticSkinVariant, context.userSettings.dynamicColor, highlight, skinVariants]); // eslint-disable-line react-hooks/exhaustive-deps
+		}, [accent, automaticSkinVariant, background, context.userSettings.dynamicColor, highlight, skinVariants]); // eslint-disable-line react-hooks/exhaustive-deps
 
 		return (
 			// eslint-disable-next-line react/no-unknown-property
@@ -486,6 +490,7 @@ const AppDecorator = compose(
 	ServiceLayer,
 	AppContextConnect(({appState, userSettings, userId, updateAppState}) => ({
 		accent: userSettings.colorAccent,
+		background: userSettings.colorBackground,
 		dynamicColor: userSettings.dynamicColor,
 		highlight: userSettings.colorHighlight,
 		layoutArrangeable: userSettings.arrangements.arrangeable,
@@ -511,9 +516,10 @@ const AppDecorator = compose(
 const ThemedAppBase = (props) => {
 	const {accent, highlight, skinVariants, useFakeTime, ...rest} = props;
 
-	const [fakeTime, newAccent, newHighlight, newSkinVariants] = useLinearSkinColor(accent, highlight, skinVariants, useFakeTime);
+	const [fakeTime, newAccent, newBackground, newHighlight, newSkinVariants] = useLinearSkinColor(accent, highlight, skinVariants, useFakeTime);
 
-	return (<AppBase accent={newAccent} fakeTime={fakeTime} highlight={newHighlight} skinVariants={newSkinVariants} {...rest} />);
+	delete rest.background;
+	return (<AppBase accent={newAccent} background={newBackground} fakeTime={fakeTime} highlight={newHighlight} skinVariants={newSkinVariants} {...rest} />);
 };
 
 ThemedAppBase.propTypes = {

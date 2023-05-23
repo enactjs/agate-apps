@@ -54,6 +54,7 @@ const defaultUserSettings = {
 	},
 	colorAccent: '#cccccc',
 	colorAccentManual: '#cccccc',
+	colorBackground: null,
 	colorHighlight: '#66aabb',
 	colorHighlightManual: '#66aabb',
 	dynamicColor: false,

@@ -1,26 +1,20 @@
 // HOC that receives 2 colors (accent and highlight) and returns 2 different colors
 import {useEffect, useMemo, useState} from 'react';
 
-import {generateColorsDayMode, generateColorsNightMode, generateTimestamps, getIndex} from './utils';
+import {generateBackground, generateColors, generateTimestamps, getIndex} from './utils';
 
 // In case of using fake times, use this index to generate new colors
 let fakeIndex = 0;
 let accentColors = {};
+let backgroundColors = {};
 let highlightColors = {};
 const timestamps = generateTimestamps(5);
 
-const generateColors = (color) => {
-	const dayColorsArray = generateColorsDayMode(color, 72);
-	const nightColorsArray = generateColorsNightMode(color, 72);
-	const array = [...nightColorsArray.reverse(), ...dayColorsArray, ...dayColorsArray.reverse(), ...nightColorsArray.reverse()];
-	const offset = array.splice(0, 12);
-
-	return [...array, ...offset];
-};
-
 const useLinearSkinColor = (accentColor, highlightColor, skinVariants, useFakeTime = false) => {
+	const bgColor = generateBackground(accentColor);
 	const [fakeIndexVar, setFakeIndexVar] = useState(fakeIndex); // eslint-disable-line
 	const [linearAccentColor, setLinearAccentColor] = useState(accentColor);
+	const [linearBGColor, setLinearBGColor] = useState(bgColor);
 	const [linearHighlightColor, setLinearHighlightColor] = useState(highlightColor);
 	const [linearSkinVariants, setLinearSkinVariants] = useState(skinVariants);
 	const index = getIndex();
@@ -28,6 +22,11 @@ const useLinearSkinColor = (accentColor, highlightColor, skinVariants, useFakeTi
 	const accentColorsArray = useMemo(() => generateColors(accentColor), [accentColor]);
 	timestamps.forEach((element, index) => {	// eslint-disable-line
 		accentColors[element] = accentColorsArray[index];
+	});
+
+	const backgroundColorsArray = useMemo(() => generateColors(bgColor), [bgColor]);
+	timestamps.forEach((element, index) => {	// eslint-disable-line
+		backgroundColors[element] = backgroundColorsArray[index];
 	});
 
 	const highlightColorsArray = useMemo(() => generateColors(highlightColor), [highlightColor]);
@@ -40,11 +39,16 @@ const useLinearSkinColor = (accentColor, highlightColor, skinVariants, useFakeTi
 	}, [accentColor]);
 
 	useEffect(() => {
+		setLinearBGColor(bgColor);
+	}, [bgColor]);
+
+	useEffect(() => {
 		setLinearHighlightColor(highlightColor);
 	}, [highlightColor]);
 
 	useEffect(() => {
 		setLinearAccentColor(accentColors[index]);
+		setLinearBGColor(backgroundColors[index]);
 		setLinearHighlightColor(highlightColors[index]);
 	}, [index]);
 
@@ -61,6 +65,7 @@ const useLinearSkinColor = (accentColor, highlightColor, skinVariants, useFakeTi
 				}
 
 				setLinearAccentColor(accentColors[index]);
+				setLinearBGColor(backgroundColors[index]);
 				setLinearHighlightColor(highlightColors[index]);
 			} else {
 				let skinVariant;
@@ -73,6 +78,7 @@ const useLinearSkinColor = (accentColor, highlightColor, skinVariants, useFakeTi
 				}
 
 				setLinearAccentColor(accentColorsArray[fakeIndex]);
+				setLinearBGColor(backgroundColorsArray[fakeIndex]);
 				setLinearHighlightColor(highlightColorsArray[fakeIndex]);
 
 				if (fakeIndex < 287) {
@@ -88,9 +94,9 @@ const useLinearSkinColor = (accentColor, highlightColor, skinVariants, useFakeTi
 		return () => {
 			clearInterval(changeColor);
 		};
-	}, [accentColorsArray, highlightColorsArray, index, useFakeTime]);
+	}, [accentColorsArray, backgroundColorsArray, highlightColorsArray, index, useFakeTime]);
 
-	return [fakeIndex, linearAccentColor, linearHighlightColor, linearSkinVariants];
+	return [fakeIndex, linearAccentColor, linearBGColor, linearHighlightColor, linearSkinVariants];
 };
 
 export default useLinearSkinColor;

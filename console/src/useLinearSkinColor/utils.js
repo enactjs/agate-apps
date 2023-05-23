@@ -101,7 +101,14 @@ const HSLToHex = ({h, s, l}) => {
 	return "#" + r + g + b;
 };
 
-export const generateColorsDayMode = (baseColor, numColors) => {
+export const generateBackground = (color) => {
+	let {h, s, l} = hexToHSL(color);
+	h += 180;
+	if (h >= 360) h -= 360;
+	return HSLToHex({h, s, l});
+};
+
+const generateColorsDayMode = (baseColor, numColors) => {
 	// Create an array to hold the colors
 	let colors = [baseColor];
 
@@ -144,7 +151,7 @@ export const generateColorsDayMode = (baseColor, numColors) => {
 	return colors;
 };
 
-export const generateColorsNightMode = (baseColor, numColors) => {
+const generateColorsNightMode = (baseColor, numColors) => {
 	// Create an array to hold the colors
 	let colors = [baseColor];
 
@@ -186,6 +193,15 @@ export const generateColorsNightMode = (baseColor, numColors) => {
 	}
 
 	return colors;
+};
+
+export const generateColors = (color) => {
+	const dayColorsArray = generateColorsDayMode(color, 72);
+	const nightColorsArray = generateColorsNightMode(color, 72);
+	const array = [...nightColorsArray.reverse(), ...dayColorsArray, ...dayColorsArray.reverse(), ...nightColorsArray.reverse()];
+	const offset = array.splice(0, 12);
+
+	return [...array, ...offset];
 };
 
 export const getIndex = () => {
