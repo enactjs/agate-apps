@@ -266,7 +266,7 @@ const AppBase = kind({
 					state.userSettings.colorAccent = accent;
 					state.userSettings.colorBackground = background;
 					state.userSettings.colorHighlight = highlight;
-					state.userSettings.skinVariants = automaticSkinVariant ? skinVariants : state.userSettings.skinVariantsManual;
+					state.userSettings.skinVariants = automaticSkinVariant ? skinVariants ? skinVariants : '' : state.userSettings.skinVariantsManual;
 					sendSkinSettings({accent: accent, background: background, highlight: highlight, skin: context.userSettings.skin, skinVariants: state.userSettings.skinVariants});
 				});
 			} else {
