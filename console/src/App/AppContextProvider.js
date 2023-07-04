@@ -1,4 +1,4 @@
-import produce from 'immer';
+import {produce} from 'immer';
 import PropTypes from 'prop-types';
 import {assocPath, equals, mergeDeepRight, omit, path} from 'ramda';
 import {Component, createContext, Fragment, PureComponent} from 'react';

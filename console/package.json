@@ -39,7 +39,7 @@
 		"@enact/ui": "^4.7.1",
 		"classnames": "^2.3.2",
 		"ilib": "^14.17.0",
-		"immer": "^9.0.21",
+		"immer": "^10.0.2",
 		"mapbox-gl": "^1.13.3",
 		"prop-types": "^15.8.1",
 		"query-string": "^8.1.0",
