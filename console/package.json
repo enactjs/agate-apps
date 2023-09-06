@@ -50,6 +50,6 @@
 		"socket.io-client": "^4.7.1"
 	},
 	"devDependencies": {
-		"cpy-cli": "^4.2.0"
+		"cpy-cli": "^5.0.0"
 	}
 }
