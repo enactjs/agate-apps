@@ -41,6 +41,6 @@
 		"react-dom": "^18.2.0"
 	},
 	"devDependencies": {
-		"cpy-cli": "^4.2.0"
+		"cpy-cli": "^5.0.0"
 	}
 }
