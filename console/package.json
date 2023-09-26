@@ -32,11 +32,11 @@
 		"dist/*"
 	],
 	"dependencies": {
-		"@enact/agate": "^2.0.6",
-		"@enact/core": "^4.7.2",
-		"@enact/i18n": "^4.7.2",
-		"@enact/spotlight": "^4.7.2",
-		"@enact/ui": "^4.7.2",
+		"@enact/agate": "^2.0.7",
+		"@enact/core": "^4.7.6",
+		"@enact/i18n": "^4.7.6",
+		"@enact/spotlight": "^4.7.6",
+		"@enact/ui": "^4.7.6",
 		"classnames": "^2.3.2",
 		"ilib": "^14.18.0",
 		"immer": "^10.0.2",
@@ -47,7 +47,7 @@
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
 		"roslib": "^1.3.0",
-		"socket.io-client": "^4.7.1"
+		"socket.io-client": "^4.7.2"
 	},
 	"devDependencies": {
 		"cpy-cli": "^5.0.0"
