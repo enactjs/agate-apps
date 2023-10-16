@@ -5,12 +5,12 @@
     "extends": "enact/strict"
   },
   "dependencies": {
-    "@enact/core": "^4.7.2",
-    "@enact/agate": "^2.0.6",
+    "@enact/core": "^4.7.6",
+    "@enact/agate": "^2.0.7",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "query-string": "^8.1.0",
-    "socket.io-client": "^4.7.1",
+    "socket.io-client": "^4.7.2",
     "webrtc-ips": "^0.2.0"
   }
 }
