@@ -5,7 +5,7 @@
     "extends": "enact/strict"
   },
   "dependencies": {
-    "@enact/core": "^4.7.6",
+    "@enact/core": "^4.7.7",
     "@enact/agate": "^2.0.7",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
