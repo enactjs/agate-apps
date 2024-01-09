@@ -37,6 +37,7 @@
 		"@enact/i18n": "^4.7.7",
 		"@enact/spotlight": "^4.7.7",
 		"@enact/ui": "^4.7.7",
+		"@vis.gl/react-google-maps": "latest",
 		"classnames": "^2.3.2",
 		"ilib": "^14.18.0",
 		"immer": "^10.0.3",
