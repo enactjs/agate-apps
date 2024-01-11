@@ -1,9 +1,10 @@
-/*global google*/
+/* global google*/
+/* eslint-disable react/jsx-no-bind, no-shadow */
 
-import Button from '@enact/agate/Button';
+//import Button from '@enact/agate/Button';
 import kind from '@enact/core/kind';
 import Skinnable from "@enact/ui/Skinnable";
-import {APIProvider, Map, Marker, useMap, useMapsLibrary} from '@vis.gl/react-google-maps';
+import {APIProvider, Map, useMap, useMapsLibrary} from '@vis.gl/react-google-maps';
 import {useEffect, useState} from 'react';
 
 import appConfig from '../../App/configLoader';
@@ -16,13 +17,13 @@ if (!appConfig.googleMapsApiKey) {
 
 const position = {lat: 46.770221, lng: 23.597034};
 
-const DestinationButton = (props) => {
-	const {children, 'data-index': index, ...rest} = props;
-	return <Button size="small" {...rest} css={css}>
-		<Marker css={css}>{index + 1}</Marker>
-		{children}
-	</Button>;
-};
+// const DestinationButton = (props) => {
+// 	const {children, 'data-index': index, ...rest} = props;
+// 	return <Button size="small" {...rest} css={css}>
+// 		<Marker css={css}>{index + 1}</Marker>
+// 		{children}
+// 	</Button>;
+// };
 
 const GoogleMapsBase = kind({
 	name: 'GoogleMaps',
@@ -35,19 +36,17 @@ const GoogleMapsBase = kind({
 		className: 'googleMaps'
 	},
 
-	render: ({
-		...rest
-	}) => {
-
+	render: () => {
 		return (
 			<>
 				<APIProvider apiKey={appConfig.googleMapsApiKey}>
 					<Map
 						center={position}
 						fullscreenControl={false}
-						zoom={8}>
-						{/*<Marker position={position} />*/}
-						<Directions></Directions>
+						zoom={8}
+					>
+						{/* <Marker position={position} />*/}
+						<Directions />
 					</Map>
 				</APIProvider>
 			</>
@@ -60,9 +59,9 @@ const destinations = [
 	'Iulius Mall Cluj',
 	'Vivo Cluj',
 	'Platinia Cluj'
-]
+];
 
-function Directions() {
+function Directions () {
 	const map = useMap();
 	const routesLibrary = useMapsLibrary("routes");
 	const [directionsService, setDirectionsService] = useState();
@@ -71,10 +70,10 @@ function Directions() {
 	const [routeIndex, setRouteIndex] = useState(0);
 	const selected = routes[routeIndex];
 	const leg = selected?.legs[0];
-	const [destination, setDestination] = useState(destinations[0]);
+	const [selectedDestination, setSelectedDestination] = useState(destinations[0]);
 
 	useEffect(() => {
-		if(!routesLibrary || !map) return;
+		if (!routesLibrary || !map) return;
 		setDirectionsService(new routesLibrary.DirectionsService());
 		setDirectionsRenderer(new routesLibrary.DirectionsRenderer({map}));
 	}, [routesLibrary, map]);
@@ -84,44 +83,44 @@ function Directions() {
 
 		directionsService.route({
 			origin: "strada Buna Ziua 39, Cluj-Napoca",
-			destination: destination,
+			destination: selectedDestination,
 			travelMode: google.maps.TravelMode.DRIVING,
 			provideRouteAlternatives: true
 		})
 			.then((response) => {
-				directionsRenderer.setDirections(response)
+				directionsRenderer.setDirections(response);
 				setRoutes(response.routes);
-			})
+			});
 
-	}, [directionsService, directionsRenderer, destination]);
+	}, [directionsService, directionsRenderer, selectedDestination]);
 
 	// Update direction route
 	useEffect(() => {
 		if (!directionsRenderer) return;
 		directionsRenderer.setRouteIndex(routeIndex);
-	}, [routeIndex, directionsRenderer, destination]);
+	}, [routeIndex, directionsRenderer, selectedDestination]);
 
 	if (!leg) return null;
 
 	return (
 		<div className={css.directions}>
 
-			{/*<Group*/}
+			{/* <Group*/}
 			{/*	component="div"*/}
 			{/*	childComponent={DestinationButton}*/}
 			{/*	onSelect={handleSetDestination}*/}
 			{/*	selectedProp="highlighted"*/}
 			{/*	selected={selected}*/}
-			{/*>*/}
+			{/* >*/}
 			{/*	{*/}
 			{/*		destinations.map((destination) => destination)*/}
 			{/*	}*/}
-			{/*</Group>*/}
+			{/* </Group>*/}
 
 			<ul>
 				{destinations.map((destination) => (
 					<li >
-						<button onClick={() => setDestination(destination)}>
+						<button onClick={() => setSelectedDestination(destination)}>
 							{destination}
 						</button>
 					</li>
