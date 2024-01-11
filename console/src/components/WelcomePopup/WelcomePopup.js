@@ -16,6 +16,7 @@ import AppContextConnect from '../../App/AppContextConnect';
 import CompactHeater from '../CompactHeater';
 import CompactMultimedia from '../CompactMultimedia';
 import CompactWeather from '../CompactWeather';
+import GoogleMaps from '../GoogleMaps';
 import MapController from '../MapController';
 
 import UserAvatar from '../UserAvatar';
@@ -193,13 +194,15 @@ const WelcomePopupBase = kind({
 							</Column>
 						</Cell>
 						<Cell>
-							<MapController
-								noStartStopToggle
-								locationSelection
-								autonomousSelection
-								noExpandButton
-								noFollowButton
-							/>
+							{/*<MapController*/}
+							{/*	noStartStopToggle*/}
+							{/*	locationSelection*/}
+							{/*	autonomousSelection*/}
+							{/*	noExpandButton*/}
+							{/*	noFollowButton*/}
+							{/*/>*/}
+
+							<GoogleMaps />
 						</Cell>
 					</Row>
 				</div>
