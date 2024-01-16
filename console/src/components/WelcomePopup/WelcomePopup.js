@@ -17,7 +17,7 @@ import CompactHeater from '../CompactHeater';
 import CompactMultimedia from '../CompactMultimedia';
 import CompactWeather from '../CompactWeather';
 import GoogleMaps from '../GoogleMaps';
-import MapController from '../MapController';
+// import MapController from '../MapController';
 
 import UserAvatar from '../UserAvatar';
 
