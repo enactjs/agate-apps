@@ -4,7 +4,7 @@
 //import Button from '@enact/agate/Button';
 import kind from '@enact/core/kind';
 import Skinnable from "@enact/ui/Skinnable";
-import {APIProvider, Map, useMap, useMapsLibrary} from '@vis.gl/react-google-maps';
+import {APIProvider, Map, Marker, useMap, useMapsLibrary} from '@vis.gl/react-google-maps';
 import {useEffect, useState} from 'react';
 
 import appConfig from '../../App/configLoader';
@@ -45,7 +45,7 @@ const GoogleMapsBase = kind({
 						fullscreenControl={false}
 						zoom={8}
 					>
-						{/* <Marker position={position} />*/}
+						 <Marker position={position} />
 						<Directions />
 					</Map>
 				</APIProvider>
@@ -104,22 +104,10 @@ function Directions () {
 
 	return (
 		<div className={css.directions}>
-
-			{/* <Group*/}
-			{/*	component="div"*/}
-			{/*	childComponent={DestinationButton}*/}
-			{/*	onSelect={handleSetDestination}*/}
-			{/*	selectedProp="highlighted"*/}
-			{/*	selected={selected}*/}
-			{/* >*/}
-			{/*	{*/}
-			{/*		destinations.map((destination) => destination)*/}
-			{/*	}*/}
-			{/* </Group>*/}
-
+			<h4>Choose destination</h4>
 			<ul>
 				{destinations.map((destination) => (
-					<li >
+					<li>
 						<button onClick={() => setSelectedDestination(destination)}>
 							{destination}
 						</button>
@@ -127,7 +115,7 @@ function Directions () {
 				))}
 			</ul>
 
-			<h4>{selected.summary}</h4>
+			<h4>Selected route: {selected.summary}</h4>
 			<div>
 				{leg.start_address.split(',')[0]} to {leg.end_address.split(',')[0]}
 			</div>
