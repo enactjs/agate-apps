@@ -8,7 +8,7 @@ export default {
 	mapApiKey: '<Insert your MapBox API key here>',
 
 	// Agate Console uses Google Maps for its maps. You can obtain your API key by
-	// visiting the following site:
+	// visiting the following site: https://developers.google.com/maps/documentation/javascript/get-api-key
 	googleMapsApiKey: '<Insert your Google Maps API key here>',
 
 	// Point this variable to the hostname (IP, domain, or localhost) of the services layer
