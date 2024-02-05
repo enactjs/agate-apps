@@ -17,7 +17,7 @@ import CompactHeater from '../CompactHeater';
 import CompactMultimedia from '../CompactMultimedia';
 import CompactWeather from '../CompactWeather';
 import GoogleMaps from '../GoogleMaps';
-// import MapController from '../MapController';
+import MapController from '../MapController';
 
 import UserAvatar from '../UserAvatar';
 
@@ -76,6 +76,7 @@ const WelcomePopupBase = kind({
 	propTypes: {
 		updateAppState: PropTypes.func.isRequired,
 		components: PropTypes.object,
+		mapsLibrary: PropTypes.number,
 		// index: PropTypes.number,
 		// onCancelSelect: PropTypes.func,
 		onClose: PropTypes.func,
@@ -138,6 +139,7 @@ const WelcomePopupBase = kind({
 		handleClose,
 		// handleTransition,
 		// index,
+		mapsLibrary,
 		// onCancelSelect,
 		// onSelectUser,
 		profileName,
@@ -157,6 +159,7 @@ const WelcomePopupBase = kind({
 		delete rest.updateAppState;
 		// delete rest.updateUser;
 
+		console.log(mapsLibrary)
 		return (
 			<Popup css={css} position="fullscreen" {...rest}>
 				{/* <Panels arranger={Arranger} index={index} enteringProp="hideChildren" onTransition={handleTransition}> */}
@@ -194,15 +197,17 @@ const WelcomePopupBase = kind({
 							</Column>
 						</Cell>
 						<Cell>
-							{/*<MapController*/}
-							{/*	noStartStopToggle*/}
-							{/*	locationSelection*/}
-							{/*	autonomousSelection*/}
-							{/*	noExpandButton*/}
-							{/*	noFollowButton*/}
-							{/*/>*/}
-
-							<GoogleMaps />
+							{mapsLibrary === 0 ?
+								<GoogleMaps />
+							:
+							<MapController
+								noStartStopToggle
+								locationSelection
+								autonomousSelection
+								noExpandButton
+								noFollowButton
+							/>
+							}
 						</Cell>
 					</Row>
 				</div>
@@ -288,9 +293,10 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 	};
 });
 
-const AppContextDecorator = AppContextConnect(({/* usersList, */updateAppState, userId, userSettings}) => {
+const AppContextDecorator = AppContextConnect(({/* usersList, */ appState, updateAppState, userId, userSettings}) => {
 	return {
 		components: (userSettings.components && userSettings.components.welcome),
+		mapsLibrary: appState.mapsLibrary,
 		profileName: userSettings.name,
 		userId,
 		// usersList: usersList,

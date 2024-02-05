@@ -2,6 +2,7 @@ import Skinnable from '@enact/agate/Skinnable';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 
+import GoogleMaps from '../GoogleMaps';
 import MapController from '../MapController';
 import Widget from '../Widget';
 
@@ -12,6 +13,7 @@ const CompactMapBase = kind({
 
 	propTypes: {
 		follow: PropTypes.bool,
+		mapsLibrary: PropTypes.number,
 		onExpand: PropTypes.func
 	},
 
@@ -20,30 +22,38 @@ const CompactMapBase = kind({
 		className: 'compactMap'
 	},
 
-	render: ({follow, onExpand, ...rest}) => {
+	render: ({follow, mapsLibrary, onExpand, ...rest}) => {
 		return (
 			<Widget {...rest} icon="compass" title="Map" description="Choose a destination and navigate" noHeader>
 				<small>
-					<MapController
-						controlScheme="compact"
-						follow={follow}
-						onExpand={onExpand}
-					/>
+					{mapsLibrary === 0 ?
+						<GoogleMaps />
+						:
+						<MapController
+							controlScheme="compact"
+							follow={follow}
+							onExpand={onExpand}
+						/>
+					}
 				</small>
 				<large>
-					<MapController
-						controlScheme="compact"
-						locationSelection
-						autonomousSelection
-						follow={follow}
-						onExpand={onExpand}
-					>
-						{/* <tools>
+					{mapsLibrary === 0 ?
+						<GoogleMaps />
+						:
+						<MapController
+							controlScheme="compact"
+							locationSelection
+							autonomousSelection
+							follow={follow}
+							onExpand={onExpand}
+						>
+							{/* <tools>
 							<Button alt="Fullscreen" icon="fullscreen" data-tabindex={getPanelIndexOf('map')} onSelect={onSelect} onKeyUp={onTabChange} onClick={onTabChange} />
 							<Button alt="Propose new destination" icon="arrowhookleft" onClick={changePosition} />
 							<Button alt="Navigate Here" icon="play" onClick={onSetDestination} />
 						</tools>*/}
-					</MapController>
+						</MapController>
+					}
 				</large>
 			</Widget>
 		);
