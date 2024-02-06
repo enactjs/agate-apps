@@ -1,7 +1,7 @@
 /* global google*/
 /* eslint-disable react/jsx-no-bind, no-shadow */
 
-//import Button from '@enact/agate/Button';
+// import Button from '@enact/agate/Button';
 import kind from '@enact/core/kind';
 import Skinnable from "@enact/ui/Skinnable";
 import {APIProvider, Map, Marker, useMap, useMapsLibrary} from '@vis.gl/react-google-maps';
@@ -10,6 +10,9 @@ import {useEffect, useState} from 'react';
 import appConfig from '../../App/configLoader';
 
 import css from './GoogleMaps.module.less';
+import PropTypes from "prop-types";
+import Button from "@enact/agate/Button";
+import {Cell, Column} from "@enact/ui/Layout";
 
 if (!appConfig.googleMapsApiKey) {
 	Error('Please set `googleMapsApiKey` key in your `config.js` file to your own Google Maps API key.');
@@ -29,6 +32,8 @@ const GoogleMapsBase = kind({
 	name: 'GoogleMaps',
 
 	propTypes: {
+		noExpandButton: PropTypes.bool,
+		onExpand: PropTypes.func
 	},
 
 	styles: {
@@ -36,7 +41,7 @@ const GoogleMapsBase = kind({
 		className: 'googleMaps'
 	},
 
-	render: () => {
+	render: ({noExpandButton, onExpand}) => {
 		return (
 			<>
 				<APIProvider apiKey={appConfig.googleMapsApiKey}>
@@ -45,8 +50,8 @@ const GoogleMapsBase = kind({
 						fullscreenControl={false}
 						zoom={8}
 					>
-						 <Marker position={position} />
-						<Directions />
+						<Marker position={position} />
+						<Directions noExpandButton={noExpandButton} onExpand={onExpand} />
 					</Map>
 				</APIProvider>
 			</>
@@ -56,12 +61,29 @@ const GoogleMapsBase = kind({
 
 
 const destinations = [
-	'Iulius Mall Cluj',
-	'Vivo Cluj',
-	'Platinia Cluj'
+		{
+			"description": "Home",
+			"coordinates": '37.78877, -122.39647'
+		},
+		{
+			"description": "Philz Coffee",
+			"coordinates": '37.78895, -122.3931'
+		},
+		{
+			"description": "School",
+			"coordinates": '37.793424, -122.401124'
+		},
+		{
+			"description": "Work",
+			"coordinates": '37.783902, -122.396148'
+		},
+		{
+			"description": "MOMA",
+			"coordinates": '37.785684, -122.401035'
+		}
 ];
 
-function Directions () {
+function Directions ({noExpandButton, onExpand}) {
 	const map = useMap();
 	const routesLibrary = useMapsLibrary("routes");
 	const [directionsService, setDirectionsService] = useState();
@@ -82,8 +104,8 @@ function Directions () {
 		if (!directionsRenderer || !directionsService) return;
 
 		directionsService.route({
-			origin: "strada Buna Ziua 39, Cluj-Napoca",
-			destination: selectedDestination,
+			origin: '37.78878, -122.40467',
+			destination: selectedDestination.coordinates,
 			travelMode: google.maps.TravelMode.DRIVING,
 			provideRouteAlternatives: true
 		})
@@ -102,36 +124,68 @@ function Directions () {
 
 	if (!leg) return null;
 
+	const onExpandFunc = () => {
+		console.log("test", onExpand, noExpandButton);
+		if (onExpand) {
+			onExpand({view: 'map'});
+		}
+	};
+
 	return (
-		<div className={css.directions}>
-			<h4>Choose destination</h4>
-			<ul>
-				{destinations.map((destination) => (
-					<li>
-						<button onClick={() => setSelectedDestination(destination)}>
-							{destination}
-						</button>
-					</li>
-				))}
-			</ul>
+		<div>
+			<Column className={css.toolsColumn}>
+			<Cell align="end" shrink>
+				{
+					noExpandButton ?
+						null :
+						<Button
+							size="small"
+							alt="Fullscreen"
+							onClick={onExpandFunc}
+							icon="expand"
+						/>
+				}
+			</Cell>
+			</Column>
+			<div className={css.directions}>
+				<h4>Choose destination</h4>
+				<ul>
+					{destinations.map((destination) => (
+						<li key={destination.description}>
+							<button onClick={() => setSelectedDestination(destination.coordinates)}>
+								{destination.description}
+							</button>
+						</li>
+					))}
+				</ul>
 
-			<h4>Selected route: {selected.summary}</h4>
-			<div>
-				{leg.start_address.split(',')[0]} to {leg.end_address.split(',')[0]}
+				{/*<Cell className={css.columnCell}>*/}
+				{/*	<DestinationList*/}
+				{/*		destination={destination}*/}
+				{/*		onSetDestination={this.handleSetDestination}*/}
+				{/*		positions={topLocations}*/}
+				{/*		title="Top Locations"*/}
+				{/*	/>*/}
+				{/*</Cell>*/}
+
+				<h4>Selected route: {selected.summary}</h4>
+				<div>
+					{leg.start_address.split(',')[0]} to {leg.end_address.split(',')[0]}
+				</div>
+				<div>Distance: {leg.distance?.text}</div>
+				<div>Duration: {leg.duration?.text}</div>
+
+				<h4>Other Routes</h4>
+				<ul>
+					{routes.map((route, index) => (
+						<li key={route.summary}>
+							<button onClick={() => setRouteIndex(index)}>
+								{route.summary}
+							</button>
+						</li>
+					))}
+				</ul>
 			</div>
-			<div>Distance: {leg.distance?.text}</div>
-			<div>Duration: {leg.duration?.text}</div>
-
-			<h4>Other Routes</h4>
-			<ul>
-				{routes.map((route, index) => (
-					<li key={route.summary}>
-						<button onClick={() => setRouteIndex(index)}>
-							{route.summary}
-						</button>
-					</li>
-				))}
-			</ul>
 		</div>
 	);
 }

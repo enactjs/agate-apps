@@ -27,8 +27,7 @@ const CompactMapBase = kind({
 			<Widget {...rest} icon="compass" title="Map" description="Choose a destination and navigate" noHeader>
 				<small>
 					{mapsLibrary === 0 ?
-						<GoogleMaps />
-						:
+						<GoogleMaps onExpand={onExpand} /> :
 						<MapController
 							controlScheme="compact"
 							follow={follow}
@@ -38,8 +37,7 @@ const CompactMapBase = kind({
 				</small>
 				<large>
 					{mapsLibrary === 0 ?
-						<GoogleMaps />
-						:
+						<GoogleMaps onExpand={onExpand} /> :
 						<MapController
 							controlScheme="compact"
 							locationSelection

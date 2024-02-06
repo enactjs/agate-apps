@@ -280,6 +280,7 @@ const AppBase = kind({
 					</afterTabs>
 					<Home
 						arrangeable={layoutArrangeable}
+						loadGoogleMaps={!showWelcomePopup}
 						mapsLibrary={mapsLibrary}
 						onCompactExpand={onSelect}
 						onSelect={onSelect}
@@ -293,7 +294,7 @@ const AppBase = kind({
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}
 					/>
-					<MapView mapsLibrary={mapsLibrary} />
+					<MapView loadGoogleMaps={!showWelcomePopup} mapsLibrary={mapsLibrary} />
 					<Settings
 						mapsLibrary={mapsLibrary}
 						onSelect={onSelect}
@@ -391,6 +392,7 @@ const AppIndex = (Wrapped) => {
 
 		onSelect = handle(
 			adaptEvent((ev) => {
+				console.log("test1");
 				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
 				this.setState(state => state.index === index ? null : {prevIndex: state.index, index});
 				return {index};

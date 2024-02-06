@@ -159,7 +159,6 @@ const WelcomePopupBase = kind({
 		delete rest.updateAppState;
 		// delete rest.updateUser;
 
-		console.log(mapsLibrary)
 		return (
 			<Popup css={css} position="fullscreen" {...rest}>
 				{/* <Panels arranger={Arranger} index={index} enteringProp="hideChildren" onTransition={handleTransition}> */}
@@ -198,15 +197,14 @@ const WelcomePopupBase = kind({
 						</Cell>
 						<Cell>
 							{mapsLibrary === 0 ?
-								<GoogleMaps />
-							:
-							<MapController
-								noStartStopToggle
-								locationSelection
-								autonomousSelection
-								noExpandButton
-								noFollowButton
-							/>
+								<GoogleMaps noExpandButton />							:
+								<MapController
+									noStartStopToggle
+									locationSelection
+									autonomousSelection
+									noExpandButton
+									noFollowButton
+								/>
 							}
 						</Cell>
 					</Row>

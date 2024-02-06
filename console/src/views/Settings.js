@@ -1,7 +1,9 @@
+import BodyText from '@enact/agate/BodyText';
 import Dropdown from '@enact/agate/Dropdown';
 import Heading from '@enact/agate/Heading';
 import Item from '@enact/agate/Item';
 import {Panel} from '@enact/agate/Panels';
+import Scroller from '@enact/agate/Scroller';
 import SwitchItem from '@enact/agate/SwitchItem';
 import kind from '@enact/core/kind';
 import {Cell, Column, Row} from '@enact/ui/Layout';
@@ -66,7 +68,7 @@ const Settings = kind({
 	render: ({css, ipAddress, mapsLibrary, onMapsSelect, onSelect, onToggleDateTimePopup, onReloadApp, ...rest}) => (
 		<Panel {...rest}>
 			<Row className="enact-fit" align=" center">
-				<Cell size="40%">
+				<Cell size="50%">
 					<Column className={css.content}>
 						<Cell
 							component={Heading}
@@ -76,58 +78,60 @@ const Settings = kind({
 						>
 							Settings
 						</Cell>
-						<SwitchItemCell
-							icon="edit"
-							noToggle
-							data-tabindex={getPanelIndexOf('settings/theme')}
-							onClick={onSelect}
-						>
-							Theme
-						</SwitchItemCell>
-						{/*<BodyText size="small">Maps Library</BodyText>*/}
-						<Dropdown
-							onSelect={onMapsSelect}
-							title="Select a library"
-							selected={mapsLibrary}
-						>
-							{['Google Maps', 'Mapbox GL']}
-						</Dropdown>
-						<SwitchItemCell
-							icon="datetime"
-							noToggle
-							onClick={onToggleDateTimePopup}
-						>
-							Date & Time
-						</SwitchItemCell>
-						<SwitchItemCell
-							icon="bluetooth"
-						>
-							Bluetooth
-						</SwitchItemCell>
-						<SwitchItemCell
-							icon="wifi"
-						>
-							WiFi
-						</SwitchItemCell>
-						<SwitchItemCell
-							icon="fan"
-						>
-							Turbo
-						</SwitchItemCell>
-						<SwitchItemCell
-							icon="heatseatright"
-							switchOffLabel="disarmed"
-							switchOnLabel="armed"
-						>
-							Ejection Seat
-						</SwitchItemCell>
-						<SwitchItemCell
-							noToggle
-							onClick={onReloadApp}
-						>
-							Reload Apps
-						</SwitchItemCell>
-						<Item label={ipAddress}>IP Address</Item>
+						<Scroller>
+							<SwitchItemCell
+								icon="edit"
+								noToggle
+								data-tabindex={getPanelIndexOf('settings/theme')}
+								onClick={onSelect}
+							>
+								Theme
+							</SwitchItemCell>
+							<BodyText size="small">Maps Library</BodyText>
+							<Dropdown
+								onSelect={onMapsSelect}
+								title="Select a library"
+								selected={mapsLibrary}
+							>
+								{['Google Maps', 'Mapbox GL']}
+							</Dropdown>
+							<SwitchItemCell
+								icon="datetime"
+								noToggle
+								onClick={onToggleDateTimePopup}
+							>
+								Date & Time
+							</SwitchItemCell>
+							<SwitchItemCell
+								icon="bluetooth"
+							>
+								Bluetooth
+							</SwitchItemCell>
+							<SwitchItemCell
+								icon="wifi"
+							>
+								WiFi
+							</SwitchItemCell>
+							<SwitchItemCell
+								icon="fan"
+							>
+								Turbo
+							</SwitchItemCell>
+							<SwitchItemCell
+								icon="heatseatright"
+								switchOffLabel="disarmed"
+								switchOnLabel="armed"
+							>
+								Ejection Seat
+							</SwitchItemCell>
+							<SwitchItemCell
+								noToggle
+								onClick={onReloadApp}
+							>
+								Reload Apps
+							</SwitchItemCell>
+							<Item label={ipAddress}>IP Address</Item>
+						</Scroller>
 					</Column>
 				</Cell>
 			</Row>

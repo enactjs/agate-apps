@@ -12,6 +12,7 @@ const MapViewBase = kind({
 	name: 'MapView',
 
 	propTypes: {
+		loadGoogleMaps: PropTypes.bool,
 		mapsLibrary: PropTypes.number
 	},
 
@@ -20,12 +21,11 @@ const MapViewBase = kind({
 		className: 'map'
 	},
 
-	render: ({mapsLibrary, ...rest}) => {
+	render: ({loadGoogleMaps, mapsLibrary, ...rest}) => {
 		return (
 			<Panel {...rest}>
 				{mapsLibrary === 0 ?
-					<GoogleMaps />
-					:
+					loadGoogleMaps ? <GoogleMaps noExpandButton /> : <></> :
 					<MapController autonomousSelection locationSelection noExpandButton>
 						{/* <tools>
 						<Button alt="POI search" icon="search" />
