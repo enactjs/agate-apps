@@ -1,24 +1,24 @@
 /* global google*/
 /* eslint-disable react/jsx-no-bind, no-shadow */
 
-// import Button from '@enact/agate/Button';
+import Button from '@enact/agate/Button';
 import kind from '@enact/core/kind';
+import {Cell, Column} from '@enact/ui/Layout';
 import Skinnable from "@enact/ui/Skinnable";
 import {APIProvider, Map, Marker, useMap, useMapsLibrary} from '@vis.gl/react-google-maps';
+import PropTypes from 'prop-types';
 import {useEffect, useState} from 'react';
 
 import appConfig from '../../App/configLoader';
+import DestinationList from '../DestinationList';
 
 import css from './GoogleMaps.module.less';
-import PropTypes from "prop-types";
-import Button from "@enact/agate/Button";
-import {Cell, Column} from "@enact/ui/Layout";
 
 if (!appConfig.googleMapsApiKey) {
 	Error('Please set `googleMapsApiKey` key in your `config.js` file to your own Google Maps API key.');
 }
 
-const position = {lat: 46.770221, lng: 23.597034};
+const position = {lat: 37.78878, lng: -122.40467};
 
 // const DestinationButton = (props) => {
 // 	const {children, 'data-index': index, ...rest} = props;
@@ -161,10 +161,10 @@ function Directions ({noExpandButton, onExpand}) {
 
 				{/*<Cell className={css.columnCell}>*/}
 				{/*	<DestinationList*/}
-				{/*		destination={destination}*/}
+				{/*		destination={selectedDestination}*/}
 				{/*		onSetDestination={this.handleSetDestination}*/}
-				{/*		positions={topLocations}*/}
-				{/*		title="Top Locations"*/}
+				{/*		//positions={topLocations}*/}
+				{/*		//title="Top Locations"*/}
 				{/*	/>*/}
 				{/*</Cell>*/}
 
