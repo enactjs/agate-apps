@@ -203,7 +203,6 @@ const Home = kind({
 	propTypes: {
 		arrangeable: PropTypes.bool,
 		loadGoogleMaps: PropTypes.bool,
-		mapsLibrary: PropTypes.number,
 		onCompactExpand: PropTypes.func,
 		onSelect: PropTypes.func,
 		onSendVideo: PropTypes.func
@@ -214,7 +213,7 @@ const Home = kind({
 		className: 'homePanel'
 	},
 
-	render: ({arrangeable, loadGoogleMaps, mapsLibrary, onCompactExpand, onSendVideo, onSelect, ...rest}) => (
+	render: ({arrangeable, loadGoogleMaps, onCompactExpand, onSendVideo, onSelect, ...rest}) => (
 		<Panel {...rest} css={css}>
 			<HomeLayout arrangeable={arrangeable}>
 				<tray1><CompactHvac onExpand={onCompactExpand} /></tray1>
@@ -224,7 +223,7 @@ const Home = kind({
 				<small1><CompactMusic onExpand={onCompactExpand} /></small1>
 				<small2><CompactScreenMonitor onExpand={onCompactExpand} /></small2>
 				<medium><CompactMultimedia onExpand={onCompactExpand} onSendVideo={onSendVideo} screenIds={[1]} /></medium>
-				{loadGoogleMaps ? <large><CompactMap onExpand={onCompactExpand} mapsLibrary={mapsLibrary} /></large> : <></>}
+				{loadGoogleMaps ? <large><CompactMap onExpand={onCompactExpand} /></large> : <></> }
 			</HomeLayout>
 		</Panel>
 	)

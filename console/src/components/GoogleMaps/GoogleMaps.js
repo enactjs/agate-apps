@@ -2,7 +2,10 @@
 /* eslint-disable react/jsx-no-bind, no-shadow */
 
 import Button from '@enact/agate/Button';
+import {MarqueeDecorator} from '@enact/agate/Marquee';
+// import ToggleButton from '@enact/agate/ToggleButton';
 import kind from '@enact/core/kind';
+import Group from '@enact/ui/Group';
 import {Cell, Column} from '@enact/ui/Layout';
 import Skinnable from "@enact/ui/Skinnable";
 import {APIProvider, Map, Marker, useMap, useMapsLibrary} from '@vis.gl/react-google-maps';
@@ -10,7 +13,7 @@ import PropTypes from 'prop-types';
 import {useEffect, useState} from 'react';
 
 import appConfig from '../../App/configLoader';
-import DestinationList from '../DestinationList';
+import {Marker as DestinationMarker} from '../MapCore/Marker';
 
 import css from './GoogleMaps.module.less';
 
@@ -48,7 +51,7 @@ const GoogleMapsBase = kind({
 					<Map
 						center={position}
 						fullscreenControl={false}
-						zoom={8}
+						zoom={10}
 					>
 						<Marker position={position} />
 						<Directions noExpandButton={noExpandButton} onExpand={onExpand} />
@@ -59,28 +62,50 @@ const GoogleMapsBase = kind({
 	}
 });
 
+const DestinationButton = (props) => {
+	const {children, 'data-index': index, ...rest} = props;
+	return <LocationButton size="small" {...rest} css={css}>
+		<DestinationMarker css={css}>{index + 1}</DestinationMarker>
+		{children}
+	</LocationButton>;
+};
+
+const LocationButton = MarqueeDecorator({className: css.marquee})(Button); // used in order to be able to overwrite `text-align` from marquee
+
+DestinationButton.propTypes = {
+	'data-index': PropTypes.number
+};
+
+
+const RouteButton = (props) => {
+	const {children, ...rest} = props;
+	return <LocationButton size="small" {...rest} css={css}>
+		{children}
+	</LocationButton>;
+};
+
 
 const destinations = [
-		{
-			"description": "Home",
-			"coordinates": '37.78877, -122.39647'
-		},
-		{
-			"description": "Philz Coffee",
-			"coordinates": '37.78895, -122.3931'
-		},
-		{
-			"description": "School",
-			"coordinates": '37.793424, -122.401124'
-		},
-		{
-			"description": "Work",
-			"coordinates": '37.783902, -122.396148'
-		},
-		{
-			"description": "MOMA",
-			"coordinates": '37.785684, -122.401035'
-		}
+	{
+		"description": "Home",
+		"coordinates": '37.78877, -122.39647'
+	},
+	{
+		"description": "Philz Coffee",
+		"coordinates": '37.78895, -122.3931'
+	},
+	{
+		"description": "School",
+		"coordinates": '37.793424, -122.401124'
+	},
+	{
+		"description": "Work",
+		"coordinates": '37.783902, -122.396148'
+	},
+	{
+		"description": "MOMA",
+		"coordinates": '37.785684, -122.401035'
+	}
 ];
 
 function Directions ({noExpandButton, onExpand}) {
@@ -125,7 +150,6 @@ function Directions ({noExpandButton, onExpand}) {
 	if (!leg) return null;
 
 	const onExpandFunc = () => {
-		console.log("test", onExpand, noExpandButton);
 		if (onExpand) {
 			onExpand({view: 'map'});
 		}
@@ -134,61 +158,84 @@ function Directions ({noExpandButton, onExpand}) {
 	return (
 		<div>
 			<Column className={css.toolsColumn}>
-			<Cell align="end" shrink>
-				{
-					noExpandButton ?
-						null :
-						<Button
-							size="small"
-							alt="Fullscreen"
-							onClick={onExpandFunc}
-							icon="expand"
-						/>
-				}
-			</Cell>
+				<Cell align="end" shrink>
+					{
+						noExpandButton ?
+							null :
+							<Button
+								size="small"
+								alt="Fullscreen"
+								onClick={onExpandFunc}
+								icon="expand"
+							/>
+					}
+				</Cell>
 			</Column>
 			<div className={css.directions}>
 				<h4>Choose destination</h4>
-				<ul>
-					{destinations.map((destination) => (
-						<li key={destination.description}>
-							<button onClick={() => setSelectedDestination(destination.coordinates)}>
-								{destination.description}
-							</button>
-						</li>
-					))}
-				</ul>
+				<Cell className={css.columnCell}>
+					<Group
+						component="div"
+						childComponent={DestinationButton}
+						onSelect={({selected}) => {
+							setSelectedDestination(destinations[selected]);
+						}}
+						selectedProp="highlighted"
+						selected={destinations.map(e => e.description).indexOf(selectedDestination.description)}
+					>
+						{
+							destinations.map(({description}) => description)
+						}
+					</Group>
+				</Cell>
 
-				{/*<Cell className={css.columnCell}>*/}
-				{/*	<DestinationList*/}
-				{/*		destination={selectedDestination}*/}
-				{/*		onSetDestination={this.handleSetDestination}*/}
-				{/*		//positions={topLocations}*/}
-				{/*		//title="Top Locations"*/}
-				{/*	/>*/}
-				{/*</Cell>*/}
-
-				<h4>Selected route: {selected.summary}</h4>
-				<div>
-					{leg.start_address.split(',')[0]} to {leg.end_address.split(',')[0]}
-				</div>
-				<div>Distance: {leg.distance?.text}</div>
-				<div>Duration: {leg.duration?.text}</div>
+				{/* <h4>Selected route: {selected.summary}</h4>*/}
+				{/* <div>*/}
+				{/*	{leg.start_address.split(',')[0]} to {leg.end_address.split(',')[0]}*/}
+				{/* </div>*/}
+				{/* <div>Distance: {leg.distance?.text}</div>*/}
+				{/* <div>Duration: {leg.duration?.text}</div>*/}
 
 				<h4>Other Routes</h4>
-				<ul>
-					{routes.map((route, index) => (
-						<li key={route.summary}>
-							<button onClick={() => setRouteIndex(index)}>
-								{route.summary}
-							</button>
-						</li>
-					))}
-				</ul>
+				<Group
+					component="div"
+					childComponent={RouteButton}
+					onSelect={({selected}) => {
+						setRouteIndex(selected);
+					}}
+					selectedProp="highlighted"
+					selected={routeIndex}
+				>
+					{
+						routes.map(({summary}) => summary)
+					}
+				</Group>
 			</div>
+
+			{/* {*/}
+			{/*	selectedDestination &&*/}
+			{/*	<Cell*/}
+			{/*		shrink*/}
+			{/*		className={css.columnCell}*/}
+			{/*		component={ToggleButton}*/}
+			{/*		css={css}*/}
+			{/*		size="small"*/}
+			{/*		// We want to be able to factor in the autonomous state, but*/}
+			{/*		// perhaps that needs to happen in ServiceLayer, and not here.*/}
+			{/*		//selected={selectedDestination && navigating}*/}
+			{/*		//onToggle={startNavigation}*/}
+			{/*		toggleOnLabel="Stop Navigation"*/}
+			{/*		toggleOffLabel="Start Navigation"*/}
+			{/*	/>*/}
+			{/* }*/}
 		</div>
 	);
 }
+
+Directions.propTypes = {
+	noExpandButton: PropTypes.bool,
+	onExpand: PropTypes.func
+};
 
 const GoogleMaps = Skinnable(GoogleMapsBase);
 

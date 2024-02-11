@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 import {Component, Fragment} from 'react';
 
 import AppContextConnect from '../../App/AppContextConnect';
+import appConfig from '../../App/configLoader';
 import CompactHeater from '../CompactHeater';
 import CompactMultimedia from '../CompactMultimedia';
 import CompactWeather from '../CompactWeather';
@@ -76,7 +77,6 @@ const WelcomePopupBase = kind({
 	propTypes: {
 		updateAppState: PropTypes.func.isRequired,
 		components: PropTypes.object,
-		mapsLibrary: PropTypes.number,
 		// index: PropTypes.number,
 		// onCancelSelect: PropTypes.func,
 		onClose: PropTypes.func,
@@ -139,7 +139,6 @@ const WelcomePopupBase = kind({
 		handleClose,
 		// handleTransition,
 		// index,
-		mapsLibrary,
 		// onCancelSelect,
 		// onSelectUser,
 		profileName,
@@ -196,7 +195,7 @@ const WelcomePopupBase = kind({
 							</Column>
 						</Cell>
 						<Cell>
-							{mapsLibrary === 0 ?
+							{appConfig.mapProvider === 'GoogleMaps' ?
 								<GoogleMaps noExpandButton />							:
 								<MapController
 									noStartStopToggle
@@ -291,10 +290,9 @@ const WelcomePopupState = hoc((configHoc, Wrapped) => {
 	};
 });
 
-const AppContextDecorator = AppContextConnect(({/* usersList, */ appState, updateAppState, userId, userSettings}) => {
+const AppContextDecorator = AppContextConnect(({/* usersList, */ updateAppState, userId, userSettings}) => {
 	return {
 		components: (userSettings.components && userSettings.components.welcome),
-		mapsLibrary: appState.mapsLibrary,
 		profileName: userSettings.name,
 		userId,
 		// usersList: usersList,

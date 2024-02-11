@@ -6,14 +6,12 @@
 // @guide-border-color: rgba(255, 255, 255, 0.5);
 .googleMaps {
 	@welcome-letter-spacing: 12px;
-
-
 }
 
 .directions {
 	position: absolute;
 	width: 300px;
-	top: 100px;
+	top: 50px;
 	right: 0px;
 	padding: 1.25rem;
 	padding-top: 0px;
@@ -21,6 +19,67 @@
 	color: white;
 	background-color: #2d3748;
 	border-radius: 0.25rem;
+}
+
+
+.button {
+  .applySkins({
+	display: block;
+	margin-top: 15px;
+
+	.marquee {
+	  text-align: left;
+	}
+
+	.client {
+	  justify-content: flex-start;
+	}
+	.marker {
+	  height: 39px;
+	  width: 39px;
+	  margin-right: 1ex;
+	  display: inline-block;
+	}
+  });
+}
+
+:global(.copper) {
+  .button {
+	.applySkins({
+	  .bg {
+		border: 3px solid @agate-accent;
+	  }
+	});
+  }
+}
+
+.button {
+  .applySkins({
+	&:global(.cobalt) {
+	  .bg {
+		background-color: @agate-accent;
+	  }
+
+	  .client {
+		color: @agate-highlight;
+	  }
+
+	  &.selected {
+		.bg {
+		  background-color: @agate-highlight;
+		}
+
+		.client {
+		  color: @agate-accent;
+		}
+	  }
+
+	  .marker {
+		background-color: @agate-highlight;
+		color: @agate-accent;
+	  }
+	}
+  });
 }
 
 .button {

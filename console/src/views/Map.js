@@ -1,8 +1,11 @@
+/* eslint-disable no-nested-ternary */
+
 // import Button from '@enact/agate/Button';
 import {Panel} from '@enact/agate/Panels';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 
+import appConfig from '../App/configLoader';
 import GoogleMaps from '../components/GoogleMaps';
 import MapController from '../components/MapController';
 
@@ -12,8 +15,7 @@ const MapViewBase = kind({
 	name: 'MapView',
 
 	propTypes: {
-		loadGoogleMaps: PropTypes.bool,
-		mapsLibrary: PropTypes.number
+		loadGoogleMaps: PropTypes.bool
 	},
 
 	styles: {
@@ -21,10 +23,10 @@ const MapViewBase = kind({
 		className: 'map'
 	},
 
-	render: ({loadGoogleMaps, mapsLibrary, ...rest}) => {
+	render: ({loadGoogleMaps, ...rest}) => {
 		return (
 			<Panel {...rest}>
-				{mapsLibrary === 0 ?
+				{appConfig.mapProvider === 'GoogleMaps' ?
 					loadGoogleMaps ? <GoogleMaps noExpandButton /> : <></> :
 					<MapController autonomousSelection locationSelection noExpandButton>
 						{/* <tools>

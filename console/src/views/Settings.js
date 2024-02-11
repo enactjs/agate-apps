@@ -1,5 +1,3 @@
-import BodyText from '@enact/agate/BodyText';
-import Dropdown from '@enact/agate/Dropdown';
 import Heading from '@enact/agate/Heading';
 import Item from '@enact/agate/Item';
 import {Panel} from '@enact/agate/Panels';
@@ -47,8 +45,6 @@ const Settings = kind({
 	propTypes: {
 		css: PropTypes.object,
 		ipAddress: PropTypes.string,
-		mapsLibrary: PropTypes.number,
-		onMapsSelect: PropTypes.func,
 		onReloadApp: PropTypes.func,
 		onSelect: PropTypes.func,
 		onToggleDateTimePopup: PropTypes.func
@@ -65,7 +61,7 @@ const Settings = kind({
 		}
 	},
 
-	render: ({css, ipAddress, mapsLibrary, onMapsSelect, onSelect, onToggleDateTimePopup, onReloadApp, ...rest}) => (
+	render: ({css, ipAddress, onSelect, onToggleDateTimePopup, onReloadApp, ...rest}) => (
 		<Panel {...rest}>
 			<Row className="enact-fit" align=" center">
 				<Cell size="50%">
@@ -87,14 +83,6 @@ const Settings = kind({
 							>
 								Theme
 							</SwitchItemCell>
-							<BodyText size="small">Maps Library</BodyText>
-							<Dropdown
-								onSelect={onMapsSelect}
-								title="Select a library"
-								selected={mapsLibrary}
-							>
-								{['Google Maps', 'Mapbox GL']}
-							</Dropdown>
 							<SwitchItemCell
 								icon="datetime"
 								noToggle

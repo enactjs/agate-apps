@@ -2,6 +2,7 @@ import Skinnable from '@enact/agate/Skinnable';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 
+import appConfig from '../../App/configLoader';
 import GoogleMaps from '../GoogleMaps';
 import MapController from '../MapController';
 import Widget from '../Widget';
@@ -13,7 +14,6 @@ const CompactMapBase = kind({
 
 	propTypes: {
 		follow: PropTypes.bool,
-		mapsLibrary: PropTypes.number,
 		onExpand: PropTypes.func
 	},
 
@@ -22,11 +22,11 @@ const CompactMapBase = kind({
 		className: 'compactMap'
 	},
 
-	render: ({follow, mapsLibrary, onExpand, ...rest}) => {
+	render: ({follow, onExpand, ...rest}) => {
 		return (
 			<Widget {...rest} icon="compass" title="Map" description="Choose a destination and navigate" noHeader>
 				<small>
-					{mapsLibrary === 0 ?
+					{appConfig.mapProvider === 'GoogleMaps' ?
 						<GoogleMaps onExpand={onExpand} /> :
 						<MapController
 							controlScheme="compact"
@@ -36,7 +36,7 @@ const CompactMapBase = kind({
 					}
 				</small>
 				<large>
-					{mapsLibrary === 0 ?
+					{appConfig.mapProvider === 'GoogleMaps' ?
 						<GoogleMaps onExpand={onExpand} /> :
 						<MapController
 							controlScheme="compact"

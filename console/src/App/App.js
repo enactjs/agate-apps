@@ -92,7 +92,6 @@ const AppBase = kind({
 		highlight: PropTypes.string,
 		index: PropTypes.number,
 		layoutArrangeable: PropTypes.bool,
-		mapsLibrary: PropTypes.number,
 		onSelect: PropTypes.func,
 		orientation: PropTypes.string,
 		prevIndex: PropTypes.number,
@@ -168,11 +167,6 @@ const AppBase = kind({
 				state.appState.showWelcomePopup = true;
 			});
 		},
-		onMapsSelect: (ev, {updateAppState}) => {
-			updateAppState((state) => {
-				state.appState.mapsLibrary = ev.selected;
-			});
-		},
 		onSelect: handle(
 			forward('onSelect'),
 			(ev, {updateAppState}) => {
@@ -188,8 +182,6 @@ const AppBase = kind({
 		index,
 		layoutArrangeable,
 		layoutArrangeableToggle,
-		mapsLibrary,
-		onMapsSelect,
 		onResetAll,
 		onSelect,
 		onToggleBasicPopup,
@@ -281,7 +273,6 @@ const AppBase = kind({
 					<Home
 						arrangeable={layoutArrangeable}
 						loadGoogleMaps={!showWelcomePopup}
-						mapsLibrary={mapsLibrary}
 						onCompactExpand={onSelect}
 						onSelect={onSelect}
 						onSendVideo={sendVideo}
@@ -294,11 +285,9 @@ const AppBase = kind({
 						onTogglePopup={onTogglePopup}
 						onToggleBasicPopup={onToggleBasicPopup}
 					/>
-					<MapView loadGoogleMaps={!showWelcomePopup} mapsLibrary={mapsLibrary} />
+					<MapView loadGoogleMaps={!showWelcomePopup} />
 					<Settings
-						mapsLibrary={mapsLibrary}
 						onSelect={onSelect}
-						onMapsSelect={onMapsSelect}
 						onReloadApp={reloadApp}
 						onToggleDateTimePopup={onToggleDateTimePopup}
 					/>
@@ -368,7 +357,6 @@ const AppBase = kind({
 					onClose={onToggleWelcomePopup}
 					onSendVideo={sendVideo}
 					open={showWelcomePopup}
-					mapsLibrary={mapsLibrary}
 				/>
 			</div>
 		);
@@ -392,7 +380,6 @@ const AppIndex = (Wrapped) => {
 
 		onSelect = handle(
 			adaptEvent((ev) => {
-				console.log("test1");
 				const {index = getPanelIndexOf(ev.view || 'home')} = ev;
 				this.setState(state => state.index === index ? null : {prevIndex: state.index, index});
 				return {index};
@@ -420,7 +407,6 @@ const AppDecorator = compose(
 		accent: userSettings.colorAccent,
 		highlight: userSettings.colorHighlight,
 		layoutArrangeable: userSettings.arrangements.arrangeable,
-		mapsLibrary: appState.mapsLibrary,
 		orientation: (userSettings.skin !== 'carbon') ? 'horizontal' : 'vertical',
 		showAppList: appState.showAppList,
 		showBasicPopup: appState.showBasicPopup,

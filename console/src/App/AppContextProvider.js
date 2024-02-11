@@ -71,7 +71,6 @@ class AppContextProvider extends Component {
 		this.watchPositionId = null;  // Store the reference to the position watcher.
 		this.state = {
 			appState:{
-				mapsLibrary: 0,
 				showAppList: false,
 				showBasicPopup: false,
 				showDateTimePopup: false,

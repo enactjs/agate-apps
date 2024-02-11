@@ -3,6 +3,9 @@ export default {
 	// Here's where: https://openweathermap.org/appid
 	weatherApiKey: '<Insert your OpenWeatherMaps API key here>',
 
+	// Agate Console can use `GoogleMaps` or `MapBox` as providers for its maps. Set one of these two values to set the map provider.
+	mapProvider: 'GoogleMaps',
+
 	// Agate Console uses mapbox for its maps. You can obtain your API key by
 	// visiting the following site: https://www.mapbox.com/help/define-access-token/
 	mapApiKey: '<Insert your MapBox API key here>',
