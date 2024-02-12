@@ -135,6 +135,7 @@ function Directions ({noExpandButton, onExpand}) {
 			provideRouteAlternatives: true
 		})
 			.then((response) => {
+				setRouteIndex(0);
 				directionsRenderer.setDirections(response);
 				setRoutes(response.routes);
 			});
