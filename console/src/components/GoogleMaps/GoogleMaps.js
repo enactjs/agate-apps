@@ -8,7 +8,7 @@ import kind from '@enact/core/kind';
 import Group from '@enact/ui/Group';
 import {Cell, Column} from '@enact/ui/Layout';
 import Skinnable from "@enact/ui/Skinnable";
-import {APIProvider, Map, Marker, useMap, useMapsLibrary} from '@vis.gl/react-google-maps';
+import {APIProvider, Map, Marker, useMap, useMapsLibrary, AdvancedMarker} from '@vis.gl/react-google-maps';
 import PropTypes from 'prop-types';
 import {useEffect, useState} from 'react';
 
@@ -16,6 +16,8 @@ import appConfig from '../../App/configLoader';
 import {Marker as DestinationMarker} from '../MapCore/Marker';
 
 import css from './GoogleMaps.module.less';
+import markerCss from '../MapCore/Marker.module.less';
+import CarPng from "../../../assets/car.png";
 
 if (!appConfig.googleMapsApiKey) {
 	Error('Please set `googleMapsApiKey` key in your `config.js` file to your own Google Maps API key.');
@@ -52,9 +54,18 @@ const GoogleMapsBase = kind({
 						center={position}
 						fullscreenControl={false}
 						zoom={10}
+						mapId={appConfig.googleMapId}
 					>
 						<Marker position={position} />
 						<Directions noExpandButton={noExpandButton} onExpand={onExpand} />
+						<AdvancedMarker
+							className={markerCss.car}
+							position={{lat: 37.78878, lng: -122.40467}}
+							draggable
+						>
+							<img src={CarPng} alt=""/>
+						</AdvancedMarker>
+
 					</Map>
 				</APIProvider>
 			</>
@@ -83,7 +94,6 @@ const RouteButton = (props) => {
 		{children}
 	</LocationButton>;
 };
-
 
 const destinations = [
 	{
@@ -127,6 +137,27 @@ function Directions ({noExpandButton, onExpand}) {
 
 	useEffect(() => {
 		if (!directionsRenderer || !directionsService) return;
+
+
+		// const AdvancedMarkerElement = new google.maps.marker.AdvancedMarkerElement({
+		// 	map,
+		// 	content: buildContent(property),
+		// 	position: {
+		// 		lat: 37.78878,
+		// 		lng: -122.40467,
+		// 	},
+		// 	title: property.description,
+		// });
+
+
+		// priceTag.className = "price-tag";
+		// priceTag.textContent = "$2.5M";
+		//
+		// const marker = new AdvancedMarkerElement({
+		// 	map,
+		// 	position: { lat: 37.42, lng: -122.1 },
+		// 	content: priceTag,
+		// });
 
 		directionsService.route({
 			origin: '37.78878, -122.40467',

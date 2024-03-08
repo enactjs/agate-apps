@@ -14,6 +14,10 @@ export default {
 	// visiting the following site: https://developers.google.com/maps/documentation/javascript/get-api-key
 	googleMapsApiKey: '<Insert your Google Maps API key here>',
 
+	// Some features of Google Maps Api require a map ID. You can generate a map id by
+	// visiting the following site: https://console.cloud.google.com/google/maps-apis/studio/maps
+	googleMapId: '<Insert your Google Maps Map Id here>',
+
 	// Point this variable to the hostname (IP, domain, or localhost) of the services layer
 	// The ROS server that we'll subscribe to get service topics.
 	// Ex: localhost:9090
